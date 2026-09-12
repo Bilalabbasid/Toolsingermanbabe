@@ -1,0 +1,252 @@
+import type { Metadata } from 'next';
+import { ToolDefinition } from '@/types/tool';
+import { CategoryInfo } from '@/config/categories.config';
+import { DEFAULT_LOCALE, getAlternateUrls } from '@/config/i18n.config';
+
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://coolwave.cool';
+export const SITE_NAME = 'CoolWave';
+
+/**
+ * Generate fully-compliant Next.js Metadata for any Tool
+ */
+export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFAULT_LOCALE): Metadata {
+  const pageUrl = `${SITE_URL}/${locale}/${tool.slug}`;
+  const alternateLanguages = getAlternateUrls(SITE_URL, `/${tool.slug}`);
+
+  return {
+    title: tool.titleDe,
+    description: tool.metaDescriptionDe,
+    keywords: [
+      tool.nameDe,
+      tool.slug.replace(/-/g, ' '),
+      ...(tool.searchKeywordsDe || []),
+      ...tool.sourceFormats.map((fmt) => `${fmt} umwandeln`),
+      ...tool.targetFormats.map((fmt) => `in ${fmt} umwandeln`),
+      'online kostenlos',
+      'ohne upload',
+      'datenschutz'
+    ],
+    alternates: {
+      canonical: pageUrl,
+      languages: alternateLanguages,
+    },
+    openGraph: {
+      title: tool.titleDe,
+      description: tool.metaDescriptionDe,
+      url: pageUrl,
+      siteName: SITE_NAME,
+      locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: tool.titleDe,
+      description: tool.metaDescriptionDe,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
+/**
+ * Generate fully-compliant Next.js Metadata for Category Hub Pages
+ */
+export function generateCategoryMetadata(catInfo: CategoryInfo, locale: string = DEFAULT_LOCALE): Metadata {
+  const pageUrl = `${SITE_URL}/${locale}/kategorie/${catInfo.slug}`;
+  const alternateLanguages = getAlternateUrls(SITE_URL, `/kategorie/${catInfo.slug}`);
+
+  return {
+    title: catInfo.metaTitle,
+    description: catInfo.metaDescription,
+    alternates: {
+      canonical: pageUrl,
+      languages: alternateLanguages,
+    },
+    openGraph: {
+      title: catInfo.metaTitle,
+      description: catInfo.metaDescription,
+      url: pageUrl,
+      siteName: SITE_NAME,
+      locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: catInfo.metaTitle,
+      description: catInfo.metaDescription,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
+/**
+ * Generate fully-compliant Next.js Metadata for Standard / Static Pages
+ */
+export function generatePageMetadata({
+  title,
+  description,
+  path,
+  locale = DEFAULT_LOCALE,
+  noIndex = false,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  locale?: string;
+  noIndex?: boolean;
+}): Metadata {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const pageUrl = `${SITE_URL}/${locale}${normalizedPath === '/' ? '' : normalizedPath}`;
+  const alternateLanguages = getAlternateUrls(SITE_URL, normalizedPath);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: pageUrl,
+      languages: alternateLanguages,
+    },
+    openGraph: {
+      title,
+      description,
+      url: pageUrl,
+      siteName: SITE_NAME,
+      locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    robots: {
+      index: !noIndex,
+      follow: !noIndex,
+      googleBot: {
+        index: !noIndex,
+        follow: !noIndex,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
+// ==========================================
+// SCHEMA.ORG STRUCTURED DATA GENERATORS
+// ==========================================
+
+/**
+ * Clean, compliant Schema.org WebApplication structured data (No misleading fake ratings)
+ */
+export function generateWebApplicationSchema(tool: ToolDefinition, locale: string = DEFAULT_LOCALE) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: tool.nameDe,
+    headline: tool.h1De,
+    url: `${SITE_URL}/${locale}/${tool.slug}`,
+    description: tool.metaDescriptionDe,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'All',
+    browserRequirements: 'Requires JavaScript. Requires HTML5.',
+    softwareVersion: '1.0',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+    },
+    creator: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+}
+
+/**
+ * Clean Schema.org FAQPage structured data
+ */
+export function generateFAQSchema(tool: ToolDefinition) {
+  if (!tool.faqDe || tool.faqDe.length === 0) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: tool.faqDe.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+/**
+ * Clean Schema.org BreadcrumbList structured data
+ */
+export function generateBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url}`,
+    })),
+  };
+}
+
+/**
+ * WebSite schema with search action for homepage
+ */
+export function generateWebsiteSchema(locale: string = DEFAULT_LOCALE) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: `${SITE_URL}/${locale}`,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_URL}/${locale}?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+}
+
+/**
+ * Organization schema
+ */
+export function generateOrganizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.ico`,
+  };
+}

@@ -1,0 +1,6 @@
+# CoolWave robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://coolwave.cool/sitemap.xml
