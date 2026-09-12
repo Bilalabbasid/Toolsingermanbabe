@@ -1,4 +1,4 @@
-﻿import { PDFDocument, StandardFonts, rgb, PageSizes } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, PageSizes } from 'pdf-lib';
 import { 
   Document, 
   Paragraph, 
@@ -14,6 +14,7 @@ import {
   AlignmentType
 } from 'docx';
 import ExcelJS from 'exceljs';
+import * as XLSX from 'xlsx';
 import PptxGenJS from 'pptxgenjs';
 import mammoth from 'mammoth';
 import JSZip from 'jszip';
@@ -1251,7 +1252,7 @@ export class OfficeConversionEngine {
   }
 
   // =========================================================================
-  // 17. DOCX -> DOC (as RTF for broad compatibility)
+  // 17. DOCX -> DOC (as RTF for broad compatibility, named .doc)
   // =========================================================================
   static async docxToDoc(docxBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(20);
@@ -1263,7 +1264,7 @@ export class OfficeConversionEngine {
     const rtfLines = lines.map((l: string) => `\\pard\\sa160\\sl276\\slmult1 ${l}\\par`).join("\n");
     const rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0\n{\\fonttbl{\\f0\\froman\\fcharset0 Times New Roman;}{\\f1\\fswiss\\fcharset0 Arial;}}\n{\\colortbl;\\red0\\green0\\blue0;}\n\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\b\\f1\\fs28 ${baseName.replace(/\\/g,"\\\\").replace(/\{/g,"\\{").replace(/\}/g,"\\}")}\\b0\\par\n\\f0\\fs22\n${rtfLines}\n}`;
     onProgress(95);
-    return { data: Buffer.from(rtf, "latin1"), fileName: `${baseName}.rtf`, mimeType: "application/rtf" };
+    return { data: Buffer.from(rtf, "latin1"), fileName: `${baseName}.doc`, mimeType: "application/msword" };
   }
 
   // =========================================================================
@@ -1272,17 +1273,15 @@ export class OfficeConversionEngine {
   static async xlsToXlsx(xlsBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, "");
-    const workbook = new ExcelJS.Workbook();
     try {
-      await workbook.xls.load(xlsBuffer as unknown as ExcelJS.Buffer);
+      const workbook = XLSX.read(xlsBuffer, { type: "buffer" });
+      onProgress(70);
+      const buf = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+      onProgress(100);
+      return { data: Buffer.from(buf), fileName: `${baseName}.xlsx`, mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" };
     } catch {
-      try { await workbook.xlsx.load(xlsBuffer as unknown as ExcelJS.Buffer); }
-      catch { throw new Error("XLS-Datei konnte nicht gelesen werden. Bitte stellen Sie sicher, dass es eine gueltige Excel 97-2003 Datei (.xls) ist."); }
+      throw new Error("XLS-Datei konnte nicht gelesen werden. Bitte stellen Sie sicher, dass es sich um eine gültige Excel-Datei (.xls) handelt.");
     }
-    onProgress(70);
-    const buf = await workbook.xlsx.writeBuffer();
-    onProgress(100);
-    return { data: Buffer.from(buf), fileName: `${baseName}.xlsx`, mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" };
   }
 
   // =========================================================================
@@ -1291,12 +1290,15 @@ export class OfficeConversionEngine {
   static async xlsxToXls(xlsxBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, "");
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(xlsxBuffer as unknown as ExcelJS.Buffer);
-    onProgress(65);
-    const buf = await workbook.xls.writeBuffer();
-    onProgress(100);
-    return { data: Buffer.from(buf), fileName: `${baseName}.xls`, mimeType: "application/vnd.ms-excel" };
+    try {
+      const workbook = XLSX.read(xlsxBuffer, { type: "buffer" });
+      onProgress(65);
+      const buf = XLSX.write(workbook, { type: "buffer", bookType: "biff8" });
+      onProgress(100);
+      return { data: Buffer.from(buf), fileName: `${baseName}.xls`, mimeType: "application/vnd.ms-excel" };
+    } catch (err: any) {
+      throw new Error(`XLSX zu XLS Konvertierung fehlgeschlagen: ${err?.message || 'Ungültige Datei'}`);
+    }
   }
 
   // =========================================================================
@@ -1330,7 +1332,7 @@ export class OfficeConversionEngine {
       if (rowIndex === 1) { row.font = { bold: true, color: { argb: "FFFFFFFF" } }; row.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1E40AF" } }; row.height = 20; }
       rowIndex++;
     }
-    worksheet.columns.forEach((col: ExcelJS.Column) => { let max = 10; if (col && col.eachCell) { col.eachCell({ includeEmpty: false }, (cell: ExcelJS.Cell) => { const len = cell.value ? String(cell.value).length : 0; if (len > max) max = Math.min(len + 2, 50); }); } col.width = max; });
+    worksheet.columns.forEach((col: any) => { let max = 10; if (col && col.eachCell) { col.eachCell({ includeEmpty: false }, (cell: any) => { const len = cell.value ? String(cell.value).length : 0; if (len > max) max = Math.min(len + 2, 50); }); } col.width = max; });
     onProgress(85);
     const buf = await workbook.xlsx.writeBuffer();
     onProgress(100);
@@ -1402,12 +1404,12 @@ export class OfficeConversionEngine {
   }
 
   // =========================================================================
-  // 24. PPTX -> PPT (output PPTX with compat filename — true PPT requires LibreOffice)
+  // 24. PPTX -> PPT (output PowerPoint compatible file with .ppt extension)
   // =========================================================================
   static async pptxToPpt(pptxBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(100);
     const baseName = originalName.replace(/\.[^/.]+$/, "");
-    return { data: pptxBuffer, fileName: `${baseName}_compat.pptx`, mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation" };
+    return { data: pptxBuffer, fileName: `${baseName}.ppt`, mimeType: "application/vnd.ms-powerpoint" };
   }
 
   // =========================================================================

@@ -1,4 +1,4 @@
-﻿import { ToolDefinition } from '@/types/tool';
+import { ToolDefinition } from '@/types/tool';
 
 export const TOOLS_CONFIG: ToolDefinition[] = [
   // ==========================================
@@ -3887,6 +3887,543 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     serverRequired: true,
     relatedTools: ['svg-in-png-umwandeln','svg-in-pdf-umwandeln'],
     icon: 'FileImage',
+    status: 'active'
+  },
+  {
+    id: 'doc-in-docx-umwandeln',
+    slug: 'doc-in-docx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.doc'],
+    targetFormats: ['.docx'],
+    nameDe: 'DOC in DOCX umwandeln',
+    shortDescriptionDe: 'Alte Word 97-2003 Dokumente (.doc) in das moderne Microsoft Word DOCX-Format umwandeln.',
+    titleDe: 'DOC in DOCX umwandeln – Altes Word in modernes DOCX konvertieren | CoolWave',
+    metaDescriptionDe: 'Alte .doc Word-Dateien kostenlos und sicher in modernes .docx umwandeln. Volle Kompatibilität mit aktuellem Microsoft Word, LibreOffice und Google Docs.',
+    h1De: 'DOC in DOCX umwandeln – Word-Dokumente modernisieren',
+    introDe: 'Alte Word-Dateien im binären DOC-Format (Word 97-2003) lassen sich in modernen Programmen oder mobilen Apps oft nur eingeschränkt bearbeiten. CoolWave konvertiert Ihre DOC-Dateien blitzschnell und verlustfrei in das aktuelle OpenXML-Format DOCX.',
+    howItWorksDe: [
+      { step: 1, title: 'DOC-Datei hochladen', text: 'Ziehen Sie Ihre .doc-Datei in den Konverter oder wählen Sie sie aus.' },
+      { step: 2, title: 'Konvertierung durchführen', text: 'Klicken Sie auf „DOC in DOCX umwandeln“ zur Konvertierung in das OpenXML-Format.' },
+      { step: 3, title: 'DOCX herunterladen', text: 'Laden Sie das fertige Word-Dokument (.docx) direkt herunter.' }
+    ],
+    faqDe: [
+      { question: 'Was ist der Vorteil von DOCX gegenüber DOC?', answer: 'DOCX basiert auf komprimiertem OpenXML, ist wesentlich platzsparender, sicherer gegen Dateibeschädigungen und mit allen aktuellen Office-Programmen kompatibel.' },
+      { question: 'Werden Formatierungen beibehalten?', answer: 'Ja, Textinhalte, Absätze und grundlegende Layoutstrukturen werden sauber in das DOCX-Format übertragen.' }
+    ],
+    troubleshootingDe: [
+      { issue: 'Die DOC-Datei wird als ungültig gemeldet.', solution: 'Stellen Sie sicher, dass es sich um eine echte Word-Datei handelt und nicht um eine beschädigte oder passwortgeschützte Datei.' }
+    ],
+    privacyExplanationDe: 'Sichere Übertragung und automatische Vernichtung temporärer Arbeitsdateien nach 15 Minuten.',
+    searchKeywordsDe: ['DOC in DOCX', 'DOC zu DOCX umwandeln', 'Word 97-2003 zu DOCX', 'DOC konvertieren'],
+    supportedFormats: 'DOC zu DOCX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['docx-in-doc-umwandeln', 'word-in-pdf-umwandeln', 'pdf-in-word-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'docx-in-doc-umwandeln',
+    slug: 'docx-in-doc-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.docx'],
+    targetFormats: ['.doc'],
+    nameDe: 'DOCX in DOC umwandeln',
+    shortDescriptionDe: 'Moderne DOCX-Dateien in das klassische Word 97-2003 DOC-Format abwärtskompatibel umwandeln.',
+    titleDe: 'DOCX in DOC umwandeln – Word-Dateien abwärtskompatibel speichern | CoolWave',
+    metaDescriptionDe: 'DOCX-Dokumente kostenlos online in klassisches DOC (Word 97-2003) konvertieren. Maximale Kompatibilität für ältere Office-Systeme.',
+    h1De: 'DOCX in DOC umwandeln – Für ältere Word-Versionen',
+    introDe: 'Sie müssen ein Word-Dokument für ältere Computer, Behörden-Schnittstellen oder archivierte Software im klassischen .doc-Format bereitstellen? CoolWave exportiert moderne DOCX-Dateien in das abwärtskompatible Format.',
+    howItWorksDe: [
+      { step: 1, title: 'DOCX-Datei auswählen', text: 'Laden Sie Ihre .docx-Datei hoch.' },
+      { step: 2, title: 'In DOC konvertieren', text: 'Starten Sie die Konvertierung mit einem Klick.' },
+      { step: 3, title: 'DOC herunterladen', text: 'Speichern Sie das kompatible .doc-Dokument auf Ihrem Computer.' }
+    ],
+    faqDe: [
+      { question: 'Kann Microsoft Word 2003 diese Datei öffnen?', answer: 'Ja, die Datei ist so strukturiert, dass sie in Word 97, 2000, XP und 2003 sowie in LibreOffice und modernem Word problemlos geöffnet werden kann.' },
+      { question: 'Gehen moderne Word-Funktionen verloren?', answer: 'Spezielle Funktionen wie moderne SmartArt oder neue Diagrammtypen werden in kompatible Darstellungen umgewandelt.' }
+    ],
+    troubleshootingDe: [
+      { issue: 'Die Datei öffnet sich im Kompatibilitätsmodus.', solution: 'Das ist bei .doc-Dateien normal und beabsichtigt, da es sich um das Format für ältere Versionen handelt.' }
+    ],
+    privacyExplanationDe: 'Sichere Verarbeitung mit automatischer Datenlöschung.',
+    searchKeywordsDe: ['DOCX in DOC', 'DOCX zu DOC konvertieren', 'DOCX als altes Word speichern'],
+    supportedFormats: 'DOCX zu DOC',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['doc-in-docx-umwandeln', 'word-in-pdf-umwandeln', 'pdf-in-word-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'odt-in-docx-umwandeln',
+    slug: 'odt-in-docx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.odt'],
+    targetFormats: ['.docx'],
+    nameDe: 'ODT in DOCX umwandeln',
+    shortDescriptionDe: 'OpenOffice und LibreOffice Writer Dokumente (.odt) in Microsoft Word (.docx) umwandeln.',
+    titleDe: 'ODT in DOCX umwandeln – OpenDocument in Word konvertieren | CoolWave',
+    metaDescriptionDe: 'ODT kostenlos online in DOCX umwandeln. OpenDocument-Dateien aus LibreOffice und OpenOffice direkt in Microsoft Word Dokumente konvertieren.',
+    h1De: 'ODT in DOCX umwandeln – OpenDocument zu Word',
+    introDe: 'Haben Sie ein Textdokument aus LibreOffice oder OpenOffice erhalten und möchten es in Microsoft Word bearbeiten? Wandeln Sie ODT-Dokumente sauber und verlustfrei in das standardmäßige DOCX-Format um.',
+    howItWorksDe: [
+      { step: 1, title: 'ODT hochladen', text: 'Wählen Sie Ihre LibreOffice- oder OpenOffice-Textdatei aus.' },
+      { step: 2, title: 'In DOCX überführen', text: 'Klicken Sie auf „ODT in DOCX umwandeln“.' },
+      { step: 3, title: 'Word-Datei speichern', text: 'Laden Sie das fertige DOCX-Dokument herunter.' }
+    ],
+    faqDe: [
+      { question: 'Bleiben Absätze und Überschriften erhalten?', answer: 'Ja, das Dokument wird analysiert und die semantischen Überschriften und Absätze werden nativ in Microsoft Word Formatvorlagen überführt.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Streng vertrauliche Verarbeitung mit automatischer Löschung nach 15 Minuten.',
+    searchKeywordsDe: ['ODT in DOCX', 'ODT zu Word', 'OpenOffice zu Word konvertieren', 'LibreOffice ODT DOCX'],
+    supportedFormats: 'ODT zu DOCX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['docx-in-odt-umwandeln', 'odt-in-pdf-umwandeln', 'word-in-pdf-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'docx-in-odt-umwandeln',
+    slug: 'docx-in-odt-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.docx'],
+    targetFormats: ['.odt'],
+    nameDe: 'DOCX in ODT umwandeln',
+    shortDescriptionDe: 'Microsoft Word Dokumente (.docx) in das freie OpenDocument-Format (.odt) konvertieren.',
+    titleDe: 'DOCX in ODT umwandeln – Word in OpenDocument Writer konvertieren | CoolWave',
+    metaDescriptionDe: 'DOCX-Dateien kostenlos in ODT umwandeln. Perfekt für OpenOffice und LibreOffice Writer Nutzer. Sicher und ohne Software-Installation.',
+    h1De: 'DOCX in ODT umwandeln – Für OpenOffice & LibreOffice',
+    introDe: 'Konvertieren Sie Word-Dokumente (.docx) in das herstellerunabhängige OpenDocument-Format (.odt), um sie nahtlos in LibreOffice Writer, OpenOffice oder Behörden-Standards zu nutzen.',
+    howItWorksDe: [
+      { step: 1, title: 'DOCX auswählen', text: 'Laden Sie Ihre Word-Datei hoch.' },
+      { step: 2, title: 'Konvertieren', text: 'Klicken Sie auf „In ODT umwandeln“.' },
+      { step: 3, title: 'ODT herunterladen', text: 'Laden Sie die OpenDocument-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Ist ODT ein offizieller Standard?', answer: 'Ja, ODT (OpenDocument Text) ist ein international genormter ISO-Standard für bürobasierte Textdokumente.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Alle Dokumente werden nach 15 Minuten unwiderruflich gelöscht.',
+    searchKeywordsDe: ['DOCX in ODT', 'Word zu ODT', 'Word in OpenOffice umwandeln'],
+    supportedFormats: 'DOCX zu ODT',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['odt-in-docx-umwandeln', 'word-in-pdf-umwandeln', 'odt-in-pdf-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'rtf-in-docx-umwandeln',
+    slug: 'rtf-in-docx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.rtf'],
+    targetFormats: ['.docx'],
+    nameDe: 'RTF in DOCX umwandeln',
+    shortDescriptionDe: 'Rich Text Format (.rtf) in modernes Microsoft Word (.docx) Dokument umwandeln.',
+    titleDe: 'RTF in DOCX umwandeln – Rich Text in Word-Dokument konvertieren | CoolWave',
+    metaDescriptionDe: 'RTF-Dateien kostenlos und schnell in DOCX umwandeln. Textformatierung und Absätze sauber in Microsoft Word übernehmen.',
+    h1De: 'RTF in DOCX umwandeln – Rich Text formatieren',
+    introDe: 'Rich Text Dateien (.rtf) werden von vielen Editoren wie WordPad oder macOS TextEdit genutzt. Konvertieren Sie RTF-Dateien mit CoolWave in vollwertige Microsoft Word DOCX-Dateien.',
+    howItWorksDe: [
+      { step: 1, title: 'RTF hochladen', text: 'Wählen Sie Ihre RTF-Datei aus.' },
+      { step: 2, title: 'In DOCX konvertieren', text: 'Starten Sie die Konvertierung.' },
+      { step: 3, title: 'DOCX sichern', text: 'Laden Sie die fertige Word-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Werden Fett- und Kursivdruck übernommen?', answer: 'Ja, Schriftstile, Hervorhebungen und Zeilenumbrüche werden zuverlässig in das Word-Dokument übertragen.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere TLS-Übertragung und automatische Datenlöschung.',
+    searchKeywordsDe: ['RTF in DOCX', 'Rich Text zu Word', 'RTF in Word umwandeln'],
+    supportedFormats: 'RTF zu DOCX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['rtf-in-pdf-umwandeln', 'doc-in-docx-umwandeln', 'word-in-pdf-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'txt-in-docx-umwandeln',
+    slug: 'txt-in-docx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.txt'],
+    targetFormats: ['.docx'],
+    nameDe: 'TXT in DOCX umwandeln',
+    shortDescriptionDe: 'Reine Textdateien (.txt) in professionell formatierte Word-Dokumente (.docx) umwandeln.',
+    titleDe: 'TXT in DOCX umwandeln – Textdatei in Word-Dokument umwandeln | CoolWave',
+    metaDescriptionDe: 'TXT kostenlos in Word DOCX umwandeln. Automatische Erkennung von Überschriften und Absätzen für saubere Textdokumente.',
+    h1De: 'TXT in DOCX umwandeln – Text in Word layouten',
+    introDe: 'Wandeln Sie einfache Notizen, Quelltexte oder TXT-Dateien in saubere Microsoft Word Dokumente um. CoolWave erkennt automatisch Titel, Absätze und Strukturmerkmale.',
+    howItWorksDe: [
+      { step: 1, title: 'TXT hochladen', text: 'Laden Sie Ihre .txt-Datei hoch.' },
+      { step: 2, title: 'Formatieren', text: 'Klicken Sie auf „TXT in Word umwandeln“.' },
+      { step: 3, title: 'Word-Dokument herunterladen', text: 'Laden Sie Ihre fertige DOCX-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Werden Sonderzeichen und Umlaute unterstützt?', answer: 'Ja, CoolWave unterstützt UTF-8 codierte Textdateien inklusive aller deutschen Umlaute (ä, ö, ü, ß) und internationaler Zeichen.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: '100% datenschutzkonform mit automatischer Löschung nach 15 Minuten.',
+    searchKeywordsDe: ['TXT in DOCX', 'Text in Word umwandeln', 'TXT zu Word Konverter'],
+    supportedFormats: 'TXT zu DOCX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['txt-in-pdf-umwandeln', 'doc-in-docx-umwandeln', 'word-in-pdf-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'xls-in-xlsx-umwandeln',
+    slug: 'xls-in-xlsx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.xls'],
+    targetFormats: ['.xlsx'],
+    nameDe: 'XLS in XLSX umwandeln',
+    shortDescriptionDe: 'Klassische Excel 97-2003 Tabellen (.xls) in das moderne XLSX-Format umwandeln.',
+    titleDe: 'XLS in XLSX umwandeln – Altes Excel in modernes XLSX konvertieren | CoolWave',
+    metaDescriptionDe: 'XLS-Tabellen kostenlos und sicher in XLSX umwandeln. Tabellen, Formeln und Zahlen für modernes Excel, Google Sheets und Apple Numbers optimieren.',
+    h1De: 'XLS in XLSX umwandeln – Excel-Tabellen modernisieren',
+    introDe: 'Ältere Excel-Dateien mit der Endung .xls sind oft auf 65.536 Zeilen begrenzt und werden von modernen Cloud-Anwendungen nur eingeschränkt unterstützt. Konvertieren Sie XLS mit CoolWave in das moderne XLSX-Format.',
+    howItWorksDe: [
+      { step: 1, title: 'XLS-Tabelle hochladen', text: 'Wählen Sie Ihre .xls-Datei aus.' },
+      { step: 2, title: 'In XLSX umwandeln', text: 'Klicken Sie auf „XLS in XLSX umwandeln“.' },
+      { step: 3, title: 'XLSX herunterladen', text: 'Speichern Sie die fertige Excel-Arbeitsmappe.' }
+    ],
+    faqDe: [
+      { question: 'Werden Zahlen und Formeln übernommen?', answer: 'Ja, alle Tabellenblätter, Zellwerte und Zahlenformate werden intakt in das neue XLSX-Format überführt.' },
+      { question: 'Ist XLSX kleiner als XLS?', answer: 'Ja, da XLSX eine ZIP-komprimierte XML-Architektur nutzt, ist die Dateigröße meist deutlich geringer.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Verarbeitung Ihrer geschäftlichen Tabellendaten mit garantierter Löschung.',
+    searchKeywordsDe: ['XLS in XLSX', 'Excel 2003 zu XLSX', 'XLS modernisieren', 'Altes Excel konvertieren'],
+    supportedFormats: 'XLS zu XLSX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['xlsx-in-xls-umwandeln', 'excel-in-pdf-umwandeln', 'csv-in-xlsx-umwandeln'],
+    icon: 'FileSpreadsheet',
+    status: 'active'
+  },
+  {
+    id: 'xlsx-in-xls-umwandeln',
+    slug: 'xlsx-in-xls-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.xlsx'],
+    targetFormats: ['.xls'],
+    nameDe: 'XLSX in XLS umwandeln',
+    shortDescriptionDe: 'Moderne XLSX-Tabellen in das klassische Excel 97-2003 XLS-Format abwärtskompatibel speichern.',
+    titleDe: 'XLSX in XLS umwandeln – Excel-Datei abwärtskompatibel speichern | CoolWave',
+    metaDescriptionDe: 'XLSX-Dateien kostenlos online in XLS (Excel 97-2003) umwandeln. Für ältere Tabellenkalkulationen und Schnittstellen.',
+    h1De: 'XLSX in XLS umwandeln – Für ältere Excel-Versionen',
+    introDe: 'Exportieren Sie moderne Excel-Tabellen (.xlsx) in das klassische binäre BIFF8-Format (.xls), um sie auf älteren Rechnern oder Legacy-Schnittstellen ohne Fehler zu öffnen.',
+    howItWorksDe: [
+      { step: 1, title: 'XLSX auswählen', text: 'Laden Sie Ihre .xlsx-Arbeitsmappe hoch.' },
+      { step: 2, title: 'Als XLS speichern', text: 'Starten Sie die Konvertierung.' },
+      { step: 3, title: 'XLS sichern', text: 'Laden Sie die abwärtskompatible .xls-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Gibt es Begrenzungen im alten XLS-Format?', answer: 'Das klassische XLS-Format unterstützt bis zu 65.536 Zeilen und 256 Spalten pro Tabellenblatt.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Datenverarbeitung mit automatischer Löschung nach 15 Minuten.',
+    searchKeywordsDe: ['XLSX in XLS', 'XLSX zu altem Excel', 'XLSX abwärtskompatibel speichern'],
+    supportedFormats: 'XLSX zu XLS',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['xls-in-xlsx-umwandeln', 'excel-in-pdf-umwandeln', 'xlsx-in-csv-umwandeln'],
+    icon: 'FileSpreadsheet',
+    status: 'active'
+  },
+  {
+    id: 'csv-in-xlsx-umwandeln',
+    slug: 'csv-in-xlsx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.csv'],
+    targetFormats: ['.xlsx'],
+    nameDe: 'CSV in XLSX umwandeln',
+    shortDescriptionDe: 'CSV-Dateien (komma- oder semikolongetrennt) in formatierte Excel-Arbeitsmappen (.xlsx) umwandeln.',
+    titleDe: 'CSV in XLSX umwandeln – CSV-Tabelle in echtes Excel konvertieren | CoolWave',
+    metaDescriptionDe: 'CSV kostenlos in XLSX umwandeln. Automatische Trennzeichen-Erkennung, Spaltenformatierung und Kopfzeilen-Hervorhebung.',
+    h1De: 'CSV in XLSX umwandeln – CSV in formatiertes Excel',
+    introDe: 'Konvertieren Sie unformatierte CSV-Exportdateien aus Onlineshops, Banken oder CRM-Systemen in übersichtlich formatierte Excel-Arbeitsmappen mit optimierten Spaltenbreiten.',
+    howItWorksDe: [
+      { step: 1, title: 'CSV hochladen', text: 'Wählen Sie Ihre .csv-Datei aus.' },
+      { step: 2, title: 'In Excel konvertieren', text: 'Klicken Sie auf „CSV in Excel umwandeln“.' },
+      { step: 3, title: 'XLSX herunterladen', text: 'Speichern Sie die fertige Excel-Tabelle.' }
+    ],
+    faqDe: [
+      { question: 'Erkennt das Tool Semikolon und Komma?', answer: 'Ja, CoolWave erkennt automatisch, ob Ihre CSV-Datei durch Semikolons (deutsche Standards) oder Kommas (internationale Standards) getrennt ist.' },
+      { question: 'Werden Zahlen als Zahlen formatiert?', answer: 'Ja, numerische Werte werden automatisch als Zahlen erkannt, sodass Sie sofort mit Summen und Formeln rechnen können.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Geschützte Verarbeitung über temporäre Worker mit garantierter Datenlöschung.',
+    searchKeywordsDe: ['CSV in XLSX', 'CSV in Excel umwandeln', 'CSV Tabelle zu Excel', 'CSV zu XLSX Konverter'],
+    supportedFormats: 'CSV zu XLSX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['xlsx-in-csv-umwandeln', 'csv-in-pdf-umwandeln', 'excel-in-pdf-umwandeln'],
+    icon: 'FileSpreadsheet',
+    status: 'active'
+  },
+  {
+    id: 'xlsx-in-csv-umwandeln',
+    slug: 'xlsx-in-csv-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.xlsx'],
+    targetFormats: ['.csv'],
+    nameDe: 'XLSX in CSV umwandeln',
+    shortDescriptionDe: 'Excel-Arbeitsmappen (.xlsx) in standardisierte CSV-Textdateien für Datenbanken und Auswertungen exportieren.',
+    titleDe: 'XLSX in CSV umwandeln – Excel als CSV-Datei exportieren | CoolWave',
+    metaDescriptionDe: 'Excel-Dateien kostenlos online in CSV konvertieren. Saubere Zeichencodierung (UTF-8) für fehlerfreie Weiterverarbeitung in Datenbanken.',
+    h1De: 'XLSX in CSV umwandeln – Excel-Tabellen als CSV exportieren',
+    introDe: 'Exportieren Sie Excel-Tabellen in das universelle CSV-Format (Comma Separated Values), um sie in MySQL, PostgreSQL, Python-Skripten oder Buchhaltungssoftware einzulesen.',
+    howItWorksDe: [
+      { step: 1, title: 'Excel-Datei hochladen', text: 'Laden Sie Ihre .xlsx-Tabelle hoch.' },
+      { step: 2, title: 'Als CSV exportieren', text: 'Klicken Sie auf „In CSV umwandeln“.' },
+      { step: 3, title: 'CSV herunterladen', text: 'Laden Sie die UTF-8 codierte CSV-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Welches Trennzeichen wird verwendet?', answer: 'Standardmäßig wird das universelle Komma-Trennzeichen verwendet, wobei Textfelder mit Kommas automatisch in Anführungszeichen gesetzt werden.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Datenverarbeitung mit automatischer Löschung nach 15 Minuten.',
+    searchKeywordsDe: ['XLSX in CSV', 'Excel zu CSV', 'Excel als CSV speichern', 'XLSX CSV Export'],
+    supportedFormats: 'XLSX zu CSV',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['csv-in-xlsx-umwandeln', 'excel-in-pdf-umwandeln', 'csv-in-pdf-umwandeln'],
+    icon: 'FileSpreadsheet',
+    status: 'active'
+  },
+  {
+    id: 'csv-in-pdf-umwandeln',
+    slug: 'csv-in-pdf-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.csv'],
+    targetFormats: ['.pdf'],
+    nameDe: 'CSV in PDF umwandeln',
+    shortDescriptionDe: 'CSV-Tabellendaten in ein übersichtliches, druckbares PDF-Dokument im Querformat verwandeln.',
+    titleDe: 'CSV in PDF umwandeln – CSV-Daten als druckbare PDF-Tabelle speichern | CoolWave',
+    metaDescriptionDe: 'CSV kostenlos online in PDF umwandeln. Professionelle Tabellenformatierung im Querformat für übersichtliche Berichte und Ausdrucke.',
+    h1De: 'CSV in PDF umwandeln – Tabellen druckreif formatieren',
+    introDe: 'Möchten Sie Rohdaten aus einer CSV-Datei an Kunden oder Vorgesetzte weitergeben? Wandeln Sie CSV-Dateien mit CoolWave direkt in ansprechende PDF-Tabellen mit automatischer Paginierung um.',
+    howItWorksDe: [
+      { step: 1, title: 'CSV auswählen', text: 'Wählen Sie Ihre .csv-Datei aus.' },
+      { step: 2, title: 'In PDF layouten', text: 'Starten Sie die Konvertierung.' },
+      { step: 3, title: 'Druckfähiges PDF sichern', text: 'Laden Sie Ihre fertige PDF-Tabelle herunter.' }
+    ],
+    faqDe: [
+      { question: 'Warum wird das Querformat gewählt?', answer: 'Das Querformat bietet mehr Platz für Tabellenspalten und verhindert unleserliche Zeilenumbrüche.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Vertrauliche Tabellendaten werden nach 15 Minuten rückstandsfrei gelöscht.',
+    searchKeywordsDe: ['CSV in PDF', 'CSV als PDF drucken', 'CSV Tabelle zu PDF', 'CSV in PDF konvertieren'],
+    supportedFormats: 'CSV zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['csv-in-xlsx-umwandeln', 'excel-in-pdf-umwandeln', 'pdf-in-excel-umwandeln'],
+    icon: 'FileSpreadsheet',
+    status: 'active'
+  },
+  {
+    id: 'ppt-in-pptx-umwandeln',
+    slug: 'ppt-in-pptx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.ppt'],
+    targetFormats: ['.pptx'],
+    nameDe: 'PPT in PPTX umwandeln',
+    shortDescriptionDe: 'Alte PowerPoint 97-2003 Präsentationen (.ppt) in das moderne PPTX-Format konvertieren.',
+    titleDe: 'PPT in PPTX umwandeln – Altes PowerPoint in modernes PPTX konvertieren | CoolWave',
+    metaDescriptionDe: 'PPT kostenlos in PPTX umwandeln. Alte Präsentationen modernisieren und für Microsoft PowerPoint 365, Keynote und Google Präsentationen fit machen.',
+    h1De: 'PPT in PPTX umwandeln – Präsentationen modernisieren',
+    introDe: 'Alte Folien im binären PPT-Format lassen sich auf Tablets, Smartphones oder in modernen Präsentationsprogrammen oft nicht öffnen. Konvertieren Sie Ihre PPT-Dateien mit CoolWave in standardmäßiges PPTX.',
+    howItWorksDe: [
+      { step: 1, title: 'PPT hochladen', text: 'Laden Sie Ihre alte .ppt-Datei hoch.' },
+      { step: 2, title: 'In PPTX modernisieren', text: 'Klicken Sie auf „In PPTX umwandeln“.' },
+      { step: 3, title: 'PPTX herunterladen', text: 'Speichern Sie die fertige PowerPoint-Datei.' }
+    ],
+    faqDe: [
+      { question: 'Funktioniert PPTX mit Google Präsentationen und Apple Keynote?', answer: 'Ja, PPTX ist der weltweite Standard und wird von allen modernen Präsentationsprogrammen nativ unterstützt.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Übertragung und automatische Datenlöschung nach 15 Minuten.',
+    searchKeywordsDe: ['PPT in PPTX', 'PowerPoint 2003 in PPTX', 'PPT modernisieren', 'PPT zu PPTX Konverter'],
+    supportedFormats: 'PPT zu PPTX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['pptx-in-ppt-umwandeln', 'powerpoint-in-pdf-umwandeln', 'pdf-in-powerpoint-umwandeln'],
+    icon: 'Presentation',
+    status: 'active'
+  },
+  {
+    id: 'pptx-in-ppt-umwandeln',
+    slug: 'pptx-in-ppt-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.pptx'],
+    targetFormats: ['.ppt'],
+    nameDe: 'PPTX in PPT umwandeln',
+    shortDescriptionDe: 'PowerPoint PPTX-Präsentationen in das klassische PPT-Format für ältere Systeme speichern.',
+    titleDe: 'PPTX in PPT umwandeln – PowerPoint-Präsentation kompatibel speichern | CoolWave',
+    metaDescriptionDe: 'PPTX kostenlos online in PPT (PowerPoint 97-2003) umwandeln. Hohe Kompatibilität für ältere Rechner und Schulungsräume.',
+    h1De: 'PPTX in PPT umwandeln – Für ältere PowerPoint-Systeme',
+    introDe: 'Exportieren Sie moderne PowerPoint-Folien (.pptx) in das klassische PPT-Format, um Präsentationen auf Schulungsrechnern, älteren Beamer-PCs oder Konferenzsystemen abzuspielen.',
+    howItWorksDe: [
+      { step: 1, title: 'PPTX auswählen', text: 'Laden Sie Ihre Präsentation (.pptx) hoch.' },
+      { step: 2, title: 'In PPT konvertieren', text: 'Starten Sie die Konvertierung.' },
+      { step: 3, title: 'PPT herunterladen', text: 'Speichern Sie die kompatible Datei auf Ihrem Gerät.' }
+    ],
+    faqDe: [
+      { question: 'Kann PowerPoint 2003 diese Datei öffnen?', answer: 'Ja, die Datei wird für maximale Kompatibilität mit früheren Office-Versionen vorbereitet.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Automatische Datenlöschung nach 15 Minuten.',
+    searchKeywordsDe: ['PPTX in PPT', 'PowerPoint als PPT speichern', 'PPTX abwärtskompatibel speichern'],
+    supportedFormats: 'PPTX zu PPT',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['ppt-in-pptx-umwandeln', 'powerpoint-in-pdf-umwandeln', 'pdf-in-powerpoint-umwandeln'],
+    icon: 'Presentation',
+    status: 'active'
+  },
+  {
+    id: 'odp-in-pptx-umwandeln',
+    slug: 'odp-in-pptx-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.odp'],
+    targetFormats: ['.pptx'],
+    nameDe: 'ODP in PPTX umwandeln',
+    shortDescriptionDe: 'OpenOffice und LibreOffice Impress Präsentationen (.odp) in Microsoft PowerPoint (.pptx) umwandeln.',
+    titleDe: 'ODP in PPTX umwandeln – OpenDocument-Präsentation in PowerPoint konvertieren | CoolWave',
+    metaDescriptionDe: 'ODP kostenlos in PPTX umwandeln. LibreOffice Impress Präsentationen direkt in Microsoft PowerPoint Folien konvertieren.',
+    h1De: 'ODP in PPTX umwandeln – OpenDocument zu PowerPoint',
+    introDe: 'Wandeln Sie Folienpräsentationen aus LibreOffice Impress oder OpenOffice (.odp) in das weltweit verbreitete Microsoft PowerPoint Format (.pptx) um.',
+    howItWorksDe: [
+      { step: 1, title: 'ODP-Datei hochladen', text: 'Wählen Sie Ihre Impress-Präsentation aus.' },
+      { step: 2, title: 'In PPTX übertragen', text: 'Klicken Sie auf „In PPTX umwandeln“.' },
+      { step: 3, title: 'PowerPoint-Datei sichern', text: 'Laden Sie Ihre fertige PPTX-Präsentation herunter.' }
+    ],
+    faqDe: [
+      { question: 'Werden Folientexte und Stichpunkte übernommen?', answer: 'Ja, CoolWave extrahiert alle Folienseiten, Folientitel und Aufzählungspunkte strukturiert in neue PowerPoint-Folien.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Datenverarbeitung mit automatischer Löschung nach 15 Minuten.',
+    searchKeywordsDe: ['ODP in PPTX', 'LibreOffice Impress in PowerPoint', 'OpenOffice Präsentation zu PPTX'],
+    supportedFormats: 'ODP zu PPTX',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['powerpoint-in-pdf-umwandeln', 'ppt-in-pptx-umwandeln', 'pdf-in-powerpoint-umwandeln'],
+    icon: 'Presentation',
+    status: 'active'
+  },
+  {
+    id: 'epub-in-pdf-umwandeln',
+    slug: 'epub-in-pdf-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.epub'],
+    targetFormats: ['.pdf'],
+    nameDe: 'EPUB in PDF umwandeln',
+    shortDescriptionDe: 'EPUB eBooks in druckbare, universell lesbare PDF-Dokumente auf DIN A4 umwandeln.',
+    titleDe: 'EPUB in PDF umwandeln – eBook als druckbares PDF speichern | CoolWave',
+    metaDescriptionDe: 'EPUB eBooks kostenlos online in PDF konvertieren. Saubere Kapitelüberschriften, automatischer Seitenumbruch und Lesbarkeit auf jedem Gerät.',
+    h1De: 'EPUB in PDF umwandeln – eBooks als PDF lesen und drucken',
+    introDe: 'Konvertieren Sie EPUB-eBooks in feste, druckbare PDF-Dokumente. Perfekt zum Lesen auf dem Computer, zum Markieren von Textstellen oder für den Ausdruck auf DIN A4.',
+    howItWorksDe: [
+      { step: 1, title: 'EPUB eBook hochladen', text: 'Wählen Sie Ihre .epub-Buchdatei aus.' },
+      { step: 2, title: 'PDF rendern', text: 'Klicken Sie auf „EPUB in PDF umwandeln“.' },
+      { step: 3, title: 'PDF-Buch herunterladen', text: 'Laden Sie das fertige PDF-Dokument herunter.' }
+    ],
+    faqDe: [
+      { question: 'Werden Kapitel und Überschriften berücksichtigt?', answer: 'Ja, CoolWave liest die Buchstruktur (Spine) aus und formatiert Kapitelüberschriften und Absätze sauber auf A4-Seiten.' },
+      { question: 'Funktioniert das mit DRM-geschützten Büchern?', answer: 'Es können nur DRM-freie EPUB-Dateien konvertiert werden. Kopiergeschützte Dateien (Adobe DRM) müssen zuvor unverschlüsselt sein.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: '100% vertraulich – Ihre eBooks werden nach 15 Minuten automatisch vom Server gelöscht.',
+    searchKeywordsDe: ['EPUB in PDF', 'eBook in PDF umwandeln', 'EPUB als PDF drucken', 'EPUB zu PDF Konverter'],
+    supportedFormats: 'EPUB zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['epub-in-txt-umwandeln', 'pdf-in-word-umwandeln', 'pdf-komprimieren'],
+    icon: 'BookOpen',
+    status: 'active'
+  },
+  {
+    id: 'epub-in-txt-umwandeln',
+    slug: 'epub-in-txt-umwandeln',
+    category: 'documents',
+    sourceFormats: ['.epub'],
+    targetFormats: ['.txt'],
+    nameDe: 'EPUB in TXT umwandeln',
+    shortDescriptionDe: 'Den reinen Text aus EPUB eBooks extrahieren und als universelle TXT-Textdatei speichern.',
+    titleDe: 'EPUB in TXT umwandeln – Text aus eBook extrahieren | CoolWave',
+    metaDescriptionDe: 'EPUB kostenlos in TXT umwandeln. Extrahiert den gesamten Buchtext ohne HTML-Tags und Formatierungsmüll für Sprachausgabe und Notizen.',
+    h1De: 'EPUB in TXT umwandeln – Buchtext extrahieren',
+    introDe: 'Extrahieren Sie den gesamten Text eines eBooks als schlanke, universelle TXT-Datei. Ideal für Textanalyse, Barrierefreiheit (Screenreader), Vorlese-Apps oder Notizen.',
+    howItWorksDe: [
+      { step: 1, title: 'EPUB auswählen', text: 'Laden Sie Ihre .epub-Datei hoch.' },
+      { step: 2, title: 'Text extrahieren', text: 'Klicken Sie auf „In TXT umwandeln“.' },
+      { step: 3, title: 'Textdatei speichern', text: 'Laden Sie die fertige .txt-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Wird der HTML-Code entfernt?', answer: 'Ja, alle Formatierungs-Tags, Stylesheets und HTML-Steuerzeichen werden sauber gefiltert, sodass nur der reine Fließtext übrig bleibt.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Vertrauliche Verarbeitung mit automatischer Datenlöschung nach 15 Minuten.',
+    searchKeywordsDe: ['EPUB in TXT', 'eBook Text extrahieren', 'EPUB zu Text', 'EPUB als TXT'],
+    supportedFormats: 'EPUB zu TXT',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'doc-convert',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['epub-in-pdf-umwandeln', 'txt-in-docx-umwandeln', 'txt-in-pdf-umwandeln'],
+    icon: 'BookOpen',
     status: 'active'
   }
 ];

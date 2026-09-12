@@ -7,7 +7,8 @@ import {
   AlertCircle, 
   FileSpreadsheet, 
   Presentation, 
-  FileCode 
+  FileCode,
+  BookOpen 
 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
@@ -26,7 +27,23 @@ export type DocConvertMode =
   | 'odt-to-pdf'
   | 'rtf-to-pdf'
   | 'txt-to-pdf'
-  | 'html-to-pdf';
+  | 'html-to-pdf'
+  | 'doc-to-docx'
+  | 'docx-to-doc'
+  | 'odt-to-docx'
+  | 'docx-to-odt'
+  | 'rtf-to-docx'
+  | 'txt-to-docx'
+  | 'xls-to-xlsx'
+  | 'xlsx-to-xls'
+  | 'csv-to-xlsx'
+  | 'xlsx-to-csv'
+  | 'csv-to-pdf'
+  | 'ppt-to-pptx'
+  | 'pptx-to-ppt'
+  | 'odp-to-pptx'
+  | 'epub-to-pdf'
+  | 'epub-to-txt';
 
 interface DocConvertEngineProps {
   mode: DocConvertMode;
@@ -50,21 +67,42 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       case 'pdf-to-ppt':
         return ['.pdf'];
       case 'word-to-pdf':
+      case 'docx-to-doc':
+      case 'docx-to-odt':
         return ['.docx'];
       case 'doc-to-pdf':
+      case 'doc-to-docx':
         return ['.doc'];
       case 'odt-to-pdf':
+      case 'odt-to-docx':
         return ['.odt'];
       case 'rtf-to-pdf':
+      case 'rtf-to-docx':
         return ['.rtf'];
       case 'txt-to-pdf':
+      case 'txt-to-docx':
         return ['.txt'];
       case 'html-to-pdf':
         return ['.html', '.htm'];
       case 'excel-to-pdf':
-        return ['.xlsx', '.xls'];
+      case 'xlsx-to-xls':
+      case 'xlsx-to-csv':
+        return ['.xlsx'];
+      case 'xls-to-xlsx':
+        return ['.xls'];
+      case 'csv-to-xlsx':
+      case 'csv-to-pdf':
+        return ['.csv'];
       case 'ppt-to-pdf':
-        return ['.pptx', '.ppt'];
+      case 'pptx-to-ppt':
+        return ['.pptx'];
+      case 'ppt-to-pptx':
+        return ['.ppt'];
+      case 'odp-to-pptx':
+        return ['.odp'];
+      case 'epub-to-pdf':
+      case 'epub-to-txt':
+        return ['.epub'];
       default:
         return ['.pdf'];
     }
@@ -72,10 +110,34 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
 
   const getTargetExtension = (): string => {
     switch (mode) {
-      case 'pdf-to-word': return 'docx';
-      case 'pdf-to-excel': return 'xlsx';
-      case 'pdf-to-ppt': return 'pptx';
-      default: return 'pdf';
+      case 'pdf-to-word':
+      case 'doc-to-docx':
+      case 'odt-to-docx':
+      case 'rtf-to-docx':
+      case 'txt-to-docx':
+        return 'docx';
+      case 'docx-to-doc':
+        return 'doc';
+      case 'docx-to-odt':
+        return 'odt';
+      case 'pdf-to-excel':
+      case 'xls-to-xlsx':
+      case 'csv-to-xlsx':
+        return 'xlsx';
+      case 'xlsx-to-xls':
+        return 'xls';
+      case 'xlsx-to-csv':
+        return 'csv';
+      case 'pdf-to-ppt':
+      case 'ppt-to-pptx':
+      case 'odp-to-pptx':
+        return 'pptx';
+      case 'pptx-to-ppt':
+        return 'ppt';
+      case 'epub-to-txt':
+        return 'txt';
+      default:
+        return 'pdf';
     }
   };
 
@@ -92,6 +154,22 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       case 'rtf-to-pdf': return 'office_rtf_to_pdf';
       case 'txt-to-pdf': return 'office_txt_to_pdf';
       case 'html-to-pdf': return 'office_html_to_pdf';
+      case 'doc-to-docx': return 'office_doc_to_docx';
+      case 'docx-to-doc': return 'office_docx_to_doc';
+      case 'odt-to-docx': return 'office_odt_to_docx';
+      case 'docx-to-odt': return 'office_docx_to_odt';
+      case 'rtf-to-docx': return 'office_rtf_to_docx';
+      case 'txt-to-docx': return 'office_txt_to_docx';
+      case 'xls-to-xlsx': return 'office_xls_to_xlsx';
+      case 'xlsx-to-xls': return 'office_xlsx_to_xls';
+      case 'csv-to-xlsx': return 'office_csv_to_xlsx';
+      case 'xlsx-to-csv': return 'office_xlsx_to_csv';
+      case 'csv-to-pdf': return 'office_csv_to_pdf';
+      case 'ppt-to-pptx': return 'office_ppt_to_pptx';
+      case 'pptx-to-ppt': return 'office_pptx_to_ppt';
+      case 'odp-to-pptx': return 'office_odp_to_pptx';
+      case 'epub-to-pdf': return 'office_epub_to_pdf';
+      case 'epub-to-txt': return 'office_epub_to_txt';
       default: return 'office_convert';
     }
   };
@@ -109,13 +187,30 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       case 'rtf-to-pdf': return 'Rich-Text in PDF umwandeln';
       case 'txt-to-pdf': return 'Textdatei in PDF layouten';
       case 'html-to-pdf': return 'HTML-Code in PDF rendern';
+      case 'doc-to-docx': return 'Altes DOC in modernes DOCX umwandeln';
+      case 'docx-to-doc': return 'DOCX in abwärtskompatibles DOC umwandeln';
+      case 'odt-to-docx': return 'OpenDocument (ODT) in Word (DOCX) umwandeln';
+      case 'docx-to-odt': return 'Word (DOCX) in OpenDocument (ODT) umwandeln';
+      case 'rtf-to-docx': return 'Rich Text (RTF) in Word (DOCX) umwandeln';
+      case 'txt-to-docx': return 'Textdatei (TXT) in Word (DOCX) formatieren';
+      case 'xls-to-xlsx': return 'Altes XLS in modernes XLSX umwandeln';
+      case 'xlsx-to-xls': return 'XLSX in abwärtskompatibles XLS umwandeln';
+      case 'csv-to-xlsx': return 'CSV-Tabelle in Excel (XLSX) umwandeln';
+      case 'xlsx-to-csv': return 'Excel-Tabelle in CSV exportieren';
+      case 'csv-to-pdf': return 'CSV-Tabelle in formatiertes PDF umwandeln';
+      case 'ppt-to-pptx': return 'Altes PPT in modernes PPTX umwandeln';
+      case 'pptx-to-ppt': return 'PowerPoint (PPTX) als PPT speichern';
+      case 'odp-to-pptx': return 'OpenDocument (ODP) in PowerPoint (PPTX) umwandeln';
+      case 'epub-to-pdf': return 'EPUB eBook in druckbares PDF umwandeln';
+      case 'epub-to-txt': return 'EPUB eBook in reinen Text extrahieren';
       default: return 'Dokument umwandeln';
     }
   };
 
   const getModeIcon = () => {
-    if (mode.includes('excel')) return <FileSpreadsheet className="w-5 h-5" />;
-    if (mode.includes('ppt')) return <Presentation className="w-5 h-5" />;
+    if (mode.includes('excel') || mode.includes('csv') || mode.includes('xls')) return <FileSpreadsheet className="w-5 h-5" />;
+    if (mode.includes('ppt') || mode.includes('odp')) return <Presentation className="w-5 h-5" />;
+    if (mode.includes('epub')) return <BookOpen className="w-5 h-5" />;
     if (mode.includes('html') || mode.includes('txt')) return <FileCode className="w-5 h-5" />;
     return <FileText className="w-5 h-5" />;
   };

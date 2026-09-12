@@ -149,16 +149,33 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
 
     case 'doc-convert': {
       let mode: DocConvertMode = 'pdf-to-word';
-      if (tool.slug === 'word-in-pdf-umwandeln') mode = 'word-to-pdf';
-      else if (tool.slug === 'pdf-in-excel-umwandeln') mode = 'pdf-to-excel';
-      else if (tool.slug === 'excel-in-pdf-umwandeln') mode = 'excel-to-pdf';
-      else if (tool.slug === 'pdf-in-powerpoint-umwandeln') mode = 'pdf-to-ppt';
-      else if (tool.slug === 'powerpoint-in-pdf-umwandeln') mode = 'ppt-to-pdf';
-      else if (tool.slug === 'doc-in-pdf-umwandeln') mode = 'doc-to-pdf';
-      else if (tool.slug === 'odt-in-pdf-umwandeln') mode = 'odt-to-pdf';
-      else if (tool.slug === 'rtf-in-pdf-umwandeln') mode = 'rtf-to-pdf';
-      else if (tool.slug === 'txt-in-pdf-umwandeln') mode = 'txt-to-pdf';
-      else if (tool.slug === 'html-in-pdf-umwandeln') mode = 'html-to-pdf';
+      const s = tool.slug;
+      if (s === 'word-in-pdf-umwandeln') mode = 'word-to-pdf';
+      else if (s === 'pdf-in-excel-umwandeln') mode = 'pdf-to-excel';
+      else if (s === 'excel-in-pdf-umwandeln') mode = 'excel-to-pdf';
+      else if (s === 'pdf-in-powerpoint-umwandeln') mode = 'pdf-to-ppt';
+      else if (s === 'powerpoint-in-pdf-umwandeln') mode = 'ppt-to-pdf';
+      else if (s === 'doc-in-pdf-umwandeln') mode = 'doc-to-pdf';
+      else if (s === 'odt-in-pdf-umwandeln') mode = 'odt-to-pdf';
+      else if (s === 'rtf-in-pdf-umwandeln') mode = 'rtf-to-pdf';
+      else if (s === 'txt-in-pdf-umwandeln') mode = 'txt-to-pdf';
+      else if (s === 'html-in-pdf-umwandeln') mode = 'html-to-pdf';
+      else if (s === 'doc-in-docx-umwandeln') mode = 'doc-to-docx';
+      else if (s === 'docx-in-doc-umwandeln') mode = 'docx-to-doc';
+      else if (s === 'odt-in-docx-umwandeln') mode = 'odt-to-docx';
+      else if (s === 'docx-in-odt-umwandeln') mode = 'docx-to-odt';
+      else if (s === 'rtf-in-docx-umwandeln') mode = 'rtf-to-docx';
+      else if (s === 'txt-in-docx-umwandeln') mode = 'txt-to-docx';
+      else if (s === 'xls-in-xlsx-umwandeln') mode = 'xls-to-xlsx';
+      else if (s === 'xlsx-in-xls-umwandeln') mode = 'xlsx-to-xls';
+      else if (s === 'csv-in-xlsx-umwandeln') mode = 'csv-to-xlsx';
+      else if (s === 'xlsx-in-csv-umwandeln') mode = 'xlsx-to-csv';
+      else if (s === 'csv-in-pdf-umwandeln') mode = 'csv-to-pdf';
+      else if (s === 'ppt-to-pptx-umwandeln') mode = 'ppt-to-pptx';
+      else if (s === 'pptx-in-ppt-umwandeln') mode = 'pptx-to-ppt';
+      else if (s === 'odp-in-pptx-umwandeln') mode = 'odp-to-pptx';
+      else if (s === 'epub-in-pdf-umwandeln') mode = 'epub-to-pdf';
+      else if (s === 'epub-in-txt-umwandeln') mode = 'epub-to-txt';
       return <DocConvertEngine mode={mode} />;
     }
 
