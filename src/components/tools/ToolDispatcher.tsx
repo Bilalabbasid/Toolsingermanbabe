@@ -1,38 +1,152 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { ToolDefinition } from '@/types/tool';
-import { PdfMergeEngine } from '@/components/engines/PdfMergeEngine';
-import { PdfSplitEngine } from '@/components/engines/PdfSplitEngine';
-import { PdfCompressEngine } from '@/components/engines/PdfCompressEngine';
-import { PdfRotateEngine } from '@/components/engines/PdfRotateEngine';
-import { PdfEditorEngine } from '@/components/engines/PdfEditorEngine';
-import { PdfSecurityEngine } from '@/components/engines/PdfSecurityEngine';
-import { PdfRedactionEngine } from '@/components/engines/PdfRedactionEngine';
-import { PdfSignEngine } from '@/components/engines/PdfSignEngine';
-import { PdfWatermarkEngine } from '@/components/engines/PdfWatermarkEngine';
-import { PdfPageOrganizerEngine, OrganizeMode } from '@/components/engines/PdfPageOrganizerEngine';
-import { PdfMetadataEngine, MetadataMode } from '@/components/engines/PdfMetadataEngine';
-import { PdfToImageEngine } from '@/components/engines/PdfToImageEngine';
-import { ImageConvertEngine } from '@/components/engines/ImageConvertEngine';
-import { ImageCompressEngine } from '@/components/engines/ImageCompressEngine';
-import { ImageResizeEngine } from '@/components/engines/ImageResizeEngine';
-import { ImageCropEngine } from '@/components/engines/ImageCropEngine';
-import { ImageRotateFlipEngine } from '@/components/engines/ImageRotateFlipEngine';
-import { ImageEffectsEngine } from '@/components/engines/ImageEffectsEngine';
-import { ImageDpiEngine } from '@/components/engines/ImageDpiEngine';
-import { FaviconEngine } from '@/components/engines/FaviconEngine';
-import { DesignConvertEngine, DesignConvertMode } from '@/components/engines/DesignConvertEngine';
-import { OcrEngine } from '@/components/engines/OcrEngine';
-import { DocConvertEngine, DocConvertMode } from '@/components/engines/DocConvertEngine';
-import { TextUtilityEngine } from '@/components/engines/TextUtilityEngine';
-import { DevUtilityEngine } from '@/components/engines/DevUtilityEngine';
-import { MediaEngine } from '@/components/engines/MediaEngine';
-import { ArchiveEngine } from '@/components/engines/ArchiveEngine';
-import { PdfHeaderFooterEngine, HeaderFooterMode } from '@/components/engines/PdfHeaderFooterEngine';
-import { PdfCompareEngine } from '@/components/engines/PdfCompareEngine';
-import { PdfRepairOptimizeEngine, RepairOptimizeMode } from '@/components/engines/PdfRepairOptimizeEngine';
-import { PdfExtractEngine, ExtractMode } from '@/components/engines/PdfExtractEngine';
+import type { OrganizeMode } from '@/components/engines/PdfPageOrganizerEngine';
+import type { MetadataMode } from '@/components/engines/PdfMetadataEngine';
+import type { DesignConvertMode } from '@/components/engines/DesignConvertEngine';
+import type { DocConvertMode } from '@/components/engines/DocConvertEngine';
+import type { HeaderFooterMode } from '@/components/engines/PdfHeaderFooterEngine';
+import type { RepairOptimizeMode } from '@/components/engines/PdfRepairOptimizeEngine';
+import type { ExtractMode } from '@/components/engines/PdfExtractEngine';
+
+// Zero-CLS Skeleton Loader for asynchronous engine chunk hydration
+function EngineSkeleton() {
+  return (
+    <div className="w-full min-h-[320px] bg-slate-50/70 border-2 border-dashed border-slate-200/80 rounded-2xl flex flex-col items-center justify-center p-8 animate-pulse">
+      <div className="w-12 h-12 bg-slate-200 rounded-2xl mb-4" />
+      <div className="h-4 w-44 bg-slate-200 rounded-md mb-2" />
+      <div className="h-3 w-28 bg-slate-200 rounded-md" />
+    </div>
+  );
+}
+
+// Dynamic Imports with Isolated Code-Splitting Chunks
+const PdfMergeEngine = dynamic(() => import('@/components/engines/PdfMergeEngine').then((m) => m.PdfMergeEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfSplitEngine = dynamic(() => import('@/components/engines/PdfSplitEngine').then((m) => m.PdfSplitEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfCompressEngine = dynamic(() => import('@/components/engines/PdfCompressEngine').then((m) => m.PdfCompressEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfRotateEngine = dynamic(() => import('@/components/engines/PdfRotateEngine').then((m) => m.PdfRotateEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfEditorEngine = dynamic(() => import('@/components/engines/PdfEditorEngine').then((m) => m.PdfEditorEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfSecurityEngine = dynamic(() => import('@/components/engines/PdfSecurityEngine').then((m) => m.PdfSecurityEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfRedactionEngine = dynamic(() => import('@/components/engines/PdfRedactionEngine').then((m) => m.PdfRedactionEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfSignEngine = dynamic(() => import('@/components/engines/PdfSignEngine').then((m) => m.PdfSignEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfWatermarkEngine = dynamic(() => import('@/components/engines/PdfWatermarkEngine').then((m) => m.PdfWatermarkEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfPageOrganizerEngine = dynamic(() => import('@/components/engines/PdfPageOrganizerEngine').then((m) => m.PdfPageOrganizerEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfMetadataEngine = dynamic(() => import('@/components/engines/PdfMetadataEngine').then((m) => m.PdfMetadataEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfToImageEngine = dynamic(() => import('@/components/engines/PdfToImageEngine').then((m) => m.PdfToImageEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageConvertEngine = dynamic(() => import('@/components/engines/ImageConvertEngine').then((m) => m.ImageConvertEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageCompressEngine = dynamic(() => import('@/components/engines/ImageCompressEngine').then((m) => m.ImageCompressEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageResizeEngine = dynamic(() => import('@/components/engines/ImageResizeEngine').then((m) => m.ImageResizeEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageCropEngine = dynamic(() => import('@/components/engines/ImageCropEngine').then((m) => m.ImageCropEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageRotateFlipEngine = dynamic(() => import('@/components/engines/ImageRotateFlipEngine').then((m) => m.ImageRotateFlipEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageEffectsEngine = dynamic(() => import('@/components/engines/ImageEffectsEngine').then((m) => m.ImageEffectsEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ImageDpiEngine = dynamic(() => import('@/components/engines/ImageDpiEngine').then((m) => m.ImageDpiEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const FaviconEngine = dynamic(() => import('@/components/engines/FaviconEngine').then((m) => m.FaviconEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const DesignConvertEngine = dynamic(() => import('@/components/engines/DesignConvertEngine').then((m) => m.DesignConvertEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const OcrEngine = dynamic(() => import('@/components/engines/OcrEngine').then((m) => m.OcrEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const DocConvertEngine = dynamic(() => import('@/components/engines/DocConvertEngine').then((m) => m.DocConvertEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const TextUtilityEngine = dynamic(() => import('@/components/engines/TextUtilityEngine').then((m) => m.TextUtilityEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const DevUtilityEngine = dynamic(() => import('@/components/engines/DevUtilityEngine').then((m) => m.DevUtilityEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const MediaEngine = dynamic(() => import('@/components/engines/MediaEngine').then((m) => m.MediaEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const ArchiveEngine = dynamic(() => import('@/components/engines/ArchiveEngine').then((m) => m.ArchiveEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfHeaderFooterEngine = dynamic(() => import('@/components/engines/PdfHeaderFooterEngine').then((m) => m.PdfHeaderFooterEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfCompareEngine = dynamic(() => import('@/components/engines/PdfCompareEngine').then((m) => m.PdfCompareEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfRepairOptimizeEngine = dynamic(() => import('@/components/engines/PdfRepairOptimizeEngine').then((m) => m.PdfRepairOptimizeEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
+const PdfExtractEngine = dynamic(() => import('@/components/engines/PdfExtractEngine').then((m) => m.PdfExtractEngine), {
+  loading: EngineSkeleton,
+  ssr: false,
+});
 
 interface ToolDispatcherProps {
   tool: ToolDefinition;

@@ -1053,42 +1053,46 @@ export function PdfEditorEngine() {
             </div>
 
             {/* Middle Zoom & Undo Controls */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-2" role="toolbar" aria-label="Ansichts- und Verlaufswerkzeuge">
               <button
                 onClick={handleUndo}
                 disabled={historyIndex <= 0}
-                className="p-1.5 text-slate-600 dark:text-slate-300 disabled:opacity-30 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                className="p-1.5 text-slate-600 dark:text-slate-300 disabled:opacity-30 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                 title="Rückgängig (Strg+Z)"
+                aria-label="Rückgängig (Strg+Z)"
               >
-                <Undo className="w-4 h-4" />
+                <Undo className="w-4 h-4" aria-hidden="true" />
               </button>
               <button
                 onClick={handleRedo}
                 disabled={historyIndex >= history.length - 1}
-                className="p-1.5 text-slate-600 dark:text-slate-300 disabled:opacity-30 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                className="p-1.5 text-slate-600 dark:text-slate-300 disabled:opacity-30 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                 title="Wiederholen (Strg+Y)"
+                aria-label="Wiederholen (Strg+Y)"
               >
-                <Redo className="w-4 h-4" />
+                <Redo className="w-4 h-4" aria-hidden="true" />
               </button>
 
-              <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
+              <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" aria-hidden="true" />
 
               <button
                 onClick={() => setZoom((z) => Math.max(50, z - 15))}
-                className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                 title="Verkleinern"
+                aria-label="Verkleinern"
               >
-                <ZoomOut className="w-4 h-4" />
+                <ZoomOut className="w-4 h-4" aria-hidden="true" />
               </button>
-              <span className="text-xs font-mono font-medium text-slate-600 dark:text-slate-300 min-w-[45px] text-center">
+              <span className="text-xs font-mono font-medium text-slate-600 dark:text-slate-300 min-w-[45px] text-center" aria-live="polite">
                 {zoom}%
               </span>
               <button
                 onClick={() => setZoom((z) => Math.min(200, z + 15))}
-                className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                 title="Vergrößern"
+                aria-label="Vergrößern"
               >
-                <ZoomIn className="w-4 h-4" />
+                <ZoomIn className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
@@ -1096,16 +1100,18 @@ export function PdfEditorEngine() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowMobileProps(!showMobileProps)}
-                className="lg:hidden p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                className="lg:hidden p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
                 title="Eigenschaften"
+                aria-label="Eigenschaften einblenden"
               >
-                <Sliders className="w-4 h-4" />
+                <Sliders className="w-4 h-4" aria-hidden="true" />
               </button>
               <button
                 onClick={exportEditedPdf}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-sm flex items-center gap-2 transition"
+                aria-label="Bearbeitetes PDF exportieren und herunterladen"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4" aria-hidden="true" />
                 <span>Exportieren</span>
               </button>
             </div>
@@ -1113,7 +1119,7 @@ export function PdfEditorEngine() {
 
           {/* Distinction Banner */}
           <div className="bg-sky-50 dark:bg-sky-950/40 border-b border-sky-100 dark:border-sky-900/40 px-4 py-1.5 text-[11px] text-sky-800 dark:text-sky-300 flex items-center gap-2">
-            <Info className="w-3.5 h-3.5 shrink-0 text-sky-600 dark:text-sky-400" />
+            <Info className="w-3.5 h-3.5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
             <span>
               <strong>Rechtssichere Bearbeitung:</strong> Text, Formen, Zeichnungen und Schwärzungen werden als normgerechte Vektor- und Textebenen präzise über das Originaldokument eingebettet.
             </span>
@@ -1122,100 +1128,124 @@ export function PdfEditorEngine() {
           {/* 3-Panel Main Workspace */}
           <div className="flex-1 flex flex-col lg:flex-row relative overflow-hidden">
             {/* LEFT TOOL PANEL */}
-            <div className="w-full lg:w-16 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex lg:flex-col items-center justify-start py-2 lg:py-4 px-2 gap-1.5 overflow-x-auto lg:overflow-y-auto shrink-0 z-10">
+            <div 
+              role="toolbar" 
+              aria-label="PDF-Editor Werkzeugleiste"
+              className="w-full lg:w-16 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex lg:flex-col items-center justify-start py-2 lg:py-4 px-2 gap-1.5 overflow-x-auto lg:overflow-y-auto shrink-0 z-10"
+            >
               <button
                 onClick={() => setActiveTool('select')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'select' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Auswählen und verschieben"
+                aria-pressed={activeTool === 'select'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'select' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Auswählen / Verschieben"
               >
-                <MousePointer className="w-5 h-5" />
+                <MousePointer className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('text')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'text' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Text hinzufügen"
+                aria-pressed={activeTool === 'text'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'text' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Text hinzufügen"
               >
-                <Type className="w-5 h-5" />
+                <Type className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('draw')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'draw' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Freihand zeichnen"
+                aria-pressed={activeTool === 'draw'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'draw' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Freihand zeichnen"
               >
-                <PenTool className="w-5 h-5" />
+                <PenTool className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('highlight')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'highlight' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Text markieren"
+                aria-pressed={activeTool === 'highlight'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'highlight' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Text markieren"
               >
-                <Highlighter className="w-5 h-5" />
+                <Highlighter className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('whiteout')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'whiteout' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Schwärzen und abdecken"
+                aria-pressed={activeTool === 'whiteout'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'whiteout' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Schwärzen / Abdecken"
               >
-                <EyeOff className="w-5 h-5" />
+                <EyeOff className="w-5 h-5" aria-hidden="true" />
               </button>
 
-              <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 my-1 hidden lg:block" />
+              <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 my-1 hidden lg:block" aria-hidden="true" />
 
               <button
                 onClick={() => setActiveTool('rectangle')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'rectangle' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Rechteck zeichnen"
+                aria-pressed={activeTool === 'rectangle'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'rectangle' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Rechteck"
               >
-                <Square className="w-5 h-5" />
+                <Square className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('circle')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'circle' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Kreis oder Ellipse zeichnen"
+                aria-pressed={activeTool === 'circle'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'circle' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Kreis / Ellipse"
               >
-                <Circle className="w-5 h-5" />
+                <Circle className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('line')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'line' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Gerade Linie zeichnen"
+                aria-pressed={activeTool === 'line'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'line' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Linie"
               >
-                <Minus className="w-5 h-5" />
+                <Minus className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('arrow')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'arrow' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Pfeil zeichnen"
+                aria-pressed={activeTool === 'arrow'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'arrow' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Pfeil"
               >
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </button>
 
-              <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 my-1 hidden lg:block" />
+              <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 my-1 hidden lg:block" aria-hidden="true" />
 
               <button
                 onClick={() => {
                   setIsSigningInitials(false);
                   setShowSignatureModal(true);
                 }}
-                className="p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                aria-label="Unterschrift einfügen"
+                className="p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 title="Unterschrift einfügen"
               >
-                <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => imageInputRef.current?.click()}
-                className="p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                aria-label="Bild in PDF einfügen"
+                className="p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 title="Bild einfügen"
               >
-                <ImageIcon className="w-5 h-5" />
+                <ImageIcon className="w-5 h-5" aria-hidden="true" />
               </button>
               <input
                 ref={imageInputRef}
@@ -1223,40 +1253,50 @@ export function PdfEditorEngine() {
                 accept="image/png,image/jpeg"
                 onChange={handleImageUpload}
                 className="hidden"
+                aria-hidden="true"
+                tabIndex={-1}
               />
 
               <button
                 onClick={() => setActiveTool('date')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'date' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Aktuelles Datum einfügen"
+                aria-pressed={activeTool === 'date'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'date' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Datum einfügen"
               >
-                <Calendar className="w-5 h-5" />
+                <Calendar className="w-5 h-5" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('check')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'check' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Häkchen einfügen"
+                aria-pressed={activeTool === 'check'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'check' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Häkchen (✓)"
               >
-                <Check className="w-5 h-5 text-emerald-600" />
+                <Check className="w-5 h-5 text-emerald-600" aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setActiveTool('cross')}
-                className={`p-2.5 rounded-xl transition ${activeTool === 'cross' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                aria-label="Kreuz einfügen"
+                aria-pressed={activeTool === 'cross'}
+                className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'cross' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                 title="Kreuz (✗)"
               >
-                <CrossIcon className="w-5 h-5 text-red-600" />
+                <CrossIcon className="w-5 h-5 text-red-600" aria-hidden="true" />
               </button>
 
-              <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 my-1 hidden lg:block" />
+              <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 my-1 hidden lg:block" aria-hidden="true" />
 
               <button
                 onClick={() => setShowMobilePages(!showMobilePages)}
-                className="p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                aria-label="Seitenübersicht umschalten"
+                aria-expanded={showMobilePages}
+                className="p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 title="Seitenübersicht"
               >
-                <Layers className="w-5 h-5" />
+                <Layers className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 

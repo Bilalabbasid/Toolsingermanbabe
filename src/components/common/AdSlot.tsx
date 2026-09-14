@@ -92,13 +92,13 @@ export function AdSlot({
       ref={containerRef}
       role="complementary"
       aria-label="Werbung"
-      className={`w-full mx-auto my-8 px-4 flex flex-col items-center justify-center select-none ${className}`}
+      className={`w-full mx-auto my-5 sm:my-8 px-2 sm:px-4 flex flex-col items-center justify-center select-none ${className}`}
     >
       <div
-        className={`w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 p-3 flex flex-col items-center justify-between text-center overflow-hidden transition-all duration-200 ${selectedStyle}`}
+        className={`w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 p-2 sm:p-3 flex flex-col items-center justify-between text-center overflow-hidden transition-all duration-200 ${selectedStyle}`}
       >
         {/* Compliance Header Disclaimer (Distinctly labeled per AdSense policies) */}
-        <div className="w-full flex items-center justify-between px-2 mb-1.5 text-[10px] text-slate-400 font-medium">
+        <div className="w-full flex items-center justify-between px-1.5 sm:px-2 mb-1 text-[9px] sm:text-[10px] text-slate-400 font-medium">
           <span className="uppercase tracking-wider font-semibold text-slate-400">
             Anzeige
           </span>
@@ -106,7 +106,7 @@ export function AdSlot({
             href="/de/preise"
             className="hover:text-sky-600 transition underline underline-offset-2"
           >
-            Werbefrei mit CoolWave Pro
+            Werbefrei mit Pro
           </Link>
         </div>
 
@@ -122,11 +122,11 @@ export function AdSlot({
               data-full-width-responsive="true"
             />
           ) : (
-            <div className="py-4 px-6 flex flex-col items-center justify-center text-center">
-              <span className="text-xs font-semibold text-slate-500">
+            <div className="py-2.5 sm:py-4 px-3 sm:px-6 flex flex-col items-center justify-center text-center">
+              <span className="text-[11px] sm:text-xs font-semibold text-slate-500">
                 CoolWave Partner-Netzwerk
               </span>
-              <span className="text-[11px] text-slate-400 mt-0.5">
+              <span className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
                 Konfigurierbarer Werbeplatz • Gesichert durch Google AdSense Richtlinien
               </span>
             </div>

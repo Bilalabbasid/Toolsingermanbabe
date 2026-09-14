@@ -22,8 +22,14 @@ export default async function LocalizedLayout({
       data-locale={locale}
       className="min-h-screen flex flex-col bg-slate-50/40 text-slate-900 selection:bg-sky-500 selection:text-white"
     >
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-sky-600 focus:text-white focus:rounded-xl focus:shadow-xl focus:font-bold focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 transition-all"
+      >
+        Zum Hauptinhalt springen
+      </a>
       <Header />
-      <main className="flex-1">{children}</main>
+      <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">{children}</main>
       <Footer />
       <CookieBanner />
     </div>

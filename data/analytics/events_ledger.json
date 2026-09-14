@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-09-14T18:04:27.357Z",
+  "updatedAt": "2026-09-14T19:21:55.644Z",
   "aggregates": {
     "pdf-komprimieren": {
       "toolSlug": "pdf-komprimieren",
-      "views": 1420,
+      "views": 1424,
       "uploadsStarted": 1170,
       "uploadsCompleted": 1120,
       "conversionsStarted": 1120,

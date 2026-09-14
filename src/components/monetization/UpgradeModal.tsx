@@ -1,17 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Sparkles, 
   Check, 
-  Zap, 
-  ShieldCheck, 
   ArrowRight, 
-  Loader2, 
-  Layers, 
-  Lock, 
-  FileText 
+  Loader2 
 } from 'lucide-react';
 import { getPlan, formatPlanPrice, calculateAnnualSavings } from '@/config/plans.config';
 import { setClientSubscription } from '@/lib/monetization/subscription';
@@ -33,11 +28,29 @@ export function UpgradeModal({
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('yearly');
   const [isLoading, setIsLoading] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       trackProViewed(triggerReason);
+      document.body.style.overflow = 'hidden';
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          onClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
     }
-  }, [isOpen, triggerReason]);
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, triggerReason, onClose]);
 
   if (!isOpen) return null;
 
@@ -80,36 +93,52 @@ export function UpgradeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div 
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="upgrade-modal-heading"
+      aria-describedby="upgrade-modal-description"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-900/75 backdrop-blur-xs animate-fade-in overflow-y-auto"
+      onClick={onClose}
+    >
+      <div 
+        className="relative w-full max-w-xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col animate-scale-up"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header Ribbon */}
-        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-sky-900 p-6 sm:p-8 text-white relative">
+        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-sky-900 p-4 sm:p-7 text-white relative shrink-0">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
-            aria-label="Schließen"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition touch-manipulation cursor-pointer"
+            aria-label="Upgrade-Dialog schließen"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold mb-3">
-            <Sparkles className="w-3.5 h-3.5 fill-amber-400" />
-            CoolWave Pro Upgrade
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[11px] sm:text-xs font-bold mb-2 sm:mb-3">
+            <Sparkles className="w-3.5 h-3.5 fill-amber-400" aria-hidden="true" />
+            <span>CoolWave Pro Upgrade</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-            Arbeiten Sie schneller & ohne Grenzen
+          <h2 id="upgrade-modal-heading" className="text-lg sm:text-2xl font-black tracking-tight pr-8">
+            Arbeiten Sie schneller &amp; ohne Grenzen
           </h2>
-          <p className="text-xs sm:text-sm text-indigo-200 mt-1 max-w-md">
+          <p id="upgrade-modal-description" className="text-[11px] sm:text-xs text-indigo-200 mt-1 max-w-md line-clamp-2 sm:line-clamp-none">
             {triggerReason}
           </p>
 
           {/* Billing interval switch */}
-          <div className="mt-5 inline-flex items-center p-1 rounded-xl bg-slate-900/60 border border-indigo-400/20">
+          <div 
+            role="radiogroup" 
+            aria-label="Abrechnungsintervall"
+            className="mt-3 sm:mt-5 inline-flex flex-wrap items-center p-1 rounded-xl bg-slate-900/60 border border-indigo-400/20 max-w-full"
+          >
             <button
               type="button"
+              role="radio"
+              aria-checked={interval === 'monthly'}
               onClick={() => setInterval('monthly')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition touch-manipulation cursor-pointer ${
                 interval === 'monthly'
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : 'text-indigo-200 hover:text-white'
@@ -119,24 +148,26 @@ export function UpgradeModal({
             </button>
             <button
               type="button"
+              role="radio"
+              aria-checked={interval === 'yearly'}
               onClick={() => setInterval('yearly')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 touch-manipulation cursor-pointer ${
                 interval === 'yearly'
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : 'text-indigo-200 hover:text-white'
               }`}
             >
               <span>Jährlich ({formatPlanPrice(proPlan, 'yearly')})</span>
-              <span className="px-1.5 py-0.5 rounded bg-emerald-500 text-white text-[10px] font-extrabold">
+              <span className="px-1.5 py-0.5 rounded bg-emerald-500 text-white text-[9px] font-extrabold">
                 -{savings}%
               </span>
             </button>
           </div>
         </div>
 
-        {/* Content Body */}
-        <div className="p-6 sm:p-8 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        {/* Scrollable Content Body */}
+        <div className="p-4 sm:p-7 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3.5">
             {[
               { title: '500 MB Dateigröße', desc: '10x größere Dateien verarbeiten' },
               { title: 'Stapelverarbeitung (50 Dateien)', desc: 'Alle Dokumente gleichzeitig konvertieren' },
@@ -145,7 +176,7 @@ export function UpgradeModal({
               { title: 'Unbegrenzte Hochpräzisions-OCR', desc: 'Gescannte Dokumente in Text wandeln' },
               { title: '30 Tage Konvertierungs-Historie', desc: 'Frühere Ergebnisse jederzeit erneut laden' },
             ].map((perk, idx) => (
-              <div key={idx} className="flex items-start gap-2.5 p-2 rounded-xl">
+              <div key={idx} className="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50/60 sm:bg-transparent">
                 <div className="p-1 rounded-md bg-emerald-100 text-emerald-700 shrink-0 mt-0.5">
                   <Check className="w-3.5 h-3.5" />
                 </div>
@@ -157,32 +188,32 @@ export function UpgradeModal({
             ))}
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900">
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div className="text-center sm:text-left w-full sm:w-auto">
+              <div className="text-xl sm:text-2xl font-black text-slate-900">
                 {formatPlanPrice(proPlan, interval)}
                 <span className="text-xs font-normal text-slate-500 ml-1">/ Monat</span>
               </div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[10px] sm:text-[11px] text-slate-400">
                 {interval === 'yearly' ? 'Jährlich abgerechnet (59,00 €/Jahr)' : 'Monatlich kündbar'} • Inkl. MwSt.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex flex-col-reverse sm:flex-row items-center gap-2 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleInstantActivate}
-                className="px-3 py-3 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 transition whitespace-nowrap"
+                className="w-full sm:w-auto min-h-[44px] px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 active:bg-slate-100 transition whitespace-nowrap touch-manipulation"
                 title="Sofort im Browser für diesen Browser aktivieren"
               >
-                Pro aktivieren
+                Lokal testen
               </button>
 
               <button
                 type="button"
                 onClick={handleCheckout}
                 disabled={isLoading}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md transition disabled:opacity-50"
+                className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-sm font-bold shadow-md transition disabled:opacity-50 touch-manipulation active:scale-[0.98]"
               >
                 {isLoading ? (
                   <>

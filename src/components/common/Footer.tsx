@@ -7,12 +7,12 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <footer className="bg-slate-900 text-slate-300 pt-12 sm:pt-16 pb-12 safe-area-bottom border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Trust Badges Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-12 mb-12 border-b border-slate-800">
-          <div className="flex items-start gap-3.5">
-            <div className="p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 border border-slate-700">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 pb-8 sm:pb-12 mb-8 sm:mb-12 border-b border-slate-800">
+          <div className="flex items-start gap-3.5 p-3 sm:p-0 rounded-xl bg-slate-800/50 sm:bg-transparent border border-slate-700/50 sm:border-0">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 border border-slate-700">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -23,8 +23,8 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3.5">
-            <div className="p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 border border-slate-700">
+          <div className="flex items-start gap-3.5 p-3 sm:p-0 rounded-xl bg-slate-800/50 sm:bg-transparent border border-slate-700/50 sm:border-0">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 border border-slate-700">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
@@ -35,8 +35,8 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3.5">
-            <div className="p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 border border-slate-700">
+          <div className="flex items-start gap-3.5 p-3 sm:p-0 rounded-xl bg-slate-800/50 sm:bg-transparent border border-slate-700/50 sm:border-0">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 border border-slate-700">
               <Lock className="w-5 h-5" />
             </div>
             <div>
@@ -49,40 +49,40 @@ export function Footer() {
         </div>
 
         {/* Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12 text-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 mb-10 sm:mb-12 text-sm">
           {/* Col 1: PDF Tools */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
               Beliebte PDF-Tools
             </h3>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
-                <Link href="/de/pdf-zusammenfuegen" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-zusammenfuegen" className="py-1 block hover:text-white transition-colors">
                   PDF zusammenfügen
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-komprimieren" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-komprimieren" className="py-1 block hover:text-white transition-colors">
                   PDF komprimieren
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-bearbeiten" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-bearbeiten" className="py-1 block hover:text-white transition-colors">
                   PDF bearbeiten
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-teilen" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-teilen" className="py-1 block hover:text-white transition-colors">
                   PDF teilen
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-unterschreiben" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-unterschreiben" className="py-1 block hover:text-white transition-colors">
                   PDF unterschreiben
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-in-word-umwandeln" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-in-word-umwandeln" className="py-1 block hover:text-white transition-colors">
                   PDF in Word umwandeln
                 </Link>
               </li>
@@ -91,37 +91,37 @@ export function Footer() {
 
           {/* Col 2: Bild Tools */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
               Bild-Konverter
             </h3>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
-                <Link href="/de/jpg-in-png-umwandeln" className="hover:text-white transition-colors">
+                <Link href="/de/jpg-in-png-umwandeln" className="py-1 block hover:text-white transition-colors">
                   JPG in PNG umwandeln
                 </Link>
               </li>
               <li>
-                <Link href="/de/png-in-jpg-umwandeln" className="hover:text-white transition-colors">
+                <Link href="/de/png-in-jpg-umwandeln" className="py-1 block hover:text-white transition-colors">
                   PNG in JPG umwandeln
                 </Link>
               </li>
               <li>
-                <Link href="/de/jpg-in-webp-umwandeln" className="hover:text-white transition-colors">
+                <Link href="/de/jpg-in-webp-umwandeln" className="py-1 block hover:text-white transition-colors">
                   JPG in WebP umwandeln
                 </Link>
               </li>
               <li>
-                <Link href="/de/bild-komprimieren" className="hover:text-white transition-colors">
+                <Link href="/de/bild-komprimieren" className="py-1 block hover:text-white transition-colors">
                   Bild komprimieren
                 </Link>
               </li>
               <li>
-                <Link href="/de/bildgroesse-aendern" className="hover:text-white transition-colors">
+                <Link href="/de/bildgroesse-aendern" className="py-1 block hover:text-white transition-colors">
                   Bildgröße ändern
                 </Link>
               </li>
               <li>
-                <Link href="/de/jpg-in-pdf-umwandeln" className="hover:text-white transition-colors">
+                <Link href="/de/jpg-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
                   JPG in PDF umwandeln
                 </Link>
               </li>
@@ -130,114 +130,119 @@ export function Footer() {
 
           {/* Col 3: Sicherheit & OCR */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
               Sicherheit & OCR
             </h3>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
-                <Link href="/de/pdf-schuetzen" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-schuetzen" className="py-1 block hover:text-white transition-colors">
                   PDF schützen (Passwort)
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-entsperren" className="hover:text-white transition-colors">
+                <Link href="/de/pdf-passwort-entfernen" className="py-1 block hover:text-white transition-colors">
                   PDF entsperren
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-wasserzeichen" className="hover:text-white transition-colors">
-                  PDF mit Wasserzeichen
+                <Link href="/de/pdf-berechtigungen" className="py-1 block hover:text-white transition-colors">
+                  Berechtigungen verwalten
                 </Link>
               </li>
               <li>
-                <Link href="/de/ocr-pdf" className="hover:text-white transition-colors">
-                  OCR PDF (Texterkennung)
+                <Link href="/de/pdf-ocr-erkennung" className="py-1 block hover:text-white transition-colors">
+                  PDF OCR Texterkennung
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-drehen" className="hover:text-white transition-colors">
-                  PDF drehen
+                <Link href="/de/gescanntes-pdf-in-word" className="py-1 block hover:text-white transition-colors">
+                  Scan PDF in Word (OCR)
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/bild-in-text-umwandeln" className="py-1 block hover:text-white transition-colors">
+                  Bild in Text (OCR)
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Text & Utilities */}
+          {/* Col 4: Dokumente & Audio/Video */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4">
-              Text & Utilities
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
+              Office & Media
             </h3>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
-                <Link href="/de/wortzaehler" className="hover:text-white transition-colors">
-                  Wortzähler & Zeichenzähler
-                </Link>
-              </li>
-              <li>
-                <Link href="/de/json-formatter" className="hover:text-white transition-colors">
-                  JSON Formatter & Validator
-                </Link>
-              </li>
-              <li>
-                <Link href="/de/base64-umwandeln" className="hover:text-white transition-colors">
-                  Base64 Encoder / Decoder
-                </Link>
-              </li>
-              <li>
-                <Link href="/de/word-in-pdf-umwandeln" className="hover:text-white transition-colors">
+                <Link href="/de/word-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
                   Word in PDF umwandeln
                 </Link>
               </li>
               <li>
-                <Link href="/de/preise" className="hover:text-white transition-colors text-amber-400 font-medium">
-                  CoolWave Pro Pläne
+                <Link href="/de/excel-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
+                  Excel in PDF umwandeln
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/powerpoint-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
+                  PowerPoint in PDF
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/audio-konvertieren" className="py-1 block hover:text-white transition-colors">
+                  Audio konvertieren
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/video-zu-mp3" className="py-1 block hover:text-white transition-colors">
+                  Video zu MP3
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/zip-entpacken" className="py-1 block hover:text-white transition-colors">
+                  ZIP entpacken
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 5: Legal & Company */}
-          <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4">
+          {/* Col 5: Rechtliches & Service */}
+          <div className="col-span-2 sm:col-span-1">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
               Rechtliches & Service
             </h3>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
-                <Link href="/de/datenschutz" className="hover:text-white transition-colors">
+                <Link href="/de/datenschutz" className="py-1 block hover:text-white transition-colors">
                   Datenschutzerklärung
                 </Link>
               </li>
               <li>
-                <Link href="/de/impressum" className="hover:text-white transition-colors">
+                <Link href="/de/impressum" className="py-1 block hover:text-white transition-colors">
                   Impressum
                 </Link>
               </li>
               <li>
-                <Link href="/de/agb" className="hover:text-white transition-colors">
-                  Allgemeine Geschäftsbedingungen
+                <Link href="/de/agb" className="py-1 block hover:text-white transition-colors">
+                  AGB
                 </Link>
               </li>
               <li>
-                <Link href="/de/cookie-richtlinie" className="hover:text-white transition-colors">
+                <Link href="/de/cookie-richtlinie" className="py-1 block hover:text-white transition-colors">
                   Cookie-Richtlinie
                 </Link>
               </li>
               <li>
-                <CookiePreferencesButton variant="link" label="Cookie-Einstellungen" className="text-slate-400 hover:text-white text-xs" />
+                <CookiePreferencesButton variant="link" label="Cookie-Einstellungen" className="py-1 block text-slate-400 hover:text-white text-xs" />
               </li>
               <li>
-                <Link href="/de/kontakt" className="hover:text-white transition-colors text-sky-400 font-medium">
+                <Link href="/de/kontakt" className="py-1 block hover:text-white transition-colors text-sky-400 font-medium">
                   Kontakt & Support
                 </Link>
               </li>
               <li>
-                <Link href="/de/blog" className="hover:text-white transition-colors">
-                  Ratgeber & Anleitungen
-                </Link>
-              </li>
-              <li>
-                <Link href="/de/admin/analytics" className="hover:text-white transition-colors text-slate-400">
-                  Analytics Dashboard
+                <Link href="/de/preise" className="py-1 block hover:text-white transition-colors text-amber-400 font-semibold">
+                  CoolWave Pro
                 </Link>
               </li>
             </ul>
@@ -245,12 +250,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright & Language Selector */}
-        <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
+        <div className="pt-6 sm:pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-slate-500 text-center sm:text-left">
+          <div>
             <span>© {currentYear} CoolWave (coolwave.cool). Alle Rechte vorbehalten.</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <span className="flex items-center gap-1.5 text-slate-400">
               <Globe className="w-3.5 h-3.5" />
               <span>Deutsch (DE)</span>
