@@ -1,0 +1,5 @@
+# Google AdSense Publisher Authorization for CoolWave
+# https://coolwave.cool/ads.txt
+# Replace ca-pub-XXXXXXXXXXXXXXXX with your approved AdSense Publisher ID upon deployment
+
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

@@ -1,4 +1,6 @@
 import { ToolDefinition } from '@/types/tool';
+import { UTILITIES_TOOLS } from './utilities.config';
+import { MEDIA_ARCHIVE_TOOLS } from './media_archive.config';
 
 export const TOOLS_CONFIG: ToolDefinition[] = [
   // ==========================================
@@ -2930,123 +2932,14 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
   },
 
   // ==========================================
-  // TEXT & DEVELOPER UTILITIES
+  // TEXT & DEVELOPER UTILITIES (24 TOOLS)
   // ==========================================
-  {
-    id: 'wortzaehler',
-    slug: 'wortzaehler',
-    category: 'utilities',
-    sourceFormats: ['.txt', '.md'],
-    targetFormats: ['.txt'],
-    nameDe: 'Wortzähler & Textanalyse',
-    shortDescriptionDe: 'Analysieren Sie Texte sofort: Wörter, Zeichen mit/ohne Leerzeichen, Absätze, Zeilen und geschätzte Lesezeit.',
-    titleDe: 'Wortzähler online – Wörter, Zeichen & Lesezeit zählen | CoolWave',
-    metaDescriptionDe: 'Kostenloser Wortzähler und Zeichenzähler. Zählt Wörter, Zeichen, Absätze und berechnet die Lesezeit in Echtzeit im Browser.',
-    h1De: 'Wortzähler & Zeichenzähler online',
-    introDe: 'Ob Hausarbeit, SEO-Artikel, Tweet oder Vortrag: Mit unserem interaktiven Textanalyse-Tool behalten Sie Längenbegrenzungen im Blick. Die Zählung von Wörtern, Zeichen (mit und ohne Leerzeichen), Absätzen und Lesezeit erfolgt in Echtzeit bei der Eingabe.',
-    howItWorksDe: [
-      { step: 1, title: 'Text einfügen', text: 'Tippen oder fügen Sie Ihren Text in das Textfeld ein.' },
-      { step: 2, title: 'Statistiken ablesen', text: 'Sehen Sie sofort Wörter, Zeichen und die geschätzte Redezeit.' },
-      { step: 3, title: 'Ergebnis kopieren', text: 'Kopieren Sie den Text bei Bedarf mit einem Klick.' }
-    ],
-    faqDe: [
-      { question: 'Wie wird die Lesezeit berechnet?', answer: 'Die Lesezeit basiert auf der durchschnittlichen Lesegeschwindigkeit eines Erwachsenen von ca. 200 Wörtern pro Minute.' }
-    ],
-    troubleshootingDe: [
-      {
-        issue: 'Zählen Bindestrich-Wörter als ein oder zwei Wörter?',
-        solution: 'Wörter mit Bindestrich (z.B. „CoolWave-Plattform“) werden standardmäßig als zusammenhängende Texteinheit gewertet.'
-      }
-    ],
-    privacyExplanationDe: '100% In-Browser Auswertung. Ihr Text wird nirgendwo gespeichert.',
-    searchKeywordsDe: ['Zeichenzähler', 'Wörter zählen online', 'Zeichen zählen ohne Leerzeichen', 'Textlänge prüfen'],
-    supportedFormats: 'Text-Eingabe',
-    freeLimits: { maxFileSizeMB: 10, maxBatch: 1 },
-    proLimits: { maxFileSizeMB: 50, maxBatch: 1 },
-    processingEngine: 'text-utility',
-    browserCapable: true,
-    serverRequired: false,
-    relatedTools: ['json-formatter', 'base64-umwandeln'],
-    icon: 'Type',
-    status: 'active'
-  },
-  {
-    id: 'json-formatter',
-    slug: 'json-formatter',
-    category: 'utilities',
-    sourceFormats: ['.json', '.txt'],
-    targetFormats: ['.json'],
-    nameDe: 'JSON Formatter & Validator',
-    shortDescriptionDe: 'Formatieren Sie unübersichtlichen oder minimierten JSON-Code sauber mit Einrückungen und prüfen Sie ihn auf Syntaxfehler.',
-    titleDe: 'JSON Formatter & Validator online – JSON formatieren | CoolWave',
-    metaDescriptionDe: 'JSON online formatieren und validieren. Minimieren, lesbar machen mit 2/4 Leerzeichen Einrückung. Syntaxfehler sofort erkennen.',
-    h1De: 'JSON Formatter & Validator – Code sauber formatieren',
-    introDe: 'Unleserliche einzeilige JSON-Antworten aus APIs sauber formatieren und validieren. Unser JSON-Formatter rückt Ihren Code wahlweise mit 2 oder 4 Leerzeichen ein oder minimiert ihn für den Produktionseinsatz.',
-    howItWorksDe: [
-      { step: 1, title: 'JSON einfügen', text: 'Fügen Sie Ihren JSON-Code in den Editor ein.' },
-      { step: 2, title: 'Formatierung wählen', text: 'Wählen Sie 2 Leerzeichen, 4 Leerzeichen oder „Kompakt minimieren“.' },
-      { step: 3, title: 'Code kopieren', text: 'Kopieren Sie das formatierte und syntaktisch geprüfte JSON.' }
-    ],
-    faqDe: [
-      { question: 'Werden Syntaxfehler genau angezeigt?', answer: 'Ja, bei ungültigem JSON markiert der Validator die exakte Position und Fehlerursache.' }
-    ],
-    troubleshootingDe: [
-      {
-        issue: 'Fehlermeldung „Unexpected token in JSON“.',
-        solution: 'Häufigste Ursachen sind einfache statt doppelter Anführungszeichen um Schlüsselnamen oder ein überflüssiges Komma am Ende einer Liste.'
-      }
-    ],
-    privacyExplanationDe: '100% In-Browser Code-Formatierung. Keine Serverübertragung.',
-    searchKeywordsDe: ['JSON formatieren', 'JSON prüfen online', 'JSON Validator Deutsch', 'JSON Minifier'],
-    supportedFormats: 'JSON / Text',
-    freeLimits: { maxFileSizeMB: 10, maxBatch: 1 },
-    proLimits: { maxFileSizeMB: 50, maxBatch: 1 },
-    processingEngine: 'text-utility',
-    browserCapable: true,
-    serverRequired: false,
-    relatedTools: ['wortzaehler', 'base64-umwandeln'],
-    icon: 'Code2',
-    status: 'active'
-  },
-  {
-    id: 'base64-umwandeln',
-    slug: 'base64-umwandeln',
-    category: 'utilities',
-    sourceFormats: ['.txt'],
-    targetFormats: ['.txt'],
-    nameDe: 'Base64 Encoder & Decoder',
-    shortDescriptionDe: 'Enkodieren und dekodieren Sie Texte und Datenstrings blitzschnell in und aus dem Base64-Format.',
-    titleDe: 'Base64 Encoder & Decoder online – Text umwandeln | CoolWave',
-    metaDescriptionDe: 'Base64 online enkodieren und dekodieren. Text sicher in Base64 umwandeln oder Base64-Strings in Klartext dekodieren.',
-    h1De: 'Base64 Encoder & Decoder online',
-    introDe: 'Konvertieren Sie beliebige Zeichenketten und Texte in das Base64-Format oder dekodieren Sie Base64-Strings zurück in lesbaren UTF-8-Klartext. Unverzichtbar für Webentwickler, API-Tests und Datenübertragungen.',
-    howItWorksDe: [
-      { step: 1, title: 'Modus wählen', text: 'Wählen Sie Enkodieren (Text zu Base64) oder Dekodieren (Base64 zu Text).' },
-      { step: 2, title: 'Text einfügen', text: 'Geben Sie den Textstring in das Eingabefeld ein.' },
-      { step: 3, title: 'Ergebnis kopieren', text: 'Kopieren Sie das umgewandelte Ergebnis mit einem Klick.' }
-    ],
-    faqDe: [
-      { question: 'Werden Sonderzeichen und Umlaute unterstützt?', answer: 'Ja, CoolWave nutzt eine vollständige UTF-8-kompatible Enkodierung, sodass auch deutsche Umlaute und Emojis fehlerfrei übertragen werden.' }
-    ],
-    troubleshootingDe: [
-      {
-        issue: 'Fehlermeldung beim Dekodieren.',
-        solution: 'Stellen Sie sicher, dass der Base64-String keine ungewollten Leerzeichen, Zeilenumbrüche oder Sonderzeichen außerhalb des Base64-Alphabets enthält.'
-      }
-    ],
-    privacyExplanationDe: '100% In-Browser Enkodierung und Dekodierung.',
-    searchKeywordsDe: ['Base64 Decoder', 'Base64 Encoder', 'Base64 Text umwandeln', 'Base64 online Deutsch'],
-    supportedFormats: 'Text zu Base64 / Base64 zu Text',
-    freeLimits: { maxFileSizeMB: 10, maxBatch: 1 },
-    proLimits: { maxFileSizeMB: 50, maxBatch: 1 },
-    processingEngine: 'text-utility',
-    browserCapable: true,
-    serverRequired: false,
-    relatedTools: ['json-formatter', 'wortzaehler'],
-    icon: 'Binary',
-    status: 'active',
-    badge: 'Kostenlos'
-  },
+  ...UTILITIES_TOOLS,
+
+  // ==========================================
+  // MEDIA & ARCHIVE UTILITIES (13 TOOLS)
+  // ==========================================
+  ...MEDIA_ARCHIVE_TOOLS,
   // ==========================================
   // IMAGE EDITING & OPTIMIZATION
   // ==========================================
@@ -4424,6 +4317,437 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     serverRequired: true,
     relatedTools: ['epub-in-pdf-umwandeln', 'txt-in-docx-umwandeln', 'txt-in-pdf-umwandeln'],
     icon: 'BookOpen',
+    status: 'active'
+  },
+  {
+    id: 'pdf-seiten-nummerieren',
+    slug: 'pdf-seiten-nummerieren',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF Seiten nummerieren',
+    shortDescriptionDe: 'Fügen Sie flexible Seitenzahlen („Seite X von Y“) mit individueller Positionierung in PDF-Dokumente ein.',
+    titleDe: 'PDF Seiten nummerieren – Seitenzahlen kostenlos online einfügen | CoolWave',
+    metaDescriptionDe: 'PDF-Seiten kostenlos und flexibel nummerieren. Wählen Sie Position, Format („Seite X von Y“) und Schriftdesign. Sicher im Browser verarbeitet.',
+    h1De: 'PDF Seiten nummerieren – Seitenzahlen einfügen',
+    introDe: 'Versehen Sie Ihre PDF-Dokumente mit professionellen Seitenzahlen. Wählen Sie individuelle Formate wie „Seite X von Y“, flexible Platzierungen und schließen Sie das Deckblatt bei Bedarf automatisch aus.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF-Datei hochladen', text: 'Ziehen Sie Ihre PDF in den Konverter oder wählen Sie sie aus.' },
+      { step: 2, title: 'Nummerierung anpassen', text: 'Wählen Sie Zahlenformat, Position (z.B. Unten-Mitte) und Schriftgröße.' },
+      { step: 3, title: 'Nummerierte PDF speichern', text: 'Klicken Sie auf „Seiten nummerieren“ und laden Sie das Dokument herunter.' }
+    ],
+    faqDe: [
+      { question: 'Kann ich das Deckblatt von der Nummerierung ausschließen?', answer: 'Ja, die Option „Deckblatt überspringen“ lässt die erste Seite frei und beginnt die Nummerierung ab Seite 2.' },
+      { question: 'Welche Formate werden unterstützt?', answer: 'Sie können beliebige Formate wählen, z.B. „Seite {n} von {total}“, „{n}/{total}“ oder einfache Ziffern „{n}“.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Verarbeitung erfolgt 100% lokal im Browser – Ihre Dokumente verlassen Ihren Computer nicht.',
+    searchKeywordsDe: ['PDF Seiten nummerieren', 'Seitenzahlen in PDF einfügen', 'PDF durchnummerieren', 'PDF Seitennummer'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-numbering',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-kopfzeile-hinzufuegen', 'pdf-fusszeile-hinzufuegen', 'pdf-wasserzeichen'],
+    icon: 'Hash',
+    status: 'active'
+  },
+  {
+    id: 'pdf-kopfzeile-hinzufuegen',
+    slug: 'pdf-kopfzeile-hinzufuegen',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF Kopfzeile hinzufügen',
+    shortDescriptionDe: 'Fügen Sie einheitliche Kopfzeilen mit Dokumententitel, Datum oder Autorenangaben in PDF-Seiten ein.',
+    titleDe: 'PDF Kopfzeile hinzufügen – Titel & Datum in PDF einfügen | CoolWave',
+    metaDescriptionDe: 'Individuelle Kopfzeilen in PDF-Dokumente einfügen. Titel, Datum oder Autorenangaben links, mittig oder rechts platzieren.',
+    h1De: 'PDF Kopfzeile hinzufügen – Einheitliche Dokumententitel',
+    introDe: 'Ergänzen Sie Ihre PDF-Seiten um einheitliche Kopfzeilen mit Dokumententiteln, Firmennamen oder Datumsangaben. Mit flexiblem 3-Zonen-Layout und optionaler Trennlinie.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF auswählen', text: 'Laden Sie Ihr PDF-Dokument hoch.' },
+      { step: 2, title: 'Kopfzeile gestalten', text: 'Geben Sie gewünschte Texte für links, mittig oder rechts ein.' },
+      { step: 3, title: 'PDF herunterladen', text: 'Wenden Sie die Kopfzeile an und speichern Sie das fertige Dokument.' }
+    ],
+    faqDe: [
+      { question: 'Kann das aktuelle Datum automatisch eingefügt werden?', answer: 'Ja, mit dem Platzhalter {date} wird automatisch das aktuelle Tagesdatum eingesetzt.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere clientseitige Verarbeitung ohne Speicherung auf externen Servern.',
+    searchKeywordsDe: ['PDF Kopfzeile', 'Kopfzeile in PDF einfügen', 'PDF Header hinzufügen'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-header-footer',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-fusszeile-hinzufuegen', 'pdf-seiten-nummerieren', 'pdf-wasserzeichen'],
+    icon: 'Layers',
+    status: 'active'
+  },
+  {
+    id: 'pdf-fusszeile-hinzufuegen',
+    slug: 'pdf-fusszeile-hinzufuegen',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF Fußzeile hinzufügen',
+    shortDescriptionDe: 'Fügen Sie rechtliche Hinweise, Vertraulichkeitsvermerke oder Copyright in die Fußzeile Ihrer PDF ein.',
+    titleDe: 'PDF Fußzeile hinzufügen – Fußnoten & Hinweistexte einbinden | CoolWave',
+    metaDescriptionDe: 'Fußzeilen mit Vertraulichkeitshinweisen, Copyright oder Seitenzahlen in PDF-Dokumente einfügen. Schnell und sicher online.',
+    h1De: 'PDF Fußzeile hinzufügen – Rechtliche Hinweise & Fußtexte',
+    introDe: 'Bringen Sie rechtliche Hinweise, Vertraulichkeitsvermerke oder Seitenzahlen am unteren Rand Ihrer PDF-Seiten an. Übersichtliche Aufteilung in Links, Mitte und Rechts.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF hochladen', text: 'Wählen Sie Ihre PDF-Datei aus.' },
+      { step: 2, title: 'Fußzeilentexte definieren', text: 'Passen Sie Text und Position der Fußnoten an.' },
+      { step: 3, title: 'Ergebnis sichern', text: 'Laden Sie Ihre mit Fußzeilen versehene PDF herunter.' }
+    ],
+    faqDe: [
+      { question: 'Kann eine Trennlinie über der Fußzeile gezeichnet werden?', answer: 'Ja, aktivieren Sie einfach das Kontrollkästchen „Dezente horizontale Trennlinie zeichnen“.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Vollständig geschützte Bearbeitung direkt im Browser.',
+    searchKeywordsDe: ['PDF Fußzeile', 'Fußzeile in PDF einfügen', 'PDF Footer hinzufügen', 'PDF Copyright Vermerk'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-header-footer',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-kopfzeile-hinzufuegen', 'pdf-seiten-nummerieren', 'pdf-wasserzeichen'],
+    icon: 'AlignLeft',
+    status: 'active'
+  },
+  {
+    id: 'pdf-vergleichen',
+    slug: 'pdf-vergleichen',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF vergleichen',
+    shortDescriptionDe: 'Zwei PDF-Dokumente seitenweise vergleichen und textliche Unterschiede farblich visualisieren.',
+    titleDe: 'PDF vergleichen – Zwei PDF-Dokumente auf Unterschiede prüfen | CoolWave',
+    metaDescriptionDe: 'Zwei PDF-Dateien online vergleichen. Textliche und visuelle Änderungen seitenweise erkennen, farblich hervorheben und als Bericht exportieren.',
+    h1De: 'PDF vergleichen – Unterschiede präzise erkennen',
+    introDe: 'Vergleichen Sie zwei Versionen eines Vertrags, Berichts oder Manuskripts. CoolWave analysiert alle Seiten semantisch und markiert hinzugefügte und gelöschte Passagen auf einen Blick.',
+    howItWorksDe: [
+      { step: 1, title: 'Beide PDFs hochladen', text: 'Laden Sie Dokument A (Original) und Dokument B (Vergleich) hoch.' },
+      { step: 2, title: 'Vergleich starten', text: 'Klicken Sie auf „Dokumente jetzt vergleichen“ zur Textanalyse.' },
+      { step: 3, title: 'Unterschiede prüfen', text: 'Sehen Sie farblich hervorgehobene Änderungen und exportieren Sie den Prüfbericht.' }
+    ],
+    faqDe: [
+      { question: 'Vergleicht das Tool nur Dateihashes oder echten Inhalt?', answer: 'CoolWave vergleicht den tatsächlichen seitenweisen Textinhalt auf Wort- und Zeichenebene und berechnet einen echten semantischen Übereinstimmungsgrad.' },
+      { question: 'Können die Unterschiede exportiert werden?', answer: 'Ja, Sie können einen detaillierten Textbericht mit allen Wortabweichungen herunterladen.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: '100% vertrauliche Client-Verarbeitung – Dokumenteninhalte bleiben auf Ihrem Gerät.',
+    searchKeywordsDe: ['PDF vergleichen', 'Zwei PDFs abgleichen', 'PDF Diff Tool', 'PDF Unterschiede finden', 'Verträge vergleichen PDF'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 2 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-compare',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-text-extrahieren', 'pdf-eigenschaften-anzeigen', 'pdf-bearbeiten'],
+    icon: 'GitCompare',
+    status: 'active'
+  },
+  {
+    id: 'pdf-reparieren',
+    slug: 'pdf-reparieren',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF reparieren',
+    shortDescriptionDe: 'Stellen Sie beschädigte oder nicht mehr lesbare PDF-Dateien wieder her.',
+    titleDe: 'PDF reparieren – Beschädigte & defekte PDF-Dateien retten | CoolWave',
+    metaDescriptionDe: 'Beschädigte PDF-Dateien online reparieren. Stellt fehlerhafte Querverweistabellen (Xref) und unvollständige Seitenstrukturen zuverlässig wieder her.',
+    h1De: 'PDF reparieren – Defekte Dokumente wiederherstellen',
+    introDe: 'Lässt sich Ihre PDF-Datei nicht mehr öffnen oder meldet der Reader einen Formatfehler? CoolWave rekonstruiert beschädigte Xref-Tabellen und holt unbeschädigte Seiteninhalte zurück.',
+    howItWorksDe: [
+      { step: 1, title: 'Defekte PDF hochladen', text: 'Wählen Sie die beschädigte PDF-Datei aus.' },
+      { step: 2, title: 'Reparatur durchführen', text: 'Klicken Sie auf „Beschädigte PDF reparieren“.' },
+      { step: 3, title: 'Gerettete PDF sichern', text: 'Laden Sie das reparierte Dokument wieder lesbar herunter.' }
+    ],
+    faqDe: [
+      { question: 'Welche Fehler können behoben werden?', answer: 'Häufige Fehler wie unvollständige Download-Trailer, korrupte Xref-Indexe, beschädigte Stream-Längen und fehlende End-of-File-Marker können erfolgreich repariert werden.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Wiederherstellung ohne Speicherung auf externen Servern.',
+    searchKeywordsDe: ['PDF reparieren', 'Defekte PDF retten', 'PDF beschädigt reparieren', 'PDF wiederherstellen'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-repair',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['pdf-optimieren', 'pdf-komprimieren', 'pdf-eigenschaften-anzeigen'],
+    icon: 'Wrench',
+    status: 'active'
+  },
+  {
+    id: 'pdf-optimieren',
+    slug: 'pdf-optimieren',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF optimieren',
+    shortDescriptionDe: 'Reduzieren Sie Dateigrößen und beschleunigen Sie Web-Ladezeiten durch Stream-Kompression.',
+    titleDe: 'PDF optimieren – Dateigröße reduzieren & Web-Ladezeit beschleunigen | CoolWave',
+    metaDescriptionDe: 'PDF-Dokumente optimieren: Unnötige Metadaten und doppelte Objekte entfernen, Datenströme komprimieren für blitzschnelles Laden.',
+    h1De: 'PDF optimieren – Schlanke & schnelle Dokumente',
+    introDe: 'Befreien Sie PDF-Dokumente von überflüssigen internen Objekten und komprimieren Sie Datenströme ohne sichtbaren Qualitätsverlust für schnelles Versenden per E-Mail.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF auswählen', text: 'Laden Sie Ihre zu große PDF-Datei hoch.' },
+      { step: 2, title: 'Optimierung anstoßen', text: 'Klicken Sie auf „PDF-Dateigröße optimieren“.' },
+      { step: 3, title: 'Optimierte PDF laden', text: 'Speichern Sie die schlankere Datei auf Ihrem Rechner.' }
+    ],
+    faqDe: [
+      { question: 'Was ist der Unterschied zu PDF komprimieren?', answer: 'Die Optimierung konzentriert sich auf die interne PDF-Struktur (Entfernung redundanter Objekte, Deflate-Stream-Kompression, Lineariserung), ohne Bildpixel aggressiv herunterzurechnen.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Schnelle Datenverarbeitung mit garantierter Datenlöschung.',
+    searchKeywordsDe: ['PDF optimieren', 'PDF schlank machen', 'PDF Stream Kompression', 'PDF für Web optimieren'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-optimize',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['pdf-komprimieren', 'pdf-reparieren', 'pdf-abflachen'],
+    icon: 'Zap',
+    status: 'active'
+  },
+  {
+    id: 'pdfa-umwandeln',
+    slug: 'pdfa-umwandeln',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF in PDF/A umwandeln',
+    shortDescriptionDe: 'Konvertieren Sie Dokumente in das revisionssichere ISO 19005-1 PDF/A-Format für Langzeitarchivierung.',
+    titleDe: 'PDF in PDF/A umwandeln – Langzeitarchivierung nach ISO 19005-1 | CoolWave',
+    metaDescriptionDe: 'PDF-Dateien in revisionssicheres PDF/A-1b für die Langzeitarchivierung konvertieren. sRGB OutputIntent und XMP-Konformität inklusive.',
+    h1De: 'PDF in PDF/A umwandeln – Revisionssichere Archivierung',
+    introDe: 'Konvertieren Sie Geschäftsberichte, Rechnungen und Verträge in das standardisierte PDF/A-1b Format nach ISO 19005-1 für lückenlose behördliche Revisionssicherheit.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF hochladen', text: 'Wählen Sie das zu archivierende Dokument aus.' },
+      { step: 2, title: 'In PDF/A umwandeln', text: 'Starten Sie die Einbettung von Farbprofilen und Archivmetadaten.' },
+      { step: 3, title: 'PDF/A herunterladen', text: 'Laden Sie Ihre archivkonforme PDF/A-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Was ist PDF/A-1b?', answer: 'PDF/A-1b ist der internationale ISO-Standard für die elektronische Langzeitarchivierung von Dokumenten. Er stellt sicher, dass Dokumente auch in Jahrzehnten noch exakt gleich angezeigt werden.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere Verarbeitung für sensible behördliche und geschäftliche Dokumente.',
+    searchKeywordsDe: ['PDF in PDFA', 'PDFA umwandeln', 'PDF ISO 19005-1', 'PDF Langzeitarchivierung', 'PDF/A-1b Konverter'],
+    supportedFormats: 'PDF zu PDF/A',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-pdfa',
+    browserCapable: true,
+    serverRequired: true,
+    relatedTools: ['pdf-optimieren', 'pdf-abflachen', 'pdf-schuetzen'],
+    icon: 'FileCheck',
+    status: 'active'
+  },
+  {
+    id: 'pdf-abflachen',
+    slug: 'pdf-abflachen',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF abflachen',
+    shortDescriptionDe: 'Brennen Sie Formulareingaben, Häkchen und Anmerkungen dauerhaft in die Seitengrafik ein.',
+    titleDe: 'PDF abflachen – Interaktive Formulare & Ebenen sperren | CoolWave',
+    metaDescriptionDe: 'Formularfelder, Kontrollkästchen und Anmerkungen in PDF fest einbrennen. Verhindert nachträgliche Bearbeitung vor dem Versand.',
+    h1De: 'PDF abflachen – Formulareingaben unveränderbar sichern',
+    introDe: 'Wandeln Sie ausgefüllte Formulare und Kommentare dauerhaft in die Seitengrafik um, sodass Empfänger die Eingaben nicht mehr verändern können.',
+    howItWorksDe: [
+      { step: 1, title: 'Ausgefüllte PDF hochladen', text: 'Wählen Sie Ihre PDF mit Formularfeldern aus.' },
+      { step: 2, title: 'Felder abflachen', text: 'Klicken Sie auf „Formulare & Anmerkungen abflachen“.' },
+      { step: 3, title: 'Gesperrte PDF speichern', text: 'Laden Sie das abwärtskompatible, geschützte Dokument herunter.' }
+    ],
+    faqDe: [
+      { question: 'Können die Formularfelder danach noch geändert werden?', answer: 'Nein, nach dem Abflachen sind alle Eingaben fester Bestandteil der Grafik und können in keinem PDF-Reader mehr umgeschrieben werden.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Lokale Ausführung direkt in Ihrem Browser – kein Datenabfluss.',
+    searchKeywordsDe: ['PDF abflachen', 'PDF flatten', 'Formularfelder sperren PDF', 'PDF interaktiv entfernen'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-flatten',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-anmerkungen-entfernen', 'pdfa-umwandeln', 'pdf-schuetzen'],
+    icon: 'Layers',
+    status: 'active'
+  },
+  {
+    id: 'pdf-anmerkungen-entfernen',
+    slug: 'pdf-anmerkungen-entfernen',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.pdf'],
+    nameDe: 'PDF Anmerkungen entfernen',
+    shortDescriptionDe: 'Löschen Sie Kommentare, Haftnotizen, Textmarkierungen und Korrekturskizzen restlos.',
+    titleDe: 'PDF Anmerkungen entfernen – Kommentare & Markierungen löschen | CoolWave',
+    metaDescriptionDe: 'Alle Anmerkungen, Haftnotizen, Markierungen und Zeichnungen mit einem Klick aus der PDF löschen. Der Grundtext bleibt unberührt.',
+    h1De: 'PDF Anmerkungen entfernen – Saubere Dokumente ohne Notizen',
+    introDe: 'Entfernen Sie interne Korrekturhinweise, Leuchtmarker-Hervorhebungen und Notizen aus PDF-Dokumenten, bevor Sie diese an externe Partner versenden.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF mit Notizen hochladen', text: 'Wählen Sie Ihre kommentierte PDF-Datei aus.' },
+      { step: 2, title: 'Anmerkungen löschen', text: 'Klicken Sie auf „Alle Anmerkungen entfernen“.' },
+      { step: 3, title: 'Saubere PDF herunterladen', text: 'Speichern Sie das bereinigte Dokument auf Ihrem PC.' }
+    ],
+    faqDe: [
+      { question: 'Bleibt der Originaltext erhalten?', answer: 'Ja, nur die überlagerten Anmerkungs-Objekte (/Annots) werden entfernt. Der gesamte Basistext und alle Bilder bleiben zu 100% erhalten.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: '100% clientseitig im Browser verarbeitet.',
+    searchKeywordsDe: ['PDF Anmerkungen entfernen', 'Kommentare aus PDF löschen', 'PDF Markierungen entfernen'],
+    supportedFormats: 'PDF zu PDF',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-annotations-remove',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-abflachen', 'pdf-metadaten-entfernen', 'pdf-schwaerzen'],
+    icon: 'MessageSquareOff',
+    status: 'active'
+  },
+  {
+    id: 'pdf-bilder-extrahieren',
+    slug: 'pdf-bilder-extrahieren',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.png', '.jpg', '.zip'],
+    nameDe: 'PDF Bilder extrahieren',
+    shortDescriptionDe: 'Extrahieren Sie alle in einer PDF eingebetteten Fotos und Abbildungen in Originalauflösung.',
+    titleDe: 'PDF Bilder extrahieren – Eingebettete Fotos & Grafiken speichern | CoolWave',
+    metaDescriptionDe: 'Alle Bilder aus einer PDF-Datei in voller Auflösung extrahieren. Einzeln herunterladen oder gebündelt als ZIP-Archiv.',
+    h1De: 'PDF Bilder extrahieren – Fotos & Grafiken exportieren',
+    introDe: 'Extrahieren Sie alle in einer PDF eingebetteten Fotos und Abbildungen in Originalqualität als PNG-Dateien – inklusive praktischem ZIP-Download.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF auswählen', text: 'Laden Sie Ihre PDF-Datei mit Bildern hoch.' },
+      { step: 2, title: 'Bilder lokalisieren', text: 'CoolWave scannt alle Seiten nach Bildobjekten.' },
+      { step: 3, title: 'Bilder herunterladen', text: 'Laden Sie einzelne Fotos oder alle Bilder als ZIP herunter.' }
+    ],
+    faqDe: [
+      { question: 'Werden die Bilder komprimiert?', answer: 'Nein, die Bilder werden in ihrer vollen Originalauflösung und Farbqualität aus den Datenströmen extrahiert.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Verarbeitung läuft lokal in Ihrem Browser – keine Übertragung.',
+    searchKeywordsDe: ['PDF Bilder extrahieren', 'Bilder aus PDF speichern', 'Fotos aus PDF extrahieren', 'PDF Image Extractor'],
+    supportedFormats: 'PDF zu Bildern (PNG/ZIP)',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-extract',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-text-extrahieren', 'pdf-in-png-umwandeln', 'pdf-in-jpg-umwandeln'],
+    icon: 'ImageIcon',
+    status: 'active'
+  },
+  {
+    id: 'pdf-text-extrahieren',
+    slug: 'pdf-text-extrahieren',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.txt'],
+    nameDe: 'PDF Text extrahieren',
+    shortDescriptionDe: 'Extrahieren Sie den gesamten Text aus einer PDF-Datei seitenweise zur Weiterverarbeitung.',
+    titleDe: 'PDF Text extrahieren – Text aus PDF-Seiten kopieren & speichern | CoolWave',
+    metaDescriptionDe: 'Den gesamten Text aus PDF-Dokumenten seitenweise extrahieren. Mit einem Klick kopieren oder als saubere TXT-Datei herunterladen.',
+    h1De: 'PDF Text extrahieren – Dokumententext weiterverwenden',
+    introDe: 'Kopieren Sie den gesamten Text Ihrer PDF-Dateien ohne störende Sonderzeichen oder Formatierungsfehler heraus und speichern Sie ihn als Textdatei.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF hochladen', text: 'Wählen Sie das Dokument mit Text aus.' },
+      { step: 2, title: 'Text auslesen', text: 'CoolWave extrahiert alle Textblöcke seitenweise.' },
+      { step: 3, title: 'Kopieren oder Speichern', text: 'Kopieren Sie den Text in die Zwischenablage oder laden Sie eine TXT-Datei herunter.' }
+    ],
+    faqDe: [
+      { question: 'Funktioniert das auch bei eingescannten PDFs?', answer: 'Für reine Bildscans ohne Textschicht nutzen Sie unser spezialisiertes Tool „Scan zu Text (OCR)“. Bei normalen PDFs wird der Text direkt digital ausgelesen.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Sichere lokale Extraktion im Browser.',
+    searchKeywordsDe: ['PDF Text extrahieren', 'Text aus PDF kopieren', 'PDF in TXT auslesen', 'PDF Text rippen'],
+    supportedFormats: 'PDF zu TXT',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-extract',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-bilder-extrahieren', 'bild-zu-text', 'pdf-in-word-umwandeln'],
+    icon: 'FileText',
+    status: 'active'
+  },
+  {
+    id: 'pdf-anhaenge-extrahieren',
+    slug: 'pdf-anhaenge-extrahieren',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.zip'],
+    nameDe: 'PDF Anhänge extrahieren',
+    shortDescriptionDe: 'Laden Sie eingebettete Dateianhänge und ZUGFeRD / Factur-X Rechnungs-XMLs herunter.',
+    titleDe: 'PDF Anhänge extrahieren – Eingebettete Dateien & ZUGFeRD-Daten | CoolWave',
+    metaDescriptionDe: 'Eingebettete Dateianhänge und ZUGFeRD / Factur-X Rechnungs-XMLs aus PDF-Dateien extrahieren und herunterladen.',
+    h1De: 'PDF Anhänge extrahieren – Verborgene Dateien sichern',
+    introDe: 'Laden Sie in PDF-Dokumenten eingebettete Begleitdateien oder Rechnungsdaten (wie ZUGFeRD-XML) schnell und unkompliziert herunter.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF auswählen', text: 'Laden Sie die PDF mit Anhängen hoch.' },
+      { step: 2, title: 'Dateibaum scannen', text: 'CoolWave durchsucht das Dokument nach eingebetteten Dateien.' },
+      { step: 3, title: 'Dateien herunterladen', text: 'Speichern Sie gefundene Anhänge einzeln oder als ZIP-Archiv.' }
+    ],
+    faqDe: [
+      { question: 'Was sind typische PDF-Dateianhänge?', answer: 'Häufig handelt es sich um elektronische XML-Rechnungsdaten (ZUGFeRD / Factur-X), Quelldateien, Kalkulationstabellen oder hochauflösende Begleitgrafiken.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: 'Keine Übertragung auf Server – Extraktion erfolgt auf Ihrem Gerät.',
+    searchKeywordsDe: ['PDF Anhänge extrahieren', 'ZUGFeRD XML extrahieren', 'Embedded Files PDF', 'Dateianhang aus PDF speichern'],
+    supportedFormats: 'PDF zu Anhängen (ZIP)',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-extract',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-bilder-extrahieren', 'pdf-eigenschaften-anzeigen', 'pdf-text-extrahieren'],
+    icon: 'Paperclip',
+    status: 'active'
+  },
+  {
+    id: 'pdf-eigenschaften-anzeigen',
+    slug: 'pdf-eigenschaften-anzeigen',
+    category: 'pdf',
+    sourceFormats: ['.pdf'],
+    targetFormats: ['.json', '.txt'],
+    nameDe: 'PDF Eigenschaften anzeigen',
+    shortDescriptionDe: 'Analysieren Sie technische PDF-Eigenschaften: Maße (mm/pt), PDF-Version, Formularfelder und PDF/A-Status.',
+    titleDe: 'PDF Eigenschaften anzeigen – Version, Maße & Metadaten prüfen | CoolWave',
+    metaDescriptionDe: 'Detaillierte PDF-Eigenschaften analysieren: Seitenmaße (mm/pt), PDF-Version, Erstellungsdatum, Formularfelder und PDF/A-Konformität.',
+    h1De: 'PDF Eigenschaften anzeigen – Vollständige Dokumentenanalyse',
+    introDe: 'Erhalten Sie detaillierten Einblick in die technischen Eigenschaften Ihrer PDF-Datei: Seitenabmessungen, PDF-Version, Sicherheitseinstellungen und Formularfelder.',
+    howItWorksDe: [
+      { step: 1, title: 'PDF hochladen', text: 'Wählen Sie das zu prüfende PDF-Dokument aus.' },
+      { step: 2, title: 'Eigenschaften einsehen', text: 'Betrachten Sie Version, Maße, Autoren und PDF/A-Status.' },
+      { step: 3, title: 'Report exportieren', text: 'Exportieren Sie die technischen Daten bei Bedarf als JSON-Bericht.' }
+    ],
+    faqDe: [
+      { question: 'Welche technischen Daten werden angezeigt?', answer: 'PDF-Version, exakte Seitenmaße in Millimetern und Punkten, Seitenzahl, Formularfelderanzahl, PDF/A-Konformität sowie alle Standardmetadaten.' }
+    ],
+    troubleshootingDe: [],
+    privacyExplanationDe: '100% anonyme und sichere Prüfung direkt im Browser.',
+    searchKeywordsDe: ['PDF Eigenschaften anzeigen', 'PDF Version prüfen', 'PDF Seitenmaße ermitteln', 'PDF Metadaten Viewer'],
+    supportedFormats: 'PDF Inspektion',
+    freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
+    proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
+    processingEngine: 'pdf-metadata',
+    browserCapable: true,
+    serverRequired: false,
+    relatedTools: ['pdf-metadaten-anzeigen', 'pdf-metadaten-entfernen', 'pdf-vergleichen'],
+    icon: 'Info',
     status: 'active'
   }
 ];

@@ -1,37 +1,138 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { adsConfig, getAdSlotConfig } from '@/config/ads.config';
+import { getClientSubscription } from '@/lib/monetization/subscription';
+import { getCookieConsent } from '@/components/common/CookieBanner';
+import { canDisplayAds, loadAdSenseScript, requestAdRender } from '@/lib/monetization/adsense';
 
 interface AdSlotProps {
+  slotKey?: 'homepage_top' | 'homepage_bottom' | 'category_top' | 'tool_content' | 'sidebar';
   slotId?: string;
-  format?: 'horizontal' | 'rectangle' | 'content';
+  format?: 'horizontal' | 'rectangle' | 'content' | 'leaderboard';
   className?: string;
 }
 
-export function AdSlot({ slotId, format = 'horizontal', className = '' }: AdSlotProps) {
-  // Respect environment variable if ads are globally disabled or Pro user
-  const isAdsEnabled = process.env.NEXT_PUBLIC_ENABLE_ADS === 'true';
+export function AdSlot({
+  slotKey,
+  slotId: explicitSlotId,
+  format: explicitFormat,
+  className = '',
+}: AdSlotProps) {
+  const [shouldRender, setShouldRender] = useState(false);
+  const [hasAdSenseLive, setHasAdSenseLive] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  if (!isAdsEnabled) {
+  const slotConfig = slotKey ? getAdSlotConfig(slotKey) : null;
+  const activeSlotId = explicitSlotId || slotConfig?.slotId || 'coolwave-ad-default';
+  const activeFormat = explicitFormat || slotConfig?.format || 'horizontal';
+
+  const evaluateEligibility = () => {
+    const sub = getClientSubscription();
+    // 1. Pro users receive 0 ads
+    if (sub.isPro || sub.entitlements.noAds) {
+      setShouldRender(false);
+      return;
+    }
+
+    if (!adsConfig.enabled) {
+      setShouldRender(false);
+      return;
+    }
+
+    setShouldRender(true);
+
+    const consent = getCookieConsent();
+    const isConsentGranted = consent ? consent.marketing : false;
+    const hasClientId = Boolean(adsConfig.clientId && adsConfig.clientId.startsWith('ca-pub-'));
+
+    if (isConsentGranted && hasClientId) {
+      const loaded = loadAdSenseScript();
+      if (loaded) {
+        setHasAdSenseLive(true);
+        requestAdRender(activeSlotId);
+      }
+    } else {
+      setHasAdSenseLive(false);
+    }
+  };
+
+  useEffect(() => {
+    evaluateEligibility();
+
+    const handleSubChange = () => evaluateEligibility();
+    const handleConsentChange = () => evaluateEligibility();
+
+    window.addEventListener('coolwave_subscription_changed', handleSubChange);
+    window.addEventListener('coolwave_consent_updated', handleConsentChange);
+
+    return () => {
+      window.removeEventListener('coolwave_subscription_changed', handleSubChange);
+      window.removeEventListener('coolwave_consent_updated', handleConsentChange);
+    };
+  }, [slotKey, explicitSlotId]);
+
+  if (!shouldRender) {
     return null;
   }
 
-  const heightClasses = {
-    horizontal: 'h-24 sm:h-28 max-w-4xl',
-    rectangle: 'h-64 max-w-sm',
-    content: 'h-32 max-w-3xl',
-  }[format];
+  // Pre-allocated height reserves to strictly protect Core Web Vitals (0 CLS)
+  const formatStyles: Record<string, string> = {
+    leaderboard: 'min-h-[100px] sm:min-h-[110px] max-w-5xl',
+    horizontal: 'min-h-[100px] sm:min-h-[120px] max-w-4xl',
+    content: 'min-h-[120px] sm:min-h-[140px] max-w-3xl',
+    rectangle: 'min-h-[260px] max-w-sm',
+  };
+
+  const selectedStyle = formatStyles[activeFormat] || formatStyles.horizontal;
 
   return (
-    <div
-      className={`mx-auto my-8 p-3 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 flex flex-col items-center justify-center text-center text-xs text-slate-400 overflow-hidden ${heightClasses} ${className}`}
-      aria-label="Werbeplatz"
+    <aside
+      ref={containerRef}
+      role="complementary"
+      aria-label="Werbung"
+      className={`w-full mx-auto my-8 px-4 flex flex-col items-center justify-center select-none ${className}`}
     >
-      <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mb-1">
-        Anzeige
-      </span>
-      <div id={slotId || 'ad-slot-default'} className="w-full flex items-center justify-center">
-        {/* Placeholder for Google AdSense / Ad Manager script tag */}
-        <span className="text-slate-400">CoolWave Partner-Netzwerk</span>
+      <div
+        className={`w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 p-3 flex flex-col items-center justify-between text-center overflow-hidden transition-all duration-200 ${selectedStyle}`}
+      >
+        {/* Compliance Header Disclaimer (Distinctly labeled per AdSense policies) */}
+        <div className="w-full flex items-center justify-between px-2 mb-1.5 text-[10px] text-slate-400 font-medium">
+          <span className="uppercase tracking-wider font-semibold text-slate-400">
+            Anzeige
+          </span>
+          <Link
+            href="/de/preise"
+            className="hover:text-sky-600 transition underline underline-offset-2"
+          >
+            Werbefrei mit CoolWave Pro
+          </Link>
+        </div>
+
+        {/* Ad Container */}
+        <div className="w-full flex-1 flex items-center justify-center bg-white/80 rounded-xl border border-slate-100/90 overflow-hidden relative">
+          {hasAdSenseLive ? (
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block', width: '100%', height: '100%' }}
+              data-ad-client={adsConfig.clientId}
+              data-ad-slot={activeSlotId}
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          ) : (
+            <div className="py-4 px-6 flex flex-col items-center justify-center text-center">
+              <span className="text-xs font-semibold text-slate-500">
+                CoolWave Partner-Netzwerk
+              </span>
+              <span className="text-[11px] text-slate-400 mt-0.5">
+                Konfigurierbarer Werbeplatz • Gesichert durch Google AdSense Richtlinien
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </aside>
   );
 }

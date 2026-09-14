@@ -4,6 +4,29 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Shield, Settings, X } from 'lucide-react';
 
+export interface CookieConsentPreferences {
+  essential: boolean;
+  analytics: boolean;
+  marketing: boolean;
+  timestamp: string;
+}
+
+export function getCookieConsent(): CookieConsentPreferences | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem('coolwave_cookie_consent');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function openCookiePreferencesModal() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('coolwave_open_cookie_preferences'));
+  }
+}
+
 export function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
@@ -17,14 +40,34 @@ export function CookieBanner() {
         queueMicrotask(() => {
           setShowBanner(true);
         });
+      } else {
+        const parsed = JSON.parse(consent);
+        setAnalytics(!!parsed.analytics);
+        setMarketing(!!parsed.marketing);
       }
     } catch {
       // In case localStorage is blocked
     }
+
+    const handleOpen = () => {
+      try {
+        const current = getCookieConsent();
+        if (current) {
+          setAnalytics(!!current.analytics);
+          setMarketing(!!current.marketing);
+        }
+      } catch {}
+      setShowPreferences(true);
+    };
+
+    window.addEventListener('coolwave_open_cookie_preferences', handleOpen);
+    return () => {
+      window.removeEventListener('coolwave_open_cookie_preferences', handleOpen);
+    };
   }, []);
 
   const saveConsent = (allAccepted: boolean, customAnalytics = false, customMarketing = false) => {
-    const preferences = {
+    const preferences: CookieConsentPreferences = {
       essential: true,
       analytics: allAccepted || customAnalytics,
       marketing: allAccepted || customMarketing,
@@ -32,17 +75,19 @@ export function CookieBanner() {
     };
     try {
       localStorage.setItem('coolwave_cookie_consent', JSON.stringify(preferences));
+      window.dispatchEvent(new CustomEvent('coolwave_consent_updated', { detail: preferences }));
     } catch {}
     setShowBanner(false);
     setShowPreferences(false);
   };
 
-  if (!showBanner) return null;
+  if (!showBanner && !showPreferences) return null;
 
   return (
     <>
       {/* Cookie Banner Bar */}
-      <div className="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-6 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 shadow-2xl animate-fade-in">
+      {showBanner && (
+        <div className="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-6 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 shadow-2xl animate-fade-in">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3 max-w-3xl">
             <div className="p-2 rounded-lg bg-sky-600/20 text-sky-400 shrink-0 border border-sky-500/30">
@@ -86,6 +131,7 @@ export function CookieBanner() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Preferences Modal */}
       {showPreferences && (

@@ -1,8 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pdfSecurityService, PdfPermissions, RedactionZone } from '@/server/services/adapters/PdfSecurityService';
+import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
+import { validateUploadedFile } from '@/server/security/fileValidator';
+import { privacyLog } from '@/server/utils/privacyLogger';
 
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = req.headers.get('x-api-key');
+    const isPro = !!apiKey;
+
+    // 0. Rate limiting
+    const ip = getClientIp(req);
+    const rateLimit = rateLimiter.check(ip, 'security', isPro);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Zu viele Sicherheitsoperationen. Bitte warten Sie einen Moment.',
+          code: 'RATE_LIMIT_EXCEEDED',
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimit.resetSeconds),
+            'X-RateLimit-Limit': String(rateLimit.limit),
+            'X-RateLimit-Remaining': '0',
+          },
+        }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
     const action = (formData.get('action') as string) || 'protect';
@@ -14,24 +40,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
-      return NextResponse.json(
-        { error: 'Ungültiges Dateiformat. Bitte laden Sie eine PDF-Datei hoch.' },
-        { status: 400 }
-      );
-    }
-
     // Limit free file sizes to 50MB
-    if (file.size > 50 * 1024 * 1024) {
+    const maxMB = isPro ? 250 : 50;
+    if (file.size > maxMB * 1024 * 1024) {
       return NextResponse.json(
-        { error: 'Die Datei überschreitet die maximale Größe von 50 MB.' },
+        { error: `Die Datei überschreitet die maximale Größe von ${maxMB} MB.` },
         { status: 413 }
       );
     }
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const baseName = file.name.replace(/\.[^/.]+$/, '');
+
+    // Deep file validation (ensuring real %PDF- signature, not spoofed executable)
+    const validation = validateUploadedFile(buffer, file.name, 'application/pdf');
+    if (!validation.valid || validation.detectedFormat !== 'pdf') {
+      return NextResponse.json(
+        {
+          error: validation.error || 'Die hochgeladene Datei ist kein gültiges PDF-Dokument.',
+          code: validation.code || 'INVALID_PDF',
+        },
+        { status: 400 }
+      );
+    }
+
+    const safeFilename = validation.safeFilename;
+    const baseName = safeFilename.replace(/\.[^/.]+$/, '');
 
     let resultBuffer: Buffer;
     let outputFilename: string;
@@ -166,11 +200,15 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${encodeURIComponent(outputFilename)}"`,
         'X-Output-Filename': encodeURIComponent(outputFilename),
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Robots-Tag': 'noindex, nofollow, noarchive',
       },
     });
   } catch (err: unknown) {
     const errorMsg = (err as Error)?.message || 'Fehler bei der Sicherheitsverarbeitung.';
+    privacyLog('error', '[PDF Security Error]', { error: errorMsg });
     return NextResponse.json({ error: errorMsg }, { status: 422 });
   }
 }

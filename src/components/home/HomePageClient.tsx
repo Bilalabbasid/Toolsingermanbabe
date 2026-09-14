@@ -15,9 +15,23 @@ import {
 import { ToolDefinition } from '@/types/tool';
 import { AdSlot } from '@/components/common/AdSlot';
 
+import { searchToolsWithRelevance, getFormatFlow } from '@/lib/search';
+
 interface HomePageClientProps {
   initialTools: ToolDefinition[];
 }
+
+const QUICK_SEARCH_CHIPS = [
+  'PDF in Word',
+  'Komprimieren',
+  'Word in PDF',
+  'Excel in PDF',
+  'JPG in PNG',
+  'Signieren',
+  'OCR',
+  'Audio konvertieren',
+  'ZIP erstellen',
+];
 
 export function HomePageClient({ initialTools }: HomePageClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -32,16 +46,10 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
     { id: 'utilities', label: 'Text & Utilities' },
   ];
 
-  const filteredTools = initialTools.filter((tool) => {
-    const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory;
-    const matchesSearch =
-      !searchQuery.trim() ||
-      tool.nameDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.shortDescriptionDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.sourceFormats.some((e) => e.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      tool.targetFormats.some((e) => e.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  const searchResults = searchToolsWithRelevance(searchQuery, selectedCategory);
+  const filteredTools = searchQuery.trim()
+    ? searchResults.map((r) => r.tool)
+    : initialTools.filter((tool) => selectedCategory === 'all' || tool.category === selectedCategory);
 
   return (
     <div className="w-full">
@@ -64,14 +72,14 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
           </p>
 
           {/* Quick Search Input */}
-          <div className="mt-8 sm:mt-10 max-w-xl mx-auto">
+          <div className="mt-8 sm:mt-10 max-w-xl mx-auto space-y-3">
             <div className="relative flex items-center">
               <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Werkzeug suchen (z. B. PDF in Word, Komprimieren, JPG in PNG)..."
+                placeholder="Werkzeug suchen (z. B. Word, Excel, Bild, Komprimieren, OCR)..."
                 className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 text-sm sm:text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all"
               />
               {searchQuery && (
@@ -82,6 +90,25 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
                   Zurücksetzen
                 </button>
               )}
+            </div>
+
+            {/* Quick Search Suggestion Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
+              <span className="text-2xs text-slate-400 font-semibold uppercase tracking-wider mr-1">Beliebt:</span>
+              {QUICK_SEARCH_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => setSearchQuery(chip)}
+                  className={`text-2xs px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
+                    searchQuery.toLowerCase() === chip.toLowerCase()
+                      ? 'bg-sky-600 text-white border-sky-600 font-bold'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-sky-300 hover:bg-sky-50/50'
+                  }`}
+                >
+                  {chip}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -136,11 +163,16 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
                     <FileText className="w-5 h-5" />
                   </div>
 
-                  {tool.badge && (
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-100">
-                      {tool.badge}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {tool.badge && (
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+                        {tool.badge}
+                      </span>
+                    )}
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                      {getFormatFlow(tool)}
                     </span>
-                  )}
+                  </div>
                 </div>
 
                 <h2 className="font-bold text-slate-900 text-base group-hover:text-sky-700 transition-colors mb-1.5">
@@ -224,6 +256,9 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
           </div>
         </div>
       </section>
+
+      {/* Policy-Compliant Homepage Content Ad Placement */}
+      <AdSlot slotKey="homepage_bottom" className="my-6 max-w-5xl" />
 
       {/* Pro Upsell Callout */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

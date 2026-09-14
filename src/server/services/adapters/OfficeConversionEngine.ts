@@ -18,6 +18,7 @@ import * as XLSX from 'xlsx';
 import PptxGenJS from 'pptxgenjs';
 import mammoth from 'mammoth';
 import JSZip from 'jszip';
+import { safeLoadZip } from '@/server/security/safeArchive';
 
 export interface ConvertedDocument {
   data: Buffer;
@@ -1178,7 +1179,7 @@ export class OfficeConversionEngine {
   static async odtToDocx(odtBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, "");
-    const zip = await JSZip.loadAsync(odtBuffer);
+    const zip = await safeLoadZip(odtBuffer);
     if (!zip.file("content.xml")) throw new Error("Ungueltige ODT-Datei: content.xml nicht gefunden.");
     onProgress(40);
     const xml = await zip.file("content.xml")!.async("text");
@@ -1448,7 +1449,7 @@ export class OfficeConversionEngine {
   static async epubToPdf(epubBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, "");
-    const zip = await JSZip.loadAsync(epubBuffer);
+    const zip = await safeLoadZip(epubBuffer);
     onProgress(30);
     let opfPath = "";
     const containerFile = zip.file("META-INF/container.xml");
@@ -1521,7 +1522,7 @@ export class OfficeConversionEngine {
   static async epubToTxt(epubBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, "");
-    const zip = await JSZip.loadAsync(epubBuffer);
+    const zip = await safeLoadZip(epubBuffer);
     onProgress(35);
     const htmlFiles = Object.keys(zip.files).filter(n => n.endsWith(".html")||n.endsWith(".xhtml")||n.endsWith(".htm")).sort().slice(0,50);
     const parts: string[] = [`${baseName}\n${"=".repeat(baseName.length)}\n`];

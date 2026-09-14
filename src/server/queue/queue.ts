@@ -10,6 +10,9 @@ export interface IJobQueue {
   cancelJob(id: string): Promise<boolean>;
   listJobs(): Promise<ConversionJob[]>;
   cleanupExpired(): Promise<number>;
+  getQueueLength(): number;
+  getActiveCount(): number;
+  canAcceptJob(maxCapacity?: number): boolean;
 }
 
 export class HostingerJobQueue implements IJobQueue {
@@ -118,6 +121,24 @@ export class HostingerJobQueue implements IJobQueue {
       await this.saveJournal();
     }
     return count;
+  }
+
+  getQueueLength(): number {
+    return this.queueOrder.length;
+  }
+
+  getActiveCount(): number {
+    let count = 0;
+    for (const job of this.jobs.values()) {
+      if (job.status === 'processing' || job.status === 'queued') {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  canAcceptJob(maxCapacity: number = 100): boolean {
+    return this.getActiveCount() < maxCapacity;
   }
 }
 

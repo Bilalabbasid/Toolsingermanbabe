@@ -4,9 +4,32 @@ import { storageProvider } from '@/server/storage/storage';
 import { jobQueue } from '@/server/queue/queue';
 import { conversionEngine } from '@/server/engine/conversion.engine';
 import { ConversionJob } from '@/types/job';
+import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
+import { validateUploadedFile } from '@/server/security/fileValidator';
+import { privacyLog } from '@/server/utils/privacyLogger';
 
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = req.headers.get('x-api-key');
+    const isPro = !!apiKey;
+
+    // 0. Rate limiting check per client IP
+    const ip = getClientIp(req);
+    const rateLimit = rateLimiter.check(ip, 'job', isPro);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Zu viele Anfragen. Bitte warten Sie einen Moment vor dem nächsten Upload.', code: 'RATE_LIMIT_EXCEEDED' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimit.resetSeconds),
+            'X-RateLimit-Limit': String(rateLimit.limit),
+            'X-RateLimit-Remaining': '0',
+          },
+        }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
     const rawType = formData.get('type') as string | null;
@@ -17,7 +40,6 @@ export async function POST(req: NextRequest) {
       jobType = `office_${srcExt}_to_${targetFormat.toLowerCase().replace('.', '')}`;
     }
     if (!jobType) jobType = 'office_convert';
-    const apiKey = req.headers.get('x-api-key');
 
     const language = formData.get('language') as string | null;
     const outputType = formData.get('outputType') as 'pdf' | 'docx' | 'txt' | null;
@@ -34,7 +56,7 @@ export async function POST(req: NextRequest) {
     if (outputType) parsedOptions.outputType = outputType;
     if (targetFormat) parsedOptions.targetFormat = targetFormat;
 
-    // 1. Validate file
+    // 1. Validate file presence
     if (!file) {
       return NextResponse.json(
         { error: 'Keine Datei übertragen. Bitte wählen Sie eine Datei aus.' },
@@ -45,34 +67,49 @@ export async function POST(req: NextRequest) {
     // 2. Validate file size limits
     const maxFreeMB = parseInt(process.env.MAX_FILE_SIZE_FREE || '50', 10);
     const maxProMB = parseInt(process.env.MAX_FILE_SIZE_PRO || '500', 10);
-    const allowedMaxBytes = (apiKey ? maxProMB : maxFreeMB) * 1024 * 1024;
+    const allowedMaxBytes = (isPro ? maxProMB : maxFreeMB) * 1024 * 1024;
 
     if (file.size > allowedMaxBytes) {
       return NextResponse.json(
         {
-          error: `Die Datei überschreitet das Limit von ${apiKey ? maxProMB : maxFreeMB} MB.`,
+          error: `Die Datei überschreitet das Limit von ${isPro ? maxProMB : maxFreeMB} MB.`,
           code: 'FILE_TOO_LARGE',
         },
         { status: 413 }
       );
     }
 
-    // 3. Store input in ephemeral storage
+    // 3. Deep File Validation & Magic-Byte Anti-Spoofing
     const arrayBuffer = await file.arrayBuffer();
-    const saved = await storageProvider.saveInput(arrayBuffer, file.name);
+    const buffer = Buffer.from(arrayBuffer);
+    const validation = validateUploadedFile(buffer, file.name, file.type);
+    if (!validation.valid) {
+      return NextResponse.json(
+        {
+          error: validation.error || 'Ungültige oder potenziell schädliche Datei.',
+          code: validation.code || 'INVALID_FILE',
+        },
+        { status: 400 }
+      );
+    }
 
-    // 4. Calculate retention expiration (default 15 mins)
+    const safeOriginalName = validation.safeFilename;
+
+    // 4. Store input in isolated ephemeral storage
+    const saved = await storageProvider.saveInput(buffer, safeOriginalName);
+
+    // 5. Calculate retention expiration
     const retentionMinutes = parseInt(process.env.TEMP_FILE_RETENTION_MINUTES || '15', 10);
     const expiration = new Date(Date.now() + retentionMinutes * 60 * 1000).toISOString();
 
-    // 5. Create Job Record
+    // 6. Create Job Record
     const jobId = `job_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
     const newJob: ConversionJob = {
       id: jobId,
       type: jobType,
       status: 'queued',
       input: {
-        originalName: file.name,
+        originalName: safeOriginalName,
         mimeType: file.type || 'application/octet-stream',
         sizeBytes: saved.sizeBytes,
         storagePath: saved.storagePath,
@@ -85,10 +122,10 @@ export async function POST(req: NextRequest) {
 
     await jobQueue.enqueue(newJob);
 
-    // 6. Trigger decoupled worker asynchronously (non-blocking)
+    // 7. Trigger decoupled worker asynchronously (non-blocking)
     setTimeout(() => {
       conversionEngine.triggerWorker().catch((err) => {
-        console.error('[Worker Error]:', err);
+        privacyLog('error', '[Worker Error]', { error: (err as Error).message });
       });
     }, 10);
 
@@ -102,8 +139,8 @@ export async function POST(req: NextRequest) {
       },
       { status: 202 }
     );
-  } catch (err) {
-    console.error('[Jobs API Error]:', err);
+  } catch (err: unknown) {
+    privacyLog('error', '[Jobs API Error]', { error: (err as Error).message });
     return NextResponse.json(
       { error: 'Interner Verarbeitungsfehler beim Einreihen des Auftrags.' },
       { status: 500 }

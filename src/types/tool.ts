@@ -36,7 +36,19 @@ export type EngineType =
   | 'ocr'
   | 'doc-convert'
   | 'text-utility'
-  | 'archive';
+  | 'dev-utility'
+  | 'archive'
+  | 'archive-tool'
+  | 'media-convert'
+  | 'pdf-numbering'
+  | 'pdf-header-footer'
+  | 'pdf-compare'
+  | 'pdf-repair'
+  | 'pdf-optimize'
+  | 'pdf-pdfa'
+  | 'pdf-flatten'
+  | 'pdf-annotations-remove'
+  | 'pdf-extract';
 
 export interface HowItWorksStep {
   step: number;

@@ -65,15 +65,26 @@ export class LocalStorageProvider implements IStorageProvider {
     };
   }
 
+  private assertWithinBaseDir(targetPath: string): string {
+    const resolvedTarget = path.resolve(targetPath);
+    const resolvedBase = path.resolve(this.baseDir);
+    if (!resolvedTarget.startsWith(resolvedBase)) {
+      throw new Error('Unzulässiger Zugriff: Pfad befindet sich außerhalb des sicheren Speicherbereichs.');
+    }
+    return resolvedTarget;
+  }
+
   async read(storagePath: string): Promise<Buffer> {
-    return await fs.readFile(storagePath);
+    const safePath = this.assertWithinBaseDir(storagePath);
+    return await fs.readFile(safePath);
   }
 
   async delete(storagePath: string): Promise<void> {
     try {
-      await fs.unlink(storagePath);
+      const safePath = this.assertWithinBaseDir(storagePath);
+      await fs.unlink(safePath);
     } catch {
-      // Ignore if file is already deleted
+      // Ignore if file is already deleted or outside baseDir
     }
   }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Lock, Cpu, Globe, Heart } from 'lucide-react';
+import { CookiePreferencesButton } from './CookiePreferencesButton';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -222,8 +223,21 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <CookiePreferencesButton variant="link" label="Cookie-Einstellungen" className="text-slate-400 hover:text-white text-xs" />
+              </li>
+              <li>
+                <Link href="/de/kontakt" className="hover:text-white transition-colors text-sky-400 font-medium">
+                  Kontakt & Support
+                </Link>
+              </li>
+              <li>
                 <Link href="/de/blog" className="hover:text-white transition-colors">
                   Ratgeber & Anleitungen
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/admin/analytics" className="hover:text-white transition-colors text-slate-400">
+                  Analytics Dashboard
                 </Link>
               </li>
             </ul>

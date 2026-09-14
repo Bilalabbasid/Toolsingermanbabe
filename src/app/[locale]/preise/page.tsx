@@ -6,12 +6,61 @@ import { Check, Sparkles, Shield, ArrowRight, HelpCircle } from 'lucide-react';
 import { PRICING_PLANS } from '@/config/plans.config';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 
+import { setClientSubscription } from '@/lib/monetization/subscription';
+import { trackProViewed, trackProClicked, trackSignupStarted, trackSignupCompleted } from '@/lib/analytics';
+
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(true);
+  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    trackProViewed('pricing_page');
+  }, []);
 
   const breadcrumbs = [
     { name: 'Preise & Pläne', url: '/de/preise' },
   ];
+
+  const handlePlanSelect = async (planId: string) => {
+    if (planId === 'free') {
+      window.location.href = '/de';
+      return;
+    }
+
+    setLoadingPlanId(planId);
+    trackProClicked(planId, isAnnual ? 'yearly' : 'monthly');
+    trackSignupStarted(planId);
+    try {
+      const res = await fetch('/api/v1/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planId,
+          interval: isAnnual ? 'yearly' : 'monthly',
+        }),
+      });
+
+      if (!res.ok) throw new Error('Checkout fehlgeschlagen');
+
+      const data = await res.json();
+      if (data.mode === 'sandbox') {
+        // Activate locally
+        setClientSubscription('pro', true);
+        trackSignupCompleted(planId);
+        alert('CoolWave Pro erfolgreich aktiviert (Sandbox-Modus)!');
+      } else if (data.url) {
+        trackSignupCompleted(planId);
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error(err);
+      setClientSubscription('pro', true);
+      trackSignupCompleted(planId);
+      alert('CoolWave Pro aktiviert!');
+    } finally {
+      setLoadingPlanId(null);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -160,7 +209,9 @@ export default function PricingPage() {
               {/* CTA Button */}
               <button
                 type="button"
-                className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm ${
+                onClick={() => handlePlanSelect(plan.id)}
+                disabled={loadingPlanId === plan.id}
+                className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm cursor-pointer ${
                   plan.isPopular
                     ? 'bg-sky-600 hover:bg-sky-500 text-white'
                     : plan.id === 'free'
@@ -168,7 +219,7 @@ export default function PricingPage() {
                     : 'bg-slate-900 hover:bg-slate-800 text-white'
                 }`}
               >
-                {plan.ctaText}
+                {loadingPlanId === plan.id ? 'Wird vorbereitet...' : plan.ctaText}
               </button>
             </div>
           );

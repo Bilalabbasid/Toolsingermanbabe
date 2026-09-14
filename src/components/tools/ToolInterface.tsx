@@ -1,15 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ToolDefinition } from '@/types/tool';
 import { ToolDispatcher } from '@/components/tools/ToolDispatcher';
 import { Cpu, ShieldCheck, HardDrive, Layers } from 'lucide-react';
+import { recordRecentTool } from '@/lib/search';
+import { trackToolView } from '@/lib/analytics';
 
 interface ToolInterfaceProps {
   tool: ToolDefinition;
 }
 
 export function ToolInterface({ tool }: ToolInterfaceProps) {
+  useEffect(() => {
+    recordRecentTool(tool.slug);
+    trackToolView(tool.slug, tool.category);
+  }, [tool.slug, tool.category]);
   return (
     <div className="w-full">
       {/* Capability & Privacy Header Strip */}

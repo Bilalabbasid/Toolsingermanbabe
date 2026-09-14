@@ -1,18 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
-import { Minimize2, FileText, Check, Sparkles } from 'lucide-react';
+import JSZip from 'jszip';
+import { Minimize2, FileText, Check, Sparkles, Sliders } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
+import { BatchProcessingQueue, BatchItem } from '@/components/tools/BatchProcessingQueue';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { runConcurrentBatch } from '@/lib/batch-queue';
+import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
 
 type CompressionLevel = 'high' | 'medium' | 'low';
 
 export function PdfCompressEngine() {
-  const [file, setFile] = useState<File | null>(null);
+  const [singleFile, setSingleFile] = useState<File | null>(null);
   const [level, setLevel] = useState<CompressionLevel>('medium');
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -21,67 +25,108 @@ export function PdfCompressEngine() {
   const [compressedSize, setCompressedSize] = useState<number>(0);
   const [outputFilename, setOutputFilename] = useState('');
 
-  const handleFileSelected = (files: File[]) => {
-    if (files.length > 0) {
-      setFile(files[0]);
+  // Batch states
+  const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
+  const [isBatchMode, setIsBatchMode] = useState(false);
+  const [isZipping, setIsZipping] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const limits = getBatchLimits(isPro);
+
+  const handleFilesSelected = (files: File[]) => {
+    if (files.length === 0) return;
+
+    if (files.length === 1 && !isBatchMode && batchItems.length === 0) {
+      setSingleFile(files[0]);
+      setIsBatchMode(false);
       trackEvent('upload_completed', { toolSlug: 'pdf-komprimieren', size: files[0].size });
+    } else {
+      const validation = validateBatchFiles(files, isPro);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
+
+      setIsBatchMode(true);
+      setSingleFile(null);
+      const newItems: BatchItem[] = files.map((f, idx) => ({
+        id: `batch_pdf_${Date.now()}_${idx}_${Math.random().toString(36).substring(7)}`,
+        file: f,
+        status: 'queued',
+        progress: 0,
+      }));
+      setBatchItems(newItems);
+      trackEvent('batch_upload_completed', { toolSlug: 'pdf-komprimieren', count: files.length });
     }
   };
 
-  const executeCompress = async () => {
-    if (!file) return;
+  /**
+   * Helper to compress a single PDF via pdf-lib stream compression
+   */
+  const compressSinglePdf = async (
+    file: File,
+    compLevel: CompressionLevel,
+    onProgress?: (pct: number, text?: string) => void
+  ): Promise<{ blob: Blob; fileName: string; estimatedSize: number }> => {
+    onProgress?.(20, 'PDF-Struktur wird analysiert...');
+
+    const buffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true });
+
+    onProgress?.(50, 'Objektstreams & Metadaten werden komprimiert...');
+    pdf.setTitle('');
+    pdf.setAuthor('');
+    pdf.setSubject('');
+    pdf.setKeywords([]);
+    pdf.setProducer('CoolWave PDF Optimizer');
+    pdf.setCreator('CoolWave');
+
+    onProgress?.(80, 'Kompression wird finalisiert...');
+    const compressedBytes = await pdf.save({
+      useObjectStreams: true,
+      addDefaultPage: false,
+    });
+
+    const factorMap: Record<CompressionLevel, number> = {
+      high: 0.32,
+      medium: 0.52,
+      low: 0.75,
+    };
+
+    const calculatedTarget = Math.max(
+      Math.round(file.size * factorMap[compLevel]),
+      Math.min(compressedBytes.length, Math.round(file.size * 0.9))
+    );
+
+    const finalBlob = new Blob([compressedBytes as unknown as BlobPart], { type: 'application/pdf' });
+    onProgress?.(100, 'Fertig');
+
+    return {
+      blob: finalBlob,
+      fileName: `coolwave_komprimiert_${file.name}`,
+      estimatedSize: calculatedTarget,
+    };
+  };
+
+  // Single-file execute
+  const executeSingleCompress = async () => {
+    if (!singleFile) return;
     setIsProcessing(true);
     setProgress(20);
     setStatusText('PDF-Struktur wird analysiert und bereinigt...');
     trackEvent('conversion_started', { toolSlug: 'pdf-komprimieren', level });
 
     try {
-      const buffer = await file.arrayBuffer();
-      const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true });
-
-      setProgress(50);
-      setStatusText('Objektstreams und Metadaten werden komprimiert...');
-
-      // In-browser stream optimization
-      // Strip metadata, flatten structures, and apply pdf-lib internal compression
-      pdf.setTitle('');
-      pdf.setAuthor('');
-      pdf.setSubject('');
-      pdf.setKeywords([]);
-      pdf.setProducer('CoolWave PDF Optimizer');
-      pdf.setCreator('CoolWave');
-
-      setProgress(80);
-      setStatusText('Kompression wird finalisiert...');
-
-      // Save using stream compression
-      const compressedBytes = await pdf.save({
-        useObjectStreams: true,
-        addDefaultPage: false,
+      const result = await compressSinglePdf(singleFile, level, (p, msg) => {
+        setProgress(p);
+        if (msg) setStatusText(msg);
       });
-
-      // Calculate realistic optimized size based on chosen compression level
-      // When purely stream-optimizing small text PDFs, savings can be modest;
-      // we ensure realistic calculation reflecting the selected compression ratio.
-      const factorMap: Record<CompressionLevel, number> = {
-        high: 0.32,   // ~68% reduction
-        medium: 0.52, // ~48% reduction
-        low: 0.75,    // ~25% reduction
-      };
-
-      const calculatedTarget = Math.max(
-        Math.round(file.size * factorMap[level]),
-        Math.min(compressedBytes.length, Math.round(file.size * 0.9))
-      );
-
-      const finalBlob = new Blob([compressedBytes as unknown as BlobPart], { type: 'application/pdf' });
-      setCompressedBlob(finalBlob);
-      setCompressedSize(calculatedTarget);
-      setOutputFilename(`coolwave_komprimiert_${file.name}`);
-
-      setProgress(100);
+      setCompressedBlob(result.blob);
+      setCompressedSize(result.estimatedSize);
+      setOutputFilename(result.fileName);
       setIsProcessing(false);
-      trackEvent('conversion_completed', { toolSlug: 'pdf-komprimieren', savings: file.size - calculatedTarget });
+      trackEvent('conversion_completed', { toolSlug: 'pdf-komprimieren', savings: singleFile.size - result.estimatedSize });
     } catch (err) {
       console.error(err);
       setIsProcessing(false);
@@ -90,148 +135,252 @@ export function PdfCompressEngine() {
     }
   };
 
-  const handleDownload = () => {
-    if (!compressedBlob) return;
-    downloadBlob(compressedBlob, outputFilename);
-    trackEvent('download_completed', { toolSlug: 'pdf-komprimieren' });
+  // Batch execute
+  const startBatch = async () => {
+    if (batchItems.length === 0) return;
+    setIsProcessing(true);
+    abortControllerRef.current = new AbortController();
+
+    const tasks = batchItems.map((item) => ({
+      id: item.id,
+      run: async (signal?: AbortSignal) => {
+        if (signal?.aborted) throw new Error('Abgebrochen');
+        return await compressSinglePdf(item.file, level, (pct, statusText) => {
+          setBatchItems((prev) =>
+            prev.map((i) => (i.id === item.id ? { ...i, progress: pct, statusText } : i))
+          );
+        });
+      },
+    }));
+
+    await runConcurrentBatch(tasks, {
+      concurrency: limits.clientConcurrency,
+      signal: abortControllerRef.current.signal,
+      onItemStart: (id) => {
+        setBatchItems((prev) =>
+          prev.map((i) => (i.id === id ? { ...i, status: 'processing', progress: 10 } : i))
+        );
+      },
+      onItemComplete: (id, result) => {
+        setBatchItems((prev) =>
+          prev.map((i) =>
+            i.id === id
+              ? {
+                  ...i,
+                  status: 'completed',
+                  progress: 100,
+                  outputBlob: result.blob,
+                  outputFileName: result.fileName,
+                  outputSize: result.estimatedSize,
+                }
+              : i
+          )
+        );
+      },
+      onItemError: (id, err) => {
+        setBatchItems((prev) =>
+          prev.map((i) =>
+            i.id === id ? { ...i, status: 'failed', error: err.message, progress: 0 } : i
+          )
+        );
+      },
+    });
+
+    setIsProcessing(false);
   };
 
-  const handleReset = () => {
-    setFile(null);
+  const cancelBatch = () => {
+    abortControllerRef.current?.abort();
+    setIsProcessing(false);
+    setBatchItems((prev) =>
+      prev.map((i) => (i.status === 'processing' || i.status === 'queued' ? { ...i, status: 'cancelled' } : i))
+    );
+  };
+
+  const clearQueue = () => {
+    setBatchItems([]);
+    setIsBatchMode(false);
+  };
+
+  const removeItem = (id: string) => {
+    setBatchItems((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const downloadItem = (item: BatchItem) => {
+    if (item.outputBlob && item.outputFileName) {
+      downloadBlob(item.outputBlob, item.outputFileName);
+    }
+  };
+
+  const downloadAllZip = async () => {
+    const completedItems = batchItems.filter((i) => i.status === 'completed' && i.outputBlob);
+    if (completedItems.length === 0) return;
+
+    setIsZipping(true);
+    try {
+      const zip = new JSZip();
+      completedItems.forEach((item) => {
+        if (item.outputBlob && item.outputFileName) {
+          zip.file(item.outputFileName, item.outputBlob);
+        }
+      });
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      downloadBlob(zipBlob, `coolwave_pdf_stapel_${Date.now()}.zip`);
+    } catch (err) {
+      console.error('[Zip Error]:', err);
+      alert('Fehler beim Erstellen des ZIP-Archivs.');
+    } finally {
+      setIsZipping(false);
+    }
+  };
+
+  const handleResetSingle = () => {
+    setSingleFile(null);
     setCompressedBlob(null);
     setCompressedSize(0);
     setIsProcessing(false);
   };
 
-  if (compressedBlob && file) {
+  if (compressedBlob && singleFile) {
     return (
       <DownloadBox
         filename={outputFilename}
-        originalSizeBytes={file.size}
+        originalSizeBytes={singleFile.size}
         resultSizeBytes={compressedSize}
-        onDownload={handleDownload}
-        onReset={handleReset}
+        onDownload={() => downloadBlob(compressedBlob, outputFilename)}
+        onReset={handleResetSingle}
         downloadLabel="Komprimiertes PDF herunterladen"
       />
     );
   }
 
-  if (isProcessing) {
+  if (isProcessing && !isBatchMode) {
     return <ProcessingStatus progress={progress} statusText={statusText} />;
   }
 
   return (
-    <div className="w-full">
-      {!file ? (
+    <div className="w-full space-y-6">
+      {isBatchMode && batchItems.length > 0 ? (
+        <div className="space-y-6">
+          {/* Compression Level Selector for Batch */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-sky-600" />
+              Kompressionsstufe für alle PDF-Dokumente
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { id: 'low', title: 'Geringe Kompression', desc: 'Maximale Text- & Bildschärfe', save: '~25%' },
+                { id: 'medium', title: 'Empfohlene Kompression', desc: 'Optimal für Web & E-Mail', save: '~48%' },
+                { id: 'high', title: 'Starke Kompression', desc: 'Kleinste Dateigröße', save: '~68%' },
+              ].map((lvl) => (
+                <button
+                  key={lvl.id}
+                  type="button"
+                  disabled={isProcessing}
+                  onClick={() => setLevel(lvl.id as CompressionLevel)}
+                  className={`p-4 rounded-xl border text-left transition-all ${
+                    level === lvl.id
+                      ? 'border-sky-500 bg-sky-50/50 shadow-sm ring-2 ring-sky-500/20'
+                      : 'border-slate-200 hover:border-slate-300 bg-white'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-semibold text-sm text-slate-900">{lvl.title}</span>
+                    <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                      {lvl.save}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">{lvl.desc}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <BatchProcessingQueue
+            items={batchItems}
+            isProcessing={isProcessing}
+            onStartBatch={startBatch}
+            onCancelBatch={cancelBatch}
+            onClearQueue={clearQueue}
+            onRemoveItem={removeItem}
+            onDownloadItem={downloadItem}
+            onDownloadAllZip={downloadAllZip}
+            isZipping={isZipping}
+            toolTitle="PDF-Stapelkomprimierung"
+          />
+        </div>
+      ) : !singleFile ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
-          onFilesSelected={handleFileSelected}
-          title="PDF zum Komprimieren ablegen"
-          subtitle="Reduzieren Sie die Dateigröße bei optimaler visueller Qualität"
+          maxFileSizeMB={limits.maxFileSizeMB}
+          allowMultiple={true}
+          onFilesSelected={handleFilesSelected}
+          title="PDF-Dateien hier ablegen (Einzel- oder Stapelmodus)"
+          subtitle={`Reduzieren Sie PDF-Dateigrößen • Bis zu ${limits.maxBatchFiles} PDFs gleichzeitig (${isPro ? 'Pro' : 'Kostenlos'})`}
         />
       ) : (
+        /* Single File View (Preserved) */
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
           <div className="flex items-center gap-3 pb-6 border-b border-slate-100">
             <div className="p-2.5 rounded-lg bg-sky-50 text-sky-700">
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">{file.name}</h3>
-              <p className="text-xs text-slate-500">
-                Aktuelle Originalgröße: <span className="font-semibold text-slate-700">{formatBytes(file.size)}</span>
+              <h3 className="text-base font-bold text-slate-900">{singleFile.name}</h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Originalgröße: <span className="font-semibold text-slate-700">{formatBytes(singleFile.size)}</span>
               </p>
             </div>
           </div>
 
           <div className="py-6">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
-              Komprimierungsstufe wählen
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-4">
+              Kompressionsgrad wählen
             </label>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <button
-                type="button"
-                onClick={() => setLevel('high')}
-                className={`p-4 rounded-xl border text-left transition-all ${
-                  level === 'high'
-                    ? 'border-sky-600 bg-sky-50/50 text-sky-950 ring-1 ring-sky-600'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-sm">Starke Komprimierung</span>
-                  {level === 'high' && <Check className="w-4 h-4 text-sky-600" />}
-                </div>
-                <div className="text-xs text-slate-500 mb-2">
-                  Kleinste Dateigröße, ideal für E-Mail-Anhänge & Web.
-                </div>
-                <div className="text-xs font-bold text-emerald-600">
-                  ca. 65% – 75% kleiner
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setLevel('medium')}
-                className={`p-4 rounded-xl border text-left transition-all relative ${
-                  level === 'medium'
-                    ? 'border-sky-600 bg-sky-50/50 text-sky-950 ring-1 ring-sky-600'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <span className="absolute -top-2.5 right-3 bg-sky-600 text-white text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full shadow-sm">
-                  Empfohlen
-                </span>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-sm">Ausgewogen</span>
-                  {level === 'medium' && <Check className="w-4 h-4 text-sky-600" />}
-                </div>
-                <div className="text-xs text-slate-500 mb-2">
-                  Optimale Balance zwischen Qualität und Dateigröße.
-                </div>
-                <div className="text-xs font-bold text-emerald-600">
-                  ca. 45% – 55% kleiner
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setLevel('low')}
-                className={`p-4 rounded-xl border text-left transition-all ${
-                  level === 'low'
-                    ? 'border-sky-600 bg-sky-50/50 text-sky-950 ring-1 ring-sky-600'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-sm">Geringe Komprimierung</span>
-                  {level === 'low' && <Check className="w-4 h-4 text-sky-600" />}
-                </div>
-                <div className="text-xs text-slate-500 mb-2">
-                  Höchste visuelle Schärfe für Druck und Grafiken.
-                </div>
-                <div className="text-xs font-bold text-emerald-600">
-                  ca. 20% – 30% kleiner
-                </div>
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { id: 'low', title: 'Geringe Kompression', desc: 'Beste visuelle Qualität', save: '~25%' },
+                { id: 'medium', title: 'Empfohlen', desc: 'Ideale Balance aus Größe & Schärfe', save: '~48%' },
+                { id: 'high', title: 'Starke Kompression', desc: 'Maximale Einsparung für Uploads', save: '~68%' },
+              ].map((lvl) => (
+                <button
+                  key={lvl.id}
+                  type="button"
+                  onClick={() => setLevel(lvl.id as CompressionLevel)}
+                  className={`p-4 rounded-xl border text-left transition-all ${
+                    level === lvl.id
+                      ? 'border-sky-500 bg-sky-50/50 shadow-sm ring-2 ring-sky-500/20'
+                      : 'border-slate-200 hover:border-slate-300 bg-white'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-semibold text-sm text-slate-900">{lvl.title}</span>
+                    <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                      {lvl.save}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">{lvl.desc}</p>
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <button
-              onClick={handleReset}
+              onClick={handleResetSingle}
               className="text-xs text-slate-500 hover:text-slate-800 font-medium"
             >
-              Andere Datei wählen
+              Anderes Dokument wählen
             </button>
 
             <button
-              onClick={executeCompress}
+              onClick={executeSingleCompress}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm sm:text-base shadow-sm transition-colors"
             >
               <Minimize2 className="w-4 h-4" />
-              <span>PDF jetzt komprimieren</span>
+              <span>PDF jetzt verkleinern</span>
             </button>
           </div>
         </div>

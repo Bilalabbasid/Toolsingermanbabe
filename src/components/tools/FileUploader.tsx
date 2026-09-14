@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { UploadCloud, File, AlertCircle, Plus, X } from 'lucide-react';
 import { formatBytes } from '@/lib/utils';
+import { trackUploadStarted, trackUploadCompleted, getActiveToolSlug } from '@/lib/analytics';
 
 interface FileUploaderProps {
   acceptedExtensions: string[];
@@ -61,6 +62,12 @@ export function FileUploader({
     }
 
     if (validFiles.length > 0) {
+      const activeSlug = getActiveToolSlug();
+      if (activeSlug) {
+        const totalBytes = validFiles.reduce((acc, f) => acc + f.size, 0);
+        trackUploadStarted(activeSlug, totalBytes);
+        trackUploadCompleted(activeSlug, totalBytes);
+      }
       onFilesSelected(validFiles);
     }
   };

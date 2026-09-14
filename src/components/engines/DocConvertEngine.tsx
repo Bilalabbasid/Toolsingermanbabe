@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import JSZip from 'jszip';
 import { 
   FileText, 
   RefreshCw, 
@@ -8,13 +9,18 @@ import {
   FileSpreadsheet, 
   Presentation, 
   FileCode,
-  BookOpen 
+  BookOpen,
+  Download,
+  Layers
 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
+import { BatchProcessingQueue, BatchItem } from '@/components/tools/BatchProcessingQueue';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { runConcurrentBatch } from '@/lib/batch-queue';
+import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
 
 export type DocConvertMode = 
   | 'pdf-to-word' 
@@ -50,7 +56,7 @@ interface DocConvertEngineProps {
 }
 
 export function DocConvertEngine({ mode }: DocConvertEngineProps) {
-  const [file, setFile] = useState<File | null>(null);
+  const [singleFile, setSingleFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState('');
@@ -58,7 +64,14 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
   const [outputFilename, setOutputFilename] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  // Batch states
+  const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
+  const [isBatchMode, setIsBatchMode] = useState(false);
+  const [isZipping, setIsZipping] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const limits = getBatchLimits(isPro);
 
   const getAcceptedExtensions = (): string[] => {
     switch (mode) {
@@ -104,7 +117,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       case 'epub-to-txt':
         return ['.epub'];
       default:
-        return ['.pdf'];
+        return ['.pdf', '.docx', '.xlsx', '.pptx', '.txt'];
     }
   };
 
@@ -215,16 +228,116 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     return <FileText className="w-5 h-5" />;
   };
 
-  const handleFileSelected = (files: File[]) => {
+  const handleFilesSelected = (files: File[]) => {
     if (files.length === 0) return;
-    setFile(files[0]);
-    setError(null);
-    setResultBlob(null);
-    trackEvent('upload_completed', { mode, size: files[0].size });
+
+    if (files.length === 1 && !isBatchMode && batchItems.length === 0) {
+      setSingleFile(files[0]);
+      setIsBatchMode(false);
+      setError(null);
+      setResultBlob(null);
+      trackEvent('upload_completed', { mode, size: files[0].size });
+    } else {
+      const validation = validateBatchFiles(files, isPro);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
+
+      setIsBatchMode(true);
+      setSingleFile(null);
+      const newItems: BatchItem[] = files.map((f, idx) => ({
+        id: `doc_batch_${Date.now()}_${idx}_${Math.random().toString(36).substring(7)}`,
+        file: f,
+        status: 'queued',
+        progress: 0,
+      }));
+      setBatchItems(newItems);
+      trackEvent('batch_upload_completed', { mode, count: files.length });
+    }
   };
 
-  const executeConversion = async () => {
-    if (!file) return;
+  /**
+   * Helper to execute a single document conversion via /api/v1/jobs
+   */
+  const convertSingleDoc = async (
+    file: File,
+    onProgress?: (pct: number, statusText?: string) => void,
+    signal?: AbortSignal
+  ): Promise<{ blob: Blob; fileName: string; size: number }> => {
+    onProgress?.(15, 'Dokument wird an Server übertragen...');
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', getJobType());
+    formData.append('targetFormat', getTargetExtension());
+
+    const res = await fetch('/api/v1/jobs', {
+      method: 'POST',
+      body: formData,
+      signal,
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error || `Server-Fehler: HTTP ${res.status}`);
+    }
+
+    const jobData = await res.json();
+    const jobId = jobData.jobId;
+
+    onProgress?.(35, 'In Warteschlange...');
+
+    let attempts = 0;
+    const maxAttempts = 60;
+    let completedJob = null;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      await new Promise((r) => setTimeout(r, 600));
+
+      if (signal?.aborted) {
+        throw new Error('Konvertierung abgebrochen.');
+      }
+
+      const pollRes = await fetch(`/api/v1/jobs/${jobId}`, { signal });
+      if (!pollRes.ok) continue;
+
+      const pollData = await pollRes.json();
+      const currentJob = pollData.job;
+
+      if (currentJob.status === 'processing') {
+        const curProgress = Math.max(35, Math.min(currentJob.progress || 50, 85));
+        onProgress?.(curProgress, `Wird transformiert (${curProgress}%)...`);
+      } else if (currentJob.status === 'completed') {
+        completedJob = currentJob;
+        break;
+      } else if (currentJob.status === 'failed') {
+        throw new Error(currentJob.error || 'Konvertierung fehlgeschlagen.');
+      }
+    }
+
+    if (!completedJob) {
+      throw new Error('Zeitüberschreitung bei der Verarbeitung des Dokuments.');
+    }
+
+    onProgress?.(90, 'Ergebnis wird empfangen...');
+    const downloadRes = await fetch(`/api/v1/jobs/${jobId}/download`, { signal });
+    if (!downloadRes.ok) {
+      throw new Error('Download der Datei fehlgeschlagen.');
+    }
+
+    const blob = await downloadRes.blob();
+    const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+    const outName = `coolwave_${baseName}.${getTargetExtension()}`;
+
+    onProgress?.(100, 'Fertig');
+    return { blob, fileName: outName, size: blob.size };
+  };
+
+  // Single file execute
+  const executeSingleConversion = async () => {
+    if (!singleFile) return;
     setError(null);
     setIsProcessing(true);
     setProgress(15);
@@ -234,199 +347,230 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     abortControllerRef.current = new AbortController();
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', getJobType());
-      formData.append('targetFormat', getTargetExtension());
+      const result = await convertSingleDoc(
+        singleFile,
+        (p, msg) => {
+          setProgress(p);
+          if (msg) setStatusText(msg);
+        },
+        abortControllerRef.current.signal
+      );
 
-      // 1. Enqueue job to worker
-      const res = await fetch('/api/v1/jobs', {
-        method: 'POST',
-        body: formData,
-        signal: abortControllerRef.current.signal,
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || `Server-Fehler: HTTP ${res.status}`);
-      }
-
-      const jobData = await res.json();
-      const jobId = jobData.jobId;
-
-      setProgress(30);
-      setStatusText('Auftrag in der Warteschlange. Worker bereitet Konvertierung vor...');
-
-      // 2. Poll job status
-      let attempts = 0;
-      const maxAttempts = 60; // 60 * 600ms = 36 seconds
-      let completedJob = null;
-
-      while (attempts < maxAttempts) {
-        attempts++;
-        await new Promise((r) => setTimeout(r, 600));
-
-        if (abortControllerRef.current?.signal.aborted) {
-          throw new Error('Konvertierung abgebrochen.');
-        }
-
-        const pollRes = await fetch(`/api/v1/jobs/${jobId}`, {
-          signal: abortControllerRef.current.signal,
-        });
-
-        if (!pollRes.ok) continue;
-
-        const pollData = await pollRes.json();
-        const currentJob = pollData.job;
-
-        if (currentJob.status === 'processing') {
-          const currentProgress = Math.max(35, Math.min(currentJob.progress || 50, 85));
-          setProgress(currentProgress);
-          setStatusText(`Worker verarbeitet Dokument (${currentProgress}%)...`);
-        } else if (currentJob.status === 'completed') {
-          completedJob = currentJob;
-          break;
-        } else if (currentJob.status === 'failed') {
-          throw new Error(currentJob.error || 'Die Konvertierung ist fehlgeschlagen.');
-        }
-      }
-
-      if (!completedJob) {
-        throw new Error('Zeitüberschreitung bei der Verarbeitung des Dokuments.');
-      }
-
-      // 3. Fetch completed binary output
-      setProgress(90);
-      setStatusText('Ergebnis wird heruntergeladen...');
-
-      const downloadRes = await fetch(`/api/v1/jobs/${jobId}/download`, {
-        signal: abortControllerRef.current.signal,
-      });
-
-      if (!downloadRes.ok) {
-        throw new Error('Die konvertierte Datei konnte nicht vom Speicher abgerufen werden.');
-      }
-
-      const blob = await downloadRes.blob();
-      const filename = completedJob.output?.fileName || `coolwave_${file.name.replace(/\.[^/.]+$/, '')}.${getTargetExtension()}`;
-
-      setResultBlob(blob);
-      setOutputFilename(filename);
+      setResultBlob(result.blob);
+      setOutputFilename(result.fileName);
       setProgress(100);
       setIsProcessing(false);
-      trackEvent('conversion_completed', { mode, sizeBytes: blob.size });
-    } catch (err: unknown) {
-      if (err instanceof Error && err.name === 'AbortError') return;
-      console.error('[DocConvertEngine Error]:', err);
-      const msg = err instanceof Error ? err.message : 'Ein unerwarteter Fehler ist aufgetreten.';
-      setError(msg);
+      trackEvent('conversion_completed', { mode, size: result.size });
+    } catch (err: any) {
+      console.error(err);
       setIsProcessing(false);
-      trackEvent('conversion_failed', { mode, error: msg });
+      setError(err.message || 'Fehler bei der Konvertierung.');
+      trackEvent('conversion_failed', { mode, error: err.message });
     }
   };
 
-  const handleDownload = () => {
-    if (!resultBlob || !outputFilename) return;
-    downloadBlob(resultBlob, outputFilename);
-    trackEvent('download_completed', { mode, filename: outputFilename });
+  // Batch execute
+  const startBatch = async () => {
+    if (batchItems.length === 0) return;
+    setIsProcessing(true);
+    abortControllerRef.current = new AbortController();
+
+    const tasks = batchItems.map((item) => ({
+      id: item.id,
+      run: async (signal?: AbortSignal) => {
+        if (signal?.aborted) throw new Error('Abgebrochen');
+        return await convertSingleDoc(
+          item.file,
+          (pct, statusText) => {
+            setBatchItems((prev) =>
+              prev.map((i) => (i.id === item.id ? { ...i, progress: pct, statusText } : i))
+            );
+          },
+          signal
+        );
+      },
+    }));
+
+    await runConcurrentBatch(tasks, {
+      concurrency: limits.clientConcurrency,
+      signal: abortControllerRef.current.signal,
+      onItemStart: (id) => {
+        setBatchItems((prev) =>
+          prev.map((i) => (i.id === id ? { ...i, status: 'processing', progress: 10 } : i))
+        );
+      },
+      onItemComplete: (id, result) => {
+        setBatchItems((prev) =>
+          prev.map((i) =>
+            i.id === id
+              ? {
+                  ...i,
+                  status: 'completed',
+                  progress: 100,
+                  outputBlob: result.blob,
+                  outputFileName: result.fileName,
+                  outputSize: result.size,
+                }
+              : i
+          )
+        );
+      },
+      onItemError: (id, err) => {
+        setBatchItems((prev) =>
+          prev.map((i) =>
+            i.id === id ? { ...i, status: 'failed', error: err.message, progress: 0 } : i
+          )
+        );
+      },
+    });
+
+    setIsProcessing(false);
   };
 
-  const handleReset = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
+  const cancelBatch = () => {
+    abortControllerRef.current?.abort();
+    setIsProcessing(false);
+    setBatchItems((prev) =>
+      prev.map((i) => (i.status === 'processing' || i.status === 'queued' ? { ...i, status: 'cancelled' } : i))
+    );
+  };
+
+  const clearQueue = () => {
+    setBatchItems([]);
+    setIsBatchMode(false);
+  };
+
+  const removeItem = (id: string) => {
+    setBatchItems((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const downloadItem = (item: BatchItem) => {
+    if (item.outputBlob && item.outputFileName) {
+      downloadBlob(item.outputBlob, item.outputFileName);
     }
-    setFile(null);
+  };
+
+  const downloadAllZip = async () => {
+    const completedItems = batchItems.filter((i) => i.status === 'completed' && i.outputBlob);
+    if (completedItems.length === 0) return;
+
+    setIsZipping(true);
+    try {
+      const zip = new JSZip();
+      completedItems.forEach((item) => {
+        if (item.outputBlob && item.outputFileName) {
+          zip.file(item.outputFileName, item.outputBlob);
+        }
+      });
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      downloadBlob(zipBlob, `coolwave_dokumente_stapel_${Date.now()}.zip`);
+    } catch (err) {
+      console.error('[Zip Error]:', err);
+      alert('Fehler beim Erstellen des ZIP-Archivs.');
+    } finally {
+      setIsZipping(false);
+    }
+  };
+
+  const handleResetSingle = () => {
+    setSingleFile(null);
     setResultBlob(null);
-    setOutputFilename('');
     setError(null);
     setIsProcessing(false);
     setProgress(0);
   };
 
+  if (resultBlob && singleFile) {
+    return (
+      <DownloadBox
+        filename={outputFilename}
+        originalSizeBytes={singleFile.size}
+        resultSizeBytes={resultBlob.size}
+        onDownload={() => downloadBlob(resultBlob, outputFilename)}
+        onReset={handleResetSingle}
+        downloadLabel="Konvertiertes Dokument herunterladen"
+      />
+    );
+  }
+
+  if (isProcessing && !isBatchMode) {
+    return (
+      <ProcessingStatus
+        progress={progress}
+        statusText={statusText}
+        onCancel={() => {
+          abortControllerRef.current?.abort();
+          setIsProcessing(false);
+        }}
+      />
+    );
+  }
+
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full space-y-6">
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 rounded-xl flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
-          <div className="flex-1">
-            <h4 className="text-sm font-semibold text-red-800 dark:text-red-300">Konvertierungsfehler</h4>
-            <p className="text-sm text-red-700 dark:text-red-400 mt-0.5">{error}</p>
-          </div>
-          <button
-            onClick={() => setError(null)}
-            className="text-xs text-red-600 dark:text-red-400 hover:underline"
-          >
-            Schließen
-          </button>
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <p className="text-sm font-medium">{error}</p>
         </div>
       )}
 
-      {!file && !resultBlob && (
+      {isBatchMode && batchItems.length > 0 ? (
+        <BatchProcessingQueue
+          items={batchItems}
+          isProcessing={isProcessing}
+          onStartBatch={startBatch}
+          onCancelBatch={cancelBatch}
+          onClearQueue={clearQueue}
+          onRemoveItem={removeItem}
+          onDownloadItem={downloadItem}
+          onDownloadAllZip={downloadAllZip}
+          isZipping={isZipping}
+          toolTitle={`Dokumente umwandeln (Stapel · ${getModeLabel()})`}
+        />
+      ) : !singleFile ? (
         <FileUploader
           acceptedExtensions={getAcceptedExtensions()}
-          maxFileSizeMB={50}
-          allowMultiple={false}
-          onFilesSelected={handleFileSelected}
+          maxFileSizeMB={limits.maxFileSizeMB}
+          allowMultiple={true}
+          onFilesSelected={handleFilesSelected}
+          title="Dokumente hier ablegen (Einzel- oder Stapelverarbeitung)"
+          subtitle={`Unterstützt: ${getAcceptedExtensions().join(', ').toUpperCase()} • Bis zu ${limits.maxBatchFiles} Dateien gleichzeitig (${isPro ? 'Pro' : 'Kostenlos'})`}
         />
-      )}
-
-      {file && !resultBlob && !isProcessing && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
-          <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                {getModeIcon()}
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-900 dark:text-white text-base sm:text-lg">
-                  {file.name}
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {formatBytes(file.size)} • Ziel: .{getTargetExtension().toUpperCase()}
-                </p>
-              </div>
+      ) : (
+        /* Single File View (Preserved) */
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+          <div className="flex items-center gap-3 pb-6 border-b border-slate-100">
+            <div className="p-3 rounded-xl bg-sky-50 text-sky-700 border border-sky-100">
+              {getModeIcon()}
             </div>
-
-            <button
-              onClick={handleReset}
-              className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-              title="Anderes Dokument wählen"
-            >
-              <RefreshCw className="w-5 h-5" />
-            </button>
+            <div>
+              <h3 className="text-base font-bold text-slate-900">{singleFile.name}</h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Dateigröße: <span className="font-semibold text-slate-700">{formatBytes(singleFile.size)}</span> • Zielformat:{' '}
+                <span className="font-bold text-sky-700 uppercase">.{getTargetExtension()}</span>
+              </p>
+            </div>
           </div>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Decoupled Worker-Engine bereit • 100% Dateischutz
-            </div>
+            <button
+              onClick={handleResetSingle}
+              className="text-xs text-slate-500 hover:text-slate-800 font-medium"
+            >
+              Anderes Dokument wählen
+            </button>
 
             <button
-              onClick={executeConversion}
-              className="w-full sm:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30 transition flex items-center justify-center gap-2 text-base"
+              onClick={executeSingleConversion}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm sm:text-base shadow-sm transition-colors"
             >
-              {getModeIcon()}
+              <RefreshCw className="w-4 h-4" />
               <span>{getModeLabel()}</span>
             </button>
           </div>
         </div>
-      )}
-
-      {isProcessing && (
-        <ProcessingStatus
-          progress={progress}
-          statusText={statusText}
-        />
-      )}
-
-      {resultBlob && (
-        <DownloadBox
-          filename={outputFilename}
-          resultSizeBytes={resultBlob.size}
-          onDownload={handleDownload}
-          onReset={handleReset}
-        />
       )}
     </div>
   );

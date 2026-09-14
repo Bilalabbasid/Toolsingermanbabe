@@ -26,6 +26,13 @@ import { DesignConvertEngine, DesignConvertMode } from '@/components/engines/Des
 import { OcrEngine } from '@/components/engines/OcrEngine';
 import { DocConvertEngine, DocConvertMode } from '@/components/engines/DocConvertEngine';
 import { TextUtilityEngine } from '@/components/engines/TextUtilityEngine';
+import { DevUtilityEngine } from '@/components/engines/DevUtilityEngine';
+import { MediaEngine } from '@/components/engines/MediaEngine';
+import { ArchiveEngine } from '@/components/engines/ArchiveEngine';
+import { PdfHeaderFooterEngine, HeaderFooterMode } from '@/components/engines/PdfHeaderFooterEngine';
+import { PdfCompareEngine } from '@/components/engines/PdfCompareEngine';
+import { PdfRepairOptimizeEngine, RepairOptimizeMode } from '@/components/engines/PdfRepairOptimizeEngine';
+import { PdfExtractEngine, ExtractMode } from '@/components/engines/PdfExtractEngine';
 
 interface ToolDispatcherProps {
   tool: ToolDefinition;
@@ -82,6 +89,39 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
 
     case 'pdf-watermark':
       return <PdfWatermarkEngine />;
+
+    case 'pdf-numbering':
+    case 'pdf-header-footer': {
+      let hfMode: HeaderFooterMode = 'numbering';
+      if (tool.slug === 'pdf-kopfzeile-hinzufuegen') hfMode = 'header';
+      else if (tool.slug === 'pdf-fusszeile-hinzufuegen') hfMode = 'footer';
+      return <PdfHeaderFooterEngine defaultMode={hfMode} toolSlug={tool.slug} />;
+    }
+
+    case 'pdf-compare':
+      return <PdfCompareEngine />;
+
+    case 'pdf-repair':
+      return <PdfRepairOptimizeEngine mode="repair" toolSlug={tool.slug} />;
+
+    case 'pdf-optimize':
+      return <PdfRepairOptimizeEngine mode="optimize" toolSlug={tool.slug} />;
+
+    case 'pdf-pdfa':
+      return <PdfRepairOptimizeEngine mode="pdfa" toolSlug={tool.slug} />;
+
+    case 'pdf-flatten':
+      return <PdfRepairOptimizeEngine mode="flatten" toolSlug={tool.slug} />;
+
+    case 'pdf-annotations-remove':
+      return <PdfRepairOptimizeEngine mode="strip-annotations" toolSlug={tool.slug} />;
+
+    case 'pdf-extract': {
+      let extMode: ExtractMode = 'images';
+      if (tool.slug === 'pdf-text-extrahieren') extMode = 'text';
+      else if (tool.slug === 'pdf-anhaenge-extrahieren') extMode = 'attachments';
+      return <PdfExtractEngine mode={extMode} toolSlug={tool.slug} />;
+    }
 
     case 'image-convert': {
       let primaryTarget = (tool.targetFormats[0] || '.png').replace('.', '').toUpperCase();
@@ -180,7 +220,17 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
     }
 
     case 'text-utility':
-      return <TextUtilityEngine toolId={tool.id as 'wortzaehler' | 'json-formatter' | 'base64-umwandeln'} />;
+      return <TextUtilityEngine toolId={tool.id as any} />;
+
+    case 'dev-utility':
+      return <DevUtilityEngine toolId={tool.id as any} />;
+
+    case 'media-convert':
+      return <MediaEngine toolId={tool.slug as any} />;
+
+    case 'archive':
+    case 'archive-tool':
+      return <ArchiveEngine toolId={tool.slug as any} />;
 
     case 'design-convert': {
       let designMode: DesignConvertMode = 'psd-to-raster';

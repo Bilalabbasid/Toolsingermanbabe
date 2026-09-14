@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
+import JSZip from 'jszip';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -11,13 +12,17 @@ import {
   Sliders,
   CheckCircle,
   Download,
-  AlertCircle
+  AlertCircle,
+  Layers
 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
+import { BatchProcessingQueue, BatchItem } from '@/components/tools/BatchProcessingQueue';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { runConcurrentBatch } from '@/lib/batch-queue';
+import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
 
 export type ImageTargetFormat =
   | 'PNG'
@@ -49,19 +54,52 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
   const [backgroundColor, setBackgroundColor] = useState<string>('#ffffff');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Batch states
+  const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
+  const [isZipping, setIsZipping] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const limits = getBatchLimits(isPro);
+
   const handleFilesSelected = (newFiles: File[]) => {
     if (newFiles.length === 0) return;
     setErrorMsg(null);
+
     if (targetFormat === 'PDF') {
       const combined = [...files, ...newFiles];
       setFiles(combined);
       const urls = combined.map((f) => URL.createObjectURL(f));
       setPreviewUrls(urls);
-    } else {
+      trackEvent('upload_completed', { targetFormat, count: newFiles.length });
+      return;
+    }
+
+    if (newFiles.length === 1 && files.length === 0 && batchItems.length === 0) {
+      // Single file workflow
       setFiles([newFiles[0]]);
       setPreviewUrls([URL.createObjectURL(newFiles[0])]);
+      setBatchItems([]);
+      trackEvent('upload_completed', { targetFormat, count: 1 });
+    } else {
+      // Batch workflow
+      const combined = [...files, ...newFiles];
+      const validation = validateBatchFiles(combined, isPro);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
+
+      setFiles(combined);
+      const newItems: BatchItem[] = combined.map((f, idx) => ({
+        id: `img_batch_${Date.now()}_${idx}_${Math.random().toString(36).substring(7)}`,
+        file: f,
+        status: 'queued',
+        progress: 0,
+      }));
+      setBatchItems(newItems);
+      trackEvent('batch_upload_completed', { targetFormat, count: combined.length });
     }
-    trackEvent('upload_completed', { targetFormat, count: newFiles.length });
   };
 
   const moveFile = (index: number, direction: 'left' | 'right') => {
@@ -88,171 +126,139 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
     setPreviewUrls(updatedUrls);
   };
 
-  /**
-   * Determine whether the given operation can be handled 100% locally in browser canvas
-   */
   const canProcessInBrowser = (file: File, target: ImageTargetFormat): boolean => {
     const ext = (file.name.split('.').pop() || '').toLowerCase();
-    
-    // Formats requiring server-side specialized decoders or encoders
     if (ext === 'heic' || ext === 'heif' || ext === 'tiff' || ext === 'tif') return false;
     if (target === 'SVG' || target === 'ICO' || target === 'BMP' || target === 'TIFF' || target === 'GIF') return false;
-    
-    // Multi-image to PDF is supported in browser via pdf-lib
     if (target === 'PDF') return true;
-
-    // Standard raster targets supported natively in modern HTML5 Canvas
     return target === 'PNG' || target === 'JPG' || target === 'WebP';
   };
 
   /**
-   * Server-side conversion via worker queue (/api/v1/jobs)
+   * Universal single-file processor (Client Canvas OR Server Worker)
    */
-  const executeServerConversion = async (file: File) => {
-    setStatusText('Bild wird an den Konvertierungs-Worker übergeben...');
-    setProgress(20);
+  const convertSingleFile = async (
+    file: File,
+    onProgress?: (pct: number, msg?: string) => void
+  ): Promise<{ blob: Blob; fileName: string; size: number }> => {
+    const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+    const ext = targetFormat.toLowerCase();
+    const outName = `coolwave_${baseName}.${ext}`;
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', 'image_convert');
-    formData.append('targetFormat', targetFormat.toLowerCase());
-    formData.append(
-      'options',
-      JSON.stringify({
-        targetFormat: targetFormat.toLowerCase(),
-        quality: quality,
-        backgroundColor: backgroundColor,
-      })
-    );
+    if (canProcessInBrowser(file, targetFormat)) {
+      onProgress?.(30, 'Bild wird im Browser transformiert...');
+      const objectUrl = URL.createObjectURL(file);
+      try {
+        const img = new Image();
+        img.src = objectUrl;
+        await new Promise((res, rej) => {
+          img.onload = res;
+          img.onerror = rej;
+        });
 
-    const res = await fetch('/api/v1/jobs', {
-      method: 'POST',
-      body: formData,
-    });
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Canvas 2D nicht verfügbar');
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || `Server-Fehler: ${res.statusText}`);
-    }
-
-    const jobData = await res.json();
-    const jobId = jobData.jobId;
-    setStatusText('Bild wird transformiert...');
-    setProgress(40);
-
-    // Poll worker status
-    let pollCount = 0;
-    while (pollCount < 60) {
-      await new Promise((r) => setTimeout(r, 1200));
-      pollCount++;
-
-      const checkRes = await fetch(`/api/v1/jobs/${jobId}`);
-      if (!checkRes.ok) continue;
-
-      const pollData = await checkRes.json();
-      if (pollData.progress) {
-        setProgress(Math.max(40, pollData.progress));
-      }
-
-      if (pollData.status === 'completed' && pollData.output?.downloadUrl) {
-        setStatusText('Download wird vorbereitet...');
-        setProgress(100);
-
-        // Fetch result blob for preview / download
-        const fileRes = await fetch(pollData.output.downloadUrl);
-        const blob = await fileRes.blob();
-        setResultBlob(blob);
-        setResultDownloadUrl(pollData.output.downloadUrl);
-        const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-        setOutputFilename(`coolwave_${baseName}.${targetFormat.toLowerCase()}`);
-        setIsProcessing(false);
-        trackEvent('conversion_completed', { targetFormat, mode: 'server' });
-        return;
-      }
-
-      if (pollData.status === 'failed') {
-        throw new Error(pollData.error || 'Server-Konvertierung fehlgeschlagen.');
-      }
-    }
-
-    throw new Error('Zeitüberschreitung bei der Server-Konvertierung.');
-  };
-
-  /**
-   * Browser-side Canvas conversion
-   */
-  const executeBrowserConversion = async (file: File) => {
-    setStatusText('Bild wird im Browser geladen...');
-    setProgress(30);
-
-    const img = new Image();
-    const objectUrl = previewUrls[0] || URL.createObjectURL(file);
-    img.src = objectUrl;
-
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-      img.onerror = () => reject(new Error('Konnte Bild nicht im Browser dekodieren.'));
-    });
-
-    setStatusText('Bildformat wird transformiert...');
-    setProgress(65);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth || img.width;
-    canvas.height = img.naturalHeight || img.height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Canvas 2D-Kontext nicht verfügbar');
-
-    if (targetFormat === 'JPG') {
-      ctx.fillStyle = backgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    ctx.drawImage(img, 0, 0);
-
-    const mimeMap: Record<string, string> = {
-      PNG: 'image/png',
-      JPG: 'image/jpeg',
-      WebP: 'image/webp',
-    };
-
-    const targetMime = mimeMap[targetFormat] || 'image/png';
-    const q = targetFormat === 'PNG' ? undefined : quality / 100;
-
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          throw new Error('Konnte Bild-Blob nicht aus Canvas generieren.');
+        if (targetFormat === 'JPG') {
+          ctx.fillStyle = backgroundColor;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-        setResultBlob(blob);
-        const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-        const ext = targetFormat.toLowerCase();
-        setOutputFilename(`coolwave_${baseName}.${ext}`);
-        setProgress(100);
-        setIsProcessing(false);
-        trackEvent('conversion_completed', { targetFormat, mode: 'browser' });
-      },
-      targetMime,
-      q
-    );
+        ctx.drawImage(img, 0, 0);
+
+        const mimeMap: Record<string, string> = {
+          PNG: 'image/png',
+          JPG: 'image/jpeg',
+          WebP: 'image/webp',
+        };
+        const targetMime = mimeMap[targetFormat] || 'image/png';
+        const q = targetFormat === 'PNG' ? undefined : quality / 100;
+
+        onProgress?.(70, 'Blob wird erzeugt...');
+        const blob = await new Promise<Blob>((res, rej) => {
+          canvas.toBlob(
+            (b) => (b ? res(b) : rej(new Error('Konnte Bild nicht konvertieren'))),
+            targetMime,
+            q
+          );
+        });
+
+        onProgress?.(100, 'Fertig');
+        return { blob, fileName: outName, size: blob.size };
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    } else {
+      // Server-side worker processing
+      onProgress?.(20, 'Übertragung an Worker...');
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'image_convert');
+      formData.append('targetFormat', targetFormat.toLowerCase());
+      formData.append(
+        'options',
+        JSON.stringify({
+          targetFormat: targetFormat.toLowerCase(),
+          quality,
+          backgroundColor,
+        })
+      );
+
+      const res = await fetch('/api/v1/jobs', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server-Fehler: ${res.statusText}`);
+      }
+
+      const jobData = await res.json();
+      const jobId = jobData.jobId;
+
+      let pollCount = 0;
+      while (pollCount < 60) {
+        await new Promise((r) => setTimeout(r, 1200));
+        pollCount++;
+
+        const checkRes = await fetch(`/api/v1/jobs/${jobId}`);
+        if (!checkRes.ok) continue;
+
+        const pollData = await checkRes.json();
+        if (pollData.progress) {
+          onProgress?.(Math.max(30, pollData.progress), 'Server verarbeitet...');
+        }
+
+        if (pollData.status === 'completed' && pollData.output?.downloadUrl) {
+          const downloadRes = await fetch(pollData.output.downloadUrl);
+          const blob = await downloadRes.blob();
+          onProgress?.(100, 'Fertig');
+          return { blob, fileName: pollData.output.fileName || outName, size: blob.size };
+        }
+
+        if (pollData.status === 'failed') {
+          throw new Error(pollData.error || 'Server-Konvertierung fehlgeschlagen');
+        }
+      }
+
+      throw new Error('Zeitüberschreitung bei der Serververarbeitung');
+    }
   };
 
-  /**
-   * Main conversion trigger
-   */
-  const executeConversion = async () => {
+  // Single-file execute
+  const executeSingleConversion = async () => {
     if (files.length === 0) return;
     setIsProcessing(true);
-    setProgress(10);
+    setProgress(15);
     setErrorMsg(null);
     setStatusText('Initialisierung...');
-    trackEvent('conversion_started', { targetFormat, count: files.length });
 
     try {
       if (targetFormat === 'PDF') {
-        // Multi-image to PDF conversion via pdf-lib
         const pdf = await PDFDocument.create();
-
         for (let i = 0; i < files.length; i++) {
           const currentFile = files[i];
           const pct = 15 + Math.round(((i + 1) / files.length) * 70);
@@ -261,7 +267,6 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
 
           const arrayBuffer = await currentFile.arrayBuffer();
           let embeddedImage;
-
           if (currentFile.type === 'image/png' || currentFile.name.toLowerCase().endsWith('.png')) {
             embeddedImage = await pdf.embedPng(arrayBuffer);
           } else {
@@ -270,17 +275,11 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
 
           const { width, height } = embeddedImage.scale(1);
           const page = pdf.addPage([width, height]);
-          page.drawImage(embeddedImage, {
-            x: 0,
-            y: 0,
-            width,
-            height,
-          });
+          page.drawImage(embeddedImage, { x: 0, y: 0, width, height });
         }
 
         setProgress(90);
-        setStatusText('PDF wird fertiggestellt...');
-
+        setStatusText('PDF wird finalisiert...');
         const pdfBytes = await pdf.save();
         const blob = new Blob([pdfBytes as unknown as BlobPart], { type: 'application/pdf' });
         setResultBlob(blob);
@@ -293,46 +292,126 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
         return;
       }
 
-      const currentFile = files[0];
+      const result = await convertSingleFile(files[0], (p, msg) => {
+        setProgress(p);
+        if (msg) setStatusText(msg);
+      });
 
-      // Check if browser-side processing is feasible
-      if (canProcessInBrowser(currentFile, targetFormat)) {
-        try {
-          await executeBrowserConversion(currentFile);
-          return;
-        } catch (browserErr) {
-          console.warn('Browser-Konvertierung fehlgeschlagen, wechsle zu Server-Worker:', browserErr);
-          // Seamless fallback to server worker
-          await executeServerConversion(currentFile);
-        }
-      } else {
-        // Run directly in isolated server worker
-        await executeServerConversion(currentFile);
-      }
+      setResultBlob(result.blob);
+      setOutputFilename(result.fileName);
+      setProgress(100);
+      setIsProcessing(false);
+      trackEvent('conversion_completed', { targetFormat, mode: 'browser' });
     } catch (err: any) {
       console.error(err);
       setIsProcessing(false);
-      setErrorMsg(err.message || 'Fehler bei der Konvertierung. Bitte überprüfen Sie die Datei.');
+      setErrorMsg(err.message || 'Fehler bei der Konvertierung.');
       trackEvent('conversion_failed', { targetFormat, error: err.message });
     }
   };
 
-  const handleDownload = () => {
-    if (resultDownloadUrl) {
-      const a = document.createElement('a');
-      a.href = resultDownloadUrl;
-      a.download = outputFilename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      trackEvent('download_completed', { targetFormat });
-    } else if (resultBlob) {
-      downloadBlob(resultBlob, outputFilename);
-      trackEvent('download_completed', { targetFormat });
+  // Batch execute
+  const startBatch = async () => {
+    if (batchItems.length === 0) return;
+    setIsProcessing(true);
+    abortControllerRef.current = new AbortController();
+
+    const tasks = batchItems.map((item) => ({
+      id: item.id,
+      run: async (signal?: AbortSignal) => {
+        if (signal?.aborted) throw new Error('Abgebrochen');
+        return await convertSingleFile(item.file, (pct, statusText) => {
+          setBatchItems((prev) =>
+            prev.map((i) => (i.id === item.id ? { ...i, progress: pct, statusText } : i))
+          );
+        });
+      },
+    }));
+
+    await runConcurrentBatch(tasks, {
+      concurrency: limits.clientConcurrency,
+      signal: abortControllerRef.current.signal,
+      onItemStart: (id) => {
+        setBatchItems((prev) =>
+          prev.map((i) => (i.id === id ? { ...i, status: 'processing', progress: 10 } : i))
+        );
+      },
+      onItemComplete: (id, result) => {
+        setBatchItems((prev) =>
+          prev.map((i) =>
+            i.id === id
+              ? {
+                  ...i,
+                  status: 'completed',
+                  progress: 100,
+                  outputBlob: result.blob,
+                  outputFileName: result.fileName,
+                  outputSize: result.size,
+                }
+              : i
+          )
+        );
+      },
+      onItemError: (id, err) => {
+        setBatchItems((prev) =>
+          prev.map((i) =>
+            i.id === id ? { ...i, status: 'failed', error: err.message, progress: 0 } : i
+          )
+        );
+      },
+    });
+
+    setIsProcessing(false);
+  };
+
+  const cancelBatch = () => {
+    abortControllerRef.current?.abort();
+    setIsProcessing(false);
+    setBatchItems((prev) =>
+      prev.map((i) => (i.status === 'processing' || i.status === 'queued' ? { ...i, status: 'cancelled' } : i))
+    );
+  };
+
+  const clearQueue = () => {
+    setFiles([]);
+    setPreviewUrls([]);
+    setBatchItems([]);
+  };
+
+  const removeItem = (id: string) => {
+    setBatchItems((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const downloadItem = (item: BatchItem) => {
+    if (item.outputBlob && item.outputFileName) {
+      downloadBlob(item.outputBlob, item.outputFileName);
     }
   };
 
-  const handleReset = () => {
+  const downloadAllZip = async () => {
+    const completedItems = batchItems.filter((i) => i.status === 'completed' && i.outputBlob);
+    if (completedItems.length === 0) return;
+
+    setIsZipping(true);
+    try {
+      const zip = new JSZip();
+      completedItems.forEach((item) => {
+        if (item.outputBlob && item.outputFileName) {
+          zip.file(item.outputFileName, item.outputBlob);
+        }
+      });
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      downloadBlob(zipBlob, `coolwave_${targetFormat.toLowerCase()}_stapel_${Date.now()}.zip`);
+    } catch (err) {
+      console.error('[Zip Error]:', err);
+      alert('Fehler beim Erstellen des ZIP-Archivs.');
+    } finally {
+      setIsZipping(false);
+    }
+  };
+
+  const handleResetSingle = () => {
     setFiles([]);
     setPreviewUrls([]);
     setResultBlob(null);
@@ -342,27 +421,82 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
     setErrorMsg(null);
   };
 
+  const isBatchView = batchItems.length > 1 && targetFormat !== 'PDF';
+
   return (
-    <div className="w-full">
+    <div className="w-full space-y-6">
       {errorMsg && (
-        <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-center gap-3">
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-center gap-3">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <p className="text-sm font-medium">{errorMsg}</p>
         </div>
       )}
 
-      {files.length === 0 && (
+      {/* Batch Mode View */}
+      {isBatchView ? (
+        <div className="space-y-6">
+          {/* Format Settings for Batch */}
+          {(targetFormat === 'JPG' || targetFormat === 'WebP' || targetFormat === 'AVIF') && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+              <div className="flex justify-between items-center text-xs font-semibold text-slate-700 mb-2">
+                <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider">
+                  <Sliders className="w-3.5 h-3.5 text-sky-600" />
+                  Qualitätsstufe für alle Bilder:
+                </span>
+                <span className="text-sky-600 font-bold bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
+                  {quality}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min={40}
+                max={100}
+                value={quality}
+                disabled={isProcessing}
+                onChange={(e) => setQuality(Number(e.target.value))}
+                className="w-full accent-sky-600 cursor-pointer disabled:opacity-50"
+              />
+            </div>
+          )}
+
+          <BatchProcessingQueue
+            items={batchItems}
+            isProcessing={isProcessing}
+            onStartBatch={startBatch}
+            onCancelBatch={cancelBatch}
+            onClearQueue={clearQueue}
+            onRemoveItem={removeItem}
+            onDownloadItem={downloadItem}
+            onDownloadAllZip={downloadAllZip}
+            isZipping={isZipping}
+            toolTitle={`Bilder nach ${targetFormat} umwandeln (Stapel)`}
+          />
+        </div>
+      ) : files.length === 0 ? (
+        /* Empty Uploader State */
         <FileUploader
           onFilesSelected={handleFilesSelected}
-          allowMultiple={targetFormat === 'PDF'}
-          maxFileSizeMB={50}
+          allowMultiple={true}
+          maxFileSizeMB={limits.maxFileSizeMB}
           acceptedExtensions={sourceExtensions}
-          title={targetFormat === 'PDF' ? 'Bilder hier ablegen (Mehrfachauswahl möglich)' : 'Bild hier ablegen'}
-          subtitle={`Unterstützt: ${sourceExtensions.join(', ').toUpperCase()}`}
+          title={targetFormat === 'PDF' ? 'Bilder hier ablegen (Mehrfachauswahl möglich)' : 'Bilder hier ablegen (Einzel- oder Stapelverarbeitung)'}
+          subtitle={`Unterstützt: ${sourceExtensions.join(', ').toUpperCase()} • Bis zu ${limits.maxBatchFiles} Dateien (${isPro ? 'Pro' : 'Kostenlos'})`}
         />
-      )}
-
-      {files.length > 0 && !resultBlob && !isProcessing && (
+      ) : resultBlob ? (
+        /* Single File Completed State */
+        <DownloadBox
+          filename={outputFilename}
+          originalSizeBytes={files[0].size}
+          resultSizeBytes={resultBlob.size}
+          onDownload={() => downloadBlob(resultBlob, outputFilename)}
+          onReset={handleResetSingle}
+          downloadLabel={`Konvertiertes ${targetFormat} herunterladen`}
+        />
+      ) : isProcessing ? (
+        /* Single File Processing State */
+        <ProcessingStatus progress={progress} statusText={statusText} />
+      ) : (
+        /* Single File Options & Preview State (Preserved) */
         <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
@@ -380,7 +514,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
             </div>
 
             <button
-              onClick={handleReset}
+              onClick={handleResetSingle}
               className="text-xs font-semibold text-slate-500 hover:text-slate-700 underline cursor-pointer"
             >
               Neu starten
@@ -399,7 +533,6 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
               </div>
 
               <div className="md:col-span-2 space-y-4">
-                {/* Quality Slider for lossy formats */}
                 {(targetFormat === 'JPG' || targetFormat === 'WebP' || targetFormat === 'AVIF') && (
                   <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
                     <div className="flex justify-between items-center text-xs font-semibold text-slate-700">
@@ -417,14 +550,9 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
                       onChange={(e) => setQuality(Number(e.target.value))}
                       className="w-full accent-sky-600 cursor-pointer"
                     />
-                    <div className="flex justify-between text-[10px] text-slate-400">
-                      <span>Kleinere Datei (40%)</span>
-                      <span>Beste Qualität (100%)</span>
-                    </div>
                   </div>
                 )}
 
-                {/* Background color toggle for formats that don't support alpha transparency (JPG, BMP) */}
                 {(targetFormat === 'JPG' || targetFormat === 'BMP') && (
                   <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
                     <span className="text-xs font-semibold text-slate-700 block">
@@ -452,67 +580,39 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
                             : 'border-slate-200 bg-white text-slate-700'
                         }`}
                       >
-                        <span className="w-3 h-3 rounded-full bg-black" />
+                        <span className="w-3 h-3 rounded-full bg-black border border-slate-700" />
                         Schwarz
                       </button>
                     </div>
                   </div>
                 )}
-
-                <div className="text-xs text-slate-500 flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>
-                    {canProcessInBrowser(files[0], targetFormat)
-                      ? '100% datenschutzkonform direkt in Ihrem Browser transformiert.'
-                      : 'High-Performance Konvertierung über die sichere CoolWave Engine.'}
-                  </span>
-                </div>
               </div>
             </div>
           )}
 
-          {/* Multi-image preview grid for PDF compilation */}
-          {targetFormat === 'PDF' && (
+          {/* Multi-image to PDF preview gallery */}
+          {targetFormat === 'PDF' && files.length > 1 && (
             <div className="space-y-3">
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                Reihenfolge der PDF-Seiten:
+              <span className="text-xs font-semibold text-slate-700 block">
+                Seitenreihenfolge im PDF (Bilder neu anordnen):
               </span>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-72 overflow-y-auto p-2 bg-slate-50 rounded-xl border border-slate-100">
-                {files.map((f, idx) => (
-                  <div key={idx} className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-xs flex flex-col justify-between">
-                    <div className="relative aspect-square mb-2 bg-slate-100 rounded flex items-center justify-center overflow-hidden">
-                      <img src={previewUrls[idx]} alt={f.name} className="w-full h-full object-cover" />
-                      <span className="absolute top-1 left-1 bg-slate-900/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                        #{idx + 1}
-                      </span>
-                    </div>
-
-                    <span className="text-[11px] font-semibold text-slate-800 truncate block mb-2">{f.name}</span>
-
-                    <div className="flex items-center justify-between border-t border-slate-100 pt-1.5">
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => moveFile(idx, 'left')}
-                          disabled={idx === 0}
-                          className="p-1 hover:bg-slate-100 disabled:opacity-30 rounded text-slate-600"
-                        >
-                          <ArrowLeft className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => moveFile(idx, 'right')}
-                          disabled={idx === files.length - 1}
-                          className="p-1 hover:bg-slate-100 disabled:opacity-30 rounded text-slate-600"
-                        >
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-
-                      <button
-                        onClick={() => removeFile(idx)}
-                        className="p-1 text-red-500 hover:bg-red-50 rounded"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                {files.map((file, idx) => (
+                  <div key={idx} className="relative group border border-slate-200 rounded-xl p-2 bg-slate-50 flex flex-col items-center">
+                    <span className="absolute top-1 left-1 bg-slate-800 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold z-10">
+                      {idx + 1}
+                    </span>
+                    <img src={previewUrls[idx]} alt="Thumbnail" className="w-full h-20 object-contain rounded mb-2" />
+                    <span className="text-[10px] text-slate-600 truncate w-full text-center">{file.name}</span>
+                    <div className="flex items-center gap-1 mt-1">
+                      <button type="button" onClick={() => moveFile(idx, 'left')} disabled={idx === 0} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">
+                        <ArrowLeft className="w-3 h-3" />
+                      </button>
+                      <button type="button" onClick={() => moveFile(idx, 'right')} disabled={idx === files.length - 1} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">
+                        <ArrowRight className="w-3 h-3" />
+                      </button>
+                      <button type="button" onClick={() => removeFile(idx)} className="p-1 rounded bg-white text-red-500 shadow-xs hover:bg-red-50">
+                        <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
                   </div>
@@ -521,35 +621,15 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
             </div>
           )}
 
-          <div className="pt-2 flex justify-end">
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
             <button
-              onClick={executeConversion}
-              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+              onClick={executeSingleConversion}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition"
             >
               <RefreshCw className="w-4 h-4" />
-              In {targetFormat} umwandeln
+              <span>{targetFormat === 'PDF' ? 'PDF jetzt zusammenfügen' : 'Jetzt umwandeln'}</span>
             </button>
           </div>
-        </div>
-      )}
-
-      {isProcessing && (
-        <div className="mt-6">
-          <ProcessingStatus
-            progress={progress}
-            statusText={statusText}
-          />
-        </div>
-      )}
-
-      {resultBlob && (
-        <div className="mt-6">
-          <DownloadBox
-            filename={outputFilename}
-            resultSizeBytes={resultBlob.size}
-            onDownload={handleDownload}
-            onReset={handleReset}
-          />
         </div>
       )}
     </div>

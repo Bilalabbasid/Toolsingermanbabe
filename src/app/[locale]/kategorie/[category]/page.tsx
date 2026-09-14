@@ -8,6 +8,7 @@ import { ToolCategory } from '@/types/tool';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { FileText, ArrowRight } from 'lucide-react';
 import { generateCategoryMetadata, generateBreadcrumbSchema } from '@/lib/seo';
+import { AdSlot } from '@/components/common/AdSlot';
 
 interface CategoryPageProps {
   params: Promise<{
@@ -74,6 +75,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {catInfo.shortDesc}
           </p>
         </div>
+
+        <AdSlot slotKey="category_top" className="my-6" />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 my-10">
           {tools.map((tool) => (

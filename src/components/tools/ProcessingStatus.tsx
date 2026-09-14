@@ -4,9 +4,10 @@ import { Loader2 } from 'lucide-react';
 interface ProcessingStatusProps {
   progress: number;
   statusText: string;
+  onCancel?: () => void;
 }
 
-export function ProcessingStatus({ progress, statusText }: ProcessingStatusProps) {
+export function ProcessingStatus({ progress, statusText, onCancel }: ProcessingStatusProps) {
   return (
     <div className="w-full bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center shadow-sm">
       <div className="flex flex-col items-center justify-center max-w-md mx-auto">
@@ -30,6 +31,16 @@ export function ProcessingStatus({ progress, statusText }: ProcessingStatusProps
         <span className="text-xs font-semibold text-slate-600 font-mono">
           {Math.round(progress)}%
         </span>
+
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="mt-4 text-xs font-semibold text-slate-500 hover:text-rose-600 transition"
+          >
+            Vorgang abbrechen
+          </button>
+        )}
       </div>
     </div>
   );

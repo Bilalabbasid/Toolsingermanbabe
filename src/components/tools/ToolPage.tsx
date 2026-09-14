@@ -243,6 +243,9 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
           </section>
         )}
 
+        {/* Policy-Compliant In-Content Ad Placement (Safely placed far below application controls) */}
+        <AdSlot slotKey="tool_content" className="my-10" />
+
         {/* FAQ Accordion with Schema */}
         <FaqSection faqs={tool.faqDe} toolName={tool.nameDe} />
 

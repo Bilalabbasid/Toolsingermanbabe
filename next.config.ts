@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     'bmp-js',
     'png-to-ico',
     'ag-psd',
+    '@ffmpeg-installer/ffmpeg',
+    '@ffmpeg-installer/win32-x64',
+    '7z-bin',
   ],
   async headers() {
     return [
