@@ -5,6 +5,7 @@ import zlib from 'zlib';
 import { promisify } from 'util';
 import { execFile } from 'child_process';
 import JSZip from 'jszip';
+import { safeLoadZip } from '@/server/security/safeArchive';
 import { IConversionService, ConversionResult } from '../base.service';
 import { ServiceOptions } from '@/types/job';
 
@@ -70,7 +71,7 @@ export class ArchiveService implements IConversionService {
     onProgress(10);
     if (signal?.aborted) throw new Error('Operation abgebrochen');
 
-    const jobType = options.type || 'archive_zip_extract';
+    const jobType = options.jobType || options.type || 'archive_zip_extract';
     const baseName = path.basename(inputName, path.extname(inputName));
     const inputExt = path.extname(inputName).toLowerCase();
 
@@ -80,7 +81,7 @@ export class ArchiveService implements IConversionService {
     if (jobType === 'archive_gzip_extract' || jobType === 'gzip-entpacken' || inputExt === '.gz') {
       onProgress(30);
       try {
-        const decompressed = await gunzipAsync(inputBuffer);
+        const decompressed = await gunzipAsync(inputBuffer, { maxOutputLength: MAX_UNCOMPRESSED_BYTES });
         if (decompressed.length > MAX_UNCOMPRESSED_BYTES) {
           throw new Error('Sicherheitswarnung: Archiv überschreitet das Entpackungslimit (Decompression Bomb Verdacht).');
         }
@@ -142,7 +143,7 @@ export class ArchiveService implements IConversionService {
       jobType !== 'tar-entpacken'
     ) {
       const zip = new JSZip();
-      const loadedZip = await zip.loadAsync(inputBuffer);
+      const loadedZip = await safeLoadZip(inputBuffer, { maxEntries: MAX_ENTRIES_COUNT, maxUncompressedBytes: MAX_UNCOMPRESSED_BYTES });
       onProgress(40);
 
       let totalBytes = 0;
@@ -195,7 +196,7 @@ export class ArchiveService implements IConversionService {
     // -------------------------------------------------------------
     // 4. 7Z & TAR EXTRACTION (via 7z.exe with strict isolation)
     // -------------------------------------------------------------
-    const workDir = path.join(process.cwd(), '.tmp', 'workdir', `arch_${crypto.randomUUID()}`);
+    const workDir = path.join(process.env.COOLWAVE_TEMP_DIR || path.join(process.cwd(), '.tmp'), 'workdir', `arch_${crypto.randomUUID()}`);
     await fs.mkdir(workDir, { recursive: true });
 
     const archiveInputPath = path.join(workDir, `archive${inputExt || '.7z'}`);

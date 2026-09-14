@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ephemeral temp storage & journals
+/.tmp/
+/data/logs/
+*.db
+*.db-journal

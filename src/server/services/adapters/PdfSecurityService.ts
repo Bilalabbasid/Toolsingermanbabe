@@ -1,3 +1,4 @@
+import { rasterRedact } from './rasterRedaction';
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
@@ -72,7 +73,7 @@ export class PdfSecurityService implements IConversionService {
     'pdf_sign',
   ];
 
-  private tempDir = path.join(process.cwd(), '.tmp', 'security');
+  private tempDir = path.join(process.env.COOLWAVE_TEMP_DIR || path.join(process.cwd(), '.tmp'), 'security');
 
   constructor() {
     // Ensure isolated temporary storage directory exists
@@ -224,98 +225,7 @@ export class PdfSecurityService implements IConversionService {
     terms: string[] = [],
     zones: RedactionZone[] = []
   ): Promise<Buffer> {
-    const doc = await PDFDocument.load(inputBuffer, { ignoreEncryption: true });
-    const cleanTerms = terms.map((t) => t.trim()).filter((t) => t.length > 0);
-
-    const pageCount = doc.getPageCount();
-
-    // 1. Process and excise text from content streams
-    for (let pageIdx = 0; pageIdx < pageCount; pageIdx++) {
-      const page = doc.getPage(pageIdx);
-      const contentsObj = page.node.Contents();
-      if (!contentsObj) continue;
-
-      // Extract array of stream references
-      const streamRefs: unknown[] = [];
-      if (contentsObj.constructor.name === 'PDFArray' || 'size' in contentsObj) {
-        const arr = contentsObj as { size: () => number; get: (idx: number) => unknown };
-        for (let i = 0; i < arr.size(); i++) {
-          streamRefs.push(arr.get(i));
-        }
-      } else {
-        streamRefs.push(contentsObj);
-      }
-
-      for (const ref of streamRefs) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const stream = doc.context.lookup(ref as any) as any;
-        if (!stream || !stream.contents) continue;
-
-        let rawBuffer: Buffer = Buffer.from(stream.contents);
-        let wasFlated = false;
-
-        // Attempt flate decompression
-        try {
-          rawBuffer = zlib.inflateSync(rawBuffer);
-          wasFlated = true;
-        } catch {
-          // Stream might be uncompressed
-        }
-
-        let streamStr = rawBuffer.toString('latin1');
-        let modified = false;
-
-        for (const term of cleanTerms) {
-          // A. Plain string search & replacement with equal number of whitespace
-          if (streamStr.includes(term)) {
-            const mask = ' '.repeat(term.length);
-            streamStr = streamStr.replaceAll(term, mask);
-            modified = true;
-          }
-
-          // B. Hex encoded string search (e.g. <48656C6C6F>)
-          const hexTerm = Buffer.from(term, 'utf8').toString('hex');
-          const hexMask = Buffer.from(' '.repeat(term.length), 'utf8').toString('hex');
-          const hexRegex = new RegExp(hexTerm, 'gi');
-          if (hexRegex.test(streamStr)) {
-            streamStr = streamStr.replace(hexRegex, hexMask);
-            modified = true;
-          }
-
-          // C. Literal escaped parens search (e.g. \(term\))
-          const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          const literalRegex = new RegExp(escapedTerm, 'g');
-          if (literalRegex.test(streamStr)) {
-            streamStr = streamStr.replace(literalRegex, ' '.repeat(term.length));
-            modified = true;
-          }
-        }
-
-        if (modified) {
-          const newBytes = Buffer.from(streamStr, 'latin1');
-          if (wasFlated) {
-            stream.contents = zlib.deflateSync(newBytes);
-          } else {
-            stream.contents = newBytes;
-          }
-        }
-      }
-
-      // 2. Draw visual blackout blocks for zones on this page
-      const pageZones = zones.filter((z) => z.pageIndex === pageIdx);
-      for (const zone of pageZones) {
-        page.drawRectangle({
-          x: zone.x,
-          y: zone.y,
-          width: zone.width,
-          height: zone.height,
-          color: rgb(0, 0, 0),
-        });
-      }
-    }
-
-    const outputBytes = await doc.save({ useObjectStreams: true });
-    return Buffer.from(outputBytes);
+    return rasterRedact(inputBuffer, terms, zones);
   }
 
   /**

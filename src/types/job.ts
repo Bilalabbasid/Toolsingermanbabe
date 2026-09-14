@@ -22,6 +22,7 @@ export interface JobOutput {
 }
 
 export interface ConversionJob {
+  ownerId?: string;
   id: string;
   type: string;
   status: JobStatus;

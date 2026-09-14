@@ -1,11 +1,14 @@
 import crypto from 'crypto';
 import { privacyConfig } from '@/config/privacy.config';
 
+const signingGlobal = globalThis as typeof globalThis & { cwDownloadSecret?: string };
+const signingSecret = process.env.DOWNLOAD_SIGNING_SECRET || (signingGlobal.cwDownloadSecret ??= crypto.randomBytes(32).toString('hex'));
+
 /**
  * Creates a cryptographically signed HMAC-SHA256 signature for a file download.
  */
 export function generateDownloadSignature(jobId: string, expirationUnixMs: number): string {
-  const secret = privacyConfig.signedUrls.secret;
+  const secret = signingSecret;
   const payload = `${jobId}:${expirationUnixMs}`;
   return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 }
@@ -43,7 +46,8 @@ export function verifySignedDownloadToken(
     };
   }
 
-  const exp = parseInt(expStr, 10);
+  if (!/^\d{13}$/.test(expStr) || !/^[a-f0-9]{64}$/.test(token)) return { valid: false, reason: 'Ungueltige Signatur.' };
+  const exp = Number(expStr);
   if (isNaN(exp)) {
     return { valid: false, reason: 'Ungültiges Zeitstempel-Format.' };
   }

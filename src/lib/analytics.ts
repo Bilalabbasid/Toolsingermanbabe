@@ -1,4 +1,5 @@
 import { AnalyticsEventType } from '@/types/analytics';
+import { getCookieConsent } from '@/components/common/CookieBanner';
 
 interface ClientEventPayload {
   toolSlug?: string;
@@ -30,6 +31,7 @@ export function getActiveToolSlug(): string | undefined {
  */
 export function setActiveToolSlug(toolSlug: string): void {
   if (typeof window === 'undefined') return;
+  if (!getCookieConsent()?.analytics) return;
   try {
     sessionStorage.setItem('cw_active_tool', toolSlug);
   } catch {
@@ -42,6 +44,7 @@ export function setActiveToolSlug(toolSlug: string): void {
  */
 export function sendAnalyticsEvent(eventType: AnalyticsEventType, payload: ClientEventPayload = {}): void {
   if (typeof window === 'undefined') return;
+  if (!getCookieConsent()?.analytics) return;
 
   const activeSlug = getActiveToolSlug();
   const eventData = {

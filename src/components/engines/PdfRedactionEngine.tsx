@@ -61,7 +61,7 @@ export function PdfRedactionEngine() {
     setIsProcessing(true);
     setError(null);
     setProgress(20);
-    setStatusText('PDF-Datenströme werden analysiert und dekomprimiert...');
+    setStatusText('PDF-Seiten werden geprüft und gerastert...');
 
     try {
       const formData = new FormData();
@@ -70,7 +70,7 @@ export function PdfRedactionEngine() {
       formData.append('terms', JSON.stringify(finalTerms));
 
       setProgress(50);
-      setStatusText('Vertrauliche Textsegmente werden physisch aus dem Dokument gelöscht...');
+      setStatusText('Vertrauliche Bereiche werden entfernt...');
 
       const res = await fetch('/api/v1/pdf/security', {
         method: 'POST',

@@ -36,7 +36,7 @@ export function AdSlot({
       return;
     }
 
-    if (!adsConfig.enabled) {
+    if (!adsConfig.enabled || !/^ca-pub-\d+$/.test(adsConfig.clientId) || !/^\d+$/.test(activeSlotId)) {
       setShouldRender(false);
       return;
     }

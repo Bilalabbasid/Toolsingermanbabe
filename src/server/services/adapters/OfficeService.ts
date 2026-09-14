@@ -192,7 +192,7 @@ export class OfficeService implements IConversionService {
       throw new Error(`Nicht unterstützter Konvertierungspfad: ${ext} zu .${target}`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unbekannter Konvertierungsfehler';
-      console.error(`[OfficeService Error] Failed to convert ${inputName}:`, msg);
+      console.error('[OfficeService] Conversion failed.');
       throw new Error(`Fehler bei der Dokument-Konvertierung: ${msg}`);
     }
   }

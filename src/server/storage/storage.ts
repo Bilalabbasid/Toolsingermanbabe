@@ -29,7 +29,7 @@ export class LocalStorageProvider implements IStorageProvider {
   private outputsDir: string;
 
   constructor(customBaseDir?: string) {
-    this.baseDir = customBaseDir || path.join(process.cwd(), '.tmp', 'storage');
+    this.baseDir = customBaseDir || path.join(process.env.COOLWAVE_TEMP_DIR || path.join(process.cwd(), '.tmp'), 'storage');
     this.uploadsDir = path.join(this.baseDir, 'uploads');
     this.outputsDir = path.join(this.baseDir, 'outputs');
   }
@@ -41,7 +41,8 @@ export class LocalStorageProvider implements IStorageProvider {
 
   async saveInput(data: ArrayBuffer | Buffer, originalName: string): Promise<{ storagePath: string; sizeBytes: number }> {
     await this.ensureDirs();
-    const safeExt = path.extname(originalName) || '';
+    const rawExt = path.extname(originalName) || '';
+    const safeExt = rawExt.toLowerCase().replace(/[^a-z0-9.]/g, '');
     const uniqueId = crypto.randomUUID();
     const filename = `${uniqueId}${safeExt}`;
     const storagePath = path.join(this.uploadsDir, filename);
@@ -58,7 +59,8 @@ export class LocalStorageProvider implements IStorageProvider {
   async saveOutput(data: ArrayBuffer | Buffer | Uint8Array, filename: string): Promise<{ storagePath: string; sizeBytes: number }> {
     await this.ensureDirs();
     const uniqueId = crypto.randomUUID();
-    const safeFilename = `${uniqueId}_${path.basename(filename)}`;
+    const cleanedBase = path.basename(filename).replace(/[^a-zA-Z0-9._-]/g, '_');
+    const safeFilename = `${uniqueId}_${cleanedBase}`;
     const storagePath = path.join(this.outputsDir, safeFilename);
 
     let buffer: Buffer;
@@ -78,22 +80,27 @@ export class LocalStorageProvider implements IStorageProvider {
     };
   }
 
-  private assertWithinBaseDir(targetPath: string): string {
+  private async assertWithinBaseDir(targetPath: string): Promise<string> {
     const resolvedTarget = path.resolve(targetPath);
     const resolvedBase = path.resolve(this.baseDir);
-    if (!resolvedTarget.startsWith(resolvedBase)) {
+    const baseWithSep = resolvedBase.endsWith(path.sep) ? resolvedBase : resolvedBase + path.sep;
+    if (resolvedTarget !== resolvedBase && !resolvedTarget.startsWith(baseWithSep)) {
       throw new Error('Unzulässiger Zugriff: Pfad befindet sich außerhalb des sicheren Speicherbereichs.');
     }
+    const realBase = await fs.realpath(resolvedBase);
+    const realTarget = await fs.realpath(resolvedTarget);
+    const relative = path.relative(realBase, realTarget);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('Unsafe storage path.');
     return resolvedTarget;
   }
 
   async read(storagePath: string): Promise<Buffer> {
-    const safePath = this.assertWithinBaseDir(storagePath);
+    const safePath = await this.assertWithinBaseDir(storagePath);
     return await fs.readFile(safePath);
   }
 
   async getFileStats(storagePath: string): Promise<StorageFileStats> {
-    const safePath = this.assertWithinBaseDir(storagePath);
+    const safePath = await this.assertWithinBaseDir(storagePath);
     const stat = await fs.stat(safePath);
     return {
       sizeBytes: stat.size,
@@ -102,7 +109,7 @@ export class LocalStorageProvider implements IStorageProvider {
   }
 
   async createReadStream(storagePath: string, chunkSize = 64 * 1024): Promise<StorageStreamResult> {
-    const safePath = this.assertWithinBaseDir(storagePath);
+    const safePath = await this.assertWithinBaseDir(storagePath);
     const stat = await fs.stat(safePath);
     const stream = fsCreateReadStream(safePath, { highWaterMark: chunkSize });
     return {
@@ -113,7 +120,7 @@ export class LocalStorageProvider implements IStorageProvider {
 
   async delete(storagePath: string): Promise<void> {
     try {
-      const safePath = this.assertWithinBaseDir(storagePath);
+      const safePath = await this.assertWithinBaseDir(storagePath);
       await fs.unlink(safePath);
     } catch {
       // Ignore if file is already deleted or outside baseDir

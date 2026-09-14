@@ -126,6 +126,7 @@ export class ConversionEngine {
     const service = this.getService(job.type);
 
     if (!service) {
+      await storageProvider.delete(job.input.storagePath);
       await jobQueue.updateJob(job.id, {
         status: 'failed',
         error: `Kein Konvertierungs-Service für Job-Typ „${job.type}“ registriert.`,
@@ -148,6 +149,7 @@ export class ConversionEngine {
     }, timeoutMs);
 
     const startTime = Date.now();
+    let outputPath: string | undefined;
     try {
       await jobQueue.updateJob(job.id, {
         status: 'processing',
@@ -166,12 +168,13 @@ export class ConversionEngine {
       const inputBuffer = await storageProvider.read(job.input.storagePath);
 
       const options: ServiceOptions = {
+        ...(job.options || {}),
         targetFormat:
           (job.options as any)?.targetFormat ||
           (job as any).outputType ||
           job.type.split('_to_')[1]?.toUpperCase(),
         jobType: job.type,
-        ...(job.options || {}),
+        type: job.type,
       };
 
       const result = await service.execute(
@@ -184,8 +187,11 @@ export class ConversionEngine {
         abortController.signal
       );
 
+      const current = await jobQueue.getJob(job.id);
+      if (abortController.signal.aborted || !current || ['cancelled', 'expired'].includes(current.status)) throw new Error('Verarbeitung abgebrochen.');
       // Save output in isolated storage
       const savedOutput = await storageProvider.saveOutput(result.data, result.fileName);
+      outputPath = savedOutput.storagePath;
 
       // Data minimization & cost saving: delete input immediately on success
       if (infraConfig.storage.purgeInputImmediately && job.input?.storagePath) {
@@ -204,7 +210,7 @@ export class ConversionEngine {
         fileSizeBytes: job.input.sizeBytes,
       }).catch(() => {});
 
-      await jobQueue.updateJob(job.id, {
+      const completed = await jobQueue.updateJob(job.id, {
         status: 'completed',
         progress: 100,
         completedAt: new Date().toISOString(),
@@ -216,8 +222,10 @@ export class ConversionEngine {
           downloadUrl,
         },
       });
+      if (completed?.status !== 'completed') await storageProvider.delete(savedOutput.storagePath);
     } catch (err: unknown) {
-      const errorMsg = (err as Error).message || 'Unbekannter Fehler während der Verarbeitung';
+      const errorMsg = 'Die Datei konnte nicht verarbeitet werden. Bitte pruefen Sie Format, Inhalt und Passwort.';
+      if (outputPath) await storageProvider.delete(outputPath);
       analyticsService.track({
         eventType: 'conversion_failed',
         toolSlug: job.type,

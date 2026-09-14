@@ -170,8 +170,8 @@ export class OcrService implements IConversionService {
     signal?: AbortSignal
   ): Promise<ConversionResult> {
     const limits = this.getLimits();
-    const isPro = Boolean(options.apiKey || options.isPro);
-    const maxPages = options.maxPages || (isPro ? 100 : limits.maxPages);
+    const isPro = options.isPro === true;
+    const maxPages = (isPro ? 100 : limits.maxPages);
     const maxSizeBytes = limits.maxFileSizeMB * 1024 * 1024;
 
     // 1. File size limit enforcement

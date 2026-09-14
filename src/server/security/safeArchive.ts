@@ -48,6 +48,8 @@ export async function safeLoadZip(
   const compressedSize = buffer.length;
 
   for (const filename of entries) {
+    const originalName = (zip.files[filename] as JSZip.JSZipObject & { unsafeOriginalName?: string }).unsafeOriginalName || filename;
+    if (/(^|[\\/])\.\.([\\/]|$)/.test(originalName) || /^[\\/]|^[a-zA-Z]:/.test(originalName)) throw new ZipBombError('Unsafe archive path.');
     // 2. Path traversal attack check in ZIP entry names
     if (
       filename.includes('../') ||

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { boundedBody, RequestError, requestError } from '@/server/security/request';
 
 export async function POST(req: NextRequest) {
   try {
-    const rawBody = await req.text();
+    const rawBody = Buffer.from(await boundedBody(req, 1024 * 1024)).toString('utf8');
     const signature = req.headers.get('stripe-signature');
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!webhookSecret || !signature) return NextResponse.json({ error: 'Webhook nicht autorisiert.' }, { status: 401 });
 
     // Verify webhook signature if secret is configured
     if (webhookSecret && signature) {
@@ -25,7 +27,9 @@ export async function POST(req: NextRequest) {
       const signedPayload = `${timestamp}.${rawBody}`;
       const hmac = crypto.createHmac('sha256', webhookSecret).update(signedPayload).digest('hex');
 
-      if (hmac !== expectedSignature) {
+      if (!/^\d+$/.test(timestamp) || Math.abs(Date.now() / 1000 - Number(timestamp)) > 300 ||
+          !/^[a-f0-9]{64}$/.test(expectedSignature) ||
+          !crypto.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expectedSignature, 'hex'))) {
         return NextResponse.json({ error: 'Signatur-Verifikation fehlgeschlagen.' }, { status: 400 });
       }
     }
@@ -75,8 +79,10 @@ export async function POST(req: NextRequest) {
         console.log(`[Stripe] Nicht behandelter Event-Typ: ${eventType}`);
     }
 
-    return NextResponse.json({ received: true });
+    // No durable account/subscription store exists yet. Do not acknowledge delivery.
+    return NextResponse.json({ error: 'Abonnement-Verarbeitung derzeit nicht verfuegbar.' }, { status: 503 });
   } catch (err: unknown) {
+    if (err instanceof RequestError) return requestError(err);
     console.error('[Stripe Webhook Error]:', err);
     return NextResponse.json({ error: 'Interner Serverfehler bei Webhook-Verarbeitung.' }, { status: 500 });
   }

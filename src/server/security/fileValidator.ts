@@ -28,7 +28,7 @@ export function sanitizeFilename(originalName: string): string {
   let cleaned = originalName.replace(/[\x00-\x1f\x7f]/g, '');
 
   // Extract base filename (removes directory paths like ../ or C:\)
-  cleaned = path.basename(cleaned);
+  cleaned = path.posix.basename(cleaned.replace(/\\/g, '/'));
 
   // Replace backslashes and forward slashes if any remain
   cleaned = cleaned.replace(/[/\\]/g, '_');
@@ -74,6 +74,12 @@ export function validateUploadedFile(
     };
   }
 
+  const allowed = new Set('pdf doc docx odt rtf txt html htm xls xlsx csv ppt pptx odp epub png jpg jpeg gif webp svg psd eps heic heif avif bmp tiff tif ico mp3 wav flac ogg m4a mp4 aac mov webm mkv avi zip 7z tar gz gzip tgz'.split(' '));
+  if (!allowed.has(ext.slice(1))) return { valid: false, safeFilename, code: 'UNSUPPORTED_EXTENSION', error: 'Nicht unterstuetztes Dateiformat.' };
+  if (ext === '.svg') {
+    const text = buffer.toString('utf8');
+    if (!/<svg\b/i.test(text) || /<!ENTITY|<!DOCTYPE|<script|<foreignObject|\bon\w+\s*=|(?:href|src)\s*=\s*["'](?!#|data:image\/(?:png|jpeg);base64,)|url\(\s*["']?(?!#)/i.test(text)) return { valid: false, safeFilename, code: 'UNSAFE_SVG', error: 'SVG mit aktiven oder externen Inhalten ist nicht erlaubt.' };
+  }
   // 2. Minimum file size check (empty files cannot be processed)
   if (buffer.length === 0) {
     return {

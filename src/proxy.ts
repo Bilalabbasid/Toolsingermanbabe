@@ -1,0 +1,47 @@
+import { ownerId, setOwnerCookie, isAdminRequest } from '@/server/security/request';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@/config/i18n.config';
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (/^\/(?:[a-z]{2}\/)?admin(?:\/|$)/.test(pathname) && !isAdminRequest(request)) {
+    return new NextResponse('Nicht autorisiert.', { status: 401, headers: { 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store' } });
+  }
+  // 1. Skip static assets, API routes, and standard SEO endpoints
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next();
+  }
+
+  // 2. Check if the pathname already has a supported locale prefix
+  const pathnameHasLocale = SUPPORTED_LOCALES.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+
+  if (!pathnameHasLocale) {
+    // 3. Permanent 308 redirect to localized route:
+    // e.g. /pdf-in-word-umwandeln -> /de/pdf-in-word-umwandeln
+    // e.g. / -> /de
+    const url = request.nextUrl.clone();
+    url.pathname = `/${DEFAULT_LOCALE}${pathname === '/' ? '' : pathname}`;
+    return NextResponse.redirect(url, 308);
+  }
+
+  return setOwnerCookie(request, NextResponse.next(), ownerId(request));
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except static files and icons
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+};

@@ -44,7 +44,7 @@ export function privacyLog(level: 'info' | 'warn' | 'error', message: string, me
         lowerKey.includes('secret') ||
         lowerKey.includes('token') ||
         lowerKey.includes('buffer') ||
-        lowerKey.includes('filecontent')
+        lowerKey.includes('filecontent') || lowerKey.includes('error') || lowerKey.includes('filename') || lowerKey.includes('path')
       ) {
         sanitizedMeta[key] = '[REDACTED]';
       } else if (lowerKey.includes('ip')) {

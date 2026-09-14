@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jobQueue } from '@/server/queue/queue';
+import { ownsJob } from '@/server/security/request';
 
 interface Params {
   params: Promise<{
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   const { id } = await params;
   const job = await jobQueue.getJob(id);
 
-  if (!job) {
+  if (!job || !ownsJob(req, job)) {
     return NextResponse.json(
       { error: `Auftrag mit ID „${id}“ wurde nicht gefunden oder ist bereits abgelaufen.` },
       { status: 404 }
@@ -28,18 +29,20 @@ export async function GET(req: NextRequest, { params }: Params) {
     completedAt: job.completedAt,
     error: job.error,
     expiration: job.expiration,
-    output: job.output
+    output: job.status === 'completed' && job.output
       ? {
           fileName: job.output.fileName,
           sizeBytes: job.output.sizeBytes,
           downloadUrl: job.output.downloadUrl,
         }
       : undefined,
-  });
+  }, { headers: { 'Cache-Control': 'no-store' } });
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
   const { id } = await params;
+  const job = await jobQueue.getJob(id);
+  if (!job || !ownsJob(req, job)) return NextResponse.json({ error: 'Auftrag nicht gefunden.' }, { status: 404 });
   const success = await jobQueue.cancelJob(id);
 
   if (!success) {

@@ -79,8 +79,9 @@ export class VideoService implements IConversionService {
 
     if (signal?.aborted) throw new Error('Operation abgebrochen');
 
+    if (options.targetFormat && !/^\.?(mp4|webm|gif|mov|avi|mkv)$/i.test(String(options.targetFormat))) throw new Error('Unsupported output format.');
     // 2. Prepare isolated workspace
-    const workDir = path.join(process.cwd(), '.tmp', 'workdir', `video_${crypto.randomUUID()}`);
+    const workDir = path.join(process.env.COOLWAVE_TEMP_DIR || path.join(process.cwd(), '.tmp'), 'workdir', `video_${crypto.randomUUID()}`);
     await fs.mkdir(workDir, { recursive: true });
 
     const inputExt = path.extname(inputName).toLowerCase() || '.mp4';
@@ -104,7 +105,7 @@ export class VideoService implements IConversionService {
 
     try {
       // 3. Build FFmpeg command arguments
-      const args: string[] = ['-y', '-i', inputPath];
+      const args: string[] = ['-y', '-protocol_whitelist', 'pipe', '-format_whitelist', 'mov,mp3,wav,aac,flac,ogg,matroska,avi', '-i', 'pipe:0'];
 
       const isCompress =
         options.type === 'video_compress' ||
@@ -163,7 +164,7 @@ export class VideoService implements IConversionService {
         const child = execFile(
           /*turbopackIgnore: true*/ ffmpegBin,
           args,
-          { timeout: timeoutMs, maxBuffer: 15 * 1024 * 1024 },
+          { cwd: workDir, windowsHide: true, timeout: timeoutMs, maxBuffer: 15 * 1024 * 1024 },
           (err, _stdout, stderr) => {
             if (err) {
               if (err.killed) {
@@ -175,6 +176,8 @@ export class VideoService implements IConversionService {
           }
         );
 
+        child.stdin?.on('error', () => {});
+        child.stdin?.end(inputBuffer);
         if (signal) {
           signal.addEventListener('abort', () => {
             try {

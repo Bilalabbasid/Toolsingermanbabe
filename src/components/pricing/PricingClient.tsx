@@ -44,18 +44,17 @@ export function PricingClient() {
       const data = await res.json();
       if (data.mode === 'sandbox') {
         // Activate locally
-        setClientSubscription('pro', true);
+        // Paid access is granted only by the server.
         trackSignupCompleted(planId);
-        alert('CoolWave Pro erfolgreich aktiviert (Sandbox-Modus)!');
+        alert('Das Upgrade ist derzeit nicht verfuegbar.');
       } else if (data.url) {
         trackSignupCompleted(planId);
         window.location.href = data.url;
       }
     } catch (err) {
       console.error(err);
-      setClientSubscription('pro', true);
-      trackSignupCompleted(planId);
-      alert('CoolWave Pro aktiviert!');
+      // Paid access is granted only by the server.
+      alert('Das Upgrade ist derzeit nicht verfuegbar. Ihr Tarif wurde nicht geaendert.');
     } finally {
       setLoadingPlanId(null);
     }

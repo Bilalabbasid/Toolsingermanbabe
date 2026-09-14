@@ -1,8 +1,11 @@
+import { isAdminRequest } from '@/server/security/request';
 import { NextRequest, NextResponse } from 'next/server';
 import { analyticsService } from '@/server/analytics/analytics.service';
 
 export async function GET(req: NextRequest) {
   try {
+    if (!isAdminRequest(req)) return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 });
+
     const searchParams = req.nextUrl.searchParams;
     const rangeParam = searchParams.get('range') as 'today' | '7d' | '30d' | 'all' | null;
     const range = rangeParam || 'all';

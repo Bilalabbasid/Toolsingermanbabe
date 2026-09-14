@@ -1121,7 +1121,7 @@ export function PdfEditorEngine() {
           <div className="bg-sky-50 dark:bg-sky-950/40 border-b border-sky-100 dark:border-sky-900/40 px-4 py-1.5 text-[11px] text-sky-800 dark:text-sky-300 flex items-center gap-2">
             <Info className="w-3.5 h-3.5 shrink-0 text-sky-600 dark:text-sky-400" aria-hidden="true" />
             <span>
-              <strong>Rechtssichere Bearbeitung:</strong> Text, Formen, Zeichnungen und Schwärzungen werden als normgerechte Vektor- und Textebenen präzise über das Originaldokument eingebettet.
+              <strong>Bearbeitung mit Ebenen:</strong> Text, Formen und Zeichnungen werden als Vektor- und Textebenen ueber das Original gelegt. Abdecken entfernt keinen Text. Fuer vertrauliche Inhalte verwenden Sie das separate Werkzeug PDF schwaerzen.
             </span>
           </div>
 
@@ -1175,10 +1175,10 @@ export function PdfEditorEngine() {
 
               <button
                 onClick={() => setActiveTool('whiteout')}
-                aria-label="Schwärzen und abdecken"
+                aria-label="Optisch abdecken (Text bleibt erhalten)"
                 aria-pressed={activeTool === 'whiteout'}
                 className={`p-2.5 rounded-xl transition cursor-pointer ${activeTool === 'whiteout' ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 ring-1 ring-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
-                title="Schwärzen / Abdecken"
+                title="Optisch abdecken – keine sichere Schwaerzung"
               >
                 <EyeOff className="w-5 h-5" aria-hidden="true" />
               </button>

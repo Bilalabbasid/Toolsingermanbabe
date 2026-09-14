@@ -78,9 +78,8 @@ export function UpgradeModal({
     } catch (err) {
       console.error(err);
       // Fallback local activation
-      setClientSubscription('pro', true);
-      trackSignupCompleted('pro');
-      alert('CoolWave Pro erfolgreich aktiviert!');
+      // Paid access is granted only by the server.
+      alert('Das Upgrade ist derzeit nicht verfuegbar. Ihr Tarif wurde nicht geaendert.');
       onClose();
     } finally {
       setIsLoading(false);
@@ -88,7 +87,7 @@ export function UpgradeModal({
   };
 
   const handleInstantActivate = () => {
-    setClientSubscription('pro', true);
+    // Paid access is granted only by the server.
     onClose();
   };
 

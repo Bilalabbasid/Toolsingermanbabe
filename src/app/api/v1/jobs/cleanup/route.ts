@@ -1,15 +1,11 @@
+import { isAdminRequest } from '@/server/security/request';
 import { NextRequest, NextResponse } from 'next/server';
 import { storageProvider } from '@/server/storage/storage';
 import { jobQueue } from '@/server/queue/queue';
 
-export async function POST(req: NextRequest) {
+async function handleCleanup(req: NextRequest) {
   try {
-    const cronSecret = process.env.CRON_SECRET;
-    const authHeader = req.headers.get('authorization');
-
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 });
-    }
+    if (!isAdminRequest(req, process.env.CRON_SECRET)) return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 });
 
     const retentionMinutes = parseInt(process.env.TEMP_FILE_RETENTION_MINUTES || '15', 10);
     const cleanedFiles = await storageProvider.cleanupExpired(retentionMinutes);
@@ -26,4 +22,12 @@ export async function POST(req: NextRequest) {
     console.error('[Cleanup Error]:', err);
     return NextResponse.json({ error: 'Fehler bei der automatischen Bereinigung.' }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  return handleCleanup(req);
+}
+
+export async function POST(req: NextRequest) {
+  return handleCleanup(req);
 }

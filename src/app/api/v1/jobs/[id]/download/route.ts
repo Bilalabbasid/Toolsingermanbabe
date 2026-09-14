@@ -1,3 +1,4 @@
+import { isProRequest } from '@/server/security/request';
 import { NextRequest, NextResponse } from 'next/server';
 import { Readable } from 'stream';
 import { jobQueue } from '@/server/queue/queue';
@@ -5,6 +6,7 @@ import { storageProvider } from '@/server/storage/storage';
 import { verifySignedDownloadToken } from '@/server/security/signedUrl';
 import { privacyConfig } from '@/config/privacy.config';
 import { getInfrastructureConfig } from '@/config/infrastructure.config';
+import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
 import { analyticsService } from '@/server/analytics/analytics.service';
 
 interface Params {
@@ -15,22 +17,30 @@ interface Params {
 
 export async function GET(req: NextRequest, { params }: Params) {
   const { id } = await params;
+
+  // Enforce rate limiting per client IP
+  const ip = getClientIp(req);
+  const isPro = isProRequest(req);
+  const rateLimit = rateLimiter.check(ip, 'download', isPro);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Zu viele Download-Anfragen. Bitte warten Sie einen Moment.', code: 'RATE_LIMIT_EXCEEDED' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(rateLimit.resetSeconds),
+          'X-RateLimit-Limit': String(rateLimit.limit),
+          'X-RateLimit-Remaining': '0',
+        },
+      }
+    );
+  }
+
   const token = req.nextUrl.searchParams.get('token');
   const exp = req.nextUrl.searchParams.get('exp');
 
-  // Verify signed download token if provided or if enforced
-  if (token || exp || privacyConfig.signedUrls.enabled) {
-    // If a token is provided, verify it strictly
-    if (token || exp) {
-      const verification = verifySignedDownloadToken(id, token, exp);
-      if (!verification.valid) {
-        return NextResponse.json(
-          { error: verification.reason || 'Ungültige oder abgelaufene Download-Signatur.' },
-          { status: 403 }
-        );
-      }
-    }
-  }
+  const verification = verifySignedDownloadToken(id, token, exp);
+  if (!verification.valid) return NextResponse.json({ error: 'Ungueltiger oder abgelaufener Download-Link.' }, { status: 403 });
 
   const job = await jobQueue.getJob(id);
 

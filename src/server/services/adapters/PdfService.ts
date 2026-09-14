@@ -15,7 +15,7 @@ export class PdfService implements IConversionService {
   ];
 
   canHandle(type: string): boolean {
-    return this.supportedTypes.includes(type) || type.startsWith('pdf_');
+    return this.supportedTypes.includes(type);
   }
 
   async execute(
@@ -29,9 +29,11 @@ export class PdfService implements IConversionService {
     if (signal?.aborted) throw new Error('Operation vom Benutzer oder Zeitüberschreitung abgebrochen.');
 
     const jobType = options.jobType || 'pdf_optimize';
+    if (jobType === 'pdf_pdfa') throw new Error('PDF/A validation is unavailable.');
     const baseName = inputName.replace(/\.[^/.]+$/, '');
 
-    const pdf = await PDFDocument.load(inputBuffer, { ignoreEncryption: true });
+    const pdf = await PDFDocument.load(inputBuffer, { throwOnInvalidObject: true });
+    if (pdf.getPageCount() === 0) throw new Error('PDF has no readable pages.');
     onProgress(40);
 
     let outputSuffix = '_optimiert.pdf';

@@ -304,7 +304,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       if (!pollRes.ok) continue;
 
       const pollData = await pollRes.json();
-      const currentJob = pollData.job;
+      const currentJob = pollData;
 
       if (currentJob.status === 'processing') {
         const curProgress = Math.max(35, Math.min(currentJob.progress || 50, 85));
@@ -322,7 +322,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     }
 
     onProgress?.(90, 'Ergebnis wird empfangen...');
-    const downloadRes = await fetch(`/api/v1/jobs/${jobId}/download`, { signal });
+    const downloadRes = await fetch(completedJob.output.downloadUrl, { signal });
     if (!downloadRes.ok) {
       throw new Error('Download der Datei fehlgeschlagen.');
     }

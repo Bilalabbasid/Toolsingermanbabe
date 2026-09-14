@@ -76,8 +76,9 @@ export class AudioService implements IConversionService {
 
     if (signal?.aborted) throw new Error('Operation abgebrochen');
 
+    if (options.targetFormat && !/^\.?(mp3|wav|aac|flac|ogg|m4a)$/i.test(String(options.targetFormat))) throw new Error('Unsupported output format.');
     // 2. Prepare isolated workspace
-    const workDir = path.join(process.cwd(), '.tmp', 'workdir', `audio_${crypto.randomUUID()}`);
+    const workDir = path.join(process.env.COOLWAVE_TEMP_DIR || path.join(process.cwd(), '.tmp'), 'workdir', `audio_${crypto.randomUUID()}`);
     await fs.mkdir(workDir, { recursive: true });
 
     const inputExt = path.extname(inputName).toLowerCase() || '.mp3';
@@ -92,7 +93,7 @@ export class AudioService implements IConversionService {
 
     try {
       // 3. Configure FFmpeg arguments based on operation
-      const args: string[] = ['-y', '-i', inputPath];
+      const args: string[] = ['-y', '-protocol_whitelist', 'pipe', '-format_whitelist', 'mov,mp3,wav,aac,flac,ogg,matroska,avi', '-i', 'pipe:0'];
 
       const isCompress =
         options.type === 'audio_compress' ||
@@ -152,7 +153,7 @@ export class AudioService implements IConversionService {
         const child = execFile(
           /*turbopackIgnore: true*/ ffmpegBin,
           args,
-          { timeout: timeoutMs, maxBuffer: 10 * 1024 * 1024 },
+          { cwd: workDir, windowsHide: true, timeout: timeoutMs, maxBuffer: 10 * 1024 * 1024 },
           (err, _stdout, stderr) => {
             if (err) {
               if (err.killed) {
@@ -164,6 +165,8 @@ export class AudioService implements IConversionService {
           }
         );
 
+        child.stdin?.on('error', () => {});
+        child.stdin?.end(inputBuffer);
         if (signal) {
           signal.addEventListener('abort', () => {
             try {

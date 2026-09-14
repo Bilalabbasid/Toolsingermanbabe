@@ -128,6 +128,7 @@ export function PdfRepairOptimizeEngine({
       pdf.setCreator('CoolWave');
       audit = `Objektströme komprimiert und ungenutzte Strukturdaten bereinigt.`;
     } else if (mode === 'pdfa') {
+      throw new Error('PDF/A-Konvertierung ist derzeit nicht verfuegbar. Es wird keine ungepruefte Archivdatei erstellt.');
       onProgress?.(50, 'PDF/A-1b XMP-Metadaten einbetten...');
       suffix = '_pdfa.pdf';
       pdf.setTitle(file.name.replace(/\.[^/.]+$/, ''));

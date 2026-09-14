@@ -1,3 +1,4 @@
+import { boundedFormData, isProRequest, requestError, RequestError } from '@/server/security/request';
 import { NextRequest, NextResponse } from 'next/server';
 import { pdfSecurityService, PdfPermissions, RedactionZone } from '@/server/services/adapters/PdfSecurityService';
 import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
@@ -7,7 +8,7 @@ import { privacyLog } from '@/server/utils/privacyLogger';
 export async function POST(req: NextRequest) {
   try {
     const apiKey = req.headers.get('x-api-key');
-    const isPro = !!apiKey;
+    const isPro = isProRequest(req);
 
     // 0. Rate limiting
     const ip = getClientIp(req);
@@ -29,11 +30,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const formData = await req.formData();
+    const formData = await boundedFormData(req, (isPro ? 250 : 50) * 1024 * 1024 + 65536);
     const file = formData.get('file') as File | null;
     const action = (formData.get('action') as string) || 'protect';
 
-    if (!file) {
+    if (!(file instanceof File)) {
       return NextResponse.json(
         { error: 'Keine PDF-Datei übertragen (Feld: file erforderlich).' },
         { status: 400 }
@@ -94,7 +95,7 @@ export async function POST(req: NextRequest) {
         }
 
         resultBuffer = await pdfSecurityService.protectPdf(buffer, userPassword, ownerPassword, perms);
-        outputFilename = `coolwave_geschuetzt_${file.name}`;
+        outputFilename = `coolwave_geschuetzt_${safeFilename}`;
         break;
       }
 
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest) {
       case 'remove_password': {
         const password = (formData.get('password') as string) || (formData.get('userPassword') as string) || undefined;
         resultBuffer = await pdfSecurityService.unlockPdf(buffer, password);
-        outputFilename = `coolwave_entsperrt_${file.name}`;
+        outputFilename = `coolwave_entsperrt_${safeFilename}`;
         break;
       }
 
@@ -122,7 +123,7 @@ export async function POST(req: NextRequest) {
         }
 
         resultBuffer = await pdfSecurityService.changePermissions(buffer, password, perms, newOwnerPassword);
-        outputFilename = `coolwave_berechtigungen_${file.name}`;
+        outputFilename = `coolwave_berechtigungen_${safeFilename}`;
         break;
       }
 
@@ -155,13 +156,13 @@ export async function POST(req: NextRequest) {
         }
 
         resultBuffer = await pdfSecurityService.trueRedact(buffer, terms, zones);
-        outputFilename = `coolwave_geschwaerzt_${file.name}`;
+        outputFilename = `coolwave_geschwaerzt_${safeFilename}`;
         break;
       }
 
       case 'metadata_remove': {
         resultBuffer = await pdfSecurityService.stripMetadata(buffer);
-        outputFilename = `coolwave_bereinigt_${file.name}`;
+        outputFilename = `coolwave_bereinigt_${safeFilename}`;
         break;
       }
 
@@ -182,7 +183,7 @@ export async function POST(req: NextRequest) {
           location,
           pageIndex,
         });
-        outputFilename = `coolwave_signiert_${file.name}`;
+        outputFilename = `coolwave_signiert_${safeFilename}`;
         break;
       }
 
@@ -209,6 +210,6 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     const errorMsg = (err as Error)?.message || 'Fehler bei der Sicherheitsverarbeitung.';
     privacyLog('error', '[PDF Security Error]', { error: errorMsg });
-    return NextResponse.json({ error: errorMsg }, { status: 422 });
+    return err instanceof RequestError ? requestError(err) : NextResponse.json({ error: 'PDF-Verarbeitung fehlgeschlagen. Bitte pruefen Sie Datei und Passwort.', code: 'INVALID_PDF' }, { status: 422 });
   }
 }

@@ -111,20 +111,11 @@ export const rateLimiter = new InMemoryRateLimiter();
  * Extracts and normalizes client IP from incoming NextRequest
  */
 export function getClientIp(req: NextRequest): string {
-  const forwarded = req.headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
+  // Configure only behind a proxy that overwrites this header and blocks direct access.
+  const trustedHeader = process.env.TRUSTED_CLIENT_IP_HEADER;
+  if (trustedHeader) {
+    const value = req.headers.get(trustedHeader)?.trim();
+    if (value && value.length <= 45 && /^[a-fA-F0-9:.]+$/.test(value)) return value;
   }
-
-  const realIp = req.headers.get('x-real-ip');
-  if (realIp) {
-    return realIp.trim();
-  }
-
-  const cfConnectingIp = req.headers.get('cf-connecting-ip');
-  if (cfConnectingIp) {
-    return cfConnectingIp.trim();
-  }
-
-  return '127.0.0.1';
+  return 'untrusted-origin';
 }

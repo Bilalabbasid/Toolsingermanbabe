@@ -27,7 +27,7 @@ export const privacyConfig: PrivacyConfig = {
   deleteInputImmediatelyOnSuccess: true,
   signedUrls: {
     enabled: true,
-    secret: process.env.DOWNLOAD_SIGNING_SECRET || 'coolwave_ephemeral_signing_secret_key_prod_fallback',
+    secret: process.env.DOWNLOAD_SIGNING_SECRET || '',
     ttlSeconds: retentionMinutes * 60,
   },
   anonymizeIp: true,

@@ -1,1 +1,0 @@
-Dies ist ein Testdokument für den CoolWave Server-Konvertierungs-Pipeline Test.
