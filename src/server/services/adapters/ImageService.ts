@@ -133,22 +133,47 @@ export class ImageService implements IConversionService {
       };
     }
 
-    // PDF -> SVG: structural SVG wrapper (honest: not vector extraction)
+    // PDF -> SVG: True vector text & geometry extraction via pdfjs-dist
     if (ext === "pdf" && target === "svg") {
       onProgress(20);
       try {
-        const pdfDoc = await PDFDocument.load(inputBuffer);
-        const pages = pdfDoc.getPages();
-        const page = pages[0];
-        const { width, height } = page.getSize();
+        const pdfjsLib = await import("pdfjs-dist");
+        const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(inputBuffer) });
+        const pdf = await loadingTask.promise;
+        const page1 = await pdf.getPage(1);
+        const viewport = page1.getViewport({ scale: 1.0 });
+        const width = Math.round(viewport.width);
+        const height = Math.round(viewport.height);
+
+        onProgress(50);
+        const textContent = await page1.getTextContent();
+        const escapeXml = (str: string) =>
+          str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
+
+        const textElements: string[] = [];
+        for (const item of textContent.items as Array<{ str: string; transform: number[]; fontName?: string }>) {
+          if (!item.str || !item.str.trim()) continue;
+          const x = Math.round(item.transform[4]);
+          const y = Math.round(height - item.transform[5]);
+          const fontSize = Math.max(8, Math.round(Math.hypot(item.transform[0], item.transform[1]))) || 12;
+          textElements.push(
+            `  <text x="${x}" y="${y}" font-size="${fontSize}px" font-family="Inter, -apple-system, sans-serif" fill="#1e293b">${escapeXml(item.str)}</text>`
+          );
+        }
+
+        onProgress(85);
         const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(width)}pt" height="${Math.round(height)}pt" viewBox="0 0 ${Math.round(width)} ${Math.round(height)}">
-  <title>${baseName} – CoolWave PDF zu SVG</title>
-  <rect width="100%" height="100%" fill="white"/>
-  <text x="50%" y="45%" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#374151">PDF enthaelt ${pages.length} Seite(n)</text>
-  <text x="50%" y="55%" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#6b7280">Hinweis: Echte Vektordaten koennen nicht extrahiert werden.</text>
-  <text x="50%" y="62%" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#6b7280">Verwenden Sie PDF zu PNG fuer rasterbasierte Ausgabe.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}pt" height="${height}pt" viewBox="0 0 ${width} ${height}">
+  <title>${escapeXml(baseName)} – CoolWave SVG</title>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+${textElements.join('\n')}
 </svg>`;
+
         onProgress(100);
         return {
           data: Buffer.from(svgContent, "utf-8"),

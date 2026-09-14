@@ -1405,12 +1405,12 @@ export class OfficeConversionEngine {
   }
 
   // =========================================================================
-  // 24. PPTX -> PPT (output PowerPoint compatible file with .ppt extension)
+  // 24. PPTX -> PPT (Legacy binary format unsupported - honest deprecation)
   // =========================================================================
   static async pptxToPpt(pptxBuffer: Buffer, originalName: string, onProgress: (p: number) => void): Promise<ConvertedDocument> {
-    onProgress(100);
-    const baseName = originalName.replace(/\.[^/.]+$/, "");
-    return { data: pptxBuffer, fileName: `${baseName}.ppt`, mimeType: "application/vnd.ms-powerpoint" };
+    throw new Error(
+      'Das veraltete Microsoft PPT-Format (Office 97–2003) wird serverseitig nicht mehr unterstützt, da es auf modernen Geräten zu Darstellungsfehlern führt. Bitte nutzen Sie das empfohlene Werkzeug „PowerPoint in PDF“, um Ihre Präsentation überall kompatibel anzuzeigen.'
+    );
   }
 
   // =========================================================================

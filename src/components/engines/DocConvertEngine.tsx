@@ -509,6 +509,21 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
 
   return (
     <div className="w-full space-y-6">
+      {mode === 'pptx-to-ppt' && (
+        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+          <div className="text-sm leading-relaxed">
+            <span className="font-semibold">Hinweis zum veralteten PPT-Format (Office 97–2003):</span>
+            <p className="mt-1">
+              Das binäre .ppt-Format ist veraltet und wird auf modernen Betriebssystemen und Mobilgeräten häufig blockiert. Für maximale Kompatibilität empfehlen wir die Umwandlung in PDF:{' '}
+              <a href="/de/powerpoint-in-pdf-umwandeln" className="font-medium underline hover:text-amber-950">
+                PowerPoint in PDF umwandeln →
+              </a>
+            </p>
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-center gap-3">
           <AlertCircle className="w-5 h-5 shrink-0" />
