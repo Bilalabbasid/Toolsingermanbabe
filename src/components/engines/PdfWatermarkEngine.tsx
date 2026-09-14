@@ -242,7 +242,7 @@ export function PdfWatermarkEngine() {
                     value={watermarkText}
                     onChange={(e) => setWatermarkText(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-                    placeholder="z.B. VERTRAULICH"
+                    placeholder="z. B. VERTRAULICH"
                   />
                   <div className="flex flex-wrap gap-2 mt-2">
                     {['VERTRAULICH', 'ENTWURF', 'KOPIE', 'MUSTER', 'GEPRÜFT'].map((preset) => (

@@ -28,7 +28,7 @@ export function RelatedTools({ relatedSlugs, currentToolName }: RelatedToolsProp
           href="/de/kategorie/pdf"
           className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800"
         >
-          <span>Alle Tools ansehen</span>
+          <span>Alle Werkzeuge ansehen</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>

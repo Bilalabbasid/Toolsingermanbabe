@@ -109,7 +109,7 @@ export function ConversionHistoryDrawer({
                 <div>
                   <h4 className="text-xs font-bold text-slate-900">Verlauf dauerhaft sichern</h4>
                   <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    Pro speichert alle Ihre Dokumente für 30 Tage mit 1-Klick-Re-Download.
+                    Pro speichert alle Ihre Dokumente für 30 Tage mit praktischem Sofort-Download.
                   </p>
                 </div>
               </div>

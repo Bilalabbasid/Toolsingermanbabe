@@ -1,12 +1,16 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { BookOpen, ArrowRight, Clock, Calendar } from 'lucide-react';
+import { generatePageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Ratgeber & PDF-Tipps | CoolWave',
-  description: 'Praktische Anleitungen und Fachartikel rund um PDF-Bearbeitung, Bildoptimierung, Dateikonvertierung und Datenschutz.',
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: 'Ratgeber, Anleitungen & Datei-Tipps | CoolWave',
+  description: 'Praktische Anleitungen und Fachartikel rund um PDF-Bearbeitung, Bildoptimierung, Dateikonvertierung und Datenschutz im Browser.',
+  path: '/blog',
+  locale: 'de',
+});
 
 const ARTICLES = [
   {

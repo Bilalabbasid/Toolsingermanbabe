@@ -17,7 +17,7 @@ export const MEDIA_ARCHIVE_TOOLS: ToolDefinition[] = [
     h1De: 'Audiodateien online konvertieren',
     introDe: 'Konvertieren Sie Ihre Musikstücke, Sprachaufnahmen und Podcasts zwischen den gängigsten Audioformaten. Unterstützt moderne Codecs wie MP3 (LAME), WAV (PCM), AAC, FLAC und OGG (Vorbis) mit wählbarer Bitrate bis zu 256 kbps.',
     howItWorksDe: [
-      { step: 1, title: 'Audiodatei hochladen', text: 'Ziehen Sie Ihre MP3, WAV, AAC, FLAC, OGG oder M4A Datei in den Upload-Bereich.' },
+      { step: 1, title: 'Audiodatei hochladen', text: 'Ziehen Sie Ihre MP3-, WAV-, AAC-, FLAC-, OGG- oder M4A-Datei in den Upload-Bereich.' },
       { step: 2, title: 'Zielformat wählen', text: 'Wählen Sie das gewünschte Audioformat und die gewünschte Bitrate (z. B. 192 kbps).' },
       { step: 3, title: 'Konvertieren & Anhören', text: 'Klicken Sie auf Umwandeln, hören Sie die Vorschau direkt im Browser an und laden Sie die Datei herunter.' },
     ],
@@ -48,7 +48,7 @@ export const MEDIA_ARCHIVE_TOOLS: ToolDefinition[] = [
     targetFormats: ['.mp3', '.m4a', '.ogg'],
     nameDe: 'Audio komprimieren',
     shortDescriptionDe: 'Reduzieren Sie die Dateigröße von Musik und Sprachmemos mit intelligenten Bitraten-Profilen ohne spürbaren Qualitätsverlust.',
-    titleDe: 'Audio komprimieren online – MP3 & WAV Dateigröße verkleinern | CoolWave',
+    titleDe: 'Audio komprimieren online – MP3- & WAV-Dateigröße verkleinern | CoolWave',
     metaDescriptionDe: 'Audio online kostenlos verkleinern. MP3 und WAV komprimieren mit wählbarer Bitrate (64k bis 256k) für E-Mail, WhatsApp und Web.',
     h1De: 'Audiodateien online komprimieren',
     introDe: 'Große Audiodateien schnell und gezielt verkleinern. Reduzieren Sie Speicherplatzbedarf für den Versand per E-Mail oder Messenger durch optimierte Kodierung.',
@@ -122,7 +122,7 @@ export const MEDIA_ARCHIVE_TOOLS: ToolDefinition[] = [
     h1De: 'Videodateien online konvertieren',
     introDe: 'Bringen Sie Ihre Videos in das passende Format für Webseiten, Smartphones, Fernseher und Schnittprogramme. Mit modernster H.264- und VP8-Videokodierung für maximale Bildschärfe bei optimierter Dateigröße.',
     howItWorksDe: [
-      { step: 1, title: 'Video hochladen', text: 'Laden Sie Ihre Video-Datei (z.B. MOV vom iPhone oder MKV) hoch.' },
+      { step: 1, title: 'Video hochladen', text: 'Laden Sie Ihre Video-Datei (z. B. MOV vom iPhone oder MKV) hoch.' },
       { step: 2, title: 'Format wählen', text: 'Wählen Sie das Zielformat: MP4, WebM, MOV, AVI, MKV oder animiertes GIF.' },
       { step: 3, title: 'Downloaden', text: 'Sehen Sie das konvertierte Video in der Vorschau und laden Sie es herunter.' },
     ],
@@ -410,7 +410,7 @@ export const MEDIA_ARCHIVE_TOOLS: ToolDefinition[] = [
     nameDe: 'GZIP entpacken (.gz)',
     shortDescriptionDe: 'Dekomprimieren Sie einzelne GZIP-Dateien (.gz) sofort zurück in die ursprüngliche Datei.',
     titleDe: 'GZIP entpacken online – .gz Dateien dekomprimieren | CoolWave',
-    metaDescriptionDe: 'GZIP online dekomprimieren. .gz Dateien kostenlos entpacken und Originaldatei (z.B. SQL, CSV, Logfile, TAR) wiederherstellen.',
+    metaDescriptionDe: 'GZIP online dekomprimieren. .gz Dateien kostenlos entpacken und Originaldatei (z. B. SQL, CSV, Logfile, TAR) wiederherstellen.',
     h1De: 'GZIP (.gz) Dateien online entpacken',
     introDe: 'Dekomprimieren Sie GZIP-Dateien (.gz) im Handumdrehen. Ob komprimierte Server-Logfiles, Datenbank-Dumps (.sql.gz) oder Datensätze: Stellen Sie die Originaldatei mit einem Klick wieder her.',
     howItWorksDe: [

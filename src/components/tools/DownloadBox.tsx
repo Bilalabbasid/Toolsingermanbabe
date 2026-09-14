@@ -2,9 +2,21 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Download, RotateCcw, ArrowRight, Sparkles } from 'lucide-react';
+import { 
+  CheckCircle2, 
+  Download, 
+  RotateCcw, 
+  ArrowRight, 
+  Sparkles, 
+  Bookmark, 
+  Layers,
+  Shield,
+  FileText,
+  Image as ImageIcon
+} from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { formatBytes } from '@/lib/utils';
+import { AdSlot } from '@/components/common/AdSlot';
 
 interface DownloadBoxProps {
   filename: string;
@@ -13,6 +25,84 @@ interface DownloadBoxProps {
   onDownload: () => void;
   onReset: () => void;
   downloadLabel?: string;
+}
+
+interface WorkflowSuggestion {
+  name: string;
+  slug: string;
+  hint: string;
+  icon: 'pdf' | 'shield' | 'image' | 'file';
+}
+
+function getNextWorkflowSuggestions(filename: string): WorkflowSuggestion[] {
+  const lower = filename.toLowerCase();
+
+  if (lower.endsWith('.pdf')) {
+    return [
+      {
+        name: 'PDF komprimieren',
+        slug: 'pdf-komprimieren',
+        hint: 'Dateigröße für E-Mail & Web um bis zu 80% verkleinern',
+        icon: 'pdf',
+      },
+      {
+        name: 'PDF mit Passwort schützen',
+        slug: 'pdf-schuetzen',
+        hint: 'Vertrauliche Daten mit AES-256 verschlüsseln',
+        icon: 'shield',
+      },
+      {
+        name: 'PDF in Word umwandeln',
+        slug: 'pdf-in-word-umwandeln',
+        hint: 'Dokument in bearbeitbares Word (DOCX) konvertieren',
+        icon: 'file',
+      },
+    ];
+  }
+
+  if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.webp')) {
+    return [
+      {
+        name: 'Bild komprimieren',
+        slug: 'bild-komprimieren',
+        hint: 'Dateigröße ohne sichtbaren Qualitätsverlust reduzieren',
+        icon: 'image',
+      },
+      {
+        name: 'In WebP umwandeln',
+        slug: 'png-in-webp-umwandeln',
+        hint: 'Modernes Webformat für minimale Ladezeiten',
+        icon: 'image',
+      },
+      {
+        name: 'In PDF umwandeln',
+        slug: 'jpg-in-pdf-umwandeln',
+        hint: 'Bilder in ein druckfertiges PDF zusammenfassen',
+        icon: 'pdf',
+      },
+    ];
+  }
+
+  return [
+    {
+      name: 'PDF komprimieren',
+      slug: 'pdf-komprimieren',
+      hint: 'Dateigröße für schnellen Versand optimieren',
+      icon: 'pdf',
+    },
+    {
+      name: 'PDF zusammenfügen',
+      slug: 'pdf-zusammenfuegen',
+      hint: 'Mehrere Dokumente zu einer Datei bündeln',
+      icon: 'file',
+    },
+    {
+      name: 'PDF-OCR-Texterkennung',
+      slug: 'pdf-ocr-texterkennung',
+      hint: 'Gescannte Seiten durchsuchbar machen',
+      icon: 'file',
+    },
+  ];
 }
 
 export function DownloadBox({
@@ -45,6 +135,21 @@ export function DownloadBox({
     originalSizeBytes && resultSizeBytes && originalSizeBytes > resultSizeBytes
       ? originalSizeBytes - resultSizeBytes
       : null;
+
+  const nextWorkflows = getNextWorkflowSuggestions(filename);
+
+  const getWorkflowIcon = (type: WorkflowSuggestion['icon']) => {
+    switch (type) {
+      case 'shield':
+        return <Shield className="w-4 h-4 text-emerald-600" />;
+      case 'image':
+        return <ImageIcon className="w-4 h-4 text-sky-600" />;
+      case 'pdf':
+      case 'file':
+      default:
+        return <FileText className="w-4 h-4 text-sky-600" />;
+    }
+  };
 
   return (
     <>
@@ -107,6 +212,50 @@ export function DownloadBox({
           </button>
         </div>
 
+        {/* Workflow Chaining: Nächste empfohlene Schritte */}
+        <div className="max-w-2xl mx-auto my-8 pt-6 border-t border-slate-100 text-left">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-sky-600" />
+              <span>Nächster empfohlener Schritt:</span>
+            </h4>
+            <span className="text-[11px] text-slate-400">Direkt weiterbearbeiten</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            {nextWorkflows.map((step) => (
+              <Link
+                key={step.slug}
+                href={`/de/${step.slug}`}
+                className="p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-sky-50/50 hover:border-sky-300 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="p-1 rounded-md bg-white border border-slate-100 shadow-2xs">
+                      {getWorkflowIcon(step.icon)}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                  <div className="text-xs font-bold text-slate-900 group-hover:text-sky-700 transition-colors">
+                    {step.name}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                    {step.hint}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Subtle Retention / Bookmark Pill */}
+        <div className="max-w-md mx-auto mb-6 p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center gap-2 text-[11px] text-slate-500">
+          <Bookmark className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+          <span>
+            <strong>Tipp:</strong> Drücken Sie <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-200 font-mono text-[10px]">Strg + D</kbd>, um CoolWave als Lesezeichen zu speichern.
+          </span>
+        </div>
+
         {/* Subtle Pro Upsell Banner (non-intrusive) */}
         <div className="max-w-xl mx-auto p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-slate-50 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-start gap-3">
@@ -118,7 +267,7 @@ export function DownloadBox({
                 Noch mehr Dateien gleichzeitig verarbeiten?
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
-                Mit CoolWave Pro erhalten Sie unbegrenzte Batch-Verarbeitung, 500 MB Dateigröße und werbefreies Arbeiten.
+                Mit CoolWave Pro erhalten Sie erweiterte Stapelverarbeitung, 500 MB Dateigröße und werbefreies Arbeiten.
               </div>
             </div>
           </div>
@@ -126,8 +275,13 @@ export function DownloadBox({
             href="/de/preise"
             className="shrink-0 text-xs font-bold text-sky-700 hover:text-sky-800 self-end sm:self-center hover:underline whitespace-nowrap min-h-[36px] flex items-center"
           >
-            Pro ansehen →
+            Pro entdecken →
           </Link>
+        </div>
+
+        {/* Policy-Compliant Post-Completion Ad Placement (Safely placed with ample margin below actions) */}
+        <div className="mt-8 pt-6 border-t border-slate-100">
+          <AdSlot slotKey="tool_content" format="horizontal" />
         </div>
       </div>
 

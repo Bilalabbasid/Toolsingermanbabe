@@ -73,13 +73,13 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
                 <>
                   <Cpu className="w-3.5 h-3.5 text-sky-600 shrink-0" />
                   <span className="hidden sm:inline">Lokale Browser-Verarbeitung (100% Datenschutz)</span>
-                  <span className="sm:hidden">100% Lokal im Browser</span>
+                  <span className="sm:hidden">100% lokal im Browser</span>
                 </>
               ) : (
                 <>
                   <ShieldCheck className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                  <span className="hidden sm:inline">Verschlüsselte Cloud-Verarbeitung (15 Min. Auto-Löschung)</span>
-                  <span className="sm:hidden">Verschlüsselt (15 Min. Löschung)</span>
+                  <span className="hidden sm:inline">Verschlüsselte Cloud-Verarbeitung (automatische Löschung nach 15 Min.)</span>
+                  <span className="sm:hidden">Verschlüsselt (15 Min.)</span>
                 </>
               )}
             </div>
@@ -194,7 +194,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
                       href={`/${locale}/preise`}
                       className="text-xs font-semibold text-sky-700 hover:text-sky-800 flex items-center gap-0.5"
                     >
-                      Upgraden <ArrowRight className="w-3 h-3" />
+                      Zu Pro wechseln <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>
                   <div className="text-sm font-bold text-slate-900">

@@ -151,12 +151,12 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/de/pdf-ocr-erkennung" className="py-1 block hover:text-white transition-colors">
-                  PDF OCR Texterkennung
+                  PDF-OCR-Texterkennung
                 </Link>
               </li>
               <li>
                 <Link href="/de/gescanntes-pdf-in-word" className="py-1 block hover:text-white transition-colors">
-                  Scan PDF in Word (OCR)
+                  Gescannte PDF in Word (OCR)
                 </Link>
               </li>
               <li>
@@ -170,7 +170,7 @@ export function Footer() {
           {/* Col 4: Dokumente & Audio/Video */}
           <div>
             <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
-              Office & Media
+              Office & Medien
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
@@ -185,7 +185,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/de/powerpoint-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
-                  PowerPoint in PDF
+                  PowerPoint in PDF umwandeln
                 </Link>
               </li>
               <li>

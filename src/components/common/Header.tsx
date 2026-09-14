@@ -90,13 +90,13 @@ export function Header() {
               href="/de/kategorie/pdf"
               className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
-              PDF Tools
+              PDF-Tools
             </Link>
             <Link
               href="/de/kategorie/images"
               className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
-              Bild Tools
+              Bild-Tools
             </Link>
             <Link
               href="/de/kategorie/documents"
@@ -108,14 +108,14 @@ export function Header() {
               href="/de/kategorie/utilities"
               className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
-              Text & Tools
+              Text-Tools & Hilfsmittel
             </Link>
             <Link
               href="/de/preise"
               className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-semibold text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Preise</span>
+              <span>Preise & Tarife</span>
             </Link>
           </nav>
 
@@ -125,11 +125,11 @@ export function Header() {
             <button
               onClick={() => setIsSearchOpen(true)}
               className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-500 hover:text-slate-800 hover:border-slate-300 hover:bg-white text-xs sm:text-sm font-normal transition-all touch-target-44 cursor-pointer"
-              aria-label="Tool suchen (Strg+K)"
+              aria-label="Werkzeuge durchsuchen (Strg+K)"
               aria-haspopup="dialog"
             >
               <Search className="w-4 h-4 text-slate-400" />
-              <span className="hidden sm:inline">Tool suchen...</span>
+              <span className="hidden sm:inline">Werkzeuge suchen...</span>
               <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-white border border-slate-200 rounded">
                 Strg+K
               </kbd>
@@ -151,7 +151,7 @@ export function Header() {
             <button
               onClick={() => setIsUpgradeOpen(true)}
               type="button"
-              aria-label={isPro ? "Pro-Abonnement aktiv - Details anzeigen" : "Kostenlose Version - Auf Pro upgraden"}
+              aria-label={isPro ? "Pro-Abonnement aktiv – Details anzeigen" : "Kostenlose Version – Zu Pro wechseln"}
               aria-haspopup="dialog"
               className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border cursor-pointer ${
                 isPro
@@ -162,7 +162,7 @@ export function Header() {
               {isPro ? (
                 <>
                   <Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-                  <span>Pro Aktiv</span>
+                  <span>Pro aktiv</span>
                 </>
               ) : (
                 <>
@@ -177,12 +177,12 @@ export function Header() {
               <button
                 onClick={() => setIsUpgradeOpen(true)}
                 type="button"
-                aria-label="Auf CoolWave Pro upgraden"
+                aria-label="Zu CoolWave Pro wechseln"
                 aria-haspopup="dialog"
                 className="hidden sm:inline-flex items-center justify-center gap-1 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 fill-white" />
-                <span>Pro holen</span>
+                <span>Zu Pro</span>
               </button>
             )}
 
@@ -235,14 +235,14 @@ export function Header() {
                   onClick={closeMobileMenu}
                   className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  PDF Tools
+                  PDF-Tools
                 </Link>
                 <Link
                   href="/de/kategorie/images"
                   onClick={closeMobileMenu}
                   className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  Bild Tools
+                  Bild-Tools
                 </Link>
                 <Link
                   href="/de/kategorie/documents"
@@ -256,7 +256,7 @@ export function Header() {
                   onClick={closeMobileMenu}
                   className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  Text & Tools
+                  Text-Tools & Hilfsmittel
                 </Link>
                 <Link
                   href="/de/preise"
@@ -264,7 +264,7 @@ export function Header() {
                   className="flex items-center gap-2 px-4 py-3 rounded-xl text-base font-semibold text-sky-700 hover:bg-sky-50 active:bg-sky-100 transition-colors touch-target-48"
                 >
                   <Sparkles className="w-4 h-4 text-amber-500" />
-                  Preise & Pläne
+                  Preise & Tarife
                 </Link>
 
                 {/* Divider */}
@@ -278,7 +278,7 @@ export function Header() {
                       : 'bg-slate-100 text-slate-700 border-slate-200'
                   }`}>
                     {isPro ? (
-                      <><Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" /> Pro Aktiv</>
+                      <><Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" /> Pro aktiv</>
                     ) : (
                       <><Zap className="w-3.5 h-3.5 text-slate-500" /> Kostenlos</>
                     )}

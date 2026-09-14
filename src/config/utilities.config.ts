@@ -25,9 +25,9 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
       { question: 'Wie wird die Lesezeit berechnet?', answer: 'Die Lesezeit basiert auf der durchschnittlichen Lesegeschwindigkeit eines Erwachsenen von ca. 200 Wörtern pro Minute.' },
     ],
     troubleshootingDe: [
-      { issue: 'Zählen Bindestrich-Wörter als ein oder zwei Wörter?', solution: 'Wörter mit Bindestrich (z.B. „CoolWave-Plattform“) werden standardmäßig als zusammenhängende Texteinheit gewertet.' },
+      { issue: 'Zählen Bindestrich-Wörter als ein oder zwei Wörter?', solution: 'Wörter mit Bindestrich (z. B. „CoolWave-Plattform“) werden standardmäßig als zusammenhängende Texteinheit gewertet.' },
     ],
-    privacyExplanationDe: '100% In-Browser Auswertung. Ihr Text verlässt Ihr Gerät nicht.',
+    privacyExplanationDe: '100% lokale Auswertung im Browser. Ihr Text verlässt Ihr Gerät nicht.',
     searchKeywordsDe: ['Zeichenzähler', 'Wörter zählen online', 'Zeichen zählen ohne Leerzeichen', 'Textlänge prüfen'],
     supportedFormats: 'Text-Eingabe',
     freeLimits: { maxFileSizeMB: 10, maxBatch: 1 },
@@ -566,7 +566,7 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
     faqDe: [
       { question: 'Wird mein Secret oder Token auf einen Server geladen?', answer: 'Nein! Die Dekodierung erfolgt zu 100% im Arbeitsspeicher Ihres Browsers.' },
     ],
-    privacyExplanationDe: '100% clientseitiges Decoding. Tokens verlassen Ihren Browser niemals.',
+    privacyExplanationDe: '100% lokale Dekodierung im Browser. Tokens verlassen Ihren Browser niemals.',
     searchKeywordsDe: ['JWT Decoder', 'JSON Web Token dekodieren', 'JWT prüfen online', 'JWT expiration prüfen'],
     supportedFormats: 'JWT String',
     freeLimits: { maxFileSizeMB: 10, maxBatch: 1 },

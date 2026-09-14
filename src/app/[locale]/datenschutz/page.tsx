@@ -1,13 +1,17 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { privacyConfig } from '@/config/privacy.config';
 import Link from 'next/link';
 import { ShieldCheck, Lock, Trash2, Cpu, Server, Key } from 'lucide-react';
+import { generatePageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Datenschutzerklärung | CoolWave',
-  description: 'Transparente Informationen zur Verarbeitung personenbezogener Daten, Dateilebenszyklus und Privatsphäre bei CoolWave.',
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: 'Datenschutzerklärung – 100% DSGVO-konform | CoolWave',
+  description: 'Transparente Informationen zur Verarbeitung personenbezogener Daten, Dateilebenszyklus und Privatsphäre bei CoolWave. Keine permanente Speicherung.',
+  path: '/datenschutz',
+  locale: 'de',
+});
 
 export default function DatenschutzPage() {
   const breadcrumbs = [

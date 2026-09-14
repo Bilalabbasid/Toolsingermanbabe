@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { AlertTriangle, Info, Download, RotateCcw, Layers } from "lucide-react";
@@ -39,7 +39,7 @@ const DISCLAIMERS: Record<DesignConvertMode, { title: string; body: string; type
   },
   "pdf-to-svg": {
     title: "PDF-Vektordaten können nicht extrahiert werden",
-    body: "CoolWave kann aus einem PDF keine echten Vektordaten extrahieren. Das Ergebnis ist eine SVG-Datei, die das gerenderte Seitenbild als Rasterbild enthält, nicht als Vektorpfade. Für echte Vektorextraktion ist spezialisierte Software (z.B. Inkscape, Adobe Acrobat Pro) erforderlich.",
+    body: "CoolWave kann aus einem PDF keine echten Vektordaten extrahieren. Das Ergebnis ist eine SVG-Datei, die das gerenderte Seitenbild als Rasterbild enthält, nicht als Vektorpfade. Für echte Vektorextraktion ist spezialisierte Software (z. B. Inkscape, Adobe Acrobat Pro) erforderlich.",
     type: "warning",
   },
   "eps-to-svg": {

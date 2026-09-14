@@ -1,12 +1,16 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { privacyConfig } from '@/config/privacy.config';
 import Link from 'next/link';
+import { generatePageMetadata } from '@/lib/seo';
 
-export const metadata = {
+export const metadata: Metadata = generatePageMetadata({
   title: 'Allgemeine Geschäftsbedingungen (AGB) | CoolWave',
-  description: 'Nutzungsbedingungen und AGB für die Nutzung der Datei- und PDF-Werkzeuge auf CoolWave.',
-};
+  description: 'Nutzungsbedingungen und AGB für die Nutzung der Datei- und PDF-Werkzeuge auf CoolWave (coolwave.cool). Regelungen zu kostenlosen und Pro-Diensten.',
+  path: '/agb',
+  locale: 'de',
+});
 
 export default function AgbPage() {
   const breadcrumbs = [

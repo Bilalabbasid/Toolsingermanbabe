@@ -11,6 +11,7 @@ import { jobQueue } from '../queue/queue';
 import { storageProvider } from '../storage/storage';
 import { ConversionJob, ServiceOptions } from '@/types/job';
 import { privacyConfig } from '@/config/privacy.config';
+import { getInfrastructureConfig } from '@/config/infrastructure.config';
 import { generateSignedDownloadUrl } from '../security/signedUrl';
 import { analyticsService } from '../analytics/analytics.service';
 
@@ -18,6 +19,7 @@ export class ConversionEngine {
   private services: IConversionService[] = [];
   private activeWorkers = 0;
   private activeMediaWorkers = 0;
+  private activeOcrWorkers = 0;
   private isDispatcherRunning = false;
 
   constructor() {
@@ -43,6 +45,15 @@ export class ConversionEngine {
     );
   }
 
+  private isOcrJob(type: string): boolean {
+    return (
+      type.startsWith('ocr_') ||
+      type.startsWith('ocr-') ||
+      type.includes('ocr') ||
+      type.includes('durchsuchbar')
+    );
+  }
+
   getService(type: string): IConversionService | undefined {
     return this.services.find((s) => s.canHandle(type));
   }
@@ -52,8 +63,10 @@ export class ConversionEngine {
     if (this.isDispatcherRunning) return;
     this.isDispatcherRunning = true;
 
-    const maxConcurrency = Math.max(1, parseInt(process.env.SERVER_CONCURRENCY || '4', 10));
-    const maxMediaConcurrency = Math.max(1, parseInt(process.env.MAX_MEDIA_CONCURRENCY || '2', 10));
+    const infraConfig = getInfrastructureConfig();
+    const maxConcurrency = infraConfig.concurrency.general;
+    const maxMediaConcurrency = infraConfig.concurrency.media;
+    const maxOcrConcurrency = infraConfig.concurrency.ocr;
 
     try {
       while (true) {
@@ -67,6 +80,8 @@ export class ConversionEngine {
           }
 
           const isMedia = this.isMediaJob(job.type);
+          const isOcr = this.isOcrJob(job.type);
+
           if (isMedia && this.activeMediaWorkers >= maxMediaConcurrency) {
             // Re-enqueue job to defer until a media slot opens
             await jobQueue.enqueue(job);
@@ -74,12 +89,21 @@ export class ConversionEngine {
             break;
           }
 
+          if (isOcr && this.activeOcrWorkers >= maxOcrConcurrency) {
+            // Re-enqueue job to defer until an OCR slot opens
+            await jobQueue.enqueue(job);
+            await new Promise((r) => setTimeout(r, 100));
+            break;
+          }
+
           this.activeWorkers++;
           if (isMedia) this.activeMediaWorkers++;
+          if (isOcr) this.activeOcrWorkers++;
 
           this.processJob(job).finally(() => {
             this.activeWorkers--;
             if (isMedia) this.activeMediaWorkers--;
+            if (isOcr) this.activeOcrWorkers--;
             this.triggerWorker().catch((err) => console.error('[Worker Re-trigger Error]:', err));
           });
         }
@@ -110,7 +134,14 @@ export class ConversionEngine {
       return;
     }
 
-    const timeoutMs = parseInt(process.env.PROCESSING_TIMEOUT_MS || '60000', 10);
+    const infraConfig = getInfrastructureConfig();
+    let timeoutMs = infraConfig.timeouts.generalMs;
+    if (this.isMediaJob(job.type)) {
+      timeoutMs = infraConfig.timeouts.mediaMs;
+    } else if (this.isOcrJob(job.type)) {
+      timeoutMs = infraConfig.timeouts.ocrMs;
+    }
+
     const abortController = new AbortController();
     const timeoutId = setTimeout(() => {
       abortController.abort();
@@ -156,8 +187,8 @@ export class ConversionEngine {
       // Save output in isolated storage
       const savedOutput = await storageProvider.saveOutput(result.data, result.fileName);
 
-      // Data minimization: delete source input file immediately on success
-      if (privacyConfig.deleteInputImmediatelyOnSuccess && job.input?.storagePath) {
+      // Data minimization & cost saving: delete input immediately on success
+      if (infraConfig.storage.purgeInputImmediately && job.input?.storagePath) {
         await storageProvider.delete(job.input.storagePath);
       }
 
@@ -192,6 +223,15 @@ export class ConversionEngine {
         toolSlug: job.type,
         errorCode: errorMsg,
       }).catch(() => {});
+
+      // Zero unnecessary retention: delete input even on failure to avoid storage leaks
+      if (infraConfig.storage.purgeInputImmediately && job.input?.storagePath) {
+        try {
+          await storageProvider.delete(job.input.storagePath);
+        } catch {
+          // Best-effort cleanup
+        }
+      }
 
       await jobQueue.updateJob(job.id, {
         status: 'failed',

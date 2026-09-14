@@ -369,7 +369,7 @@ export function PdfExtractEngine({
             )}
             {mode === 'attachments' && (
               <p>
-                Liest eingebettete Dateianhänge (z.B. ZUGFeRD / Factur-X XML-Rechnungen, Tabellen oder Begleitdokumente) aus dem PDF-Datenbaum aus.
+                Liest eingebettete Dateianhänge (z. B. ZUGFeRD / Factur-X XML-Rechnungen, Tabellen oder Begleitdokumente) aus dem PDF-Datenbaum aus.
               </p>
             )}
           </div>

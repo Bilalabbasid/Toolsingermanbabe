@@ -39,11 +39,11 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
 
   const categories = [
     { id: 'all', label: 'Alle Werkzeuge' },
-    { id: 'pdf', label: 'PDF Tools' },
-    { id: 'images', label: 'Bild Tools' },
+    { id: 'pdf', label: 'PDF-Tools' },
+    { id: 'images', label: 'Bild-Tools' },
     { id: 'documents', label: 'Dokumente' },
     { id: 'security', label: 'Sicherheit' },
-    { id: 'utilities', label: 'Text & Utilities' },
+    { id: 'utilities', label: 'Text & Hilfsprogramme' },
   ];
 
   const searchResults = searchToolsWithRelevance(searchQuery, selectedCategory);
@@ -269,10 +269,10 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
               <span>CoolWave Pro</span>
             </span>
             <h2 className="text-xl sm:text-3xl font-bold tracking-tight">
-              Mehr Power für Vielnutzer & Profis
+              Mehr Leistung für Vielnutzer & Profis
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
-              Arbeiten Sie ohne Werbung, verarbeiten Sie bis zu 50 Dateien gleichzeitig im Batch-Modus und heben Sie das Dateilimit auf bis zu 500 MB an.
+              Arbeiten Sie ohne Werbung, verarbeiten Sie bis zu 50 Dateien gleichzeitig in der Stapelverarbeitung und heben Sie das Dateilimit auf bis zu 500 MB an.
             </p>
           </div>
 
@@ -281,7 +281,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
               href="/de/preise"
               className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-bold text-sm shadow-sm transition-colors touch-manipulation"
             >
-              Pläne & Preise ansehen
+              Preise & Tarife ansehen
             </Link>
           </div>
         </div>

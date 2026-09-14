@@ -70,7 +70,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     titleDe: 'PDF teilen – Seiten einzeln oder als Bereich trennen | CoolWave',
     metaDescriptionDe: 'PDF-Dateien kostenlos online aufteilen. Wählen Sie einzelne Seiten oder Seitenbereiche aus und extrahieren Sie diese blitzschnell direkt im Browser.',
     h1De: 'PDF teilen & Seiten extrahieren',
-    introDe: 'Mit dem CoolWave PDF-Splitter zerlegen Sie umfangreiche PDF-Dateien nach Ihren Vorgaben. Wählen Sie gezielt Seitenbereiche (z.B. Seite 1-3, 5) oder extrahieren Sie jede Seite als separates Dokument. Alles geschieht sicher in Ihrem Browser ohne Weitergabe an Dritte.',
+    introDe: 'Mit dem CoolWave PDF-Splitter zerlegen Sie umfangreiche PDF-Dateien nach Ihren Vorgaben. Wählen Sie gezielt Seitenbereiche (z. B. Seite 1-3, 5) oder extrahieren Sie jede Seite als separates Dokument. Alles geschieht sicher in Ihrem Browser ohne Weitergabe an Dritte.',
     howItWorksDe: [
       { step: 1, title: 'PDF öffnen', text: 'Laden Sie das PDF-Dokument hoch, das Sie aufteilen möchten.' },
       { step: 2, title: 'Modus & Seiten festlegen', text: 'Geben Sie den gewünschten Seitenbereich ein (z. B. 1-3) oder wählen Sie „Alle Seiten einzeln extrahieren“.' },
@@ -165,7 +165,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
         solution: 'Ein PDF-Dokument muss mindestens eine verbleibende Seite enthalten.'
       }
     ],
-    privacyExplanationDe: '100% In-Browser Seitenbereinigung. Keine Datenübertragung.',
+    privacyExplanationDe: '100% lokale Seitenbereinigung im Browser. Keine Datenübertragung.',
     searchKeywordsDe: ['PDF Seite entfernen', 'Leere Seiten aus PDF löschen', 'PDF Seiten rausschneiden'],
     supportedFormats: 'PDF zu PDF',
     freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
@@ -183,11 +183,11 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     category: 'pdf',
     sourceFormats: ['.pdf'],
     targetFormats: ['.pdf'],
-    nameDe: 'PDF Seiten neu anordnen',
+    nameDe: 'PDF-Seiten neu anordnen',
     shortDescriptionDe: 'Sortieren Sie durcheinander geratene Seiten in Ihrer PDF-Datei intuitiv in die richtige Lesereihenfolge.',
-    titleDe: 'PDF Seiten neu anordnen – Seitenreihenfolge online sortieren | CoolWave',
+    titleDe: 'PDF-Seiten neu anordnen – Seitenreihenfolge online sortieren | CoolWave',
     metaDescriptionDe: 'Seitenreihenfolge in PDF-Dateien kostenlos online ändern. Verschieben Sie Seiten nach links oder rechts und speichern Sie die neue Sortierung.',
-    h1De: 'PDF Seiten neu anordnen – Reihenfolge intuitiv sortieren',
+    h1De: 'PDF-Seiten neu anordnen – Reihenfolge intuitiv sortieren',
     introDe: 'Wurden Seiten beim Einscannen vertauscht oder soll ein Deckblatt an den Anfang gestellt werden? Mit CoolWave verschieben Sie PDF-Seiten per Pfeilklick an die richtige Position und erzeugen ein logisch sortiertes Gesamtdokument.',
     howItWorksDe: [
       { step: 1, title: 'PDF laden', text: 'Öffnen Sie Ihr Dokument in der Sortier-Übersicht.' },
@@ -203,7 +203,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
         solution: 'Jede Kachel zeigt deutlich die Original-Seitenzahl und die neue Zielposition an.'
       }
     ],
-    privacyExplanationDe: '100% In-Browser Seitenverschiebung via pdf-lib.',
+    privacyExplanationDe: '100% lokale Seitenverschiebung im Browser via pdf-lib.',
     searchKeywordsDe: ['PDF Seiten sortieren', 'PDF Reihenfolge ändern', 'Seitenreihenfolge PDF anpassen'],
     supportedFormats: 'PDF zu PDF',
     freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
@@ -230,7 +230,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     howItWorksDe: [
       { step: 1, title: 'PDF einfügen', text: 'Ziehen Sie die zu verkleinernde PDF-Datei in das Tool.' },
       { step: 2, title: 'Komprimierungsstufe wählen', text: 'Wählen Sie zwischen Starker (maximale Reduktion), Ausgewogener (empfohlen) oder Leichter Kompression.' },
-      { step: 3, title: 'Optimiertes PDF herunterladen', text: 'Sehen Sie Ihre Ersparnis (z.B. „68% kleiner“) und laden Sie die Datei herunter.' }
+      { step: 3, title: 'Optimiertes PDF herunterladen', text: 'Sehen Sie Ihre Ersparnis (z. B. „68% kleiner“) und laden Sie die Datei herunter.' }
     ],
     faqDe: [
       { question: 'Leidet die Textschärfe unter der Kompression?', answer: 'Nein. Vektortext bleibt gestochen scharf. Die Optimierung zielt auf redundante Datenstrukturen, ungenutzte Schriftarten und Bild-Streams ab.' },
@@ -243,12 +243,12 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
         solution: 'Wenn das PDF fast ausschließlich reinen Vektortext enthält oder bereits voroptimiert wurde, lässt sich die Dateigröße nicht weiter verlustfrei schrumpfen. Bei PDFs mit vielen Scans erzielen Sie die höchste Reduktion.'
       },
       {
-        issue: 'Die PDF ist nach der Komprimierung für den Druck ungeeignet.',
+        issue: 'Das PDF ist nach der Komprimierung für den Druck ungeeignet.',
         solution: 'Wählen Sie die Stufe „Leichte Kompression“, um eine höhere Bildauflösung für den Druck beizubehalten.'
       }
     ],
-    privacyExplanationDe: '100% In-Browser Stream-Optimierung. Ihre Dokumente verbleiben auf Ihrem Computer.',
-    searchKeywordsDe: ['PDF verkleinern', 'PDF Dateigröße reduzieren', 'PDF kleiner machen für E-Mail', 'PDF KB verringern'],
+    privacyExplanationDe: '100% lokale Optimierung im Browser. Ihre Dokumente verbleiben auf Ihrem Computer.',
+    searchKeywordsDe: ['PDF verkleinern', 'PDF-Dateigröße reduzieren', 'PDF kleiner machen für E-Mail', 'PDF KB verringern'],
     supportedFormats: 'PDF Optimierung',
     freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
     proLimits: { maxFileSizeMB: 500, maxBatch: 25 },
@@ -926,7 +926,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'Excel-Datei öffnen', text: 'Laden Sie Ihre Tabelle herunter und öffnen Sie sie direkt in Excel oder Google Sheets.' }
     ],
     faqDe: [
-      { question: 'Werden Zahlenformate und Formeln übernommen?', answer: 'Zahlen und Texte werden exakt extrahiert. Rechenformeln (z.B. SUMME) können Sie in Excel anschließend mit einem Klick neu anlegen.' }
+      { question: 'Werden Zahlenformate und Formeln übernommen?', answer: 'Zahlen und Texte werden exakt extrahiert. Rechenformeln (z. B. SUMME) können Sie in Excel anschließend mit einem Klick neu anlegen.' }
     ],
     troubleshootingDe: [
       {
@@ -973,7 +973,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
         solution: 'Stellen Sie im Tabellenblatt sicher, dass der Druckbereich auf „Auf 1 Seite anpassen“ konfiguriert ist.'
       }
     ],
-    privacyExplanationDe: 'Sichere verschlüsselte Tabellenkonvertierung mit 15 Min. Auto-Löschung.',
+    privacyExplanationDe: 'Sichere verschlüsselte Tabellenkonvertierung mit automatischer Löschung nach 15 Minuten.',
     searchKeywordsDe: ['XLSX in PDF', 'Excel zu PDF', 'Tabelle als PDF speichern'],
     supportedFormats: 'XLSX / XLS zu PDF',
     freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
@@ -2409,7 +2409,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'PNG downloaden', text: 'Laden Sie das extrahierte PNG-Icon herunter.' }
     ],
     faqDe: [
-      { question: 'Welche Icon-Größe wird extrahiert?', answer: 'Es wird automatisch die höchstauflösende Version (z.B. 256x256 Pixel) aus der ICO-Datei extrahiert.' }
+      { question: 'Welche Icon-Größe wird extrahiert?', answer: 'Es wird automatisch die höchstauflösende Version (z. B. 256 × 256 Pixel) aus der ICO-Datei extrahiert.' }
     ],
     troubleshootingDe: [
       { issue: 'Icon wirkt klein.', solution: 'Manche alte ICO-Dateien enthalten nur 16x16 oder 32x32 Pixel.' }
@@ -3861,9 +3861,9 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.odt'],
     targetFormats: ['.docx'],
     nameDe: 'ODT in DOCX umwandeln',
-    shortDescriptionDe: 'OpenOffice und LibreOffice Writer Dokumente (.odt) in Microsoft Word (.docx) umwandeln.',
+    shortDescriptionDe: 'OpenOffice- und LibreOffice-Writer-Dokumente (.odt) in Microsoft-Word-Dateien (.docx) umwandeln.',
     titleDe: 'ODT in DOCX umwandeln – OpenDocument in Word konvertieren | CoolWave',
-    metaDescriptionDe: 'ODT kostenlos online in DOCX umwandeln. OpenDocument-Dateien aus LibreOffice und OpenOffice direkt in Microsoft Word Dokumente konvertieren.',
+    metaDescriptionDe: 'ODT kostenlos online in DOCX umwandeln. OpenDocument-Dateien aus LibreOffice und OpenOffice direkt in Microsoft-Word-Dokumente konvertieren.',
     h1De: 'ODT in DOCX umwandeln – OpenDocument zu Word',
     introDe: 'Haben Sie ein Textdokument aus LibreOffice oder OpenOffice erhalten und möchten es in Microsoft Word bearbeiten? Wandeln Sie ODT-Dokumente sauber und verlustfrei in das standardmäßige DOCX-Format um.',
     howItWorksDe: [
@@ -3894,9 +3894,9 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.docx'],
     targetFormats: ['.odt'],
     nameDe: 'DOCX in ODT umwandeln',
-    shortDescriptionDe: 'Microsoft Word Dokumente (.docx) in das freie OpenDocument-Format (.odt) konvertieren.',
+    shortDescriptionDe: 'Microsoft-Word-Dokumente (.docx) in das freie OpenDocument-Format (.odt) konvertieren.',
     titleDe: 'DOCX in ODT umwandeln – Word in OpenDocument Writer konvertieren | CoolWave',
-    metaDescriptionDe: 'DOCX-Dateien kostenlos in ODT umwandeln. Perfekt für OpenOffice und LibreOffice Writer Nutzer. Sicher und ohne Software-Installation.',
+    metaDescriptionDe: 'DOCX-Dateien kostenlos in ODT umwandeln. Perfekt für OpenOffice- und LibreOffice-Writer-Nutzer. Sicher und ohne Software-Installation.',
     h1De: 'DOCX in ODT umwandeln – Für OpenOffice & LibreOffice',
     introDe: 'Konvertieren Sie Word-Dokumente (.docx) in das herstellerunabhängige OpenDocument-Format (.odt), um sie nahtlos in LibreOffice Writer, OpenOffice oder Behörden-Standards zu nutzen.',
     howItWorksDe: [
@@ -3927,11 +3927,11 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.rtf'],
     targetFormats: ['.docx'],
     nameDe: 'RTF in DOCX umwandeln',
-    shortDescriptionDe: 'Rich Text Format (.rtf) in modernes Microsoft Word (.docx) Dokument umwandeln.',
+    shortDescriptionDe: 'Rich-Text-Format (.rtf) in modernes Microsoft-Word-Dokument (.docx) umwandeln.',
     titleDe: 'RTF in DOCX umwandeln – Rich Text in Word-Dokument konvertieren | CoolWave',
     metaDescriptionDe: 'RTF-Dateien kostenlos und schnell in DOCX umwandeln. Textformatierung und Absätze sauber in Microsoft Word übernehmen.',
     h1De: 'RTF in DOCX umwandeln – Rich Text formatieren',
-    introDe: 'Rich Text Dateien (.rtf) werden von vielen Editoren wie WordPad oder macOS TextEdit genutzt. Konvertieren Sie RTF-Dateien mit CoolWave in vollwertige Microsoft Word DOCX-Dateien.',
+    introDe: 'Rich-Text-Dateien (.rtf) werden von vielen Editoren wie WordPad oder macOS TextEdit genutzt. Konvertieren Sie RTF-Dateien mit CoolWave in vollwertige Microsoft-Word-DOCX-Dateien.',
     howItWorksDe: [
       { step: 1, title: 'RTF hochladen', text: 'Wählen Sie Ihre RTF-Datei aus.' },
       { step: 2, title: 'In DOCX konvertieren', text: 'Starten Sie die Konvertierung.' },
@@ -3964,7 +3964,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     titleDe: 'TXT in DOCX umwandeln – Textdatei in Word-Dokument umwandeln | CoolWave',
     metaDescriptionDe: 'TXT kostenlos in Word DOCX umwandeln. Automatische Erkennung von Überschriften und Absätzen für saubere Textdokumente.',
     h1De: 'TXT in DOCX umwandeln – Text in Word layouten',
-    introDe: 'Wandeln Sie einfache Notizen, Quelltexte oder TXT-Dateien in saubere Microsoft Word Dokumente um. CoolWave erkennt automatisch Titel, Absätze und Strukturmerkmale.',
+    introDe: 'Wandeln Sie einfache Notizen, Quelltexte oder TXT-Dateien in saubere Microsoft-Word-Dokumente um. CoolWave erkennt automatisch Titel, Absätze und Strukturmerkmale.',
     howItWorksDe: [
       { step: 1, title: 'TXT hochladen', text: 'Laden Sie Ihre .txt-Datei hoch.' },
       { step: 2, title: 'Formatieren', text: 'Klicken Sie auf „TXT in Word umwandeln“.' },
@@ -4259,13 +4259,13 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.epub'],
     targetFormats: ['.pdf'],
     nameDe: 'EPUB in PDF umwandeln',
-    shortDescriptionDe: 'EPUB eBooks in druckbare, universell lesbare PDF-Dokumente auf DIN A4 umwandeln.',
-    titleDe: 'EPUB in PDF umwandeln – eBook als druckbares PDF speichern | CoolWave',
-    metaDescriptionDe: 'EPUB eBooks kostenlos online in PDF konvertieren. Saubere Kapitelüberschriften, automatischer Seitenumbruch und Lesbarkeit auf jedem Gerät.',
-    h1De: 'EPUB in PDF umwandeln – eBooks als PDF lesen und drucken',
-    introDe: 'Konvertieren Sie EPUB-eBooks in feste, druckbare PDF-Dokumente. Perfekt zum Lesen auf dem Computer, zum Markieren von Textstellen oder für den Ausdruck auf DIN A4.',
+    shortDescriptionDe: 'EPUB-E-Books in druckbare, universell lesbare PDF-Dokumente auf DIN A4 umwandeln.',
+    titleDe: 'EPUB in PDF umwandeln – E-Book als druckbares PDF speichern | CoolWave',
+    metaDescriptionDe: 'EPUB-E-Books kostenlos online in PDF konvertieren. Saubere Kapitelüberschriften, automatischer Seitenumbruch und Lesbarkeit auf jedem Gerät.',
+    h1De: 'EPUB in PDF umwandeln – E-Books als PDF lesen und drucken',
+    introDe: 'Konvertieren Sie EPUB-E-Books in feste, druckbare PDF-Dokumente. Perfekt zum Lesen auf dem Computer, zum Markieren von Textstellen oder für den Ausdruck auf DIN A4.',
     howItWorksDe: [
-      { step: 1, title: 'EPUB eBook hochladen', text: 'Wählen Sie Ihre .epub-Buchdatei aus.' },
+      { step: 1, title: 'EPUB-E-Book hochladen', text: 'Wählen Sie Ihre .epub-Buchdatei aus.' },
       { step: 2, title: 'PDF rendern', text: 'Klicken Sie auf „EPUB in PDF umwandeln“.' },
       { step: 3, title: 'PDF-Buch herunterladen', text: 'Laden Sie das fertige PDF-Dokument herunter.' }
     ],
@@ -4274,8 +4274,8 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Funktioniert das mit DRM-geschützten Büchern?', answer: 'Es können nur DRM-freie EPUB-Dateien konvertiert werden. Kopiergeschützte Dateien (Adobe DRM) müssen zuvor unverschlüsselt sein.' }
     ],
     troubleshootingDe: [],
-    privacyExplanationDe: '100% vertraulich – Ihre eBooks werden nach 15 Minuten automatisch vom Server gelöscht.',
-    searchKeywordsDe: ['EPUB in PDF', 'eBook in PDF umwandeln', 'EPUB als PDF drucken', 'EPUB zu PDF Konverter'],
+    privacyExplanationDe: '100% vertraulich – Ihre E-Books werden nach 15 Minuten automatisch vom Server gelöscht.',
+    searchKeywordsDe: ['EPUB in PDF', 'E-Book in PDF umwandeln', 'EPUB als PDF drucken', 'EPUB zu PDF Konverter'],
     supportedFormats: 'EPUB zu PDF',
     freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
     proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
@@ -4293,11 +4293,11 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.epub'],
     targetFormats: ['.txt'],
     nameDe: 'EPUB in TXT umwandeln',
-    shortDescriptionDe: 'Den reinen Text aus EPUB eBooks extrahieren und als universelle TXT-Textdatei speichern.',
-    titleDe: 'EPUB in TXT umwandeln – Text aus eBook extrahieren | CoolWave',
-    metaDescriptionDe: 'EPUB kostenlos in TXT umwandeln. Extrahiert den gesamten Buchtext ohne HTML-Tags und Formatierungsmüll für Sprachausgabe und Notizen.',
+    shortDescriptionDe: 'Den reinen Text aus EPUB-E-Books extrahieren und als universelle TXT-Textdatei speichern.',
+    titleDe: 'EPUB in TXT umwandeln – Text aus E-Book extrahieren | CoolWave',
+    metaDescriptionDe: 'EPUB kostenlos in TXT umwandeln. Extrahiert den gesamten Buchtext ohne HTML-Tags und Formatierungsreste für Sprachausgabe und Notizen.',
     h1De: 'EPUB in TXT umwandeln – Buchtext extrahieren',
-    introDe: 'Extrahieren Sie den gesamten Text eines eBooks als schlanke, universelle TXT-Datei. Ideal für Textanalyse, Barrierefreiheit (Screenreader), Vorlese-Apps oder Notizen.',
+    introDe: 'Extrahieren Sie den gesamten Text eines E-Books als schlanke, universelle TXT-Datei. Ideal für Textanalyse, Barrierefreiheit (Screenreader), Vorlese-Apps oder Notizen.',
     howItWorksDe: [
       { step: 1, title: 'EPUB auswählen', text: 'Laden Sie Ihre .epub-Datei hoch.' },
       { step: 2, title: 'Text extrahieren', text: 'Klicken Sie auf „In TXT umwandeln“.' },
@@ -4308,7 +4308,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     ],
     troubleshootingDe: [],
     privacyExplanationDe: 'Vertrauliche Verarbeitung mit automatischer Datenlöschung nach 15 Minuten.',
-    searchKeywordsDe: ['EPUB in TXT', 'eBook Text extrahieren', 'EPUB zu Text', 'EPUB als TXT'],
+    searchKeywordsDe: ['EPUB in TXT', 'E-Book Text extrahieren', 'EPUB zu Text', 'EPUB als TXT'],
     supportedFormats: 'EPUB zu TXT',
     freeLimits: { maxFileSizeMB: 50, maxBatch: 1 },
     proLimits: { maxFileSizeMB: 500, maxBatch: 10 },
@@ -4333,12 +4333,12 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     introDe: 'Versehen Sie Ihre PDF-Dokumente mit professionellen Seitenzahlen. Wählen Sie individuelle Formate wie „Seite X von Y“, flexible Platzierungen und schließen Sie das Deckblatt bei Bedarf automatisch aus.',
     howItWorksDe: [
       { step: 1, title: 'PDF-Datei hochladen', text: 'Ziehen Sie Ihre PDF in den Konverter oder wählen Sie sie aus.' },
-      { step: 2, title: 'Nummerierung anpassen', text: 'Wählen Sie Zahlenformat, Position (z.B. Unten-Mitte) und Schriftgröße.' },
+      { step: 2, title: 'Nummerierung anpassen', text: 'Wählen Sie Zahlenformat, Position (z. B. Unten Mitte) und Schriftgröße.' },
       { step: 3, title: 'Nummerierte PDF speichern', text: 'Klicken Sie auf „Seiten nummerieren“ und laden Sie das Dokument herunter.' }
     ],
     faqDe: [
       { question: 'Kann ich das Deckblatt von der Nummerierung ausschließen?', answer: 'Ja, die Option „Deckblatt überspringen“ lässt die erste Seite frei und beginnt die Nummerierung ab Seite 2.' },
-      { question: 'Welche Formate werden unterstützt?', answer: 'Sie können beliebige Formate wählen, z.B. „Seite {n} von {total}“, „{n}/{total}“ oder einfache Ziffern „{n}“.' }
+      { question: 'Welche Formate werden unterstützt?', answer: 'Sie können beliebige Formate wählen, z. B. „Seite {n} von {total}“, „{n}/{total}“ oder einfache Ziffern „{n}“.' }
     ],
     troubleshootingDe: [],
     privacyExplanationDe: 'Verarbeitung erfolgt 100% lokal im Browser – Ihre Dokumente verlassen Ihren Computer nicht.',

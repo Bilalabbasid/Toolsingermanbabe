@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Readable } from 'stream';
 import { jobQueue } from '@/server/queue/queue';
 import { storageProvider } from '@/server/storage/storage';
 import { verifySignedDownloadToken } from '@/server/security/signedUrl';
 import { privacyConfig } from '@/config/privacy.config';
+import { getInfrastructureConfig } from '@/config/infrastructure.config';
 import { analyticsService } from '@/server/analytics/analytics.service';
 
 interface Params {
@@ -54,21 +56,44 @@ export async function GET(req: NextRequest, { params }: Params) {
   }
 
   try {
-    const fileBuffer = await storageProvider.read(job.output.storagePath);
+    const infraConfig = getInfrastructureConfig();
+    const { stream: nodeStream, sizeBytes } = await storageProvider.createReadStream(
+      job.output.storagePath,
+      infraConfig.storage.streamChunkSizeBytes
+    );
 
     // Track download_completed
     analyticsService.track({
       eventType: 'download_completed',
       toolSlug: job.type,
-      outputSizeBytes: fileBuffer.length,
+      outputSizeBytes: sizeBytes,
     }).catch(() => {});
 
-    return new NextResponse(new Uint8Array(fileBuffer), {
+    // Hook auto-cleanup when stream transmission completes or closes
+    const autoCleanRequested = req.nextUrl.searchParams.get('autoclean') === 'true';
+    if (infraConfig.storage.deleteOnDownload || autoCleanRequested) {
+      (nodeStream as any).on('close', async () => {
+        try {
+          await storageProvider.delete(job.output!.storagePath);
+          await jobQueue.updateJob(job.id, {
+            status: 'expired',
+            error: 'Datei nach erfolgreichem Download automatisch aus dem Speicher entfernt.',
+          });
+        } catch {
+          // Cleanup best-effort
+        }
+      });
+    }
+
+    // Convert Node.js stream to Web ReadableStream for zero-copy transmission
+    const webStream = Readable.toWeb(nodeStream as Readable);
+
+    return new Response(webStream as any, {
       status: 200,
       headers: {
         'Content-Type': job.output.mimeType || 'application/octet-stream',
         'Content-Disposition': `attachment; filename="${encodeURIComponent(job.output.fileName)}"`,
-        'Content-Length': fileBuffer.length.toString(),
+        'Content-Length': sizeBytes.toString(),
         'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
         'Pragma': 'no-cache',
         'X-Content-Type-Options': 'nosniff',

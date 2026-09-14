@@ -178,7 +178,7 @@ export function CookieBanner() {
                 <div>
                   <div className="font-semibold text-slate-900 text-xs sm:text-sm">Anonyme Analyse</div>
                   <p className="text-slate-500 text-[11px] sm:text-xs mt-0.5">
-                    Hilft uns zu verstehen, welche Konvertierungstools am häufigsten genutzt werden.
+                    Hilft uns zu verstehen, welche Werkzeuge und Funktionen am häufigsten genutzt werden.
                   </p>
                 </div>
                 <input
@@ -193,7 +193,7 @@ export function CookieBanner() {
                 <div>
                   <div className="font-semibold text-slate-900 text-xs sm:text-sm">Personalisierte Werbung</div>
                   <p className="text-slate-500 text-[11px] sm:text-xs mt-0.5">
-                    Ermöglicht das Einblenden relevanter Partnerangebote zur Finanzierung der kostenlosen Tools.
+                    Ermöglicht das Einblenden relevanter Partnerangebote zur Finanzierung der kostenlosen Werkzeuge.
                   </p>
                 </div>
                 <input

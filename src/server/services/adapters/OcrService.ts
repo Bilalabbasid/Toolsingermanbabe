@@ -5,6 +5,7 @@ import { PDFDocument } from 'pdf-lib';
 import sharp from 'sharp';
 import * as napi from '@napi-rs/canvas';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import { getInfrastructureConfig } from '@/config/infrastructure.config';
 
 // Polyfill Node.js canvas globals for pdfjs-dist rendering
 if (typeof global !== 'undefined') {
@@ -22,6 +23,69 @@ export interface OcrConfigLimits {
   maxFileSizeMB: number;
   timeoutMs: number;
 }
+
+interface PooledWorkerEntry {
+  worker: Tesseract.Worker;
+  lang: string;
+  inUse: boolean;
+  lastUsed: number;
+  timer?: NodeJS.Timeout;
+}
+
+class TesseractWorkerPool {
+  private pool: Map<string, PooledWorkerEntry[]> = new Map();
+
+  async acquire(lang: string, idleTimeoutMs: number): Promise<{ worker: Tesseract.Worker; release: () => Promise<void> }> {
+    const list = this.pool.get(lang) || [];
+    let entry = list.find((p) => !p.inUse);
+
+    if (!entry) {
+      const worker = await Tesseract.createWorker(lang);
+      entry = { worker, lang, inUse: true, lastUsed: Date.now() };
+      list.push(entry);
+      this.pool.set(lang, list);
+    } else {
+      entry.inUse = true;
+      if (entry.timer) {
+        clearTimeout(entry.timer);
+        entry.timer = undefined;
+      }
+    }
+
+    const currentEntry = entry;
+    return {
+      worker: currentEntry.worker,
+      release: async () => {
+        currentEntry.inUse = false;
+        currentEntry.lastUsed = Date.now();
+        // Discard or terminate worker after idle timeout to release RAM
+        currentEntry.timer = setTimeout(async () => {
+          if (!currentEntry.inUse) {
+            try {
+              await currentEntry.worker.terminate();
+            } catch {}
+            const currentList = this.pool.get(lang) || [];
+            this.pool.set(lang, currentList.filter((p) => p !== currentEntry));
+          }
+        }, idleTimeoutMs);
+      },
+    };
+  }
+
+  async drain(): Promise<void> {
+    for (const [_, list] of this.pool) {
+      for (const entry of list) {
+        if (entry.timer) clearTimeout(entry.timer);
+        try {
+          await entry.worker.terminate();
+        } catch {}
+      }
+    }
+    this.pool.clear();
+  }
+}
+
+const workerPool = new TesseractWorkerPool();
 
 export class OcrService implements IConversionService {
   name = 'OcrService';
@@ -144,8 +208,18 @@ export class OcrService implements IConversionService {
     onProgress(10);
     if (signal?.aborted) throw new Error('OCR-Verarbeitung wurde abgebrochen.');
 
-    // Initialize Tesseract Worker
-    const worker = await Tesseract.createWorker(lang);
+    // Acquire or initialize Tesseract Worker with caching
+    const infraConfig = getInfrastructureConfig();
+    let worker: Tesseract.Worker;
+    let releaseWorker: (() => Promise<void>) | null = null;
+
+    if (infraConfig.caching.poolOcrWorkers) {
+      const pooled = await workerPool.acquire(lang, infraConfig.caching.ocrWorkerIdleTimeoutMs);
+      worker = pooled.worker;
+      releaseWorker = pooled.release;
+    } else {
+      worker = await Tesseract.createWorker(lang);
+    }
 
     try {
       const pageTexts: { pageNumber: number; text: string }[] = [];
@@ -324,7 +398,13 @@ export class OcrService implements IConversionService {
         };
       }
     } finally {
-      await worker.terminate();
+      if (releaseWorker) {
+        await releaseWorker();
+      } else if (worker) {
+        try {
+          await worker.terminate();
+        } catch {}
+      }
     }
   }
 }

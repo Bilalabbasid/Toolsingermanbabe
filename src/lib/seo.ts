@@ -5,6 +5,8 @@ import { DEFAULT_LOCALE, getAlternateUrls } from '@/config/i18n.config';
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://coolwave.cool';
 export const SITE_NAME = 'CoolWave';
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+export const DEFAULT_ORG_LOGO = `${SITE_URL}/icon-512.png`;
 
 /**
  * Generate fully-compliant Next.js Metadata for any Tool
@@ -37,11 +39,20 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
       siteName: SITE_NAME,
       locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
       type: 'website',
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${tool.nameDe} – CoolWave Online Tools`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: tool.titleDe,
       description: tool.metaDescriptionDe,
+      images: [DEFAULT_OG_IMAGE],
     },
     robots: {
       index: true,
@@ -78,11 +89,20 @@ export function generateCategoryMetadata(catInfo: CategoryInfo, locale: string =
       siteName: SITE_NAME,
       locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
       type: 'website',
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${catInfo.name} – CoolWave Online Tools`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: catInfo.metaTitle,
       description: catInfo.metaDescription,
+      images: [DEFAULT_OG_IMAGE],
     },
     robots: {
       index: true,
@@ -132,11 +152,20 @@ export function generatePageMetadata({
       siteName: SITE_NAME,
       locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
       type: 'website',
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${title} | CoolWave`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [DEFAULT_OG_IMAGE],
     },
     robots: {
       index: !noIndex,
@@ -171,6 +200,7 @@ export function generateWebApplicationSchema(tool: ToolDefinition, locale: strin
     operatingSystem: 'All',
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
     softwareVersion: '1.0',
+    image: DEFAULT_OG_IMAGE,
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -239,6 +269,25 @@ export function generateWebsiteSchema(locale: string = DEFAULT_LOCALE) {
 }
 
 /**
+ * CollectionPage schema for category hub pages
+ */
+export function generateCollectionPageSchema(catInfo: CategoryInfo, locale: string = DEFAULT_LOCALE) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: catInfo.name,
+    headline: catInfo.h1,
+    description: catInfo.metaDescription,
+    url: `${SITE_URL}/${locale}/kategorie/${catInfo.slug}`,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: SITE_NAME,
+      url: `${SITE_URL}/${locale}`,
+    },
+  };
+}
+
+/**
  * Organization schema
  */
 export function generateOrganizationSchema() {
@@ -247,6 +296,6 @@ export function generateOrganizationSchema() {
     '@type': 'Organization',
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon.ico`,
+    logo: DEFAULT_ORG_LOGO,
   };
 }

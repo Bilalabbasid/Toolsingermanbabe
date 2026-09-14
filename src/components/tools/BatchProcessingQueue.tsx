@@ -124,7 +124,7 @@ export function BatchProcessingQueue({
               <Zap className={`w-4 h-4 ${isPro ? 'text-amber-400 fill-amber-400' : 'text-slate-400'}`} />
               <div className="text-left">
                 <div className="text-xs font-bold text-slate-200">
-                  {isPro ? 'Pro-Konto (Aktiv)' : 'Kostenloser Tarif'}
+                  {isPro ? 'Pro-Konto (aktiv)' : 'Kostenloser Tarif'}
                 </div>
                 <div className="text-[10px] text-slate-400">
                   Limit: max. {limits.maxBatchFiles} Dateien / {limits.maxFileSizeMB} MB je Datei
@@ -213,7 +213,7 @@ export function BatchProcessingQueue({
           ) : (
             <>
               <Archive className="w-4 h-4" />
-              Alle herunterladen (ZIP · {completedCount})
+              Alle als ZIP herunterladen ({completedCount})
             </>
           )}
         </button>

@@ -174,7 +174,7 @@ export function UpgradeModal({
               { title: '100% Werbefrei', desc: 'Fokussiertes Arbeiten ohne Werbebanner' },
               { title: 'Prioritäts-Warteschlange', desc: 'VIP-Verarbeitung ohne Wartezeiten' },
               { title: 'Unbegrenzte Hochpräzisions-OCR', desc: 'Gescannte Dokumente in Text wandeln' },
-              { title: '30 Tage Konvertierungs-Historie', desc: 'Frühere Ergebnisse jederzeit erneut laden' },
+              { title: '30 Tage Konvertierungsverlauf', desc: 'Frühere Ergebnisse jederzeit erneut laden' },
             ].map((perk, idx) => (
               <div key={idx} className="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50/60 sm:bg-transparent">
                 <div className="p-1 rounded-md bg-emerald-100 text-emerald-700 shrink-0 mt-0.5">
@@ -222,7 +222,7 @@ export function UpgradeModal({
                   </>
                 ) : (
                   <>
-                    <span>Jetzt upgraden</span>
+                    <span>Jetzt Pro aktivieren</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

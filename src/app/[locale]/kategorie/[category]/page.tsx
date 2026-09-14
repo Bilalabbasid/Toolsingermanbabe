@@ -7,7 +7,11 @@ import { getToolsByCategory } from '@/config/tools.config';
 import { ToolCategory } from '@/types/tool';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { FileText, ArrowRight } from 'lucide-react';
-import { generateCategoryMetadata, generateBreadcrumbSchema } from '@/lib/seo';
+import { 
+  generateCategoryMetadata, 
+  generateBreadcrumbSchema,
+  generateCollectionPageSchema
+} from '@/lib/seo';
 import { AdSlot } from '@/components/common/AdSlot';
 
 interface CategoryPageProps {
@@ -56,12 +60,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     { name: 'Startseite', url: `/${locale}` },
     ...breadcrumbs,
   ]);
+  const collectionSchema = generateCollectionPageSchema(catInfo, locale);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">

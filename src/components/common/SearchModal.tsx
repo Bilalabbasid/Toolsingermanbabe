@@ -41,7 +41,7 @@ const CATEGORY_TABS: Array<{ id: string; label: string }> = [
   { id: 'pdf', label: 'PDF' },
   { id: 'images', label: 'Bilder' },
   { id: 'documents', label: 'Dokumente' },
-  { id: 'utilities', label: 'Tools' },
+  { id: 'utilities', label: 'Werkzeuge' },
 ];
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
@@ -186,7 +186,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             aria-autocomplete="list"
             aria-controls="search-results-list"
             aria-activedescendant={searchResults.length > 0 && selectedIndex >= 0 ? `search-result-${searchResults[selectedIndex]?.tool.id}` : undefined}
-            placeholder="Tool suchen (z. B. Word, Bild, ZIP)..."
+            placeholder="Werkzeug oder Format suchen (z. B. Word, Bild, ZIP)..."
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -374,11 +374,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </div>
               )}
 
-              {/* Beliebte Tools (Popular tools) */}
+              {/* Beliebte Werkzeuge */}
               <div>
                 <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wider px-2 mb-2 flex items-center gap-1.5">
                   <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                  Beliebte Tools
+                  Beliebte Werkzeuge
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {popularTools.map((tool) => (
@@ -409,11 +409,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </div>
               </div>
 
-              {/* Empfohlene Tools (Recommended tools) */}
+              {/* Empfohlene Werkzeuge */}
               <div>
                 <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wider px-2 mb-2 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-sky-600" />
-                  Empfohlene Tools
+                  Empfohlene Werkzeuge
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {recommendedTools.map((tool) => (

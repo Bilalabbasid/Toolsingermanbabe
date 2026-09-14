@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { UploadCloud, File, AlertCircle, Plus, X, Smartphone } from 'lucide-react';
+import Link from 'next/link';
+import { UploadCloud, File, AlertCircle, Plus, X, Smartphone, Sparkles, ArrowRight, Minimize2 } from 'lucide-react';
 import { formatBytes } from '@/lib/utils';
 import { trackUploadStarted, trackUploadCompleted, getActiveToolSlug } from '@/lib/analytics';
 
@@ -24,6 +25,7 @@ export function FileUploader({
 }: FileUploaderProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [sizeExceededFile, setSizeExceededFile] = useState<{ name: string; size: number } | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,6 +38,7 @@ export function FileUploader({
   const validateAndProcessFiles = (rawFiles: FileList | null) => {
     if (!rawFiles || rawFiles.length === 0) return;
     setErrorMessage(null);
+    setSizeExceededFile(null);
 
     const validFiles: File[] = [];
     const maxBytes = maxFileSizeMB * 1024 * 1024;
@@ -58,9 +61,7 @@ export function FileUploader({
 
       // Validate size
       if (file.size > maxBytes) {
-        setErrorMessage(
-          `Die Datei „${file.name}" ist zu groß (${formatBytes(file.size)}). Das Limit für kostenlose Nutzer beträgt ${maxFileSizeMB} MB.`
-        );
+        setSizeExceededFile({ name: file.name, size: file.size });
         return;
       }
 
@@ -173,6 +174,59 @@ export function FileUploader({
         </div>
       </div>
 
+      {sizeExceededFile && (
+        <div 
+          role="alert" 
+          aria-live="assertive"
+          className="mt-3 sm:mt-4 p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-sky-50 border border-amber-200/80 text-left shadow-xs"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-amber-100 text-amber-700 shrink-0 mt-0.5">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">
+                  Datei ist größer als das kostenlose Limit ({maxFileSizeMB} MB)
+                </h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Die Datei „<strong>{sizeExceededFile.name}</strong>“ hat eine Größe von <strong>{formatBytes(sizeExceededFile.size)}</strong>.
+                </p>
+
+                {/* Helpful Action Paths */}
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  {sizeExceededFile.name.toLowerCase().endsWith('.pdf') && (
+                    <Link
+                      href="/de/pdf-komprimieren"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-sky-300 text-xs font-semibold text-sky-700 shadow-2xs hover:bg-sky-50/50 transition-colors"
+                    >
+                      <Minimize2 className="w-3.5 h-3.5" />
+                      <span>Erst kostenlos verkleinern</span>
+                    </Link>
+                  )}
+
+                  <Link
+                    href="/de/preise"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-2xs transition-colors"
+                  >
+                    <span>Bis zu 500 MB mit Pro verarbeiten</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setSizeExceededFile(null)}
+              className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
+              aria-label="Hinweis schließen"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {errorMessage && (
         <div 
           role="alert" 
@@ -181,7 +235,7 @@ export function FileUploader({
         >
           <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" aria-hidden="true" />
           <div className="flex-1 min-w-0">
-            <span className="font-semibold block">Achtung:</span>
+            <span className="font-semibold block">Hinweis:</span>
             <span className="break-words">{errorMessage}</span>
           </div>
           <button

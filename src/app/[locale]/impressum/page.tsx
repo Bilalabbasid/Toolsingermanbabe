@@ -1,11 +1,15 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import Link from 'next/link';
+import { generatePageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Impressum | CoolWave',
-  description: 'Gesetzliche Anbieterkennzeichnung nach § 5 DDG für CoolWave (coolwave.cool).',
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: 'Impressum – Gesetzliche Anbieterkennzeichnung | CoolWave',
+  description: 'Gesetzliche Anbieterkennzeichnung nach § 5 DDG für CoolWave (coolwave.cool). Betreiberinformationen, Kontaktdaten und rechtliche Hinweise.',
+  path: '/impressum',
+  locale: 'de',
+});
 
 export default function ImpressumPage() {
   const breadcrumbs = [

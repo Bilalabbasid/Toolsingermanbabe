@@ -1,11 +1,24 @@
 import fs from 'fs/promises';
+import { createReadStream as fsCreateReadStream } from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+
+export interface StorageFileStats {
+  sizeBytes: number;
+  mtimeMs: number;
+}
+
+export interface StorageStreamResult {
+  stream: NodeJS.ReadableStream;
+  sizeBytes: number;
+}
 
 export interface IStorageProvider {
   saveInput(data: ArrayBuffer | Buffer, originalName: string): Promise<{ storagePath: string; sizeBytes: number }>;
   saveOutput(data: ArrayBuffer | Buffer | Uint8Array, filename: string): Promise<{ storagePath: string; sizeBytes: number }>;
   read(storagePath: string): Promise<Buffer>;
+  createReadStream(storagePath: string, chunkSize?: number): Promise<StorageStreamResult>;
+  getFileStats(storagePath: string): Promise<StorageFileStats>;
   delete(storagePath: string): Promise<void>;
   cleanupExpired(maxAgeMinutes: number): Promise<number>;
 }
@@ -77,6 +90,25 @@ export class LocalStorageProvider implements IStorageProvider {
   async read(storagePath: string): Promise<Buffer> {
     const safePath = this.assertWithinBaseDir(storagePath);
     return await fs.readFile(safePath);
+  }
+
+  async getFileStats(storagePath: string): Promise<StorageFileStats> {
+    const safePath = this.assertWithinBaseDir(storagePath);
+    const stat = await fs.stat(safePath);
+    return {
+      sizeBytes: stat.size,
+      mtimeMs: stat.mtimeMs,
+    };
+  }
+
+  async createReadStream(storagePath: string, chunkSize = 64 * 1024): Promise<StorageStreamResult> {
+    const safePath = this.assertWithinBaseDir(storagePath);
+    const stat = await fs.stat(safePath);
+    const stream = fsCreateReadStream(safePath, { highWaterMark: chunkSize });
+    return {
+      stream,
+      sizeBytes: stat.size,
+    };
   }
 
   async delete(storagePath: string): Promise<void> {

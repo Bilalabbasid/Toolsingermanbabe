@@ -198,7 +198,7 @@ export function PdfSplitEngine() {
                 >
                   <div className="font-semibold text-sm">Seitenbereich extrahieren</div>
                   <div className="text-xs text-slate-500 mt-1">
-                    z.B. Seiten 1 bis 3 in ein neues PDF zusammenfassen.
+                    z. B. Seiten 1 bis 3 in ein neues PDF zusammenfassen.
                   </div>
                 </button>
 
@@ -228,7 +228,7 @@ export function PdfSplitEngine() {
                   type="text"
                   value={pageRange}
                   onChange={(e) => setPageRange(e.target.value)}
-                  placeholder="z.B. 1-3, 5"
+                  placeholder="z. B. 1-3, 5"
                   className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
                 />
                 <span className="text-[11px] text-slate-400 mt-1.5 block">

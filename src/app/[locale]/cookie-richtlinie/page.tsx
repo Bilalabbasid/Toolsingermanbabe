@@ -1,13 +1,17 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { CookiePreferencesButton } from '@/components/common/CookiePreferencesButton';
 import Link from 'next/link';
 import { Cookie, ShieldCheck, BarChart3, Megaphone } from 'lucide-react';
+import { generatePageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Cookie-Richtlinie | CoolWave',
-  description: 'Transparente Übersicht über den Einsatz von Cookies, Drittanbieter-Diensten und Ihre Widerrufsmöglichkeiten bei CoolWave.',
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: 'Cookie-Richtlinie – Privatsphäre & Einstellungen | CoolWave',
+  description: 'Transparente Übersicht über den Einsatz von Cookies, Web-Speichern und Ihre Widerrufsmöglichkeiten bei CoolWave. Einstellungen jederzeit anpassbar.',
+  path: '/cookie-richtlinie',
+  locale: 'de',
+});
 
 export default function CookieRichtliniePage() {
   const breadcrumbs = [
