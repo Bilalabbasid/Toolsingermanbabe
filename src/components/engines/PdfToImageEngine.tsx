@@ -233,7 +233,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
               </span>
               <img
                 src={firstPagePreview}
-                alt="PDF Vorschau"
+                alt={file ? `PDF-Vorschau von ${file.name}` : "PDF-Seitenvorschau"}
                 className="max-h-64 rounded-lg shadow-sm border border-slate-200 object-contain"
               />
             </div>

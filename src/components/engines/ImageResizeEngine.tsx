@@ -181,7 +181,7 @@ export function ImageResizeEngine({ isGrayscaleMode = false }: ImageResizeEngine
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
                 <img
                   src={previewUrl}
-                  alt="Vorschau"
+                  alt={`Bildvorschau von ${file.name}`}
                   className="w-full h-full object-contain"
                 />
               </div>

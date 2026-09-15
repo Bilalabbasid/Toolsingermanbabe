@@ -153,22 +153,22 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-berechtigungen" className="py-1 block hover:text-white transition-colors">
+                <Link href="/de/pdf-berechtigungen-aendern" className="py-1 block hover:text-white transition-colors">
                   Berechtigungen verwalten
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-ocr-erkennung" className="py-1 block hover:text-white transition-colors">
+                <Link href="/de/ocr-pdf" className="py-1 block hover:text-white transition-colors">
                   PDF-OCR-Texterkennung
                 </Link>
               </li>
               <li>
-                <Link href="/de/gescanntes-pdf-in-word" className="py-1 block hover:text-white transition-colors">
+                <Link href="/de/scan-zu-word" className="py-1 block hover:text-white transition-colors">
                   Gescannte PDF in Word (OCR)
                 </Link>
               </li>
               <li>
-                <Link href="/de/bild-in-text-umwandeln" className="py-1 block hover:text-white transition-colors">
+                <Link href="/de/bild-zu-text" className="py-1 block hover:text-white transition-colors">
                   Bild in Text (OCR)
                 </Link>
               </li>
@@ -203,7 +203,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/de/video-zu-mp3" className="py-1 block hover:text-white transition-colors">
+                <Link href="/de/video-in-mp3-umwandeln" className="py-1 block hover:text-white transition-colors">
                   Video zu MP3
                 </Link>
               </li>

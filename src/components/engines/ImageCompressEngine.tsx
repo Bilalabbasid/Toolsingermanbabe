@@ -331,7 +331,7 @@ export function ImageCompressEngine() {
           <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100">
             {previewUrl && (
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
-                <img src={previewUrl} alt="Vorschau" className="w-full h-full object-contain" />
+                <img src={previewUrl} alt={`Komprimierungsvorschau von ${singleFile.name}`} className="w-full h-full object-contain" />
               </div>
             )}
 

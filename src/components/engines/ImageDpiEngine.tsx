@@ -159,7 +159,7 @@ export function ImageDpiEngine({ stripMetadata = false }: ImageDpiEngineProps) {
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-5">
           <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
             <div className="w-16 h-16 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
-              <img src={imgEl.src} alt="Vorschau" className="w-full h-full object-contain" />
+              <img src={imgEl.src} alt={file ? `Bildvorschau von ${file.name}` : "Bildvorschau"} className="w-full h-full object-contain" />
             </div>
             <div>
               <p className="font-bold text-slate-900 text-sm truncate max-w-xs">{file?.name}</p>

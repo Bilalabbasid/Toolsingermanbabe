@@ -527,7 +527,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
               <div className="md:col-span-1 bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-center">
                 <img
                   src={previewUrls[0]}
-                  alt="Vorschau"
+                  alt={`Vorschau von ${files[0].name}`}
                   className="max-h-48 max-w-full object-contain rounded shadow-xs"
                 />
               </div>
@@ -602,7 +602,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
                     <span className="absolute top-1 left-1 bg-slate-800 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold z-10">
                       {idx + 1}
                     </span>
-                    <img src={previewUrls[idx]} alt="Thumbnail" className="w-full h-20 object-contain rounded mb-2" />
+                    <img src={previewUrls[idx]} alt={`Miniaturansicht Seite ${idx + 1}: ${file.name}`} className="w-full h-20 object-contain rounded mb-2" />
                     <span className="text-[10px] text-slate-600 truncate w-full text-center">{file.name}</span>
                     <div className="flex items-center gap-1 mt-1">
                       <button type="button" onClick={() => moveFile(idx, 'left')} disabled={idx === 0} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">

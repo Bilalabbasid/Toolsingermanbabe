@@ -368,7 +368,7 @@ export function PdfSignEngine() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={uploadedSignatureUrl}
-                        alt="Unterschrift Vorschau"
+                        alt="Hochgeladene Unterschrift Vorschau"
                         className="max-h-20 object-contain"
                       />
                     </div>

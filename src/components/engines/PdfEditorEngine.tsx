@@ -1514,7 +1514,7 @@ export function PdfEditorEngine() {
                           {(obj.type === 'image' || obj.type === 'signature' || obj.type === 'initials') && obj.imageData && (
                             <img
                               src={obj.imageData}
-                              alt="Inserted element"
+                              alt={obj.type === 'signature' ? "Eingefügte Unterschrift" : obj.type === 'initials' ? "Eingefügte Initialen" : "Eingefügtes Bildelement"}
                               className="w-full h-full object-contain pointer-events-none"
                             />
                           )}

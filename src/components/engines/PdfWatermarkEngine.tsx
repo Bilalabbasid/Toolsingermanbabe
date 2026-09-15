@@ -359,7 +359,7 @@ export function PdfWatermarkEngine() {
                   />
                   {imagePreview && (
                     <div className="mt-3 p-3 border border-slate-200 rounded-xl inline-block bg-slate-50">
-                      <img src={imagePreview} alt="Logo Vorschau" className="max-h-24 max-w-full object-contain" />
+                      <img src={imagePreview} alt="Vorschau des Wasserzeichen-Logos" className="max-h-24 max-w-full object-contain" />
                     </div>
                   )}
                 </div>

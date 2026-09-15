@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Star, Download } from 'lucide-react';
@@ -110,7 +110,7 @@ export function FaviconEngine() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {results.map((r) => (
             <div key={r.size} className="border border-slate-200 rounded-xl p-3 flex flex-col items-center gap-2 hover:border-sky-300 transition-colors">
-              <img src={URL.createObjectURL(r.blob)} alt={r.size + 'px'} className="w-12 h-12 object-contain rounded bg-slate-50 border border-slate-100" />
+              <img src={URL.createObjectURL(r.blob)} alt={`Favicon Vorschau ${r.size}x${r.size} Pixel`} className="w-12 h-12 object-contain rounded bg-slate-50 border border-slate-100" />
               <div className="text-center">
                 <div className="text-xs font-bold text-slate-800">{r.size}x{r.size}</div>
                 <div className="text-[10px] text-slate-400">{formatBytes(r.blob.size)}</div>
@@ -149,7 +149,7 @@ export function FaviconEngine() {
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-5">
           <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
             <div className="w-16 h-16 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
-              <img src={imgEl.src} alt="Vorschau" className="w-full h-full object-contain" />
+              <img src={imgEl.src} alt={file ? `Favicon-Quellbild ${file.name}` : "Favicon-Quellbild Vorschau"} className="w-full h-full object-contain" />
             </div>
             <div>
               <p className="font-bold text-slate-900 text-sm truncate max-w-xs">{file?.name}</p>

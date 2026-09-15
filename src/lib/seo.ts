@@ -15,6 +15,8 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
   const pageUrl = `${SITE_URL}/${locale}/${tool.slug}`;
   const alternateLanguages = getAlternateUrls(SITE_URL, `/${tool.slug}`);
 
+  const ogImageUrl = `${SITE_URL}/${locale}/${tool.slug}/opengraph-image`;
+
   return {
     title: tool.titleDe,
     description: tool.metaDescriptionDe,
@@ -41,7 +43,7 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
       type: 'website',
       images: [
         {
-          url: DEFAULT_OG_IMAGE,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: `${tool.nameDe} – CoolWave Online Tools`,
@@ -52,7 +54,7 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
       card: 'summary_large_image',
       title: tool.titleDe,
       description: tool.metaDescriptionDe,
-      images: [DEFAULT_OG_IMAGE],
+      images: [ogImageUrl],
     },
     robots: {
       index: true,
