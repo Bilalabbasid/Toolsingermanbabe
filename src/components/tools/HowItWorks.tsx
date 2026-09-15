@@ -14,7 +14,7 @@ export function HowItWorks({ steps, toolName }: HowItWorksProps) {
           So funktioniert {toolName}
         </h2>
         <p className="text-sm text-slate-500">
-          In nur 3 einfachen Schritten zum perfekten Ergebnis – direkt in Ihrem Browser.
+          So wählen Sie Ihre Datei aus, starten die Bearbeitung und speichern das Ergebnis.
         </p>
       </div>
 

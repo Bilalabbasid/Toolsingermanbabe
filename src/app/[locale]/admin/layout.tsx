@@ -1,3 +1,4 @@
+export const metadata = { robots: { index: false, follow: false } };
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/server/auth/guards';

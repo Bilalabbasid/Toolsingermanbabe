@@ -25,7 +25,7 @@ export async function submitJobs(req: NextRequest, batch: boolean): Promise<Next
     const sizeCheck = validateBatchFiles(files, isPro);
     if (!sizeCheck.valid) throw new RequestError(sizeCheck.code || 'INVALID_FILE', sizeCheck.code?.includes('LARGE') ? 413 : 400);
     const options = parseOptions(form.get('options'));
-    for (const key of ['targetFormat', 'language', 'outputType']) {
+    for (const key of ['targetFormat', 'language', 'outputType', 'scanMode']) {
       const value = form.get(key);
       if (value !== null) {
         if (typeof value !== 'string' || !/^\.?[a-zA-Z0-9_+-]{1,24}$/.test(value)) throw new RequestError('INVALID_OPTIONS');

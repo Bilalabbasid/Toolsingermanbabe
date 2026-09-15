@@ -123,8 +123,8 @@ export class PdfSecurityService implements IConversionService {
 
       const recryptOptions: Record<string, unknown> = {};
       if (userPassword) recryptOptions.userPassword = userPassword;
-      if (ownerPassword) recryptOptions.ownerPassword = ownerPassword;
-      else if (userPassword) recryptOptions.ownerPassword = userPassword; // Fallback owner password
+      // Always enforce an independent owner password to prevent user password from having owner/admin rights
+      recryptOptions.ownerPassword = ownerPassword || crypto.randomBytes(16).toString('hex');
 
       if (permissions) {
         recryptOptions.userProtectionFlag = computeUserProtectionFlag(permissions);
@@ -146,7 +146,7 @@ export class PdfSecurityService implements IConversionService {
   }
 
   /**
-   * Unlock / decrypt PDF removing all password protection
+   * Decrypt password-protected PDF
    */
   async unlockPdf(inputBuffer: Buffer, password?: string): Promise<Buffer> {
     const inputPath = await this.getTempFilePath('dec_in');
@@ -156,7 +156,9 @@ export class PdfSecurityService implements IConversionService {
       await fs.writeFile(inputPath, inputBuffer);
 
       const recryptOptions: Record<string, unknown> = {};
-      if (password) recryptOptions.password = password;
+      if (password) {
+        recryptOptions.password = password;
+      }
 
       muhammara.recrypt(inputPath, outputPath, recryptOptions);
 
@@ -164,17 +166,17 @@ export class PdfSecurityService implements IConversionService {
       return resultBuffer;
     } catch (err: unknown) {
       const msg = (err as Error)?.message || '';
-      if (msg.includes('Unable to recrypt') || msg.includes('coool')) {
-        throw new Error('Das eingegebene Passwort ist ungültig oder die Datei ist beschädigt.');
+      if (msg.includes('Unable to recrypt') || msg.includes('incorrect password')) {
+        throw new Error('Das angegebene Kennwort ist falsch oder das Dokument ist nicht verschlüsselt.');
       }
-      throw new Error('Fehler beim Entsperren der PDF-Datei.');
+      throw new Error('Fehler beim Entsperren des PDF-Dokuments.');
     } finally {
       await this.cleanupFiles(inputPath, outputPath);
     }
   }
 
   /**
-   * Modify permissions flags on an existing PDF
+   * Modify permissions of an encrypted or unencrypted PDF
    */
   async changePermissions(
     inputBuffer: Buffer,
@@ -188,17 +190,14 @@ export class PdfSecurityService implements IConversionService {
     try {
       await fs.writeFile(inputPath, inputBuffer);
 
-      const flag = computeUserProtectionFlag(permissions);
       const recryptOptions: Record<string, unknown> = {
-        userProtectionFlag: flag,
+        userProtectionFlag: computeUserProtectionFlag(permissions),
       };
 
       if (currentPassword) {
         recryptOptions.password = currentPassword;
       }
-      if (newOwnerPassword || currentPassword) {
-        recryptOptions.ownerPassword = newOwnerPassword || currentPassword;
-      }
+      recryptOptions.ownerPassword = newOwnerPassword || crypto.randomBytes(16).toString('hex');
 
       muhammara.recrypt(inputPath, outputPath, recryptOptions);
 
@@ -229,23 +228,36 @@ export class PdfSecurityService implements IConversionService {
   }
 
   /**
-   * Completely removes all metadata, producer/author tags, and Adobe XMP XML packets
+   * Completely removes all metadata, producer/author tags, dates, and Adobe XMP XML packets
    */
   async stripMetadata(inputBuffer: Buffer): Promise<Buffer> {
     const doc = await PDFDocument.load(inputBuffer, { ignoreEncryption: true });
 
-    // 1. Wipe standard document info dictionary
+    // 1. Wipe standard document info dictionary and dates
     doc.setTitle('');
     doc.setAuthor('');
     doc.setSubject('');
     doc.setKeywords([]);
     doc.setProducer('');
     doc.setCreator('');
+    doc.setCreationDate(new Date(0));
+    doc.setModificationDate(new Date(0));
 
-    // 2. Erase Adobe XMP /Metadata stream from the PDF catalog
+    // 2. Erase Adobe XMP /Metadata stream, PieceInfo, and Names from catalog
     if (doc.catalog.has(PDFName.of('Metadata'))) {
       doc.catalog.delete(PDFName.of('Metadata'));
     }
+    if (doc.catalog.has(PDFName.of('PieceInfo'))) {
+      doc.catalog.delete(PDFName.of('PieceInfo'));
+    }
+
+    // 3. Clear piece info on individual pages
+    doc.getPages().forEach((p) => {
+      try {
+        p.node.delete(PDFName.of('PieceInfo'));
+        p.node.delete(PDFName.of('Metadata'));
+      } catch {}
+    });
 
     const outputBytes = await doc.save({ useObjectStreams: true });
     return Buffer.from(outputBytes);
@@ -280,12 +292,27 @@ export class PdfSecurityService implements IConversionService {
     const signer = options.signerName || 'CoolWave Benutzer';
     const reason = options.reason || 'Dokumentenfreigabe & Integrität';
 
-    // 1. Embed signature image if provided
     const stampWidth = options.width || 220;
     const stampHeight = options.height || 70;
     const posX = options.x ?? Math.max(30, pageWidth - stampWidth - 40);
     const posY = options.y ?? Math.max(30, 40);
 
+    const font = await doc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
+
+    // 1. Draw subtle background frame first (so it does not obscure signature)
+    targetPage.drawRectangle({
+      x: posX - 6,
+      y: posY - 6,
+      width: stampWidth + 12,
+      height: stampHeight + 12,
+      borderColor: rgb(0.1, 0.4, 0.8),
+      borderWidth: 1,
+      color: rgb(0.97, 0.98, 1),
+      opacity: 0.95,
+    });
+
+    // 2. Embed signature image if provided
     if (options.signaturePngBase64) {
       try {
         const base64Clean = options.signaturePngBase64.replace(/^data:image\/\w+;base64,/, '');
@@ -303,23 +330,8 @@ export class PdfSecurityService implements IConversionService {
       }
     }
 
-    // 2. Draw tamper-evident visual verification badge
-    const font = await doc.embedFont(StandardFonts.Helvetica);
-    const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
-
-    // Subtle background frame
-    targetPage.drawRectangle({
-      x: posX - 6,
-      y: posY - 6,
-      width: stampWidth + 12,
-      height: stampHeight + 12,
-      borderColor: rgb(0.1, 0.4, 0.8),
-      borderWidth: 1,
-      color: rgb(0.97, 0.98, 1),
-      opacity: 0.95,
-    });
-
-    targetPage.drawText('CoolWave Digital Verified Signatur', {
+    // 3. Draw verification text
+    targetPage.drawText('CoolWave Elektronische Signatur', {
       x: posX,
       y: posY + stampHeight - 8,
       size: 8,

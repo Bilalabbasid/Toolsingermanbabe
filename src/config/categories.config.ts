@@ -26,7 +26,7 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
     shortDesc: 'Bilder umwandeln, verkleinern, zuschneiden, komprimieren und anpassen.',
     icon: 'Image',
     metaTitle: 'Bild-Tools online – Bilder konvertieren & bearbeiten | CoolWave',
-    metaDescription: 'Kostenlose Online-Bild-Werkzeuge: JPG in PNG, WebP konvertieren, Bilder komprimieren, skalieren und zuschneiden ohne Qualitätsverlust.',
+    metaDescription: 'Kostenlose Online-Bild-Werkzeuge: JPG in PNG, WebP konvertieren, Bilder komprimieren, skalieren und zuschneiden. Wählen Sie Format und Qualität passend zum Einsatz.',
     h1: 'Bilder konvertieren und bearbeiten im Browser',
   },
   documents: {

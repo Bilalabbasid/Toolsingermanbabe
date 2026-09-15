@@ -63,6 +63,8 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
   const [outputFilename, setOutputFilename] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [ocrLanguage, setOcrLanguage] = useState<'deu' | 'eng'>('deu');
+  const [scanMode, setScanMode] = useState<'layout' | 'text'>('text');
 
   // Batch states
   const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
@@ -271,6 +273,10 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     formData.append('file', file);
     formData.append('type', getJobType());
     formData.append('targetFormat', getTargetExtension());
+    if (mode === 'pdf-to-word') {
+      formData.append('language', ocrLanguage);
+      formData.append('scanMode', scanMode);
+    }
 
     const res = await fetch('/api/v1/jobs', {
       method: 'POST',
@@ -329,7 +335,9 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
 
     const blob = await downloadRes.blob();
     const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-    const outName = `coolwave_${baseName}.${getTargetExtension()}`;
+    const outName = mode === 'pdf-to-word' && completedJob.output.fileName?.endsWith('_ocr.docx')
+      ? `coolwave_${baseName}_editierbar.docx`
+      : `coolwave_${baseName}.${getTargetExtension()}`;
 
     onProgress?.(100, 'Fertig');
     return { blob, fileName: outName, size: blob.size };
@@ -483,14 +491,23 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
 
   if (resultBlob && singleFile) {
     return (
-      <DownloadBox
-        filename={outputFilename}
-        originalSizeBytes={singleFile.size}
-        resultSizeBytes={resultBlob.size}
-        onDownload={() => downloadBlob(resultBlob, outputFilename)}
-        onReset={handleResetSingle}
-        downloadLabel="Konvertiertes Dokument herunterladen"
-      />
+      <div className="space-y-4">
+        <DownloadBox
+          filename={outputFilename}
+          originalSizeBytes={singleFile.size}
+          resultSizeBytes={resultBlob.size}
+          onDownload={() => downloadBlob(resultBlob, outputFilename)}
+          onReset={handleResetSingle}
+          downloadLabel="Konvertiertes Dokument herunterladen"
+        />
+        {mode === 'pdf-to-word' && <button
+          type="button"
+          onClick={() => { setResultBlob(null); setProgress(0); }}
+          className="mx-auto block rounded-lg border border-sky-300 px-4 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50"
+        >
+          Mit derselben PDF eine andere Word-Ausgabe erstellen
+        </button>}
+      </div>
     );
   }
 
@@ -568,6 +585,21 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
               </p>
             </div>
           </div>
+
+          {mode === 'pdf-to-word' && <div className="mt-5 rounded-xl bg-sky-50 p-4 text-sm text-slate-700">
+            <label htmlFor="pdf-word-scan-mode" className="mb-2 block font-semibold">Word-Ausgabe für gescannte PDF-Seiten</label>
+            <select id="pdf-word-scan-mode" value={scanMode} onChange={event => setScanMode(event.target.value as 'layout' | 'text')} className="min-h-11 rounded-lg border border-slate-300 bg-white px-3">
+              <option value="text">Bearbeitbarer Text (OCR, angenähertes Layout)</option>
+              <option value="layout">Originalansicht (Seite als nicht bearbeitbares Bild)</option>
+            </select>
+            {scanMode === 'text' ? <>
+              <label htmlFor="pdf-word-language" className="mb-2 mt-4 block font-semibold">Sprache des Textes</label>
+              <select id="pdf-word-language" value={ocrLanguage} onChange={event => setOcrLanguage(event.target.value as 'deu' | 'eng')} className="min-h-11 rounded-lg border border-slate-300 bg-white px-3">
+                <option value="deu">Deutsch</option><option value="eng">Englisch</option>
+              </select>
+              <p className="mt-2">Der erkannte Text ist in Word bearbeitbar. Zeilenpositionen und Überschriften werden angenähert; prüfen Sie Namen, Zahlen und Spalten am Original.</p>
+            </> : <p className="mt-2">Die gescannte Seite sieht im Word-Dokument wie das Original aus. Ihr Text bleibt ein Bild und ist nicht bearbeitbar.</p>}
+          </div>}
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <button

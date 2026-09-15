@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+import { isValidLocale } from '@/config/i18n.config';
 import React from 'react';
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
@@ -15,6 +17,7 @@ export default async function LocalizedLayout({
   params,
 }: LocalizedLayoutProps) {
   const { locale } = await params;
+  if (!isValidLocale(locale)) notFound();
 
   return (
     <div 

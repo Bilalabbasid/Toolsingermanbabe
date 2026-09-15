@@ -13,12 +13,17 @@ import {
   ExternalHyperlink,
   AlignmentType
 } from 'docx';
+import { ImageRun } from 'docx';
+import * as napi from '@napi-rs/canvas';
 import ExcelJS from 'exceljs';
 import * as XLSX from 'xlsx';
 import PptxGenJS from 'pptxgenjs';
 import mammoth from 'mammoth';
 import JSZip from 'jszip';
 import { safeLoadZip } from '@/server/security/safeArchive';
+import { getLoadedPdfJs, getPdfJsDocumentOptions } from '@/server/pdf/pdfjsNode';
+import { cleanWinAnsiText } from '@/server/pdf/safeWinAnsi';
+import type { ServiceOptions } from '@/types/job';
 
 export interface ConvertedDocument {
   data: Buffer;
@@ -32,34 +37,21 @@ export class OfficeConversionEngine {
   // =========================================================================
   static async pdfToDocx(
     pdfBuffer: Buffer, 
-    originalName: string, 
-    onProgress: (p: number) => void
+    originalName: string,
+    onProgress: (p: number) => void,
+    options: ServiceOptions = {},
+    signal?: AbortSignal
   ): Promise<ConvertedDocument> {
     onProgress(15);
-    const pdfjsLib = await import('pdfjs-dist');
-    const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(pdfBuffer) });
+    const pdfjsLib = await getLoadedPdfJs();
+    const loadingTask = pdfjsLib.getDocument(getPdfJsDocumentOptions(pdfBuffer));
     const pdf = await loadingTask.promise;
     const numPages = pdf.numPages;
 
     const sectionsChildren: (Paragraph | Table)[] = [];
     const baseName = originalName.replace(/\.[^/.]+$/, '');
 
-    // Title banner paragraph
-    sectionsChildren.push(
-      new Paragraph({
-        heading: HeadingLevel.HEADING_1,
-        spacing: { after: 200 },
-        children: [
-          new TextRun({
-            text: baseName,
-            bold: true,
-            size: 32, // 16pt
-            font: 'Calibri',
-            color: '1E293B',
-          }),
-        ],
-      })
-    );
+    let extractedCharacters = 0;
 
     for (let i = 1; i <= numPages; i++) {
       const pagePct = 15 + Math.round((i / numPages) * 70);
@@ -68,6 +60,7 @@ export class OfficeConversionEngine {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const items = textContent.items as Array<{ str: string; transform: number[]; fontName?: string; width?: number; height?: number }>;
+      extractedCharacters += items.reduce((total, item) => total + (item.str?.trim().length || 0), 0);
 
       if (items.length === 0) {
         sectionsChildren.push(
@@ -186,6 +179,54 @@ export class OfficeConversionEngine {
       }
     }
 
+    // A scan is a page image. OCR alone loses columns, typography, and graphics.
+    // Preserve the original page by default; offer editable OCR as an explicit mode.
+    if (extractedCharacters < 10) {
+      const page = await pdf.getPage(1);
+      const operators = await page.getOperatorList();
+      if (operators.fnArray.length < 3) {
+        throw new Error('Dieses PDF enthält keinen lesbaren Text. Bitte prüfen Sie die Datei oder verwenden Sie einen Scan mit sichtbarem Text.');
+      }
+      if (options.scanMode === 'text') {
+        const { OcrService } = await import('./OcrService');
+        const ocrResult = await new OcrService().execute(pdfBuffer, originalName, {
+          language: options.language || 'deu', outputType: 'docx',
+          jobType: 'ocr_pdf_to_word', isPro: options.isPro,
+        }, onProgress, signal);
+        return { ...ocrResult, data: Buffer.from(ocrResult.data) };
+      }
+      const canvasGlobals = globalThis as unknown as Record<string, unknown>;
+      if (!canvasGlobals.Path2D) canvasGlobals.Path2D = napi.Path2D;
+      if (!canvasGlobals.ImageData) canvasGlobals.ImageData = napi.ImageData;
+      if (!canvasGlobals.DOMMatrix) canvasGlobals.DOMMatrix = napi.DOMMatrix;
+      if (!canvasGlobals.DOMPoint) canvasGlobals.DOMPoint = napi.DOMPoint;
+      const scanSections = [];
+      for (let i = 1; i <= numPages; i++) {
+        if (signal?.aborted) throw new Error('PDF-Verarbeitung wurde abgebrochen.');
+        const scanPage = await pdf.getPage(i);
+        const pointViewport = scanPage.getViewport({ scale: 1 });
+        const renderViewport = scanPage.getViewport({ scale: 2 });
+        const canvas = napi.createCanvas(Math.ceil(renderViewport.width), Math.ceil(renderViewport.height));
+        await scanPage.render({ canvasContext: canvas.getContext('2d') as never, viewport: renderViewport }).promise;
+        const png = canvas.toBuffer('image/png');
+        // DOCX dimensions are twips; image dimensions are CSS pixels (96 dpi).
+        const pageWidth = Math.round(pointViewport.width * 20);
+        const pageHeight = Math.round(pointViewport.height * 20);
+        const margin = 120; // 6 pt, avoids Word adding a trailing blank page.
+        const fit = Math.min((pointViewport.width - 12) / pointViewport.width, (pointViewport.height - 12) / pointViewport.height);
+        const imageWidth = Math.floor(pointViewport.width * fit * 96 / 72);
+        const imageHeight = Math.floor(pointViewport.height * fit * 96 / 72);
+        scanSections.push({
+          properties: { page: { size: { width: pageWidth, height: pageHeight }, margin: { top: margin, bottom: margin, left: margin, right: margin } } },
+          children: [new Paragraph({ spacing: { after: 0, before: 0 }, children: [new ImageRun({ data: png, type: 'png', transformation: { width: imageWidth, height: imageHeight } })] })],
+        });
+        onProgress(15 + Math.round(i / numPages * 75));
+      }
+      const scanDocx = await Packer.toBuffer(new Document({ sections: scanSections }));
+      onProgress(100);
+      return { data: scanDocx, fileName: `${baseName}.docx`, mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+    }
+
     onProgress(90);
     const doc = new Document({
       sections: [
@@ -238,25 +279,6 @@ export class OfficeConversionEngine {
 
     let currentPage = pdf.addPage([pageWidth, pageHeight]);
     let yPos = pageHeight - margin;
-
-    // Header title
-    currentPage.drawText(baseName, {
-      x: margin,
-      y: yPos,
-      size: 18,
-      font: fontBold,
-      color: rgb(0.06, 0.09, 0.16),
-    });
-    yPos -= 30;
-
-    // Decorative rule
-    currentPage.drawLine({
-      start: { x: margin, y: yPos },
-      end: { x: pageWidth - margin, y: yPos },
-      thickness: 1,
-      color: rgb(0.8, 0.85, 0.9),
-    });
-    yPos -= 25;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -330,8 +352,8 @@ export class OfficeConversionEngine {
   ): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, '');
-    const pdfjsLib = await import('pdfjs-dist');
-    const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(pdfBuffer) });
+    const pdfjsLib = await getLoadedPdfJs();
+    const loadingTask = pdfjsLib.getDocument(getPdfJsDocumentOptions(pdfBuffer));
     const pdf = await loadingTask.promise;
     const numPages = pdf.numPages;
 
@@ -339,11 +361,14 @@ export class OfficeConversionEngine {
     workbook.creator = 'CoolWave Engine';
     workbook.created = new Date();
 
+    let totalExtractedCharacters = 0;
+
     for (let pageNum = 1; pageNum <= numPages; pageNum++) {
       onProgress(20 + Math.round((pageNum / numPages) * 60));
       const page = await pdf.getPage(pageNum);
       const textContent = await page.getTextContent();
       const items = textContent.items as Array<{ str: string; transform: number[]; width?: number }>;
+      totalExtractedCharacters += items.reduce((sum, it) => sum + (it.str?.trim().length || 0), 0);
 
       const worksheet = workbook.addWorksheet(`Seite ${pageNum}`);
 
@@ -393,17 +418,23 @@ export class OfficeConversionEngine {
         }
       }
 
-      // Auto-fit column widths
-      worksheet.columns.forEach((column) => {
-        let maxLength = 12;
-        if (column && column.eachCell) {
-          column.eachCell({ includeEmpty: false }, (cell) => {
-            const len = cell.value ? String(cell.value).length : 0;
-            if (len > maxLength) maxLength = Math.min(len + 3, 50);
-          });
-        }
-        column.width = maxLength;
-      });
+      // Auto-fit column widths safely
+      if (worksheet.columns && Array.isArray(worksheet.columns)) {
+        worksheet.columns.forEach((column) => {
+          let maxLength = 12;
+          if (column && column.eachCell) {
+            column.eachCell({ includeEmpty: false }, (cell) => {
+              const len = cell.value ? String(cell.value).length : 0;
+              if (len > maxLength) maxLength = Math.min(len + 3, 50);
+            });
+          }
+          column.width = maxLength;
+        });
+      }
+    }
+
+    if (totalExtractedCharacters < 10) {
+      throw new Error('Dieses PDF enthält ausschließlich eingescannte Bilder oder keinen extrahierbaren Tabellentext. Bitte nutzen Sie für gescannte Dokumente unsere OCR-Texterkennung.');
     }
 
     onProgress(90);
@@ -529,8 +560,8 @@ export class OfficeConversionEngine {
   ): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, '');
-    const pdfjsLib = await import('pdfjs-dist');
-    const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(pdfBuffer) });
+    const pdfjsLib = await getLoadedPdfJs();
+    const loadingTask = pdfjsLib.getDocument(getPdfJsDocumentOptions(pdfBuffer));
     const pdf = await loadingTask.promise;
     const numPages = pdf.numPages;
 
@@ -554,6 +585,29 @@ export class OfficeConversionEngine {
         if (item.str && item.str.trim()) {
           textLines.push(item.str.trim());
         }
+      }
+
+      if (textLines.length === 0) {
+        // Scanned page or image-only PDF: render page to canvas and embed as slide image
+        const canvasGlobals = globalThis as unknown as Record<string, unknown>;
+        if (!canvasGlobals.Path2D) canvasGlobals.Path2D = napi.Path2D;
+        if (!canvasGlobals.ImageData) canvasGlobals.ImageData = napi.ImageData;
+        if (!canvasGlobals.DOMMatrix) canvasGlobals.DOMMatrix = napi.DOMMatrix;
+        if (!canvasGlobals.DOMPoint) canvasGlobals.DOMPoint = napi.DOMPoint;
+
+        const renderViewport = page.getViewport({ scale: 2 });
+        const canvas = napi.createCanvas(Math.ceil(renderViewport.width), Math.ceil(renderViewport.height));
+        await page.render({ canvasContext: canvas.getContext('2d') as never, viewport: renderViewport }).promise;
+        const png = canvas.toBuffer('image/png');
+        slide.addImage({
+          data: `data:image/png;base64,${png.toString('base64')}`,
+          x: 0.5,
+          y: 0.3,
+          w: 12.33,
+          h: 6.9,
+          sizing: { type: 'contain', w: 12.33, h: 6.9 },
+        });
+        continue;
       }
 
       const titleText = textLines[0] || `Folie ${pageNum}`;
@@ -947,12 +1001,11 @@ export class OfficeConversionEngine {
   ): Promise<ConvertedDocument> {
     onProgress(20);
     const baseName = originalName.replace(/\.[^/.]+$/, '');
-    const text = txtBuffer.toString('utf-8');
-    const rawLines = text.split(/\r?\n/);
+    const cleanText = cleanWinAnsiText(txtBuffer.toString('utf-8'));
+    const rawLines = cleanText.split(/\r?\n/);
 
     const pdf = await PDFDocument.create();
     const fontCourier = await pdf.embedFont(StandardFonts.Courier);
-    const fontBold = await pdf.embedFont(StandardFonts.HelveticaBold);
 
     const pageWidth = PageSizes.A4[0];
     const pageHeight = PageSizes.A4[1];
@@ -964,16 +1017,6 @@ export class OfficeConversionEngine {
     let page = pdf.addPage([pageWidth, pageHeight]);
     let yPos = pageHeight - margin;
     let pageNum = 1;
-
-    // Header
-    page.drawText(baseName, {
-      x: margin,
-      y: yPos,
-      size: 14,
-      font: fontBold,
-      color: rgb(0.1, 0.15, 0.25),
-    });
-    yPos -= 25;
 
     for (let i = 0; i < rawLines.length; i++) {
       const line = rawLines[i];

@@ -109,7 +109,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
           {/* Trust Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-semibold shadow-xs mb-4 sm:mb-5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Kostenlos, schnell &amp; 100% DSGVO-konform</span>
+            <span>PDFs, Bilder und Dokumente online bearbeiten</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight max-w-4xl mx-auto">
@@ -182,7 +182,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
             </span>
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              Automatische Server-Löschung nach 15 Min.
+              Hinweise zu Formaten und Dateilimits
             </span>
           </div>
         </div>
@@ -491,10 +491,10 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-2">
-                2. 100% DSGVO-konform
+                2. Verarbeitung nachvollziehen
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                Keine geheimen Tracker, kein Verkauf Ihrer Daten und keine permanente Speicherung. CoolWave erfüllt alle strengen Vorgaben der europäischen Datenschutz-Grundverordnung.
+                Je nach Werkzeug erfolgt die Bearbeitung im Browser oder auf dem Server. Beachten Sie die Hinweise am Werkzeug und unsere Datenschutzerklärung, bevor Sie vertrauliche Dateien auswählen.
               </p>
             </div>
 
@@ -506,7 +506,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
                 3. Automatische Löschung
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                Sollte für komplexe Office-Konvertierungen eine serverseitige Verarbeitung nötig sein, werden alle temporären Daten nach 15 Minuten unwiderruflich und restlos von den Servern gelöscht.
+                Server-Konvertierungen verwenden temporäre Dateien und zeitlich begrenzte Download-Links. Laden Sie Ihr Ergebnis rechtzeitig herunter und bewahren Sie das Original auf.
               </p>
             </div>
           </div>

@@ -96,8 +96,17 @@ export function ImageCompressEngine() {
       ctx.drawImage(img, 0, 0);
 
       onProgress?.(85, 'Blob wird generiert...');
-      const targetMime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      let targetMime = 'image/jpeg';
+      let ext = '.jpg';
+      if (file.type === 'image/png' || /\.png$/i.test(file.name)) {
+        targetMime = 'image/png';
+        ext = '.png';
+      } else if (file.type === 'image/webp' || /\.webp$/i.test(file.name)) {
+        targetMime = 'image/webp';
+        ext = '.webp';
+      }
       const compressionFactor = qualityLevel / 100;
+      const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
 
       const blob = await new Promise<Blob>((res, rej) => {
         canvas.toBlob(
@@ -110,7 +119,7 @@ export function ImageCompressEngine() {
       onProgress?.(100, 'Fertig');
       return {
         blob,
-        fileName: `coolwave_komprimiert_${file.name}`,
+        fileName: `coolwave_komprimiert_${base}${ext}`,
       };
     } finally {
       URL.revokeObjectURL(objectUrl);

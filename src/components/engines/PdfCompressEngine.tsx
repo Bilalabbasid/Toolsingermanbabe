@@ -88,16 +88,7 @@ export function PdfCompressEngine() {
       addDefaultPage: false,
     });
 
-    const factorMap: Record<CompressionLevel, number> = {
-      high: 0.32,
-      medium: 0.52,
-      low: 0.75,
-    };
-
-    const calculatedTarget = Math.max(
-      Math.round(file.size * factorMap[compLevel]),
-      Math.min(compressedBytes.length, Math.round(file.size * 0.9))
-    );
+    const calculatedTarget = compressedBytes.length;
 
     const finalBlob = new Blob([compressedBytes as unknown as BlobPart], { type: 'application/pdf' });
     onProgress?.(100, 'Fertig');

@@ -1,3 +1,4 @@
+import { applyGermanEditorial } from './tool-editorial.config';
 import { ToolDefinition } from '@/types/tool';
 import { UTILITIES_TOOLS } from './utilities.config';
 import { MEDIA_ARCHIVE_TOOLS } from './media_archive.config';
@@ -830,25 +831,25 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.pdf'],
     targetFormats: ['.docx', '.doc'],
     nameDe: 'PDF in Word umwandeln',
-    shortDescriptionDe: 'Konvertieren Sie PDF-Dateien in bearbeitbare Word-Dokumente (DOCX), um Texte und Tabellen in Microsoft Word oder LibreOffice weiterzubearbeiten.',
+    shortDescriptionDe: 'Wandeln Sie PDF-Text in bearbeitbares Word um. Bei Scans wählen Sie zwischen OCR-Text und einer originalgetreuen, nicht bearbeitbaren Seitenansicht.',
     titleDe: 'PDF in Word umwandeln – kostenlos online konvertieren | CoolWave',
-    metaDescriptionDe: 'Wandeln Sie PDF-Dateien kostenlos und ohne Registrierung in editierbare Word-Dokumente um. Layouts und Texte bleiben präzise erhalten.',
+    metaDescriptionDe: 'PDF kostenlos in Word (DOCX) umwandeln: bearbeitbarer OCR-Text für Scans oder originalgetreue Seitenansicht als Bild. Ohne Registrierung.',
     h1De: 'PDF in Word umwandeln – kostenlos & online',
-    introDe: 'Sie müssen ein PDF-Dokument überarbeiten, besitzen aber die Originaldatei nicht mehr? Unser PDF-zu-Word-Konverter extrahiert Textstrukturen, Absätze und Formatierungen und erzeugt ein sauberes, in Microsoft Word voll editierbares Dokument. Ob Lebenslauf, Vertrag oder wissenschaftliche Arbeit – sparen Sie sich mühsames Abtippen.',
+    introDe: 'Sie möchten Text aus einer PDF in Word bearbeiten? Bei PDF-Dateien mit auswählbarem Text erstellen wir ein DOCX mit bearbeitbaren Absätzen. Für Bildscans erkennt OCR den Text und nähert Zeilenpositionen und Überschriften an. Wenn die genaue Ansicht wichtiger ist, können Sie die Seite stattdessen als nicht bearbeitbares Bild in Word übernehmen.',
     howItWorksDe: [
       { step: 1, title: 'PDF hochladen', text: 'Ziehen Sie die PDF-Datei in das Konvertierungsfeld.' },
       { step: 2, title: 'Konvertierung starten', text: 'Klicken Sie auf „In Word umwandeln“.' },
       { step: 3, title: 'Word-Datei herunterladen', text: 'Öffnen und bearbeiten Sie die Datei direkt in Microsoft Word, Google Docs oder LibreOffice.' }
     ],
     faqDe: [
-      { question: 'Kann ich die erstellte Word-Datei frei bearbeiten?', answer: 'Ja, Sie erhalten ein Standard-Dokument, in dem Sie Texte überschreiben, löschen und formatieren können.' },
-      { question: 'Können auch gescannte Dokumente konvertiert werden?', answer: 'Für reine Bildscans ohne Textschicht empfehlen wir unser spezielles Tool „OCR PDF“, um den Text per Zeichenerkennung auszulesen.' },
+      { question: 'Kann ich die erstellte Word-Datei frei bearbeiten?', answer: 'Im Modus „Bearbeitbarer Text“ ja. Im Modus „Originalansicht“ liegt eine gescannte Seite als Bild vor; deren Text kann in Word nicht einzeln bearbeitet werden.' },
+      { question: 'Können auch gescannte Dokumente konvertiert werden?', answer: 'Ja. Wählen Sie den OCR-Modus für bearbeitbaren Text oder die Originalansicht für ein unverändertes Seitenbild. OCR kann Spalten, Schriftarten und einzelne Zeichen nur annähern.' },
       { question: 'Gibt es einen Unterschied zwischen „PDF in Word“ und „PDF zu Word“?', answer: 'Nein, beide Begriffe beschreiben dieselbe Funktion: die Umwandlung eines PDF-Dokuments in eine bearbeitbare Word-Datei (DOCX).' }
     ],
     troubleshootingDe: [
       {
         issue: 'Nach der Umwandlung enthält die Word-Datei nur uneditierbare Bilder statt echtem Text.',
-        solution: 'Ihre PDF besteht aus einem reinen Bildscan. Nutzen Sie unser Tool „OCR PDF“, um eine optische Zeichenerkennung durchzuführen.'
+        solution: 'Ihre PDF besteht aus einem Bildscan. Wählen Sie vor der Umwandlung „Bearbeitbarer Text (OCR)“. Die Originalansicht erhält das Seitenbild, dessen Text nicht einzeln bearbeitet werden kann.'
       },
       {
         issue: 'Sonderzeichen oder Umlaute werden falsch dargestellt.',
@@ -4607,11 +4608,11 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
 // ==========================================
 
 export function getActiveTools(): ToolDefinition[] {
-  return TOOLS_CONFIG.filter((t) => t.status === 'active' || t.status === 'beta');
+  return [...new Map(TOOLS_CONFIG.filter(t => t.status === 'active' || t.status === 'beta').map(t => [t.slug, t])).values()].map(applyGermanEditorial);
 }
 
 export function getToolBySlug(slug: string): ToolDefinition | undefined {
-  return TOOLS_CONFIG.find((tool) => tool.slug === slug && tool.status !== 'maintenance');
+  return getActiveTools().find(tool => tool.slug === slug);
 }
 
 export function getToolsByCategory(category: string): ToolDefinition[] {

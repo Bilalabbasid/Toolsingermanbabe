@@ -20,6 +20,7 @@ import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { getClientPdfJs } from '@/lib/pdfjsClient';
 
 export type ExtractMode = 'images' | 'text' | 'attachments';
 
@@ -85,11 +86,7 @@ export function PdfExtractEngine({
       const arrayBuffer = await file.arrayBuffer();
 
       if (mode === 'text') {
-        const pdfjsLib = await import('pdfjs-dist');
-        if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-          pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-        }
-
+        const pdfjsLib = await getClientPdfJs();
         const doc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
         const totalPages = doc.numPages;
         const pages: Array<{ page: number; text: string }> = [];
@@ -110,11 +107,7 @@ export function PdfExtractEngine({
         setPageTexts(pages);
         setExtractedText(fullText.trim());
       } else if (mode === 'images') {
-        const pdfjsLib = await import('pdfjs-dist');
-        if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-          pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-        }
-
+        const pdfjsLib = await getClientPdfJs();
         const doc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
         const totalPages = doc.numPages;
         const images: ExtractedImage[] = [];

@@ -274,9 +274,10 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
     }
 
     case 'image-effects': {
-      let effectMode: 'sharpen' | 'blur' | 'brightness' | 'grayscale' = 'sharpen';
+      let effectMode: 'sharpen' | 'blur' | 'brightness' | 'grayscale' | 'optimize' = 'sharpen';
       if (tool.slug === 'bild-weichzeichnen') effectMode = 'blur';
       else if (tool.slug === 'bild-schaerfen') effectMode = 'sharpen';
+      else if (tool.slug === 'bildqualitaet-optimieren') effectMode = 'optimize';
       return <ImageEffectsEngine mode={effectMode} />;
     }
 

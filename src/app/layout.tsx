@@ -14,19 +14,7 @@ export const metadata: Metadata = {
     template: '%s',
   },
   description:
-    'PDFs bearbeiten, Dateien konvertieren, Bilder komprimieren und Dokumente zusammenführen – schnell, einfach und 100% datenschutzkonform.',
-  keywords: [
-    'PDF in Word umwandeln',
-    'Word in PDF umwandeln',
-    'PDF komprimieren',
-    'PDF zusammenfügen',
-    'PDF teilen',
-    'PDF bearbeiten',
-    'PDF unterschreiben',
-    'JPG in PNG',
-    'Bild komprimieren',
-    'Online Datei Tools',
-  ],
+    'PDFs bearbeiten, Dateien konvertieren, Bilder komprimieren und Dokumente zusammenführen – online mit Anleitungen zu Formaten und Dateilimits.',
   authors: [{ name: 'CoolWave' }],
   creator: 'CoolWave',
   icons: {

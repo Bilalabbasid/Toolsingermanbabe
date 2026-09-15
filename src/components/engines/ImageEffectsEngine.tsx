@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, RotateCcw } from 'lucide-react';
@@ -7,7 +7,7 @@ import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
 import { formatBytes } from '@/lib/utils';
 
-type EffectMode = 'sharpen' | 'blur' | 'brightness' | 'grayscale';
+type EffectMode = 'sharpen' | 'blur' | 'brightness' | 'grayscale' | 'optimize';
 
 interface ImageEffectsEngineProps {
   mode?: EffectMode;
@@ -108,36 +108,72 @@ export function ImageEffectsEngine({ mode = 'sharpen' }: ImageEffectsEngineProps
   const executeProcess = async () => {
     if (!imgEl || !file) return;
     setIsProcessing(true); setProgress(30);
-    const labels: Record<string, string> = { sharpen: 'Schaerfe wird angewendet...', blur: 'Weichzeichner wird angewendet...', brightness: 'Helligkeit wird angepasst...', grayscale: 'Schwarzweiss-Filter wird angewendet...' };
+    const labels: Record<string, string> = {
+      sharpen: 'Schärfe wird angewendet...',
+      blur: 'Weichzeichner wird angewendet...',
+      brightness: 'Helligkeit wird angepasst...',
+      grayscale: 'Schwarzweiß-Filter wird angewendet...',
+      optimize: 'Bildqualität wird optimiert...',
+    };
     setStatusText(labels[mode] || 'Verarbeitung...');
     try {
       const canvas = document.createElement('canvas');
       canvas.width = imgEl.naturalWidth; canvas.height = imgEl.naturalHeight;
       const ctx = canvas.getContext('2d')!;
       if (mode === 'brightness') { ctx.filter = 'brightness(' + brightness + '%) contrast(' + contrast + '%)'; }
+      else if (mode === 'optimize') { ctx.filter = 'contrast(106%) saturate(104%)'; }
       ctx.drawImage(imgEl, 0, 0);
       ctx.filter = 'none';
       if (mode === 'sharpen') applySharpen(ctx, canvas.width, canvas.height, amount);
+      else if (mode === 'optimize') applySharpen(ctx, canvas.width, canvas.height, Math.min(amount, 4));
       else if (mode === 'blur') applyGaussianBlur(ctx, canvas.width, canvas.height, amount);
       else if (mode === 'grayscale') applyGrayscale(ctx, canvas.width, canvas.height);
       setProgress(80); setStatusText('Exportiere...');
-      const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-      canvas.toBlob((blob) => {
-        if (!blob) throw new Error('Export fehler');
-        setResultBlob(blob);
-        const ext = mime === 'image/png' ? '.png' : '.jpg';
-        const base = file.name.replace(/\.[^.]+$/, '');
-        const suffixMap: Record<string, string> = { sharpen: 'schaerfer', blur: 'weich', brightness: 'angepasst', grayscale: 'sw' };
-        setOutputFilename('coolwave_' + (suffixMap[mode] || mode) + '_' + base + ext);
-        setProgress(100); setIsProcessing(false);
-      }, mime, 0.93);
+
+      let mime = 'image/jpeg';
+      let ext = '.jpg';
+      if (file.type === 'image/png' || /\.png$/i.test(file.name)) {
+        mime = 'image/png';
+        ext = '.png';
+      } else if (file.type === 'image/webp' || /\.webp$/i.test(file.name)) {
+        mime = 'image/webp';
+        ext = '.webp';
+      }
+
+      const blob = await new Promise<Blob>((res, rej) => {
+        canvas.toBlob((b) => (b ? res(b) : rej(new Error('Export fehler'))), mime, 0.93);
+      });
+
+      setResultBlob(blob);
+      const base = file.name.replace(/\.[^.]+$/, '');
+      const suffixMap: Record<string, string> = {
+        sharpen: 'schaerfer',
+        blur: 'weich',
+        brightness: 'angepasst',
+        grayscale: 'sw',
+        optimize: 'optimiert',
+      };
+      setOutputFilename('coolwave_' + (suffixMap[mode] || mode) + '_' + base + ext);
+      setProgress(100); setIsProcessing(false);
     } catch { setIsProcessing(false); alert('Fehler bei der Verarbeitung.'); }
   };
 
   const handleReset = () => { setFile(null); setImgEl(null); setResultBlob(null); setIsProcessing(false); };
 
-  const titles: Record<string, string> = { sharpen: 'Bild schaerfen', blur: 'Bild weichzeichnen', brightness: 'Helligkeit & Kontrast', grayscale: 'Schwarzweiss umwandeln' };
-  const subtitles: Record<string, string> = { sharpen: 'Kantenschaerfe mit konvolutionsbasiertem Schaerfe-Filter erhoehen', blur: 'Gaussschen Weichzeichner auf ein Bild anwenden', brightness: 'Helligkeit und Kontrast des Bildes anpassen', grayscale: 'Farbbilder in klassische Graustufen umwandeln' };
+  const titles: Record<string, string> = {
+    sharpen: 'Bild schärfen',
+    blur: 'Bild weichzeichnen',
+    brightness: 'Helligkeit & Kontrast',
+    grayscale: 'Schwarzweiß umwandeln',
+    optimize: 'Bildqualität optimieren',
+  };
+  const subtitles: Record<string, string> = {
+    sharpen: 'Kantenschärfe mit konvolutionsbasiertem Schärfe-Filter erhöhen',
+    blur: 'Gaußschen Weichzeichner auf ein Bild anwenden',
+    brightness: 'Helligkeit und Kontrast des Bildes anpassen',
+    grayscale: 'Farbbilder in klassische Graustufen umwandeln',
+    optimize: 'Automatische Optimierung von Schärfe, Kontrast und Farbbrillanz',
+  };
 
   if (resultBlob && file) {
     return (

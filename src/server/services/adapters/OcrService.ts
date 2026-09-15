@@ -4,8 +4,9 @@ import Tesseract from 'tesseract.js';
 import { PDFDocument } from 'pdf-lib';
 import sharp from 'sharp';
 import * as napi from '@napi-rs/canvas';
-import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import { buildEditableOcrDocx, type OcrWordPage } from './ocrWordLayout';
 import { getInfrastructureConfig } from '@/config/infrastructure.config';
+import { getLoadedPdfJs, getPdfJsDocumentOptions } from '@/server/pdf/pdfjsNode';
 
 // Polyfill Node.js canvas globals for pdfjs-dist rendering
 if (typeof global !== 'undefined') {
@@ -135,28 +136,7 @@ export class OcrService implements IConversionService {
    * Initialize pdfjs-dist with GlobalWorkerOptions in Node.js
    */
   private async getPdfJs() {
-    const path = await import('path');
-    const { pathToFileURL } = await import('url');
-    const fs = await import('fs/promises');
-
-    // Ensure worker exists in chunks directory for Next.js bundle resolution
-    try {
-      const chunkDir = path.join(process.cwd(), '.next', 'server', 'chunks');
-      await fs.mkdir(chunkDir, { recursive: true });
-      await fs.copyFile(
-        path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.mjs'),
-        path.join(chunkDir, 'pdf.worker.mjs')
-      );
-    } catch {
-      // Ignore if already copied
-    }
-
-    const dynamicImport = new Function('specifier', 'return import(specifier)');
-    const pdfPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'build', 'pdf.mjs');
-    const pdfjs = await dynamicImport(pathToFileURL(pdfPath).href);
-    const workerPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.mjs');
-    pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(workerPath).href;
-    return pdfjs;
+    return getLoadedPdfJs();
   }
 
   /**
@@ -224,6 +204,7 @@ export class OcrService implements IConversionService {
     try {
       const pageTexts: { pageNumber: number; text: string }[] = [];
       const pagePdfBuffers: Uint8Array[] = [];
+      const wordPages: OcrWordPage[] = [];
 
       if (isPdf) {
         // --- Multi-page PDF Processing ---
@@ -238,9 +219,8 @@ export class OcrService implements IConversionService {
 
         const pdfjs = await this.getPdfJs();
         const loadingTask = pdfjs.getDocument({
-          data: new Uint8Array(inputBuffer),
+          ...getPdfJsDocumentOptions(inputBuffer),
           useSystemFonts: true,
-          standardFontDataUrl: undefined,
         });
         const loadedPdf = await loadingTask.promise;
 
@@ -252,7 +232,7 @@ export class OcrService implements IConversionService {
 
           // Render page to image using canvas
           const page = await loadedPdf.getPage(p);
-          const viewport = page.getViewport({ scale: 1.5 });
+          const viewport = page.getViewport({ scale: outputType === 'docx' ? 2.5 : 1.5 });
           const canvas = napi.createCanvas(Math.round(viewport.width), Math.round(viewport.height));
           const ctx = canvas.getContext('2d');
 
@@ -266,9 +246,17 @@ export class OcrService implements IConversionService {
           const cleanImage = await this.preprocessImage(rawPagePng);
 
           // Perform OCR with Tesseract
-          const ret = await worker.recognize(cleanImage, {}, { pdf: outputType === 'pdf' });
+          const ret = await worker.recognize(cleanImage, {}, { pdf: outputType === 'pdf', tsv: outputType === 'docx' });
           const text = ret.data.text || '';
           pageTexts.push({ pageNumber: p, text });
+          if (outputType === 'docx') wordPages.push({
+            text,
+            tsv: ret.data.tsv,
+            imageWidth: canvas.width,
+            imageHeight: canvas.height,
+            pageWidthTwips: Math.round(page.getViewport({ scale: 1 }).width * 20),
+            pageHeightTwips: Math.round(page.getViewport({ scale: 1 }).height * 20),
+          });
 
           if (outputType === 'pdf' && ret.data.pdf) {
             pagePdfBuffers.push(new Uint8Array(ret.data.pdf));
@@ -285,8 +273,15 @@ export class OcrService implements IConversionService {
         onProgress(50);
         if (signal?.aborted) throw new Error('OCR-Verarbeitung abgebrochen.');
 
-        const ret = await worker.recognize(cleanImage, {}, { pdf: outputType === 'pdf' });
+        const ret = await worker.recognize(cleanImage, {}, { pdf: outputType === 'pdf', tsv: outputType === 'docx' });
         pageTexts.push({ pageNumber: 1, text: ret.data.text || '' });
+        if (outputType === 'docx') {
+          const metadata = await sharp(cleanImage).metadata();
+          const width = metadata.width || 1000;
+          const height = metadata.height || 1400;
+          wordPages.push({ text: ret.data.text || '', tsv: ret.data.tsv, imageWidth: width, imageHeight: height,
+            pageWidthTwips: 11906, pageHeightTwips: Math.round(11906 * height / width) });
+        }
 
         if (outputType === 'pdf' && ret.data.pdf) {
           pagePdfBuffers.push(new Uint8Array(ret.data.pdf));
@@ -295,6 +290,12 @@ export class OcrService implements IConversionService {
 
       onProgress(88);
       if (signal?.aborted) throw new Error('OCR-Verarbeitung abgebrochen.');
+
+      // Never return a filename-only DOCX (or an empty TXT/searchable PDF) as success.
+      // A blank, damaged, or unsuitable scan must remain a failed job.
+      if (pageTexts.every(page => page.text.trim().length < 10)) {
+        throw new Error('OCR hat keinen lesbaren Text erkannt. Bitte prüfen Sie Auflösung, Ausrichtung und Sprache des Scans.');
+      }
 
       // 3. Assemble Output Document
       if (outputType === 'pdf') {
@@ -326,52 +327,7 @@ export class OcrService implements IConversionService {
           mimeType: 'application/pdf',
         };
       } else if (outputType === 'docx') {
-        // Assemble Word Document (.docx)
-        const docChildren: Paragraph[] = [
-          new Paragraph({
-            text: `CoolWave OCR Texterkennung – ${inputName}`,
-            heading: HeadingLevel.HEADING_1,
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: `Erkannt in Sprache: ${lang.toUpperCase()} | Seiten: ${pageTexts.length}`,
-                italics: true,
-                color: '666666',
-              }),
-            ],
-          }),
-          new Paragraph({ text: '' }),
-        ];
-
-        for (const item of pageTexts) {
-          if (pageTexts.length > 1) {
-            docChildren.push(
-              new Paragraph({
-                text: `--- Seite ${item.pageNumber} ---`,
-                heading: HeadingLevel.HEADING_2,
-              })
-            );
-          }
-
-          const paragraphs = item.text.split(/\n\s*\n/);
-          for (const paraText of paragraphs) {
-            const cleanPara = paraText.trim();
-            if (cleanPara) {
-              docChildren.push(
-                new Paragraph({
-                  children: [new TextRun(cleanPara)],
-                  spacing: { after: 120 },
-                })
-              );
-            }
-          }
-        }
-
-        const docxDoc = new Document({
-          sections: [{ children: docChildren }],
-        });
-        const docxBuffer = await Packer.toBuffer(docxDoc);
+        const docxBuffer = await buildEditableOcrDocx(wordPages);
 
         onProgress(100);
         return {

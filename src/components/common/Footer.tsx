@@ -21,9 +21,9 @@ export function Footer() {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-white text-sm font-semibold">100% DSGVO-konform</h4>
+              <h4 className="text-white text-sm font-semibold">Informationen zum Datenschutz</h4>
               <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">
-                Rechtssichere Datenverarbeitung nach europäischen Datenschutzstandards.
+                Hinweise zu Verarbeitung, Speicherung und Ihren Rechten finden Sie in der Datenschutzerklärung.
               </p>
             </div>
           </div>
@@ -35,7 +35,7 @@ export function Footer() {
             <div>
               <h4 className="text-white text-sm font-semibold">Lokale Browser-Verarbeitung</h4>
               <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">
-                Die meisten Dateien werden direkt in Ihrem Browser berechnet und verlassen Ihr Gerät nicht.
+                Einige Werkzeuge arbeiten direkt im Browser. Andere übertragen Dateien zur Konvertierung an den Server.
               </p>
             </div>
           </div>
@@ -246,8 +246,13 @@ export function Footer() {
                 <CookiePreferencesButton variant="link" label="Cookie-Einstellungen" className="py-1 block text-slate-400 hover:text-white text-xs" />
               </li>
               <li>
-                <Link href="/de/kontakt" className="py-1 block hover:text-white transition-colors text-sky-400 font-medium">
-                  Kontakt & Support
+                <Link href="/de/blog" className="py-1 block hover:text-white transition-colors text-sky-400 font-medium">
+                  Ratgeber &amp; Anleitungen
+                </Link>
+              </li>
+              <li>
+                <Link href="/de/kontakt" className="py-1 block hover:text-white transition-colors text-slate-300 font-medium">
+                  Kontakt &amp; Support
                 </Link>
               </li>
               <li>

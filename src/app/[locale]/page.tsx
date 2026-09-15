@@ -1,3 +1,4 @@
+import { serializeJsonLd } from '@/lib/json-ld';
 import React from 'react';
 import type { Metadata } from 'next';
 import { getActiveTools } from '@/config/tools.config';
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
 
   return generatePageMetadata({
     title: 'CoolWave – Kostenlose Online-PDF- und Datei-Tools im Browser',
-    description: 'Alle wichtigen Online-Tools für PDF, Bilder und Dokumente. PDFs bearbeiten, zusammenfügen, komprimieren und konvertieren – 100% datenschutzkonform ohne Upload.',
+    description: 'PDF zusammenfügen, teilen und bearbeiten, Bilder umwandeln und Dokumente konvertieren. Finden Sie das passende Online-Tool mit Anleitung und Dateilimits.',
     path: '/',
     locale,
   });
@@ -35,11 +36,11 @@ export default async function HomePage() {
       {/* Schema.org Structured Data for WebSite & Organization */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(orgSchema) }}
       />
 
       <HomePageClient initialTools={activeTools} />

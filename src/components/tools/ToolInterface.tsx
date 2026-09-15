@@ -41,10 +41,10 @@ export function ToolInterface({ tool }: ToolInterfaceProps) {
                 Cloud
               </span>
               <span className="hidden sm:inline text-slate-600">
-                Ende-zu-Ende verschlüsselt, automatische Löschung nach 15 Min.
+                Server-Verarbeitung mit temporärer Speicherung
               </span>
               <span className="sm:hidden text-slate-600">
-                Verschlüsselt (15 Min.)
+                Server-Verarbeitung
               </span>
             </>
           )}

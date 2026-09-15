@@ -3,7 +3,7 @@ import { ToolDefinition } from '@/types/tool';
 import { CategoryInfo } from '@/config/categories.config';
 import { DEFAULT_LOCALE, getAlternateUrls } from '@/config/i18n.config';
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://coolwave.cool';
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://coolwave.cool').replace(/\/+$/, '');
 export const SITE_NAME = 'CoolWave';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const DEFAULT_ORG_LOGO = `${SITE_URL}/icon-512.png`;
@@ -20,16 +20,6 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
   return {
     title: tool.titleDe,
     description: tool.metaDescriptionDe,
-    keywords: [
-      tool.nameDe,
-      tool.slug.replace(/-/g, ' '),
-      ...(tool.searchKeywordsDe || []),
-      ...tool.sourceFormats.map((fmt) => `${fmt} umwandeln`),
-      ...tool.targetFormats.map((fmt) => `in ${fmt} umwandeln`),
-      'online kostenlos',
-      'ohne upload',
-      'datenschutz'
-    ],
     alternates: {
       canonical: pageUrl,
       languages: alternateLanguages,
@@ -57,10 +47,10 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
       images: [ogImageUrl],
     },
     robots: {
-      index: true,
+      index: tool.processingEngine !== 'pdf-pdfa',
       follow: true,
       googleBot: {
-        index: true,
+        index: tool.processingEngine !== 'pdf-pdfa',
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
@@ -262,11 +252,6 @@ export function generateWebsiteSchema(locale: string = DEFAULT_LOCALE) {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: `${SITE_URL}/${locale}`,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_URL}/${locale}?q={search_term_string}`,
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
@@ -301,3 +286,125 @@ export function generateOrganizationSchema() {
     logo: DEFAULT_ORG_LOGO,
   };
 }
+
+/**
+ * Generate fully-compliant Next.js Metadata for Blog Articles
+ */
+export function generateArticleMetadata({
+  slug,
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  locale = DEFAULT_LOCALE,
+}: {
+  slug: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  updatedAt?: string;
+  locale?: string;
+}): Metadata {
+  const pageUrl = `${SITE_URL}/${locale}/blog/${slug}`;
+  const alternateLanguages = getAlternateUrls(SITE_URL, `/blog/${slug}`);
+  const ogImageUrl = `${SITE_URL}/${locale}/blog/${slug}/opengraph-image`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: pageUrl,
+      languages: alternateLanguages,
+    },
+    openGraph: {
+      title,
+      description,
+      url: pageUrl,
+      siteName: SITE_NAME,
+      locale: locale === 'de' ? 'de_DE' : `${locale}_${locale.toUpperCase()}`,
+      type: 'article',
+      publishedTime: publishedAt,
+      modifiedTime: updatedAt || publishedAt,
+      authors: ['CoolWave Redaktion'],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${title} | CoolWave Ratgeber`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
+/**
+ * Generate Schema.org BlogPosting / Article JSON-LD
+ */
+export function generateArticleSchema({
+  slug,
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  author = 'CoolWave Redaktion',
+  locale = DEFAULT_LOCALE,
+}: {
+  slug: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  updatedAt?: string;
+  author?: string;
+  locale?: string;
+}) {
+  const pageUrl = `${SITE_URL}/${locale}/blog/${slug}`;
+  const ogImageUrl = `${SITE_URL}/${locale}/blog/${slug}/opengraph-image`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+    },
+    headline: title,
+    description,
+    image: [ogImageUrl],
+    datePublished: publishedAt,
+    dateModified: updatedAt || publishedAt,
+    author: {
+      '@type': 'Organization',
+      name: author,
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: DEFAULT_ORG_LOGO,
+      },
+    },
+    inLanguage: locale === 'de' ? 'de-DE' : locale,
+  };
+}
+

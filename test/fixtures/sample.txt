@@ -1,0 +1,3 @@
+CoolWave Testdokument
+Dies ist ein sicheres Testdokument für die Werkzeug-Verifikation.
+Zeile 3 mit deutschem Text: ÄÖÜäöüß.

@@ -113,16 +113,30 @@ export function ImageResizeEngine({ isGrayscaleMode = false }: ImageResizeEngine
       setProgress(85);
       setStatusText('Bild wird exportiert...');
 
-      const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      let mimeType = 'image/jpeg';
+      let ext = '.jpg';
+      if (file.type === 'image/png' || /\.png$/i.test(file.name)) {
+        mimeType = 'image/png';
+        ext = '.png';
+      } else if (file.type === 'image/webp' || /\.webp$/i.test(file.name)) {
+        mimeType = 'image/webp';
+        ext = '.webp';
+      }
 
-      canvas.toBlob((blob) => {
-        if (!blob) throw new Error('Export fehlgeschlagen');
-        setResultBlob(blob);
-        const prefix = isGrayscaleMode ? 'graustufen_' : 'skaliert_';
-        setOutputFilename(`coolwave_${prefix}${file.name}`);
-        setProgress(100);
-        setIsProcessing(false);
-      }, mimeType, 0.92);
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error('Export fehlgeschlagen'))),
+          mimeType,
+          0.92
+        );
+      });
+
+      setResultBlob(blob);
+      const prefix = isGrayscaleMode ? 'graustufen_' : 'skaliert_';
+      const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+      setOutputFilename(`coolwave_${prefix}${base}${ext}`);
+      setProgress(100);
+      setIsProcessing(false);
     } catch (err) {
       console.error(err);
       setIsProcessing(false);

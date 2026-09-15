@@ -1,3 +1,4 @@
+import { serializeJsonLd } from '@/lib/json-ld';
 import React from 'react';
 import { ToolDefinition } from '@/types/tool';
 import { CATEGORIES } from '@/config/categories.config';
@@ -6,6 +7,7 @@ import { ToolInterface } from '@/components/tools/ToolInterface';
 import { HowItWorks } from '@/components/tools/HowItWorks';
 import { FaqSection } from '@/components/tools/FaqSection';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { RelatedArticles } from '@/components/blog/RelatedArticles';
 import { AdSlot } from '@/components/common/AdSlot';
 import { 
   generateWebApplicationSchema, 
@@ -30,7 +32,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
     { name: tool.nameDe, url: `/${locale}/${tool.slug}` },
   ];
 
-  const appSchema = generateWebApplicationSchema(tool);
+  const appSchema = generateWebApplicationSchema(tool, locale);
   const faqSchema = generateFAQSchema(tool);
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Startseite', url: `/${locale}` },
@@ -42,17 +44,17 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(appSchema) }}
       />
       {faqSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
         />
       )}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6">
@@ -77,14 +79,14 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
               {tool.browserCapable ? (
                 <>
                   <Cpu className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-                  <span className="hidden sm:inline">Lokale Browser-Verarbeitung (100% Datenschutz)</span>
-                  <span className="sm:hidden">100% lokal im Browser</span>
+                  <span className="hidden sm:inline">Verarbeitung im Browser</span>
+                  <span className="sm:hidden">Im Browser</span>
                 </>
               ) : (
                 <>
                   <ShieldCheck className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                  <span className="hidden sm:inline">Verschlüsselte Cloud-Verarbeitung (automatische Löschung nach 15 Min.)</span>
-                  <span className="sm:hidden">Verschlüsselt (15 Min.)</span>
+                  <span className="hidden sm:inline">Server-Verarbeitung mit temporärer Speicherung</span>
+                  <span className="sm:hidden">Server-Verarbeitung</span>
                 </>
               )}
             </div>
@@ -102,7 +104,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
           <div className="mt-3 sm:mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-6 text-[11px] sm:text-xs text-slate-500 font-medium">
             <span className="flex items-center gap-1 text-emerald-600">
               <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-              100% Kostenlos
+              Kostenloser Basistarif
             </span>
             <span className="flex items-center gap-1 text-slate-600">
               <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-600 shrink-0" />
@@ -114,7 +116,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
             </span>
             <span className="flex items-center gap-1 text-slate-600">
               <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
-              DSGVO-konform
+              Dateilimits transparent
             </span>
           </div>
         </div>
@@ -258,10 +260,19 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
         {/* FAQ Accordion with Schema */}
         <FaqSection faqs={tool.faqDe} toolName={tool.nameDe} />
 
-        {/* Bidirectional Internal Link Graph */}
+        {/* Bidirectional Internal Link Graph: Related Tools */}
         <RelatedTools
           relatedSlugs={tool.relatedTools}
           currentToolName={tool.nameDe}
+        />
+
+        {/* Bidirectional Internal Link Graph: Related Blog Guides & Tutorials */}
+        <RelatedArticles
+          toolSlug={tool.slug}
+          category={tool.category}
+          title={`Ratgeber & Anleitungen zu ${tool.nameDe}`}
+          subtitle="Praxistipps, Hintergrundwissen und Schritt-für-Schritt-Anleitungen für Ihre Dokumente."
+          limit={3}
         />
       </div>
     </>

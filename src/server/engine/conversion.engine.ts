@@ -14,6 +14,7 @@ import { privacyConfig } from '@/config/privacy.config';
 import { getInfrastructureConfig } from '@/config/infrastructure.config';
 import { generateSignedDownloadUrl } from '../security/signedUrl';
 import { analyticsService } from '../analytics/analytics.service';
+import { sanitizeJobError } from './errorSanitizer';
 
 export class ConversionEngine {
   private services: IConversionService[] = [];
@@ -139,7 +140,7 @@ export class ConversionEngine {
     let timeoutMs = infraConfig.timeouts.generalMs;
     if (this.isMediaJob(job.type)) {
       timeoutMs = infraConfig.timeouts.mediaMs;
-    } else if (this.isOcrJob(job.type)) {
+    } else if (this.isOcrJob(job.type) || job.type === 'office_pdf_to_docx') {
       timeoutMs = infraConfig.timeouts.ocrMs;
     }
 
@@ -224,6 +225,7 @@ export class ConversionEngine {
       });
       if (completed?.status !== 'completed') await storageProvider.delete(savedOutput.storagePath);
     } catch (err: unknown) {
+      console.error('[ConversionEngine Error in processJob]:', err);
       const errorMsg = 'Die Datei konnte nicht verarbeitet werden. Bitte pruefen Sie Format, Inhalt und Passwort.';
       if (outputPath) await storageProvider.delete(outputPath);
       analyticsService.track({
@@ -243,7 +245,7 @@ export class ConversionEngine {
 
       await jobQueue.updateJob(job.id, {
         status: 'failed',
-        error: errorMsg,
+        error: sanitizeJobError(err),
         completedAt: new Date().toISOString(),
       });
     } finally {

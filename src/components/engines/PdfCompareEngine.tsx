@@ -16,6 +16,7 @@ import {
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { getClientPdfJs } from '@/lib/pdfjsClient';
 
 interface DiffPart {
   type: 'added' | 'removed' | 'common';
@@ -56,6 +57,7 @@ export function PdfCompareEngine() {
   const [result, setResult] = useState<ComparisonResult | null>(null);
   const [activePage, setActivePage] = useState<number>(1);
   const [filterChangesOnly, setFilterChangesOnly] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Simple token-based Myers / LCS diff implementation
   const computeWordDiff = (text1: string, text2: string): DiffPart[] => {
@@ -116,16 +118,14 @@ export function PdfCompareEngine() {
 
   const comparePdfs = async () => {
     if (!fileA || !fileB) return;
+    setError(null);
     setIsProcessing(true);
     setProgress(15);
     setStatusText('PDF-Vergleichs-Engine wird initialisiert...');
     trackEvent('conversion_started', { toolSlug: 'pdf-vergleichen' });
 
     try {
-      const pdfjsLib = await import('pdfjs-dist');
-      if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-      }
+      const pdfjsLib = await getClientPdfJs();
 
       setProgress(25);
       setStatusText('Dokument A (Original) wird geladen...');
@@ -190,6 +190,12 @@ export function PdfCompareEngine() {
           textA,
           textB,
         });
+      }
+
+      if (totalWordsA === 0 && totalWordsB === 0) {
+        setError('In beiden PDF-Dokumenten wurde kein auswählbarer Text gefunden (reine Bild-Scans oder Grafiken). Bitte führen Sie vorab eine OCR-Texterkennung durch.');
+        setIsProcessing(false);
+        return;
       }
 
       // Calculate similarity score percentage
@@ -281,6 +287,13 @@ export function PdfCompareEngine() {
               Laden Sie das Original und die überarbeitete Fassung hoch. CoolWave analysiert Texte, Wörter und Absätze seitenweise und hebt Änderungen farblich hervor.
             </p>
           </div>
+
+          {error && (
+            <div className="max-w-3xl mx-auto mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-8">
             {/* Document A Upload Box */}

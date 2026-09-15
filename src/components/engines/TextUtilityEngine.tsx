@@ -123,10 +123,10 @@ export function TextUtilityEngine({ toolId }: TextUtilityEngineProps) {
         res = input.toLowerCase();
         break;
       case 'title':
-        res = input.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        res = input.replace(/([\p{L}\p{N}]\S*)/gu, (txt) => txt.charAt(0).toLocaleUpperCase('de-DE') + txt.slice(1).toLocaleLowerCase('de-DE'));
         break;
       case 'sentence':
-        res = input.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase());
+        res = input.toLocaleLowerCase('de-DE').replace(/(^\s*[\p{L}]|[.!?]\s*[\p{L}])/gu, (c) => c.toLocaleUpperCase('de-DE'));
         break;
       case 'camel': {
         const words = input.trim().split(/[\s_-]+/);

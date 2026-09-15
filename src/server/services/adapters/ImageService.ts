@@ -2,6 +2,7 @@ import { IConversionService, ConversionResult } from "../base.service";
 import { ServiceOptions } from "@/types/job";
 import { PDFDocument } from "pdf-lib";
 import sharp from "sharp";
+import { getLoadedPdfJs, getPdfJsDocumentOptions } from "@/server/pdf/pdfjsNode";
 
 export type SupportedImageTarget =
   | "png"
@@ -137,8 +138,8 @@ export class ImageService implements IConversionService {
     if (ext === "pdf" && target === "svg") {
       onProgress(20);
       try {
-        const pdfjsLib = await import("pdfjs-dist");
-        const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(inputBuffer) });
+        const pdfjsLib = await getLoadedPdfJs();
+        const loadingTask = pdfjsLib.getDocument(getPdfJsDocumentOptions(inputBuffer));
         const pdf = await loadingTask.promise;
         const page1 = await pdf.getPage(1);
         const viewport = page1.getViewport({ scale: 1.0 });

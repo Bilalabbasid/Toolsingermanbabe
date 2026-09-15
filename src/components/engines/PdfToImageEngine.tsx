@@ -11,6 +11,7 @@ import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { getClientPdfJs } from '@/lib/pdfjsClient';
 
 interface PdfToImageEngineProps {
   targetFormat: 'JPG' | 'PNG';
@@ -37,11 +38,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
     setStatusText('PDF wird analysiert & Vorschau generiert...');
 
     try {
-      const pdfjsLib = await import('pdfjs-dist');
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-      }
-
+      const pdfjsLib = await getClientPdfJs();
       const buffer = await f.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) });
       const pdf = await loadingTask.promise;
@@ -79,11 +76,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
     trackEvent('conversion_started', { targetFormat });
 
     try {
-      const pdfjsLib = await import('pdfjs-dist');
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-      }
-
+      const pdfjsLib = await getClientPdfJs();
       const buffer = await file.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) });
       const pdf = await loadingTask.promise;

@@ -56,7 +56,7 @@ export class OfficeService implements IConversionService {
     try {
       // 1. PDF to DOCX
       if (jobType === 'office_pdf_to_docx' || (ext === '.pdf' && target === 'docx')) {
-        return await OfficeConversionEngine.pdfToDocx(inputBuffer, inputName, onProgress);
+        return await OfficeConversionEngine.pdfToDocx(inputBuffer, inputName, onProgress, options, signal);
       }
 
       // 2. DOCX to PDF
