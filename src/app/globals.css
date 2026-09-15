@@ -123,6 +123,23 @@ body {
   outline-offset: 2px;
 }
 
+/* Form controls manage their own visual focus via borders/rings */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[type="search"]:focus-visible {
+  outline: none !important;
+}
+
+/* Remove default webkit search cancel and decoration buttons in Chrome/Safari/Edge */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}
+
 /* Remove outline on mouse clicks while strictly preserving keyboard focus-visible */
 :focus:not(:focus-visible) {
   outline: none;
