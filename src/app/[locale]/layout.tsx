@@ -20,7 +20,7 @@ export default async function LocalizedLayout({
     <div 
       lang={locale}
       data-locale={locale}
-      className="min-h-screen flex flex-col bg-slate-50/40 text-slate-900 selection:bg-sky-500 selection:text-white"
+      className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white"
     >
       <a 
         href="#main-content" 
