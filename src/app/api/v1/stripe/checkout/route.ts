@@ -17,6 +17,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const user = await getCurrentUser(req);
+    if (!user) {
+      return NextResponse.json(
+        { error: 'UNAUTHORIZED', message: 'Bitte melden Sie sich an, um ein Abonnement abzuschließen.' },
+        { status: 401 }
+      );
+    }
+
+    if (!isDatabaseConfigured()) {
+      return NextResponse.json(
+        { error: 'SERVICE_UNAVAILABLE', message: 'Abonnement-Dienst ist vorübergehend nicht verfügbar (Datenbank nicht bereit).' },
+        { status: 503 }
+      );
+    }
+
     if (!isStripeConfigured()) {
       return NextResponse.json(
         {
@@ -34,8 +49,6 @@ export async function POST(req: NextRequest) {
         { status: 503 }
       );
     }
-
-    const user = await getCurrentUser(req);
     
     // Validate and anchor return origin to prevent Open Redirect attacks
     let origin = PUBLIC_CONFIG.siteUrl.replace(/\/+$/, '');
@@ -57,41 +70,38 @@ export async function POST(req: NextRequest) {
 
     let customerId: string | undefined;
 
-    if (user && isDatabaseConfigured()) {
-      const sub = await prisma.subscription.findUnique({
-        where: { userId: user.id },
+    const sub = await prisma.subscription.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (sub?.stripeCustomerId) {
+      customerId = sub.stripeCustomerId;
+    } else {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: user.name || undefined,
+        metadata: {
+          userId: user.id,
+        },
       });
+      customerId = customer.id;
 
-      if (sub?.stripeCustomerId) {
-        customerId = sub.stripeCustomerId;
-      } else {
-        const customer = await stripe.customers.create({
-          email: user.email,
-          name: user.name || undefined,
-          metadata: {
-            userId: user.id,
-          },
-        });
-        customerId = customer.id;
-
-        await prisma.subscription.upsert({
-          where: { userId: user.id },
-          create: {
-            userId: user.id,
-            stripeCustomerId: customer.id,
-            plan: 'free',
-            status: 'active',
-          },
-          update: {
-            stripeCustomerId: customer.id,
-          },
-        }).catch(() => {});
-      }
+      await prisma.subscription.upsert({
+        where: { userId: user.id },
+        create: {
+          userId: user.id,
+          stripeCustomerId: customer.id,
+          plan: 'free',
+          status: 'active',
+        },
+        update: {
+          stripeCustomerId: customer.id,
+        },
+      });
     }
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: !customerId && user ? user.email : undefined,
       line_items: [
         {
           price: priceId,
@@ -102,11 +112,11 @@ export async function POST(req: NextRequest) {
       success_url: `${origin}/de/konto?checkout_success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/de/preise?checkout_canceled=true`,
       metadata: {
-        userId: user?.id || 'anonymous',
+        userId: user.id,
       },
       subscription_data: {
         metadata: {
-          userId: user?.id || 'anonymous',
+          userId: user.id,
         },
       },
       allow_promotion_codes: true,

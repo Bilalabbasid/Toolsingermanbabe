@@ -102,6 +102,7 @@ export function PdfRotateEngine() {
           onFilesSelected={handleFileSelected}
           title="PDF zum Drehen ablegen"
           subtitle="Drehen Sie querliegende oder auf dem Kopf stehende Seiten dauerhaft"
+          isLocal={true}
         />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">

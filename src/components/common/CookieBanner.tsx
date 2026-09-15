@@ -101,7 +101,7 @@ export function CookieBanner() {
                 <span className="font-semibold text-white block mb-0.5 sm:mb-1 text-xs sm:text-sm">
                   Datenschutz & Privatsphäre bei CoolWave
                 </span>
-                Wir verwenden technisch notwendige Cookies und mit Ihrer Einwilligung anonyme Analysen zur Produktverbesserung. Dokumente verarbeiten wir lokal im Browser. Details in der{' '}
+                Wir verwenden technisch notwendige Cookies und mit Ihrer Einwilligung anonyme Analysen zur Produktverbesserung. Client-Tools verarbeiten Dateien direkt im Browser; Server-Konvertierungen erfolgen verschlüsselt mit automatischer Löschung nach 15 Minuten. Details in der{' '}
                 <Link href="/de/datenschutz" className="underline text-sky-400 hover:text-sky-300">
                   Datenschutzerklärung
                 </Link>{' '}

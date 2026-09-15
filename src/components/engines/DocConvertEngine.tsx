@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Link from 'next/link';
 import JSZip from 'jszip';
 import { 
   FileText, 
@@ -534,9 +535,9 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
             <span className="font-semibold">Hinweis zum veralteten PPT-Format (Office 97–2003):</span>
             <p className="mt-1">
               Das binäre .ppt-Format ist veraltet und wird auf modernen Betriebssystemen und Mobilgeräten häufig blockiert. Für maximale Kompatibilität empfehlen wir die Umwandlung in PDF:{' '}
-              <a href="/de/powerpoint-in-pdf-umwandeln" className="font-medium underline hover:text-amber-950">
+              <Link href="/de/powerpoint-in-pdf-umwandeln" className="font-medium underline hover:text-amber-950">
                 PowerPoint in PDF umwandeln →
-              </a>
+              </Link>
             </p>
           </div>
         </div>
@@ -570,6 +571,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
           onFilesSelected={handleFilesSelected}
           title="Dokumente hier ablegen (Einzel- oder Stapelverarbeitung)"
           subtitle={`Unterstützt: ${getAcceptedExtensions().join(', ').toUpperCase()} • Bis zu ${limits.maxBatchFiles} Dateien gleichzeitig (${isPro ? 'Pro' : 'Kostenlos'})`}
+          isLocal={false}
         />
       ) : (
         /* Single File View (Preserved) */

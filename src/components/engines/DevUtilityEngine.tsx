@@ -226,7 +226,7 @@ export function DevUtilityEngine({ toolId }: DevUtilityEngineProps) {
 
         const obj: Record<string, any> = {};
         headers.forEach((h, idx) => {
-          let val = values[idx] !== undefined ? values[idx].replace(/^"|"$/g, '').replace(/""/g, '"') : '';
+          const val = values[idx] !== undefined ? values[idx].replace(/^"|"$/g, '').replace(/""/g, '"') : '';
           // Type coercion for numbers and booleans
           if (val === 'true') obj[h] = true;
           else if (val === 'false') obj[h] = false;
@@ -456,16 +456,31 @@ export function DevUtilityEngine({ toolId }: DevUtilityEngineProps) {
       worker = new Worker(workerUrl);
     } catch {
       try {
-        const reg = new RegExp(regexPattern, regexFlags);
-        const matches = Array.from(input.matchAll(reg)).slice(0, 1000);
+        if (input.length > 5000) {
+          throw new Error('Eingabe zu lang für die synchrone Ausführung im Haupt-Thread ohne Web Worker (max. 5.000 Zeichen).');
+        }
+        if (/([*+]\??){2,}|(\([^)]*[*+][^)]*\)[*+]|\([^)]*\|[^)]*\)[*+])/.test(regexPattern)) {
+          throw new Error('Potenziell gefährliches Backtracking-Muster erfordert Web Worker zur ReDoS-Prävention.');
+        }
+        const flags = regexFlags.includes('g') ? regexFlags : regexFlags + 'g';
+        const reg = new RegExp(regexPattern, flags);
+        const matches: Array<{ match: string; index?: number; groups: string[] }> = [];
+        let match: RegExpExecArray | null;
+        let count = 0;
+        while ((match = reg.exec(input)) !== null && count < 1000) {
+          matches.push({ match: match[0], index: match.index, groups: match.slice(1) });
+          count++;
+          if (match.index === reg.lastIndex) reg.lastIndex++;
+        }
         setRegexResult({
           count: matches.length,
-          matches: matches.map((m) => ({ match: m[0], index: m.index, groups: m.slice(1) })),
+          matches,
           valid: true,
           error: null,
         });
-      } catch (err: any) {
-        setRegexResult({ count: 0, matches: [], valid: false, error: err?.message || 'Ungültiger Regex' });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Ungültiger Regex';
+        setRegexResult({ count: 0, matches: [], valid: false, error: msg });
       }
       return;
     }

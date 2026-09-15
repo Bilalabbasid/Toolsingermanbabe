@@ -166,6 +166,7 @@ export function PdfSplitEngine() {
           onFilesSelected={handleFileSelected}
           title="PDF zum Teilen ablegen"
           subtitle="Wählen Sie eine PDF-Datei aus, um einzelne Seiten zu extrahieren"
+          isLocal={true}
         />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">

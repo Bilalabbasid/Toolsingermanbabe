@@ -265,101 +265,24 @@ export class OfficeConversionEngine {
     onProgress(15);
     const baseName = originalName.replace(/\.[^/.]+$/, '');
 
-    // 1. Try LibreOffice headless for genuine pagination, styles, tables, and images
+    // Require LibreOffice headless for layout, pagination, styles, tables, and images
+    if (!(await isLibreOfficeAvailable())) {
+      throw new Error('[ENGINE_UNAVAILABLE] LibreOffice ist auf dem Server erforderlich, um Word-Dokumente (DOCX) layoutgetreu mit Bildern und Tabellen in PDF umzuwandeln.');
+    }
+
     try {
-      if (await isLibreOfficeAvailable()) {
-        onProgress(35);
-        const pdfData = await convertWithLibreOffice(docxBuffer, 'docx', 'pdf');
-        onProgress(100);
-        return {
-          data: pdfData,
-          fileName: `${baseName}.pdf`,
-          mimeType: 'application/pdf',
-        };
-      }
-    } catch (loErr) {
-      console.warn('[OfficeConversionEngine] LibreOffice DOCX->PDF failed:', loErr);
+      onProgress(35);
+      const pdfData = await convertWithLibreOffice(docxBuffer, 'docx', 'pdf');
+      onProgress(100);
+      return {
+        data: pdfData,
+        fileName: `${baseName}.pdf`,
+        mimeType: 'application/pdf',
+      };
+    } catch (loErr: unknown) {
+      console.error('[OfficeConversionEngine] LibreOffice DOCX->PDF failed:', loErr);
+      throw new Error('[ENGINE_UNAVAILABLE] Fehler bei der Konvertierung mit LibreOffice.');
     }
-
-    // 2. High-fidelity in-process fallback
-    onProgress(30);
-    const rawResult = await mammoth.extractRawText({ buffer: docxBuffer });
-    const text = rawResult.value || '';
-    onProgress(50);
-
-    const pdf = await PDFDocument.create();
-    const fontRegular = await embedUnicodeFont(pdf);
-    const fontBold = await pdf.embedFont(StandardFonts.HelveticaBold);
-
-    const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
-    const pageWidth = PageSizes.A4[0];
-    const pageHeight = PageSizes.A4[1];
-    const margin = 50;
-    const contentWidth = pageWidth - margin * 2;
-
-    let currentPage = pdf.addPage([pageWidth, pageHeight]);
-    let yPos = pageHeight - margin;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const isHeading = line.length < 60 && (i === 0 || lines[i - 1] === '');
-      const fontSize = isHeading ? 13 : 10.5;
-      const lineHeight = isHeading ? 22 : 16;
-      const font = isHeading ? fontBold : fontRegular;
-      const color = isHeading ? rgb(0.1, 0.15, 0.25) : rgb(0.2, 0.25, 0.3);
-
-      // Line wrapping helper
-      const words = line.split(' ');
-      let currentLineText = '';
-
-      for (const word of words) {
-        const testLine = currentLineText ? `${currentLineText} ${word}` : word;
-        const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-
-        if (testWidth <= contentWidth) {
-          currentLineText = testLine;
-        } else {
-          if (yPos < margin + 40) {
-            currentPage = pdf.addPage([pageWidth, pageHeight]);
-            yPos = pageHeight - margin;
-          }
-          currentPage.drawText(currentLineText, {
-            x: margin,
-            y: yPos,
-            size: fontSize,
-            font,
-            color,
-          });
-          yPos -= lineHeight;
-          currentLineText = word;
-        }
-      }
-
-      if (currentLineText) {
-        if (yPos < margin + 40) {
-          currentPage = pdf.addPage([pageWidth, pageHeight]);
-          yPos = pageHeight - margin;
-        }
-        currentPage.drawText(currentLineText, {
-          x: margin,
-          y: yPos,
-          size: fontSize,
-          font,
-          color,
-        });
-        yPos -= isHeading ? lineHeight + 6 : lineHeight;
-      }
-    }
-
-    onProgress(90);
-    const pdfBytes = await pdf.save();
-    onProgress(100);
-
-    return {
-      data: Buffer.from(pdfBytes),
-      fileName: `${baseName}.pdf`,
-      mimeType: 'application/pdf',
-    };
   }
 
   // =========================================================================
@@ -540,51 +463,96 @@ export class OfficeConversionEngine {
         const font = isHeader ? fontBold : fontRegular;
         const fontSize = isHeader ? 9.5 : 8.5;
 
-        if (isHeader) {
-          currentPage.drawRectangle({
-            x: margin,
-            y: yPos - 5,
-            width: availableWidth,
-            height: rowHeight,
-            color: rgb(0.92, 0.95, 0.98),
-          });
-        }
+        // Calculate wrapped lines for all cells in this row to avoid character loss
+        const cellLinesMap: Map<number, string[]> = new Map();
+        let maxLinesInRow = 1;
 
-        // Draw all columns without artificial 12-column limitation
         for (let colIdx = 1; colIdx <= colCount; colIdx++) {
           const cell = row.getCell(colIdx);
           const rawVal = cell.text || (cell.value !== null && cell.value !== undefined ? String(cell.value) : '');
           if (!rawVal) continue;
 
-          // Preserve text content without 25-character truncation
-          const cellX = margin + (colIdx - 1) * colWidth + 4;
-          const maxTextWidth = colWidth - 8;
-          let safeText = cleanWinAnsiText(rawVal);
-          if (font.widthOfTextAtSize(safeText, fontSize) > maxTextWidth) {
-            // Trim to fit the cell width visually if needed
-            while (safeText.length > 3 && font.widthOfTextAtSize(safeText + '…', fontSize) > maxTextWidth) {
-              safeText = safeText.slice(0, -1);
-            }
-            safeText += '…';
-          }
+          const maxTextWidth = Math.max(colWidth - 8, 20);
+          const safeText = cleanWinAnsiText(rawVal);
 
-          currentPage.drawText(safeText, {
-            x: cellX,
-            y: yPos,
-            size: fontSize,
-            font,
-            color: isHeader ? rgb(0.05, 0.1, 0.2) : rgb(0.2, 0.25, 0.3),
+          const words = safeText.split(' ');
+          const lines: string[] = [];
+          let curLine = '';
+
+          for (const word of words) {
+            const testLine = curLine ? `${curLine} ${word}` : word;
+            if (font.widthOfTextAtSize(testLine, fontSize) <= maxTextWidth) {
+              curLine = testLine;
+            } else {
+              if (curLine) {
+                lines.push(curLine);
+                curLine = '';
+              }
+              if (font.widthOfTextAtSize(word, fontSize) > maxTextWidth) {
+                let chunk = '';
+                for (const char of word) {
+                  if (font.widthOfTextAtSize(chunk + char, fontSize) <= maxTextWidth) {
+                    chunk += char;
+                  } else {
+                    lines.push(chunk);
+                    chunk = char;
+                  }
+                }
+                curLine = chunk;
+              } else {
+                curLine = word;
+              }
+            }
+          }
+          if (curLine) lines.push(curLine);
+          cellLinesMap.set(colIdx, lines);
+          if (lines.length > maxLinesInRow) {
+            maxLinesInRow = lines.length;
+          }
+        }
+
+        const effectiveRowHeight = Math.max(20, maxLinesInRow * 11 + 6);
+
+        if (yPos - effectiveRowHeight < margin + 20) {
+          currentPage = pdf.addPage([pageWidth, pageHeight]);
+          yPos = pageHeight - margin;
+        }
+
+        if (isHeader) {
+          currentPage.drawRectangle({
+            x: margin,
+            y: yPos - effectiveRowHeight + 5,
+            width: availableWidth,
+            height: effectiveRowHeight,
+            color: rgb(0.92, 0.95, 0.98),
           });
         }
 
+        for (let colIdx = 1; colIdx <= colCount; colIdx++) {
+          const lines = cellLinesMap.get(colIdx);
+          if (!lines || lines.length === 0) continue;
+          const cellX = margin + (colIdx - 1) * colWidth + 4;
+          let textY = yPos;
+          for (const line of lines) {
+            currentPage.drawText(line, {
+              x: cellX,
+              y: textY,
+              size: fontSize,
+              font,
+              color: isHeader ? rgb(0.05, 0.1, 0.2) : rgb(0.2, 0.25, 0.3),
+            });
+            textY -= 11;
+          }
+        }
+
         currentPage.drawLine({
-          start: { x: margin, y: yPos - 5 },
-          end: { x: margin + availableWidth, y: yPos - 5 },
+          start: { x: margin, y: yPos - effectiveRowHeight + 5 },
+          end: { x: margin + availableWidth, y: yPos - effectiveRowHeight + 5 },
           thickness: 0.5,
           color: rgb(0.85, 0.88, 0.92),
         });
 
-        yPos -= rowHeight;
+        yPos -= effectiveRowHeight;
       });
     });
 
@@ -949,80 +917,23 @@ export class OfficeConversionEngine {
     onProgress(15);
     const baseName = originalName.replace(/\.[^/.]+$/, '');
 
+    if (!(await isLibreOfficeAvailable())) {
+      throw new Error('[ENGINE_UNAVAILABLE] LibreOffice ist auf dem Server erforderlich, um OpenDocument Text (ODT) layoutgetreu mit Bildern und Tabellen in PDF umzuwandeln.');
+    }
+
     try {
-      if (await isLibreOfficeAvailable()) {
-        onProgress(35);
-        const pdfData = await convertWithLibreOffice(odtBuffer, 'odt', 'pdf');
-        onProgress(100);
-        return {
-          data: pdfData,
-          fileName: `${baseName}.pdf`,
-          mimeType: 'application/pdf',
-        };
-      }
-    } catch (loErr) {
-      console.warn('[OfficeConversionEngine] LibreOffice ODT->PDF failed:', loErr);
+      onProgress(35);
+      const pdfData = await convertWithLibreOffice(odtBuffer, 'odt', 'pdf');
+      onProgress(100);
+      return {
+        data: pdfData,
+        fileName: `${baseName}.pdf`,
+        mimeType: 'application/pdf',
+      };
+    } catch (loErr: unknown) {
+      console.error('[OfficeConversionEngine] LibreOffice ODT->PDF failed:', loErr);
+      throw new Error('[ENGINE_UNAVAILABLE] Fehler bei der Konvertierung mit LibreOffice.');
     }
-
-    const zip = await JSZip.loadAsync(odtBuffer);
-    if (!zip.file('content.xml')) {
-      throw new Error('Ungültiges ODT-Dokument: content.xml nicht gefunden.');
-    }
-
-    onProgress(40);
-    const contentXml = await zip.file('content.xml')!.async('text');
-
-    // Extract headings, paragraphs, and tables
-    const paragraphMatches = contentXml.match(/<text:[ph][^>]*>(.*?)<\/text:[ph]>/g) || [];
-    const lines = paragraphMatches
-      .map((p) => p.replace(/<[^>]+>/g, '').trim())
-      .filter((t) => t.length > 0);
-
-    const pdf = await PDFDocument.create();
-    const fontRegular = await embedUnicodeFont(pdf);
-    const fontBold = await pdf.embedFont(StandardFonts.HelveticaBold);
-
-    const pageWidth = PageSizes.A4[0];
-    const pageHeight = PageSizes.A4[1];
-    const margin = 50;
-
-    let page = pdf.addPage([pageWidth, pageHeight]);
-    let yPos = pageHeight - margin;
-
-    page.drawText(cleanWinAnsiText(baseName), {
-      x: margin,
-      y: yPos,
-      size: 18,
-      font: fontBold,
-      color: rgb(0.1, 0.15, 0.25),
-    });
-    yPos -= 30;
-
-    for (const line of lines) {
-      if (yPos < margin + 30) {
-        page = pdf.addPage([pageWidth, pageHeight]);
-        yPos = pageHeight - margin;
-      }
-      const safeLine = line.length > 85 ? line.substring(0, 82) + '...' : line;
-      page.drawText(cleanWinAnsiText(safeLine), {
-        x: margin,
-        y: yPos,
-        size: 11,
-        font: fontRegular,
-        color: rgb(0.15, 0.2, 0.25),
-      });
-      yPos -= 18;
-    }
-
-    onProgress(90);
-    const pdfBytes = await pdf.save();
-    onProgress(100);
-
-    return {
-      data: Buffer.from(pdfBytes),
-      fileName: `${baseName}.pdf`,
-      mimeType: 'application/pdf',
-    };
   }
 
   // =========================================================================

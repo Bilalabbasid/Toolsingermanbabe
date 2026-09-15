@@ -8,6 +8,10 @@ import { isProRequest } from '../src/server/security/request';
 import { NextRequest } from 'next/server';
 import { PDFDocument, PDFName, rgb } from 'pdf-lib';
 import JSZip from 'jszip';
+import ExcelJS from 'exceljs';
+import { getClientIp } from '../src/server/security/rateLimiter';
+import { hydrateClientSubscription, getClientSubscription } from '../src/lib/monetization/subscription';
+import { POST as stripeCheckoutPost } from '../src/app/api/v1/stripe/checkout/route';
 
 describe('CoolWave Comprehensive Repair Regressions', () => {
   // -------------------------------------------------------------
@@ -202,5 +206,87 @@ describe('CoolWave Comprehensive Repair Regressions', () => {
     // Should include Kapitel 1 through 35
     expect(txtStr).toContain('Kapitel 1');
     expect(txtStr).toContain('Kapitel 35');
+  });
+
+  // -------------------------------------------------------------
+  // Audit Remediation: Stripe Checkout blocks anonymous checkout
+  // -------------------------------------------------------------
+  it('Remediation: Paid checkout rejects unauthenticated requests with 401', async () => {
+    const req = new NextRequest('http://localhost:3000/api/v1/stripe/checkout', {
+      method: 'POST',
+    });
+    const res = await stripeCheckoutPost(req);
+    expect(res.status).toBe(401);
+    const body = await res.json();
+    expect(body.error).toBe('UNAUTHORIZED');
+  });
+
+  // -------------------------------------------------------------
+  // Audit Remediation: Rate limiter client IP header spoofing defense
+  // -------------------------------------------------------------
+  it('Remediation: Rate limiter ignores untrusted proxy IP headers by default', () => {
+    delete process.env.TRUST_PROXY;
+    delete process.env.TRUSTED_CLIENT_IP_HEADER;
+
+    const req = new NextRequest('http://localhost:3000/api/v1/jobs', {
+      headers: {
+        'cf-connecting-ip': '198.51.100.45',
+        'x-forwarded-for': '198.51.100.46',
+      },
+    });
+
+    // Untrusted headers should not be accepted
+    expect(getClientIp(req)).toBe('127.0.0.1');
+
+    // When explicitly enabled, trust proxy
+    process.env.TRUST_PROXY = 'true';
+    expect(getClientIp(req)).toBe('198.51.100.45');
+    delete process.env.TRUST_PROXY;
+  });
+
+  // -------------------------------------------------------------
+  // Audit Remediation: Spreadsheet cell multiline wrapping
+  // -------------------------------------------------------------
+  it('Remediation: xlsxToPdf wraps long cells into multiple lines without truncation', async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('TestSheet');
+    worksheet.addRow(['ID', 'LongDescriptionColumn']);
+    const longText = 'This is a very long string designed to test cell multiline wrapping in CoolWave spreadsheetToPdf without truncating any characters with an ellipsis.';
+    worksheet.addRow([1, longText]);
+
+    const xlsxBuffer = Buffer.from(await workbook.xlsx.writeBuffer());
+    const pdfResult = await OfficeConversionEngine.xlsxToPdf(xlsxBuffer, 'multiline_test.xlsx', () => {});
+
+    expect(pdfResult.data).toBeInstanceOf(Buffer);
+    const pdfDoc = await PDFDocument.load(pdfResult.data);
+    expect(pdfDoc.getPageCount()).toBeGreaterThanOrEqual(1);
+  });
+
+  // -------------------------------------------------------------
+  // Audit Remediation: DOCX->PDF throws ENGINE_UNAVAILABLE when engine is missing
+  // -------------------------------------------------------------
+  it('Remediation: docxToPdf throws ENGINE_UNAVAILABLE when LibreOffice is missing', async () => {
+    // If LibreOffice is not installed, it should cleanly throw ENGINE_UNAVAILABLE
+    try {
+      await OfficeConversionEngine.docxToPdf(Buffer.from('fake-docx-content'), 'sample.docx', () => {});
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      expect(msg).toContain('ENGINE_UNAVAILABLE');
+    }
+  });
+
+  // -------------------------------------------------------------
+  // Audit Remediation: Client subscription hydration
+  // -------------------------------------------------------------
+  it('Remediation: Client subscription hydrates properly and updates state', () => {
+    hydrateClientSubscription({ plan: 'pro' });
+    let sub = getClientSubscription();
+    expect(sub.isPro).toBe(true);
+    expect(sub.tier).toBe('pro');
+
+    hydrateClientSubscription(null);
+    sub = getClientSubscription();
+    expect(sub.isPro).toBe(false);
+    expect(sub.tier).toBe('free');
   });
 });

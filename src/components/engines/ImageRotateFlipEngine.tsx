@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import { RotateCcw, RotateCw, FlipHorizontal, FlipVertical } from 'lucide-react';
@@ -84,16 +84,19 @@ export function ImageRotateFlipEngine({ mode = 'rotate' }: ImageRotateFlipEngine
       ctx.restore();
       setProgress(80); setStatusText('Exportiere...');
       const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-      canvas.toBlob((blob) => {
-        if (!blob) throw new Error('Export fehler');
-        setResultBlob(blob);
-        const ext = mime === 'image/png' ? '.png' : '.jpg';
-        const base = file.name.replace(/\.[^.]+$/, '');
-        const suffix = mode === 'flip' ? 'gespiegelt' : 'gedreht';
-        setOutputFilename('coolwave_' + suffix + '_' + base + ext);
-        setProgress(100); setIsProcessing(false);
-      }, mime, 0.92);
-    } catch { setIsProcessing(false); alert('Fehler bei der Verarbeitung.'); }
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mime, 0.92));
+      if (!blob) throw new Error('Export fehler');
+      setResultBlob(blob);
+      const ext = mime === 'image/png' ? '.png' : '.jpg';
+      const base = file.name.replace(/\.[^.]+$/, '');
+      const suffix = mode === 'flip' ? 'gespiegelt' : 'gedreht';
+      setOutputFilename('coolwave_' + suffix + '_' + base + ext);
+      setProgress(100);
+    } catch {
+      alert('Fehler bei der Verarbeitung.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleReset = () => { setFile(null); setImgEl(null); setResultBlob(null); setRotation(0); setFlipH(false); setFlipV(false); setIsProcessing(false); };

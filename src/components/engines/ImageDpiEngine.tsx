@@ -111,16 +111,16 @@ export function ImageDpiEngine({ stripMetadata = false }: ImageDpiEngineProps) {
       setProgress(60); setStatusText('Exportiere...');
       const isPng = file.type === 'image/png' || file.name.toLowerCase().endsWith('.png');
       const mime = isPng ? 'image/png' : 'image/jpeg';
-      canvas.toBlob(async (blob) => {
-        if (!blob) throw new Error('Export fehler');
-        if (stripMetadata) {
-          // Canvas re-draw already strips Exif. Done.
-          setResultBlob(blob);
-          const ext = isPng ? '.png' : '.jpg';
-          setOutputFilename('coolwave_no_meta_' + file.name.replace(/\.[^.]+$/, '') + ext);
-          setProgress(100); setIsProcessing(false);
-          return;
-        }
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mime, 0.96));
+      if (!blob) throw new Error('Export fehler');
+
+      if (stripMetadata) {
+        // Canvas re-draw already strips Exif. Done.
+        setResultBlob(blob);
+        const ext = isPng ? '.png' : '.jpg';
+        setOutputFilename('coolwave_no_meta_' + file.name.replace(/\.[^.]+$/, '') + ext);
+        setProgress(100);
+      } else {
         // Patch DPI into the raw bytes
         const buf = await blob.arrayBuffer();
         let bytes: Uint8Array = new Uint8Array(buf);
@@ -131,9 +131,13 @@ export function ImageDpiEngine({ stripMetadata = false }: ImageDpiEngineProps) {
         setResultBlob(finalBlob);
         const ext = isPng ? '.png' : '.jpg';
         setOutputFilename('coolwave_' + dpi + 'dpi_' + file.name.replace(/\.[^.]+$/, '') + ext);
-        setProgress(100); setIsProcessing(false);
-      }, mime, 0.96);
-    } catch { setIsProcessing(false); alert('Fehler bei der Verarbeitung.'); }
+        setProgress(100);
+      }
+    } catch {
+      alert('Fehler bei der Verarbeitung.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleReset = () => { setFile(null); setImgEl(null); setResultBlob(null); setIsProcessing(false); };

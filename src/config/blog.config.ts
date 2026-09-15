@@ -108,7 +108,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     ctaButtonLabel: 'PDF in Word umwandeln',
     relatedToolSlugs: ['word-in-pdf-umwandeln', 'scan-zu-word', 'pdf-bearbeiten'],
     relatedArticleSlugs: ['gescannte-pdf-in-word-umwandeln', 'pdf-in-word-ohne-formatierungsverlust', 'word-in-pdf-umwandeln-kostenlos'],
-    directAnswer: 'Um eine PDF in Word umzuwandeln, ziehen Sie Ihre Datei einfach in den CoolWave PDF-zu-Word-Konverter. Die Struktur, Texte und Formatierungen werden automatisch in ein bearbeitbares DOCX-Dokument übertragen, das Sie sofort in Microsoft Word, LibreOffice oder Google Docs öffnen und anpassen können – ohne Registrierung und ohne Server-Upload.',
+    directAnswer: 'Um eine PDF in Word umzuwandeln, ziehen Sie Ihre Datei einfach in den CoolWave PDF-zu-Word-Konverter. Die Struktur, Texte und Formatierungen werden automatisch in ein bearbeitbares DOCX-Dokument übertragen, das Sie sofort in Microsoft Word, LibreOffice oder Google Docs öffnen und anpassen können – ohne Registrierung, verschlüsselt und mit automatischer Löschung nach 15 Minuten.',
     steps: [
       { step: 1, title: 'PDF-Datei auswählen', text: 'Laden Sie Ihre PDF-Datei über das Auswahlfeld hoch oder ziehen Sie sie per Drag & Drop in den Konverter.' },
       { step: 2, title: 'Automatische Konvertierung starten', text: 'CoolWave analysiert Absätze, Überschriften, Tabellen und eingebettete Bilder für eine saubere DOCX-Übernahme.' },

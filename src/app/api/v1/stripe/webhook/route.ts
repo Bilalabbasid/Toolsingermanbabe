@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (!isDatabaseConfigured()) {
-      console.warn('[Stripe Webhook] Database not configured, cannot persist event:', event.type);
-      return NextResponse.json({ received: true });
+      console.warn('[Stripe Webhook] Database not configured, returning 503 so Stripe will retry:', event.type);
+      return NextResponse.json({ error: 'DATABASE_UNAVAILABLE' }, { status: 503 });
     }
 
     // Webhook Idempotency & Replay Defense: Ignore already-processed event IDs
@@ -53,115 +53,117 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ received: true, duplicate: true });
     }
 
-    // Process event types
-    switch (event.type) {
-      case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session;
-        const customerId = session.customer as string;
-        const subscriptionId = session.subscription as string;
-        const userId = session.metadata?.userId;
+    // Process event types and record audit log atomically
+    await prisma.$transaction(async (tx) => {
+      switch (event.type) {
+        case 'checkout.session.completed': {
+          const session = event.data.object as Stripe.Checkout.Session;
+          const customerId = session.customer as string;
+          const subscriptionId = session.subscription as string;
+          const userId = session.metadata?.userId;
 
-        if (userId && userId !== 'anonymous') {
-          await prisma.subscription.upsert({
-            where: { userId },
-            create: {
-              userId,
-              stripeCustomerId: customerId,
-              stripeSubscriptionId: subscriptionId,
-              plan: 'pro',
-              status: 'active',
-            },
-            update: {
-              stripeCustomerId: customerId,
-              stripeSubscriptionId: subscriptionId,
-              plan: 'pro',
-              status: 'active',
-            },
-          }).catch((err) => console.error('[Webhook] Failed to update subscription on checkout:', err));
+          if (userId && userId !== 'anonymous') {
+            await tx.subscription.upsert({
+              where: { userId },
+              create: {
+                userId,
+                stripeCustomerId: customerId,
+                stripeSubscriptionId: subscriptionId,
+                plan: 'pro',
+                status: 'active',
+              },
+              update: {
+                stripeCustomerId: customerId,
+                stripeSubscriptionId: subscriptionId,
+                plan: 'pro',
+                status: 'active',
+              },
+            });
+          }
+          break;
         }
-        break;
+
+        case 'customer.subscription.updated':
+        case 'customer.subscription.created': {
+          const sub = event.data.object as Stripe.Subscription;
+          const customerId = sub.customer as string;
+          const status = sub.status; // 'active', 'past_due', 'canceled', etc.
+          const priceId = sub.items.data[0]?.price?.id;
+          const plan = status === 'active' || status === 'trialing' ? 'pro' : 'free';
+          const currentPeriodEnd = new Date((sub as any).current_period_end * 1000);
+          const cancelAtPeriodEnd = sub.cancel_at_period_end;
+
+          await tx.subscription.updateMany({
+            where: { stripeCustomerId: customerId },
+            data: {
+              stripeSubscriptionId: sub.id,
+              stripePriceId: priceId,
+              status,
+              plan,
+              currentPeriodEnd,
+              cancelAtPeriodEnd,
+            },
+          });
+          break;
+        }
+
+        case 'customer.subscription.deleted': {
+          const sub = event.data.object as Stripe.Subscription;
+          const customerId = sub.customer as string;
+
+          await tx.subscription.updateMany({
+            where: { stripeCustomerId: customerId },
+            data: {
+              status: 'canceled',
+              plan: 'free',
+              cancelAtPeriodEnd: false,
+            },
+          });
+          break;
+        }
+
+        case 'invoice.payment_failed': {
+          const invoice = event.data.object as Stripe.Invoice;
+          const customerId = invoice.customer as string;
+
+          await tx.subscription.updateMany({
+            where: { stripeCustomerId: customerId },
+            data: {
+              status: 'past_due',
+            },
+          });
+          break;
+        }
+
+        case 'invoice.paid': {
+          const invoice = event.data.object as Stripe.Invoice;
+          const customerId = invoice.customer as string;
+
+          await tx.subscription.updateMany({
+            where: { stripeCustomerId: customerId },
+            data: {
+              status: 'active',
+              plan: 'pro',
+            },
+          });
+          break;
+        }
+
+        default:
+          // Unhandled event type
+          break;
       }
 
-      case 'customer.subscription.updated':
-      case 'customer.subscription.created': {
-        const sub = event.data.object as Stripe.Subscription;
-        const customerId = sub.customer as string;
-        const status = sub.status; // 'active', 'past_due', 'canceled', etc.
-        const priceId = sub.items.data[0]?.price?.id;
-        const plan = status === 'active' || status === 'trialing' ? 'pro' : 'free';
-        const currentPeriodEnd = new Date((sub as any).current_period_end * 1000);
-        const cancelAtPeriodEnd = sub.cancel_at_period_end;
-
-        await prisma.subscription.updateMany({
-          where: { stripeCustomerId: customerId },
-          data: {
-            stripeSubscriptionId: sub.id,
-            stripePriceId: priceId,
-            status,
-            plan,
-            currentPeriodEnd,
-            cancelAtPeriodEnd,
-          },
-        }).catch((err) => console.error('[Webhook] Failed to update subscription on sub update:', err));
-        break;
-      }
-
-      case 'customer.subscription.deleted': {
-        const sub = event.data.object as Stripe.Subscription;
-        const customerId = sub.customer as string;
-
-        await prisma.subscription.updateMany({
-          where: { stripeCustomerId: customerId },
-          data: {
-            status: 'canceled',
-            plan: 'free',
-            cancelAtPeriodEnd: false,
-          },
-        }).catch((err) => console.error('[Webhook] Failed to cancel subscription:', err));
-        break;
-      }
-
-      case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice;
-        const customerId = invoice.customer as string;
-
-        await prisma.subscription.updateMany({
-          where: { stripeCustomerId: customerId },
-          data: {
-            status: 'past_due',
-          },
-        }).catch((err) => console.error('[Webhook] Failed to update status on payment failure:', err));
-        break;
-      }
-
-      case 'invoice.paid': {
-        const invoice = event.data.object as Stripe.Invoice;
-        const customerId = invoice.customer as string;
-
-        await prisma.subscription.updateMany({
-          where: { stripeCustomerId: customerId },
-          data: {
-            status: 'active',
-            plan: 'pro',
-          },
-        }).catch((err) => console.error('[Webhook] Failed to update status on invoice paid:', err));
-        break;
-      }
-
-      default:
-        // Unhandled event type
-        break;
-    }
-
-    // Persist processed event ID in audit logs for idempotency
-    await prisma.auditLog.create({
-      data: {
-        action: 'STRIPE_WEBHOOK_PROCESSED',
-        targetType: 'StripeEvent',
-        targetId: event.id,
-        metadata: JSON.stringify({ type: event.type, timestamp: new Date().toISOString() }),
-      },
-    }).catch(() => {});
+      // Persist processed event ID in audit logs for idempotency atomically with mutation
+      await tx.auditLog.create({
+        data: {
+          action: 'STRIPE_WEBHOOK_PROCESSED',
+          targetType: 'StripeEvent',
+          targetId: event.id,
+          metadata: JSON.stringify({ type: event.type, timestamp: new Date().toISOString() }),
+        },
+      });
+    });
 
     return NextResponse.json({ received: true });
   } catch (err: unknown) {

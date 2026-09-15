@@ -63,7 +63,9 @@ export function BlogToolCTA({
             <span>Passendes Tool</span>
           </span>
           <span className="text-slate-400 text-xs">•</span>
-          <span className="text-slate-300 text-xs font-medium">100% Client-Side &amp; DSGVO-konform</span>
+          <span className="text-slate-300 text-xs font-medium">
+            {tool.serverRequired ? 'Verschlüsselt & DSGVO-konform' : '100% Client-Side & DSGVO-konform'}
+          </span>
         </div>
 
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">

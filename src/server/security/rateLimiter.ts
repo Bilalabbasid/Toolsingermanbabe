@@ -114,25 +114,30 @@ export const rateLimiter = new InMemoryRateLimiter();
  * Extracts and normalizes client IP from incoming NextRequest
  */
 export function getClientIp(req: NextRequest): string {
-  // Configure only behind a proxy that overwrites this header and blocks direct access.
+  // 1. If an explicit trusted proxy header is configured, enforce ONLY that header
   const trustedHeader = process.env.TRUSTED_CLIENT_IP_HEADER;
   if (trustedHeader) {
     const value = req.headers.get(trustedHeader)?.trim();
     if (value && value.length <= 45 && /^[a-fA-F0-9:.]+$/.test(value)) return value;
+    return '127.0.0.1';
   }
 
-  // Check standard reverse proxy headers (Cloudflare, Azure, nginx)
-  const cfIp = req.headers.get('cf-connecting-ip')?.trim();
-  if (cfIp && cfIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(cfIp)) return cfIp;
+  // 2. Only trust proxy headers if TRUST_PROXY is explicitly enabled
+  const trustProxy = process.env.TRUST_PROXY === 'true';
+  if (trustProxy) {
+    const cfIp = req.headers.get('cf-connecting-ip')?.trim();
+    if (cfIp && cfIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(cfIp)) return cfIp;
 
-  const xRealIp = req.headers.get('x-real-ip')?.trim();
-  if (xRealIp && xRealIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(xRealIp)) return xRealIp;
+    const xRealIp = req.headers.get('x-real-ip')?.trim();
+    if (xRealIp && xRealIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(xRealIp)) return xRealIp;
 
-  const xForwardedFor = req.headers.get('x-forwarded-for')?.trim();
-  if (xForwardedFor) {
-    const firstIp = xForwardedFor.split(',')[0].trim();
-    if (firstIp && firstIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(firstIp)) return firstIp;
+    const xForwardedFor = req.headers.get('x-forwarded-for')?.trim();
+    if (xForwardedFor) {
+      const firstIp = xForwardedFor.split(',')[0].trim();
+      if (firstIp && firstIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(firstIp)) return firstIp;
+    }
   }
 
-  return '127.0.0.1';
+  // 3. Fall back to socket/direct connection or local loopback
+  return (req as any).ip || '127.0.0.1';
 }

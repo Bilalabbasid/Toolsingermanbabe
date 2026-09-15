@@ -23,7 +23,7 @@ import {
 import { SearchModal } from './SearchModal';
 import { UpgradeModal } from '@/components/monetization/UpgradeModal';
 import { ConversionHistoryDrawer } from '@/components/monetization/ConversionHistoryDrawer';
-import { getClientSubscription, SubscriptionTier } from '@/lib/monetization/subscription';
+import { getClientSubscription, hydrateClientSubscription, SubscriptionTier } from '@/lib/monetization/subscription';
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -37,9 +37,16 @@ export function Header() {
     fetch('/api/v1/auth/me')
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d?.user) setCurrentUser(d.user);
+        if (d?.user) {
+          setCurrentUser(d.user);
+          hydrateClientSubscription(d.user);
+        } else {
+          hydrateClientSubscription(null);
+        }
       })
-      .catch(() => {});
+      .catch(() => {
+        hydrateClientSubscription(null);
+      });
   }, []);
 
   useEffect(() => {

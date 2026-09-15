@@ -23,7 +23,7 @@ export function FileUploader({
   onFilesSelected,
   title = 'Dateien hier ablegen',
   subtitle,
-  isLocal = true,
+  isLocal = false,
 }: FileUploaderProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

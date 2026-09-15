@@ -143,6 +143,7 @@ export function PdfMergeEngine() {
           onFilesSelected={handleFilesSelected}
           title="PDF-Dateien hier ablegen"
           subtitle="Wählen Sie zwei oder mehr PDF-Dateien aus, die Sie zusammenführen möchten"
+          isLocal={true}
         />
       ) : (
         <div className="space-y-4">

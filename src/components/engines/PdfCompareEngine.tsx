@@ -77,7 +77,7 @@ export function PdfCompareEngine() {
       } else {
         // Lookahead to find next match
         let foundMatch = false;
-        let lookAheadLimit = Math.min(20, Math.max(words1.length - i, words2.length - j));
+        const lookAheadLimit = Math.min(20, Math.max(words1.length - i, words2.length - j));
 
         for (let k = 1; k < lookAheadLimit; k++) {
           if (i + k < words1.length && words1[i + k] === words2[j]) {

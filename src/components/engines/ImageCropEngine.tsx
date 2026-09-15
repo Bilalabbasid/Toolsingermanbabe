@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Crop, RotateCcw } from 'lucide-react';
@@ -125,7 +125,7 @@ export function ImageCropEngine({ circleMode = false }: ImageCropEngineProps) {
     const { rx, ry } = getRelPos(e);
     const dx = rx - dragStart.x, dy = ry - dragStart.y;
     if (dragMode === 'create') {
-      let nx = Math.min(dragStart.x, rx), ny = Math.min(dragStart.y, ry);
+      const nx = Math.min(dragStart.x, rx), ny = Math.min(dragStart.y, ry);
       let nw = Math.abs(rx - dragStart.x), nh = Math.abs(ry - dragStart.y);
       if (lockedRatio) { if (nw / nh > lockedRatio) { nh = nw / lockedRatio; } else { nw = nh * lockedRatio; } }
       nw = Math.min(nw, 1 - nx); nh = Math.min(nh, 1 - ny);
@@ -135,7 +135,8 @@ export function ImageCropEngine({ circleMode = false }: ImageCropEngineProps) {
       const ny = Math.max(0, Math.min(dragStart.cropSnap.y + dy, 1 - dragStart.cropSnap.h));
       setCrop({ ...dragStart.cropSnap, x: nx, y: ny });
     } else if (dragMode === 'resize-br') {
-      let nw = dragStart.cropSnap.w + dx, nh = dragStart.cropSnap.h + dy;
+      const nw = dragStart.cropSnap.w + dx;
+      let nh = dragStart.cropSnap.h + dy;
       if (lockedRatio) { nh = nw / lockedRatio; }
       setCrop({ ...dragStart.cropSnap, w: Math.max(0.02, Math.min(nw, 1 - dragStart.cropSnap.x)), h: Math.max(0.02, Math.min(nh, 1 - dragStart.cropSnap.y)) });
     }
@@ -179,15 +180,18 @@ export function ImageCropEngine({ circleMode = false }: ImageCropEngineProps) {
       ctx.drawImage(imgEl, cX, cY, cW, cH, 0, 0, cW, cH);
       setProgress(80); setStatusText('Exportiere...');
       const mime = (circleMode || file.type === 'image/png') ? 'image/png' : 'image/jpeg';
-      canvas.toBlob((blob) => {
-        if (!blob) throw new Error('Export fehler');
-        setResultBlob(blob);
-        const ext = mime === 'image/png' ? '.png' : '.jpg';
-        const base = file.name.replace(/\.[^.]+$/, '');
-        setOutputFilename('coolwave_' + (circleMode ? 'kreis_' : 'zugeschnitten_') + base + ext);
-        setProgress(100); setIsProcessing(false);
-      }, mime, 0.92);
-    } catch { setIsProcessing(false); alert('Fehler beim Zuschneiden.'); }
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mime, 0.92));
+      if (!blob) throw new Error('Export fehler');
+      setResultBlob(blob);
+      const ext = mime === 'image/png' ? '.png' : '.jpg';
+      const base = file.name.replace(/\.[^.]+$/, '');
+      setOutputFilename('coolwave_' + (circleMode ? 'kreis_' : 'zugeschnitten_') + base + ext);
+      setProgress(100);
+    } catch {
+      alert('Fehler beim Zuschneiden.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleReset = () => { setFile(null); setImgEl(null); setResultBlob(null); setIsProcessing(false); };
