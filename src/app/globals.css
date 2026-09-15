@@ -115,6 +115,53 @@ body {
   display: none;
 }
 
+/* Hide scrollbar — alias used in SearchModal */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tiny text utility */
+.text-2xs {
+  font-size: 0.625rem;
+  line-height: 0.875rem;
+}
+
+/* Modal backdrop fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out forwards;
+}
+
+/* Modal panel scale-up */
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-scale-up {
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Search modal panel — responsive height container */
+.search-modal-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100%;
+}
+@media (min-width: 640px) {
+  .search-modal-panel {
+    height: 82vh;
+    max-height: 720px;
+  }
+}
+
 /* ===== ACCESSIBILITY (a11y) UTILITIES ===== */
 
 /* Global focus-visible indicator: crisp, visible, WCAG AA compliant */

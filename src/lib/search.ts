@@ -111,16 +111,21 @@ export function searchToolsWithRelevance(
   categoryFilter: string = 'all'
 ): SearchResultItem[] {
   const activeTools = getActiveTools();
+  const matchesCategory = (toolCat: string, filter: string) => {
+    if (filter === 'all') return true;
+    if (filter === 'pdf') return toolCat === 'pdf' || toolCat === 'security';
+    return toolCat === filter;
+  };
+
   if (!query.trim()) {
-    return activeTools
-      .filter((t) => categoryFilter === 'all' || t.category === categoryFilter)
-      .slice(0, 8)
-      .map((tool) => ({
-        tool,
-        score: 1,
-        formatFlow: getFormatFlow(tool),
-        matchedField: 'default',
-      }));
+    const filtered = activeTools.filter((t) => matchesCategory(t.category, categoryFilter));
+    const list = categoryFilter === 'all' ? filtered.slice(0, 8) : filtered;
+    return list.map((tool) => ({
+      tool,
+      score: 1,
+      formatFlow: getFormatFlow(tool),
+      matchedField: 'category',
+    }));
   }
 
   const rawQuery = query.toLowerCase().trim();
@@ -145,7 +150,7 @@ export function searchToolsWithRelevance(
   const scoredResults: SearchResultItem[] = [];
 
   for (const tool of activeTools) {
-    if (categoryFilter !== 'all' && tool.category !== categoryFilter) {
+    if (!matchesCategory(tool.category, categoryFilter)) {
       continue;
     }
 

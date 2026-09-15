@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T23:08:11.965Z",
+  "updatedAt": "2026-09-15T01:04:31.415Z",
   "aggregates": {
     "pdf-komprimieren": {
       "toolSlug": "pdf-komprimieren",
@@ -61,7 +61,7 @@
       "totalDurationMs": 434620,
       "totalInputBytes": 4216832000,
       "totalOutputBytes": 3429171200,
-      "proViews": 40,
+      "proViews": 42,
       "proClicks": 18,
       "proSignups": 5
     },
@@ -288,9 +288,25 @@
       "proViews": 0,
       "proClicks": 0,
       "proSignups": 0
+    },
+    "zeilen-zaehlen": {
+      "toolSlug": "zeilen-zaehlen",
+      "views": 6,
+      "uploadsStarted": 0,
+      "uploadsCompleted": 0,
+      "conversionsStarted": 0,
+      "conversionsCompleted": 0,
+      "conversionsFailed": 0,
+      "downloadsCompleted": 0,
+      "totalDurationMs": 0,
+      "totalInputBytes": 0,
+      "totalOutputBytes": 0,
+      "proViews": 0,
+      "proClicks": 0,
+      "proSignups": 0
     }
   },
-  "proViewedTotal": 716,
+  "proViewedTotal": 721,
   "proClickedTotal": 317,
   "signupStartedTotal": 216,
   "signupCompletedTotal": 102

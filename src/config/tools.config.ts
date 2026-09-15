@@ -4596,7 +4596,9 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     relatedTools: ['pdf-metadaten-anzeigen', 'pdf-metadaten-entfernen', 'pdf-vergleichen'],
     icon: 'Info',
     status: 'active'
-  }
+  },
+  ...UTILITIES_TOOLS,
+  ...MEDIA_ARCHIVE_TOOLS,
 ];
 
 
