@@ -5,7 +5,7 @@ import { jobQueue } from '@/server/queue/queue';
 
 async function handleCleanup(req: NextRequest) {
   try {
-    if (!isAdminRequest(req, process.env.CRON_SECRET)) return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 });
+    if (!(await isAdminRequest(req, process.env.CRON_SECRET))) return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 });
 
     const retentionMinutes = parseInt(process.env.TEMP_FILE_RETENTION_MINUTES || '15', 10);
     const cleanedFiles = await storageProvider.cleanupExpired(retentionMinutes);

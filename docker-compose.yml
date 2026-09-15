@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # CoolWave Main Application
+  coolwave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: coolwave_app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL:-postgresql://coolwave_user:coolwave_secure_pass@postgres:5432/coolwave_db?schema=public}
+      - AUTH_SECRET=${AUTH_SECRET:-replace_with_a_secure_32_byte_hex_secret}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+      - STRIPE_PRO_PRICE_ID=${STRIPE_PRO_PRICE_ID:-}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Local Development PostgreSQL (For testing; Azure PostgreSQL Flexible Server used in production)
+  postgres:
+    image: postgres:16-alpine
+    container_name: coolwave_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-coolwave_db}
+      POSTGRES_USER: ${POSTGRES_USER:-coolwave_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coolwave_secure_pass}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U coolwave_user -d coolwave_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Queue / Rate-limiting Cache
+  redis:
+    image: redis:7-alpine
+    container_name: coolwave_redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:

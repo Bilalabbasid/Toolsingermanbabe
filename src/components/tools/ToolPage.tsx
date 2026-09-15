@@ -13,6 +13,7 @@ import {
   generateBreadcrumbSchema
 } from '@/lib/seo';
 import { ShieldCheck, Cpu, CheckCircle2, Sparkles, ArrowRight, AlertCircle, Lock } from 'lucide-react';
+import { ToolIcon } from '@/components/common/ToolIcon';
 import Link from 'next/link';
 
 interface ToolPageProps {
@@ -62,6 +63,10 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
 
         {/* Above-the-Fold Hero & Tool Workspace */}
         <div className="text-center max-w-3xl mx-auto mt-2 sm:mt-4 mb-6 sm:mb-8">
+          <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-700 border border-sky-100 flex items-center justify-center mx-auto mb-3 shadow-2xs">
+            <ToolIcon name={tool.icon} category={tool.category} className="w-6 h-6" />
+          </div>
+
           <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-3">
             {tool.badge && (
               <span className="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] sm:text-xs font-bold uppercase tracking-wider">

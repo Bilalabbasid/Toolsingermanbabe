@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, FileText } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { getRelatedTools } from '@/config/tools.config';
+import { ToolCard } from '@/components/tools/ToolCard';
 
 interface RelatedToolsProps {
   relatedSlugs: string[];
@@ -14,49 +17,28 @@ export function RelatedTools({ relatedSlugs, currentToolName }: RelatedToolsProp
   if (!tools || tools.length === 0) return null;
 
   return (
-    <section className="my-16 pt-12 border-t border-slate-200">
-      <div className="flex items-center justify-between mb-8">
+    <section className="my-14 sm:my-20 pt-10 border-t border-slate-200/90">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-            Passende Werkzeuge zu {currentToolName}
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <span>Passende Werkzeuge zu {currentToolName}</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Entdecken Sie weitere nützliche Funktionen für Ihre Dokumente und Bilder.
+            Optimieren Sie Ihren Workflow mit weiteren nützlichen Konvertern und Werkzeugen.
           </p>
         </div>
         <Link
           href="/de/kategorie/pdf"
-          className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800 transition self-start sm:self-center"
         >
-          <span>Alle Werkzeuge ansehen</span>
+          <span>Alle Werkzeuge durchsuchen</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4.5">
         {tools.map((tool) => (
-          <Link
-            key={tool.id}
-            href={`/de/${tool.slug}`}
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-sm transition-all group flex flex-col justify-between"
-          >
-            <div>
-              <div className="w-9 h-9 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center mb-3 group-hover:bg-sky-600 group-hover:text-white transition-colors">
-                <FileText className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-slate-900 text-sm group-hover:text-sky-700 transition-colors mb-1">
-                {tool.nameDe}
-              </h3>
-              <p className="text-xs text-slate-500 line-clamp-2">
-                {tool.shortDescriptionDe}
-              </p>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-600 font-medium">
-              <span>Jetzt öffnen</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </Link>
+          <ToolCard key={tool.id} tool={tool} />
         ))}
       </div>
     </section>

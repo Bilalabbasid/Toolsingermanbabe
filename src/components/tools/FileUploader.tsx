@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { UploadCloud, File, AlertCircle, Plus, X, Smartphone, Sparkles, ArrowRight, Minimize2 } from 'lucide-react';
+import { UploadCloud, File, AlertCircle, Plus, X, Smartphone, Sparkles, ArrowRight, Minimize2, CheckCircle2 } from 'lucide-react';
 import { formatBytes } from '@/lib/utils';
 import { trackUploadStarted, trackUploadCompleted, getActiveToolSlug } from '@/lib/analytics';
 
@@ -13,6 +13,7 @@ interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;
   title?: string;
   subtitle?: string;
+  isLocal?: boolean;
 }
 
 export function FileUploader({
@@ -22,6 +23,7 @@ export function FileUploader({
   onFilesSelected,
   title = 'Dateien hier ablegen',
   subtitle,
+  isLocal = true,
 }: FileUploaderProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -54,7 +56,7 @@ export function FileUploader({
         !acceptedExtensions.includes('*')
       ) {
         setErrorMessage(
-          `Das Format von „${file.name}" wird nicht unterstützt. Erlaubt sind: ${acceptedExtensions.join(', ')}`
+          `Das Format von „${file.name}“ wird nicht unterstützt. Erlaubt sind: ${acceptedExtensions.join(', ')}`
         );
         return;
       }
@@ -121,10 +123,10 @@ export function FileUploader({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative w-full rounded-2xl border-2 border-dashed p-6 sm:p-8 md:p-12 text-center cursor-pointer transition-all duration-200 bg-white active:scale-[0.995] focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none ${
+        className={`relative w-full rounded-2xl border-2 border-dashed p-6 sm:p-10 md:p-14 text-center cursor-pointer transition-all duration-200 bg-white active:scale-[0.995] focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none ${
           isDragOver
-            ? 'border-sky-500 bg-sky-50/50 scale-[1.005]'
-            : 'border-slate-300 hover:border-sky-500 hover:bg-slate-50/60'
+            ? 'border-sky-500 bg-sky-50/60 scale-[1.005]'
+            : 'border-slate-300/90 hover:border-sky-500 hover:bg-slate-50/50'
         }`}
       >
         <input
@@ -132,7 +134,10 @@ export function FileUploader({
           type="file"
           multiple={allowMultiple}
           accept={acceptedExtensions.join(',')}
-          onChange={(e) => validateAndProcessFiles(e.target.files)}
+          onChange={(e) => {
+            validateAndProcessFiles(e.target.files);
+            e.target.value = '';
+          }}
           className="hidden"
           id="file-upload-input"
           aria-hidden="true"
@@ -140,11 +145,11 @@ export function FileUploader({
         />
 
         <div className="flex flex-col items-center justify-center pointer-events-none">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-3 sm:mb-4 border border-sky-100 shadow-sm">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-3 sm:mb-4 border border-sky-100/80 shadow-2xs">
             {isTouchDevice ? (
-              <Smartphone className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" aria-hidden="true" />
+              <Smartphone className="w-7 h-7 sm:w-8 sm:h-8" aria-hidden="true" />
             ) : (
-              <UploadCloud className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" aria-hidden="true" />
+              <UploadCloud className="w-7 h-7 sm:w-8 sm:h-8" aria-hidden="true" />
             )}
           </div>
 
@@ -156,29 +161,38 @@ export function FileUploader({
             {displaySubtitle}
           </p>
 
-          <span
-            className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold text-sm sm:text-base shadow-sm transition-colors touch-target-48"
-          >
+          <span className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold text-sm sm:text-base shadow-xs transition-colors touch-target-48">
             <Plus className="w-5 h-5" aria-hidden="true" />
             <span>Datei auswählen</span>
           </span>
 
-          {/* File type & size info — stacked on xs, inline on sm+ */}
-          <div id="uploader-instructions" className="mt-4 sm:mt-5 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-1 sm:gap-2 text-[11px] sm:text-xs text-slate-500">
-            <span className="text-center">Unterstützt: {acceptedExtensions.join(', ').toUpperCase()}</span>
+          {/* File format, size and privacy hints */}
+          <div
+            id="uploader-instructions"
+            className="mt-4 sm:mt-5 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs text-slate-500"
+          >
+            <span>Unterstützt: <strong className="text-slate-700 font-mono">{acceptedExtensions.join(', ').toUpperCase()}</strong></span>
             <span className="hidden sm:inline" aria-hidden="true">•</span>
-            <span>Maximal: {maxFileSizeMB} MB</span>
+            <span>Maximal: <strong className="text-slate-700 font-mono">{maxFileSizeMB} MB</strong></span>
+            {allowMultiple && (
+              <>
+                <span className="hidden sm:inline" aria-hidden="true">•</span>
+                <span className="text-sky-700 font-semibold">Mehrfachauswahl möglich</span>
+              </>
+            )}
             <span className="hidden sm:inline" aria-hidden="true">•</span>
-            <span className="text-emerald-700 font-medium">100% lokal im Browser</span>
+            <span className={isLocal ? 'text-emerald-700 font-semibold' : 'text-slate-600 font-medium'}>
+              {isLocal ? '100% lokal im Browser' : 'Verschlüsselt (15 Min. Auto-Löschung)'}
+            </span>
           </div>
         </div>
       </div>
 
       {sizeExceededFile && (
-        <div 
-          role="alert" 
+        <div
+          role="alert"
           aria-live="assertive"
-          className="mt-3 sm:mt-4 p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-sky-50 border border-amber-200/80 text-left shadow-xs"
+          className="mt-3 sm:mt-4 p-4 rounded-2xl bg-amber-50/90 border border-amber-200 text-left shadow-2xs"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
@@ -193,7 +207,6 @@ export function FileUploader({
                   Die Datei „<strong>{sizeExceededFile.name}</strong>“ hat eine Größe von <strong>{formatBytes(sizeExceededFile.size)}</strong>.
                 </p>
 
-                {/* Helpful Action Paths */}
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {sizeExceededFile.name.toLowerCase().endsWith('.pdf') && (
                     <Link
@@ -228,10 +241,10 @@ export function FileUploader({
       )}
 
       {errorMessage && (
-        <div 
-          role="alert" 
+        <div
+          role="alert"
           aria-live="assertive"
-          className="mt-3 sm:mt-4 p-3 sm:p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-2.5 animate-shake"
+          className="mt-3 sm:mt-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-2.5 animate-shake"
         >
           <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" aria-hidden="true" />
           <div className="flex-1 min-w-0">

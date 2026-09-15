@@ -16,8 +16,25 @@ export function isProRequest(req: NextRequest): boolean {
   return secretMatches(req.headers.get('x-api-key'), process.env.PRO_API_KEY);
 }
 
-export function isAdminRequest(req: NextRequest, secret = process.env.ADMIN_SECRET || process.env.CRON_SECRET): boolean {
-  return secretMatches(req.headers.get('authorization')?.replace(/^Bearer /, ''), secret);
+export async function isAdminRequest(req: NextRequest, secret = process.env.ADMIN_SECRET || process.env.CRON_SECRET): Promise<boolean> {
+  // 1. Check Bearer secret token (for cron / external API clients)
+  const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
+  if (authHeader && secretMatches(authHeader.replace(/^Bearer /, ''), secret)) {
+    return true;
+  }
+
+  // 2. Check authenticated browser session with ADMIN role
+  try {
+    const { getCurrentUser } = await import('@/server/auth/guards');
+    const user = await getCurrentUser(req);
+    if (user && user.role === 'ADMIN') {
+      return true;
+    }
+  } catch {
+    // ignore
+  }
+
+  return false;
 }
 
 export function ownerId(req: NextRequest): string {

@@ -17,6 +17,8 @@ import {
 import confetti from 'canvas-confetti';
 import { formatBytes } from '@/lib/utils';
 import { AdSlot } from '@/components/common/AdSlot';
+import { TOOLS_CONFIG } from '@/config/tools.config';
+import { ToolCard } from '@/components/tools/ToolCard';
 
 interface DownloadBoxProps {
   filename: string;
@@ -223,28 +225,34 @@ export function DownloadBox({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            {nextWorkflows.map((step) => (
-              <Link
-                key={step.slug}
-                href={`/de/${step.slug}`}
-                className="p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-sky-50/50 hover:border-sky-300 transition-all group flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="p-1 rounded-md bg-white border border-slate-100 shadow-2xs">
-                      {getWorkflowIcon(step.icon)}
-                    </span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+            {nextWorkflows.map((step) => {
+              const tool = TOOLS_CONFIG.find((t) => t.slug === step.slug);
+              if (tool) {
+                return <ToolCard key={tool.id} tool={tool} compact={true} />;
+              }
+              return (
+                <Link
+                  key={step.slug}
+                  href={`/de/${step.slug}`}
+                  className="p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-sky-50/50 hover:border-sky-300 transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="p-1 rounded-md bg-white border border-slate-100 shadow-2xs">
+                        {getWorkflowIcon(step.icon)}
+                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                    <div className="text-xs font-bold text-slate-900 group-hover:text-sky-700 transition-colors">
+                      {step.name}
+                    </div>
+                    <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                      {step.hint}
+                    </p>
                   </div>
-                  <div className="text-xs font-bold text-slate-900 group-hover:text-sky-700 transition-colors">
-                    {step.name}
-                  </div>
-                  <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
-                    {step.hint}
-                  </p>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
 

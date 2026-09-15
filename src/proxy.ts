@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@/config/i18n.config';
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (/^\/(?:[a-z]{2}\/)?admin(?:\/|$)/.test(pathname) && !isAdminRequest(request)) {
+  if (/^\/(?:[a-z]{2}\/)?admin(?:\/|$)/.test(pathname) && !(await isAdminRequest(request))) {
     return new NextResponse('Nicht autorisiert.', { status: 401, headers: { 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store' } });
   }
   // 1. Skip static assets, API routes, and standard SEO endpoints

@@ -474,3 +474,20 @@ curl -s "https://coolwave.cool/api/v1/jobs/cleanup?secret=<YOUR_CRON_SECRET>"
 df -h
 du -sh /var/www/coolwave/.tmp/storage/*
 ```
+commands 
+# 1. SSH into Hostinger VPS
+ssh root@<YOUR_VPS_IP>
+
+# 2. Clone & install system binaries
+apt update && apt install -y curl git ufw fail2ban certbot python3-certbot-nginx nginx ffmpeg tesseract-ocr tesseract-ocr-deu libreoffice-writer-nogpu
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && apt install -y nodejs && npm install -g pm2
+
+# 3. Setup CoolWave
+cd /var/www && git clone <REPO_URL> coolwave && cd coolwave
+cp .env.example .env.production && nano .env.production
+npm ci && npm run build
+
+# 4. Launch PM2 & Nginx
+pm2 start ecosystem.config.js && pm2 save && pm2 startup
+cp /var/www/coolwave/DEPLOYMENT.md /etc/nginx/sites-available/coolwave.cool # (Use Nginx block from DEPLOYMENT.md)
+certbot --nginx -d coolwave.cool -d www.coolwave.cool

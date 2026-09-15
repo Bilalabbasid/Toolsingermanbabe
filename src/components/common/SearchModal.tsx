@@ -21,6 +21,7 @@ import {
   CornerDownLeft,
   ArrowLeft,
 } from 'lucide-react';
+import { ToolIcon } from '@/components/common/ToolIcon';
 import {
   searchToolsWithRelevance,
   getPopularTools,
@@ -139,15 +140,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   };
 
   const getToolIcon = (tool: ToolDefinition) => {
-    const s = tool.slug;
-    if (s.includes('audio') || s.includes('mp3')) return <Music className="w-4 h-4" />;
-    if (s.includes('video') || s.includes('gif')) return <Video className="w-4 h-4" />;
-    if (s.includes('zip') || s.includes('7z') || s.includes('tar') || s.includes('gzip')) return <FolderArchive className="w-4 h-4" />;
-    if (tool.category === 'images') return <ImageIcon className="w-4 h-4" />;
-    if (tool.category === 'documents') return <FileSpreadsheet className="w-4 h-4" />;
-    if (tool.category === 'security') return <Shield className="w-4 h-4" />;
-    if (tool.category === 'utilities') return <Wrench className="w-4 h-4" />;
-    return <FileText className="w-4 h-4" />;
+    return <ToolIcon name={tool.icon} category={tool.category} className="w-4 h-4" />;
   };
 
   return (

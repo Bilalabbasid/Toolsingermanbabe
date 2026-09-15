@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
-import { ArrowUp, ArrowDown, Trash2, Plus, FileText, CheckCircle2 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
+import { FileList } from '@/components/tools/FileList';
+import { Button } from '@/components/common/Button';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 
@@ -144,105 +145,34 @@ export function PdfMergeEngine() {
           subtitle="Wählen Sie zwei oder mehr PDF-Dateien aus, die Sie zusammenführen möchten"
         />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">
-                Ausgewählte Dokumente ({files.length})
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Passen Sie die Reihenfolge per Pfeiltasten an.
-              </p>
-            </div>
+        <div className="space-y-4">
+          <FileList
+            items={files}
+            onRemove={removeFile}
+            onMoveUp={moveUp}
+            onMoveDown={moveDown}
+            onAddFiles={handleFilesSelected}
+            acceptedExtensions={['.pdf']}
+            title="Ausgewählte PDF-Dokumente"
+          />
 
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="add-more-pdfs"
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Weitere PDF hinzufügen</span>
-              </label>
-              <input
-                id="add-more-pdfs"
-                type="file"
-                multiple
-                accept=".pdf"
-                className="hidden"
-                onChange={(e) => {
-                  if (e.target.files) {
-                    handleFilesSelected(Array.from(e.target.files));
-                  }
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Files Reorder List */}
-          <div className="divide-y divide-slate-100 my-4">
-            {files.map((item, index) => (
-              <div
-                key={item.id}
-                className="py-3 flex items-center justify-between gap-3 hover:bg-slate-50/70 px-2 rounded-lg transition-colors"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center shrink-0">
-                    {index + 1}
-                  </span>
-                  <div className="p-2 rounded bg-sky-50 text-sky-700 shrink-0">
-                    <FileText className="w-4 h-4" />
-                  </div>
-                  <div className="truncate">
-                    <div className="text-sm font-semibold text-slate-900 truncate">
-                      {item.name}
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      {formatBytes(item.size)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => moveUp(index)}
-                    disabled={index === 0}
-                    className="p-1.5 rounded text-slate-400 hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-100"
-                    title="Nach oben verschieben"
-                  >
-                    <ArrowUp className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => moveDown(index)}
-                    disabled={index === files.length - 1}
-                    className="p-1.5 rounded text-slate-400 hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-100"
-                    title="Nach unten verschieben"
-                  >
-                    <ArrowDown className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => removeFile(item.id)}
-                    className="p-1.5 rounded text-rose-400 hover:text-rose-600 hover:bg-rose-50 ml-1"
-                    title="Entfernen"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-slate-500">
-              Gesamtgröße: {formatBytes(files.reduce((a, b) => a + b.size, 0))}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <span className="text-xs sm:text-sm text-slate-500 font-medium">
+              Gesamtgröße:{' '}
+              <strong className="text-slate-800 font-mono">
+                {formatBytes(files.reduce((a, b) => a + b.size, 0))}
+              </strong>{' '}
+              ({files.length} {files.length === 1 ? 'Dokument' : 'Dokumente'})
             </span>
 
-            <button
+            <Button
               onClick={mergePdfs}
               disabled={files.length < 2}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-sm sm:text-base shadow-sm transition-colors"
+              size="lg"
+              className="w-full sm:w-auto"
             >
-              <span>PDF zusammenfügen</span>
-            </button>
+              PDF zusammenfügen ({files.length})
+            </Button>
           </div>
         </div>
       )}

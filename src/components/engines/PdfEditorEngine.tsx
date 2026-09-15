@@ -1588,6 +1588,27 @@ export function PdfEditorEngine() {
                 )}
               </div>
 
+              {/* Security Distinction: Whiteout Overlay vs. True Redaction */}
+              {(activeTool === 'whiteout' || selectedObject?.type === 'whiteout') && (
+                <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-xl space-y-2 text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-amber-900 dark:text-amber-200">
+                    <Info className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Optische Überdeckung (Cover)</span>
+                  </div>
+                  <p className="text-[11px] text-amber-900/90 dark:text-amber-300 leading-relaxed">
+                    Dieses Werkzeug legt ein weißes Rechteck über den Bereich. Der darunterliegende Text bleibt im PDF-Quellcode erhalten und kann kopiert oder extrahiert werden.
+                  </p>
+                  <a
+                    href="/de/pdf-schwaerzen"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 hover:underline pt-0.5"
+                  >
+                    <span>Für DSGVO-sichere echte Schwärzung hier klicken &rarr;</span>
+                  </a>
+                </div>
+              )}
+
               {/* Color Picker */}
               <div>
                 <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-2">

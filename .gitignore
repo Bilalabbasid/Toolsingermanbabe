@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -40,8 +41,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# ephemeral temp storage & journals
+# ephemeral temp storage & scratch
 /.tmp/
+/temp_uploads/
+/scratch/
 /data/logs/
 *.db
 *.db-journal
+*.dump
+*.log
+

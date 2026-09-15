@@ -1,0 +1,152 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  passwordHash  String?
+  name          String?
+  role          Role            @default(USER)
+  emailVerified DateTime?
+  lastLoginAt   DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  sessions      Session[]
+  subscription  Subscription?
+  jobs          ConversionJob[]
+  auditLogs     AuditLog[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sessionToken])
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  stripePriceId        String?
+  status               String    @default("active") // active, trialing, past_due, canceled, incomplete
+  plan                 String    @default("free")   // free, pro, business
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean   @default(false)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+}
+
+model ConversionJob {
+  id          String    @id
+  userId      String?
+  toolSlug    String
+  status      String    // pending, processing, completed, failed
+  inputMime   String?
+  outputMime  String?
+  inputSize   Int?
+  outputSize  Int?
+  durationMs  Int?
+  failureCode String?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([toolSlug])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model UserUsage {
+  id              String   @id @default(cuid())
+  userId          String?
+  date            String   // Format: YYYY-MM-DD
+  toolSlug        String
+  conversionCount Int      @default(1)
+  bytesProcessed  BigInt   @default(0)
+  ocrPages        Int      @default(0)
+
+  @@unique([userId, date, toolSlug])
+  @@index([userId, date])
+  @@index([date])
+}
+
+model ToolConfiguration {
+  id                      String   @id @default(cuid())
+  toolSlug                String   @unique
+  enabled                 Boolean  @default(true)
+  hidden                  Boolean  @default(false)
+  isFeatured              Boolean  @default(false)
+  isComingSoon            Boolean  @default(false)
+  freeMaxFileSizeMB       Int?
+  proMaxFileSizeMB        Int?
+  freeMaxBatch            Int?
+  proMaxBatch             Int?
+  dailyLimit              Int?
+  customTitleDe           String?
+  customMetaDescriptionDe String?
+  customH1De              String?
+  updatedAt               DateTime @updatedAt
+
+  @@index([toolSlug])
+  @@index([enabled])
+}
+
+model AdminSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   // Serialized JSON
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  action      String
+  targetType  String
+  targetId    String?
+  metadata    String?  // Serialized JSON
+  timestamp   DateTime @default(now())
+
+  actorUser   User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId])
+  @@index([action])
+  @@index([targetType])
+  @@index([timestamp])
+}

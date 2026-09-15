@@ -1,12 +1,11 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { CATEGORIES } from '@/config/categories.config';
 import { getToolsByCategory } from '@/config/tools.config';
 import { ToolCategory } from '@/types/tool';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
-import { FileText, ArrowRight } from 'lucide-react';
+import { ToolGrid } from '@/components/tools/ToolGrid';
 import { 
   generateCategoryMetadata, 
   generateBreadcrumbSchema,
@@ -87,39 +86,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
         <AdSlot slotKey="category_top" className="my-6" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 my-10">
-          {tools.map((tool) => (
-            <Link
-              key={tool.id}
-              href={`/${locale}/${tool.slug}`}
-              className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100 group-hover:bg-sky-600 group-hover:text-white transition-colors">
-                    <FileText className="w-5 h-5" />
-                  </div>
-                  {tool.badge && (
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-100">
-                      {tool.badge}
-                    </span>
-                  )}
-                </div>
-
-                <h2 className="font-bold text-slate-900 text-lg group-hover:text-sky-700 transition-colors mb-2">
-                  {tool.nameDe}
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                  {tool.shortDescriptionDe}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-600 font-semibold">
-                <span>Tool starten</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-          ))}
+        <div className="my-8">
+          <ToolGrid tools={tools} locale={locale} columns={3} />
         </div>
       </div>
     </>

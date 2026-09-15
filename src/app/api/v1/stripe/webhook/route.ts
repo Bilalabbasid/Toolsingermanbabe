@@ -1,89 +1,149 @@
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
-import { boundedBody, RequestError, requestError } from '@/server/security/request';
+import { getStripe, isStripeConfigured } from '@/server/stripe/client';
+import { prisma, isDatabaseConfigured } from '@/server/db/prisma';
+import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
   try {
-    const rawBody = Buffer.from(await boundedBody(req, 1024 * 1024)).toString('utf8');
-    const signature = req.headers.get('stripe-signature');
+    if (!isStripeConfigured()) {
+      return NextResponse.json({ received: true, ignored: 'Stripe not configured' });
+    }
+
+    const stripe = getStripe();
+    if (!stripe) {
+      return NextResponse.json({ error: 'Stripe not initialized' }, { status: 500 });
+    }
+
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    if (!webhookSecret || !signature) return NextResponse.json({ error: 'Webhook nicht autorisiert.' }, { status: 401 });
-
-    // Verify webhook signature if secret is configured
-    if (webhookSecret && signature) {
-      const parts = signature.split(',').reduce((acc, part) => {
-        const [k, v] = part.split('=');
-        if (k && v) acc[k.trim()] = v.trim();
-        return acc;
-      }, {} as Record<string, string>);
-
-      const timestamp = parts.t;
-      const expectedSignature = parts.v1;
-
-      if (!timestamp || !expectedSignature) {
-        return NextResponse.json({ error: 'Ungültige Signatur-Header.' }, { status: 400 });
-      }
-
-      const signedPayload = `${timestamp}.${rawBody}`;
-      const hmac = crypto.createHmac('sha256', webhookSecret).update(signedPayload).digest('hex');
-
-      if (!/^\d+$/.test(timestamp) || Math.abs(Date.now() / 1000 - Number(timestamp)) > 300 ||
-          !/^[a-f0-9]{64}$/.test(expectedSignature) ||
-          !crypto.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expectedSignature, 'hex'))) {
-        return NextResponse.json({ error: 'Signatur-Verifikation fehlgeschlagen.' }, { status: 400 });
-      }
+    if (!webhookSecret) {
+      console.warn('[Stripe Webhook] STRIPE_WEBHOOK_SECRET not configured, skipping verification.');
+      return NextResponse.json({ error: 'Webhook secret not set' }, { status: 500 });
     }
 
-    let event;
+    const body = await req.text();
+    const signature = req.headers.get('stripe-signature');
+
+    if (!signature) {
+      return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 });
+    }
+
+    let event: Stripe.Event;
     try {
-      event = JSON.parse(rawBody);
-    } catch {
-      return NextResponse.json({ error: 'Ungültiges JSON-Format.' }, { status: 400 });
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Invalid signature';
+      console.error('[Stripe Webhook Signature Error]:', msg);
+      return NextResponse.json({ error: `Webhook Error: ${msg}` }, { status: 400 });
     }
 
-    const eventType = event.type;
-    console.log(`[Stripe Webhook Received]: ${eventType}`);
+    if (!isDatabaseConfigured()) {
+      console.warn('[Stripe Webhook] Database not configured, cannot persist event:', event.type);
+      return NextResponse.json({ received: true });
+    }
 
-    switch (eventType) {
+    // Process event types
+    switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data?.object;
-        console.log(`[Stripe] Checkout abgeschlossen für Kunde: ${session?.customer || session?.client_reference_id}`);
+        const session = event.data.object as Stripe.Checkout.Session;
+        const customerId = session.customer as string;
+        const subscriptionId = session.subscription as string;
+        const userId = session.metadata?.userId;
+
+        if (userId && userId !== 'anonymous') {
+          await prisma.subscription.upsert({
+            where: { userId },
+            create: {
+              userId,
+              stripeCustomerId: customerId,
+              stripeSubscriptionId: subscriptionId,
+              plan: 'pro',
+              status: 'active',
+            },
+            update: {
+              stripeCustomerId: customerId,
+              stripeSubscriptionId: subscriptionId,
+              plan: 'pro',
+              status: 'active',
+            },
+          }).catch((err) => console.error('[Webhook] Failed to update subscription on checkout:', err));
+        }
         break;
       }
 
-      case 'customer.subscription.updated': {
-        const subscription = event.data?.object;
-        console.log(`[Stripe] Abonnement aktualisiert: ${subscription?.id}, Status: ${subscription?.status}`);
+      case 'customer.subscription.updated':
+      case 'customer.subscription.created': {
+        const sub = event.data.object as Stripe.Subscription;
+        const customerId = sub.customer as string;
+        const status = sub.status; // 'active', 'past_due', 'canceled', etc.
+        const priceId = sub.items.data[0]?.price?.id;
+        const plan = status === 'active' || status === 'trialing' ? 'pro' : 'free';
+        const currentPeriodEnd = new Date((sub as any).current_period_end * 1000);
+        const cancelAtPeriodEnd = sub.cancel_at_period_end;
+
+        await prisma.subscription.updateMany({
+          where: { stripeCustomerId: customerId },
+          data: {
+            stripeSubscriptionId: sub.id,
+            stripePriceId: priceId,
+            status,
+            plan,
+            currentPeriodEnd,
+            cancelAtPeriodEnd,
+          },
+        }).catch((err) => console.error('[Webhook] Failed to update subscription on sub update:', err));
         break;
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = event.data?.object;
-        console.log(`[Stripe] Abonnement beendet: ${subscription?.id}`);
-        break;
-      }
+        const sub = event.data.object as Stripe.Subscription;
+        const customerId = sub.customer as string;
 
-      case 'invoice.payment_succeeded': {
-        const invoice = event.data?.object;
-        console.log(`[Stripe] Rechnung bezahlt: ${invoice?.id}`);
+        await prisma.subscription.updateMany({
+          where: { stripeCustomerId: customerId },
+          data: {
+            status: 'canceled',
+            plan: 'free',
+            cancelAtPeriodEnd: false,
+          },
+        }).catch((err) => console.error('[Webhook] Failed to cancel subscription:', err));
         break;
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data?.object;
-        console.warn(`[Stripe] Zahlung fehlgeschlagen für Rechnung: ${invoice?.id}`);
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId = invoice.customer as string;
+
+        await prisma.subscription.updateMany({
+          where: { stripeCustomerId: customerId },
+          data: {
+            status: 'past_due',
+          },
+        }).catch((err) => console.error('[Webhook] Failed to update status on payment failure:', err));
+        break;
+      }
+
+      case 'invoice.paid': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId = invoice.customer as string;
+
+        await prisma.subscription.updateMany({
+          where: { stripeCustomerId: customerId },
+          data: {
+            status: 'active',
+            plan: 'pro',
+          },
+        }).catch((err) => console.error('[Webhook] Failed to update status on invoice paid:', err));
         break;
       }
 
       default:
-        console.log(`[Stripe] Nicht behandelter Event-Typ: ${eventType}`);
+        // Unhandled event type
+        break;
     }
 
-    // No durable account/subscription store exists yet. Do not acknowledge delivery.
-    return NextResponse.json({ error: 'Abonnement-Verarbeitung derzeit nicht verfuegbar.' }, { status: 503 });
+    return NextResponse.json({ received: true });
   } catch (err: unknown) {
-    if (err instanceof RequestError) return requestError(err);
-    console.error('[Stripe Webhook Error]:', err);
-    return NextResponse.json({ error: 'Interner Serverfehler bei Webhook-Verarbeitung.' }, { status: 500 });
+    console.error('[Stripe Webhook Handler Error]:', err);
+    return NextResponse.json({ error: 'Internal webhook error' }, { status: 500 });
   }
 }

@@ -10,7 +10,8 @@ import {
   Globe, 
   History, 
   Zap, 
-  Crown 
+  Crown,
+  User
 } from 'lucide-react';
 import { SearchModal } from './SearchModal';
 import { UpgradeModal } from '@/components/monetization/UpgradeModal';
@@ -23,6 +24,16 @@ export function Header() {
   const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>('free');
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/api/v1/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.user) setCurrentUser(d.user);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const updateSubscription = () => {
@@ -172,6 +183,30 @@ export function Header() {
               )}
             </button>
 
+            {/* User Account / Login Button */}
+            {currentUser ? (
+              <Link
+                href="/de/konto"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition"
+                title={currentUser.email}
+              >
+                <User className="w-3.5 h-3.5 text-sky-600" />
+                <span className="hidden sm:inline max-w-[80px] truncate">{currentUser.name || 'Konto'}</span>
+                {currentUser.role === 'ADMIN' && (
+                  <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-bold rounded">
+                    Admin
+                  </span>
+                )}
+              </Link>
+            ) : (
+              <Link
+                href="/de/login"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition"
+              >
+                <span>Anmelden</span>
+              </Link>
+            )}
+
             {/* Pro Upgrade CTA — Desktop only */}
             {!isPro && (
               <button
@@ -266,6 +301,33 @@ export function Header() {
                   <Sparkles className="w-4 h-4 text-amber-500" />
                   Preise & Tarife
                 </Link>
+
+                {currentUser ? (
+                  <Link
+                    href="/de/konto"
+                    onClick={closeMobileMenu}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200"
+                  >
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-sky-600" />
+                      <span>Mein Konto</span>
+                    </div>
+                    {currentUser.role === 'ADMIN' && (
+                      <span className="px-1.5 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-bold rounded">
+                        Admin
+                      </span>
+                    )}
+                  </Link>
+                ) : (
+                  <Link
+                    href="/de/login"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200"
+                  >
+                    <User className="w-4 h-4 text-slate-600" />
+                    <span>Anmelden / Registrieren</span>
+                  </Link>
+                )}
 
                 {/* Divider */}
                 <div className="border-t border-slate-100 my-2" />

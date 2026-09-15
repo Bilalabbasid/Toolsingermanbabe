@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T21:42:29.123Z",
+  "updatedAt": "2026-09-14T23:08:11.965Z",
   "aggregates": {
     "pdf-komprimieren": {
       "toolSlug": "pdf-komprimieren",
@@ -13,13 +13,13 @@
       "totalDurationMs": 903640,
       "totalInputBytes": 4816896000,
       "totalOutputBytes": 1659699200,
-      "proViews": 85,
+      "proViews": 87,
       "proClicks": 38,
       "proSignups": 12
     },
     "pdf-in-word-umwandeln": {
       "toolSlug": "pdf-in-word-umwandeln",
-      "views": 1280,
+      "views": 1282,
       "uploadsStarted": 1000,
       "uploadsCompleted": 950,
       "conversionsStarted": 950,
@@ -51,7 +51,7 @@
     },
     "pdf-zusammenfuegen": {
       "toolSlug": "pdf-zusammenfuegen",
-      "views": 890,
+      "views": 892,
       "uploadsStarted": 760,
       "uploadsCompleted": 710,
       "conversionsStarted": 710,
@@ -290,7 +290,7 @@
       "proSignups": 0
     }
   },
-  "proViewedTotal": 714,
+  "proViewedTotal": 716,
   "proClickedTotal": 317,
   "signupStartedTotal": 216,
   "signupCompletedTotal": 102
