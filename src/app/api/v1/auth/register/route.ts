@@ -4,12 +4,24 @@ import { hashPassword } from '@/server/auth/passwords';
 import { createSession, SESSION_COOKIE_NAME, SESSION_EXPIRY_DAYS, SafeUser } from '@/server/auth/session';
 import { getUserEntitlements } from '@/lib/monetization/entitlements';
 
+import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
+import { IS_PRODUCTION } from '@/config/env.config';
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rate = rateLimiter.check(ip, 'auth');
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: 'Zu viele Registrierungsanfragen. Bitte warten Sie einen Moment.', code: 'RATE_LIMIT_EXCEEDED' },
+        { status: 429, headers: { 'Retry-After': String(rate.resetSeconds) } }
+      );
+    }
+
     const body = await req.json();
     const { email, password, name } = body;
 
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
+    if (!email || typeof email !== 'string' || !email.includes('@') || email.length > 254) {
       return NextResponse.json(
         { error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' },
         { status: 400 }
@@ -18,19 +30,29 @@ export async function POST(req: NextRequest) {
 
     const cleanEmail = email.toLowerCase().trim();
 
-    if (!password || typeof password !== 'string' || password.length < 8) {
+    if (!password || typeof password !== 'string' || password.length < 8 || password.length > 128) {
       return NextResponse.json(
-        { error: 'Das Passwort muss mindestens 8 Zeichen lang sein.' },
+        { error: 'Das Passwort muss zwischen 8 und 128 Zeichen lang sein.' },
         { status: 400 }
       );
     }
 
-    let existingUser = null;
-    if (isDatabaseConfigured()) {
-      existingUser = await prisma.user.findUnique({
-        where: { email: cleanEmail },
-      });
+    if (!isDatabaseConfigured()) {
+      if (IS_PRODUCTION) {
+        return NextResponse.json(
+          { error: 'Registrierungsdienst vorübergehend nicht verfügbar.' },
+          { status: 503 }
+        );
+      }
+      return NextResponse.json(
+        { error: 'Datenbank ist nicht konfiguriert.' },
+        { status: 503 }
+      );
     }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email: cleanEmail },
+    });
 
     if (existingUser) {
       return NextResponse.json(

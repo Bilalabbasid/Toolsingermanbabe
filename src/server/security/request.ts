@@ -16,7 +16,9 @@ export function isProRequest(req: NextRequest): boolean {
   return secretMatches(req.headers.get('x-api-key'), process.env.PRO_API_KEY);
 }
 
-export async function isAdminRequest(req: NextRequest, secret = process.env.ADMIN_SECRET || process.env.CRON_SECRET): Promise<boolean> {
+export async function isAdminRequest(req?: NextRequest, secret = process.env.ADMIN_SECRET || process.env.CRON_SECRET): Promise<boolean> {
+  if (!req) return false;
+
   // 1. Check Bearer secret token (for cron / external API clients)
   const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
   if (authHeader && secretMatches(authHeader.replace(/^Bearer /, ''), secret)) {
@@ -90,6 +92,7 @@ export function requestError(err: unknown): NextResponse {
 export function parseOptions(raw: FormDataEntryValue | null): Record<string, unknown> {
   if (raw === null) return {};
   if (typeof raw !== 'string' || raw.length > 16384) throw new RequestError('INVALID_OPTIONS');
+  if (/"(?:__proto__|constructor|prototype)"\s*:/.test(raw)) throw new RequestError('RESERVED_OPTION');
   let value;
   try { value = JSON.parse(raw); } catch { throw new RequestError('INVALID_OPTIONS'); }
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new RequestError('INVALID_OPTIONS');

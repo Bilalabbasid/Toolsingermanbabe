@@ -11,7 +11,7 @@ export interface RateLimitResult {
   resetSeconds: number;
 }
 
-export type RateLimitAction = 'job' | 'batch' | 'download' | 'security';
+export type RateLimitAction = 'job' | 'batch' | 'download' | 'security' | 'auth' | 'checkout' | 'admin';
 
 interface ActionLimits {
   free: number;
@@ -24,6 +24,9 @@ const ACTION_LIMITS: Record<RateLimitAction, ActionLimits> = {
   batch: { free: 6, pro: 30, windowMs: 60 * 1000 },
   download: { free: 60, pro: 300, windowMs: 60 * 1000 },
   security: { free: 20, pro: 100, windowMs: 60 * 1000 },
+  auth: { free: 10, pro: 20, windowMs: 60 * 1000 },
+  checkout: { free: 15, pro: 30, windowMs: 60 * 1000 },
+  admin: { free: 60, pro: 120, windowMs: 60 * 1000 },
 };
 
 class InMemoryRateLimiter {
@@ -117,5 +120,19 @@ export function getClientIp(req: NextRequest): string {
     const value = req.headers.get(trustedHeader)?.trim();
     if (value && value.length <= 45 && /^[a-fA-F0-9:.]+$/.test(value)) return value;
   }
-  return 'untrusted-origin';
+
+  // Check standard reverse proxy headers (Cloudflare, Azure, nginx)
+  const cfIp = req.headers.get('cf-connecting-ip')?.trim();
+  if (cfIp && cfIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(cfIp)) return cfIp;
+
+  const xRealIp = req.headers.get('x-real-ip')?.trim();
+  if (xRealIp && xRealIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(xRealIp)) return xRealIp;
+
+  const xForwardedFor = req.headers.get('x-forwarded-for')?.trim();
+  if (xForwardedFor) {
+    const firstIp = xForwardedFor.split(',')[0].trim();
+    if (firstIp && firstIp.length <= 45 && /^[a-fA-F0-9:.]+$/.test(firstIp)) return firstIp;
+  }
+
+  return '127.0.0.1';
 }

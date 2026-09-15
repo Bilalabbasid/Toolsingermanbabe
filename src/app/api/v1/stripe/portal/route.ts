@@ -3,8 +3,20 @@ import { getStripe, isStripeConfigured } from '@/server/stripe/client';
 import { requireAuth } from '@/server/auth/guards';
 import { prisma, isDatabaseConfigured } from '@/server/db/prisma';
 
+import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
+import { PUBLIC_CONFIG, IS_PRODUCTION } from '@/config/env.config';
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rate = rateLimiter.check(ip, 'checkout');
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: 'RATE_LIMIT_EXCEEDED', message: 'Zu viele Anfragen.' },
+        { status: 429, headers: { 'Retry-After': String(rate.resetSeconds) } }
+      );
+    }
+
     if (!isStripeConfigured()) {
       return NextResponse.json(
         {
@@ -21,7 +33,13 @@ export async function POST(req: NextRequest) {
     }
 
     const user = await requireAuth(req);
-    const origin = req.headers.get('origin') || process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    let origin = PUBLIC_CONFIG.siteUrl.replace(/\/+$/, '');
+    if (!IS_PRODUCTION) {
+      const clientOrigin = req.headers.get('origin');
+      if (clientOrigin && (clientOrigin.includes('localhost') || clientOrigin.includes('127.0.0.1'))) {
+        origin = clientOrigin;
+      }
+    }
 
     if (!isDatabaseConfigured()) {
       return NextResponse.json({ error: 'DATABASE_UNAVAILABLE' }, { status: 503 });

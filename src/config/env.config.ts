@@ -24,11 +24,22 @@ export const DATABASE_CONFIG = {
 };
 
 // Authentication & Session Security
+const rawAuthSecret = process.env.AUTH_SECRET || '';
+const isDevDefault = rawAuthSecret === 'dev-secret-change-in-production';
+
 export const AUTH_CONFIG = {
-  secret: process.env.AUTH_SECRET || 'dev-secret-change-in-production',
+  secret: rawAuthSecret || (!IS_PRODUCTION ? 'dev-secret-change-in-production' : ''),
+  isConfigured: Boolean(rawAuthSecret && !isDevDefault && rawAuthSecret.length >= 32),
   adminSecret: process.env.ADMIN_SECRET || '',
   initialAdminEmail: process.env.ADMIN_INITIAL_EMAIL || '',
   initialAdminPassword: process.env.ADMIN_INITIAL_PASSWORD || '',
+  assertProductionSecurity(): void {
+    if (IS_PRODUCTION && (!rawAuthSecret || isDevDefault || rawAuthSecret.length < 32)) {
+      throw new Error(
+        'SECURITY FATAL: AUTH_SECRET must be configured with a minimum 32-character secret in production.'
+      );
+    }
+  },
 };
 
 // Stripe Billing Configuration

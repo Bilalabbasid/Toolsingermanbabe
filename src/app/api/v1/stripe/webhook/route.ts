@@ -41,6 +41,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ received: true });
     }
 
+    // Webhook Idempotency & Replay Defense: Ignore already-processed event IDs
+    const existingLog = await prisma.auditLog.findFirst({
+      where: {
+        action: 'STRIPE_WEBHOOK_PROCESSED',
+        targetId: event.id,
+      },
+    });
+
+    if (existingLog) {
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+
     // Process event types
     switch (event.type) {
       case 'checkout.session.completed': {
@@ -140,6 +152,16 @@ export async function POST(req: NextRequest) {
         // Unhandled event type
         break;
     }
+
+    // Persist processed event ID in audit logs for idempotency
+    await prisma.auditLog.create({
+      data: {
+        action: 'STRIPE_WEBHOOK_PROCESSED',
+        targetType: 'StripeEvent',
+        targetId: event.id,
+        metadata: JSON.stringify({ type: event.type, timestamp: new Date().toISOString() }),
+      },
+    }).catch(() => {});
 
     return NextResponse.json({ received: true });
   } catch (err: unknown) {
