@@ -11,7 +11,14 @@ import {
   History, 
   Zap, 
   Crown,
-  User
+  User,
+  FileText,
+  Image as ImageIcon,
+  FileSpreadsheet,
+  Wrench,
+  ShieldCheck,
+  ScanText,
+  ChevronRight,
 } from 'lucide-react';
 import { SearchModal } from './SearchModal';
 import { UpgradeModal } from '@/components/monetization/UpgradeModal';
@@ -96,37 +103,41 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav aria-label="Hauptnavigation" className="hidden md:flex items-center gap-1 lg:gap-2">
+          <nav aria-label="Hauptnavigation" className="hidden md:flex items-center gap-0.5 lg:gap-1">
             <Link
               href="/de/kategorie/pdf"
-              className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
+              <FileText className="w-3.5 h-3.5 text-rose-500" />
               PDF-Tools
             </Link>
             <Link
               href="/de/kategorie/images"
-              className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
+              <ImageIcon className="w-3.5 h-3.5 text-purple-500" />
               Bild-Tools
             </Link>
             <Link
               href="/de/kategorie/documents"
-              className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
               Dokumente
             </Link>
             <Link
               href="/de/kategorie/utilities"
-              className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
-              Text-Tools & Hilfsmittel
+              <Wrench className="w-3.5 h-3.5 text-slate-500" />
+              Werkzeuge
             </Link>
             <Link
               href="/de/preise"
               className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-semibold text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Preise & Tarife</span>
+              <span>Preise &amp; Tarife</span>
             </Link>
           </nav>
 
@@ -268,38 +279,57 @@ export function Header() {
                 <Link
                   href="/de/kategorie/pdf"
                   onClick={closeMobileMenu}
-                  className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  PDF-Tools
+                  <span className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                    <FileText className="w-4 h-4" />
+                  </span>
+                  <span className="flex-1">PDF-Tools</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
                 <Link
                   href="/de/kategorie/images"
                   onClick={closeMobileMenu}
-                  className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  Bild-Tools
+                  <span className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                    <ImageIcon className="w-4 h-4" />
+                  </span>
+                  <span className="flex-1">Bild-Tools</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
                 <Link
                   href="/de/kategorie/documents"
                   onClick={closeMobileMenu}
-                  className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  Dokumente
+                  <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <FileSpreadsheet className="w-4 h-4" />
+                  </span>
+                  <span className="flex-1">Dokumente &amp; Office</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
                 <Link
                   href="/de/kategorie/utilities"
                   onClick={closeMobileMenu}
-                  className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
                 >
-                  Text-Tools & Hilfsmittel
+                  <span className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center shrink-0">
+                    <Wrench className="w-4 h-4" />
+                  </span>
+                  <span className="flex-1">Werkzeuge &amp; Hilfsmittel</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
                 <Link
                   href="/de/preise"
                   onClick={closeMobileMenu}
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-base font-semibold text-sky-700 hover:bg-sky-50 active:bg-sky-100 transition-colors touch-target-48"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-sky-700 hover:bg-sky-50 active:bg-sky-100 transition-colors touch-target-48"
                 >
-                  <Sparkles className="w-4 h-4 text-amber-500" />
-                  Preise & Tarife
+                  <span className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                    <Sparkles className="w-4 h-4" />
+                  </span>
+                  <span className="flex-1">Preise &amp; Tarife</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
 
                 {currentUser ? (

@@ -62,13 +62,13 @@ interface CategoryTab {
 }
 
 const CATEGORY_TABS: CategoryTab[] = [
-  { id: 'all', label: 'Alle Werkzeuge' },
-  { id: 'pdf', label: 'PDF-Tools', category: 'pdf', icon: FileText },
-  { id: 'images', label: 'Bild-Tools', category: 'images', icon: ImageIcon },
-  { id: 'documents', label: 'Dokumente', category: 'documents', icon: FileSpreadsheet },
-  { id: 'security', label: 'Sicherheit', category: 'security', icon: Lock },
-  { id: 'ocr', label: 'OCR & Texterkennung', category: 'ocr', icon: ScanText },
-  { id: 'utilities', label: 'Text & Hilfsprogramme', category: 'utilities', icon: Wrench },
+  { id: 'all',       label: 'Alle Werkzeuge' },
+  { id: 'pdf',       label: 'PDF-Tools',               category: 'pdf',       icon: FileText },
+  { id: 'images',    label: 'Bild-Tools',              category: 'images',    icon: ImageIcon },
+  { id: 'documents', label: 'Dokumente',               category: 'documents', icon: FileSpreadsheet },
+  { id: 'security',  label: 'Sicherheit',              category: 'security',  icon: Lock },
+  { id: 'ocr',       label: 'OCR & Texterkennung',     category: 'ocr',       icon: ScanText },
+  { id: 'utilities', label: 'Text & Hilfsprogramme',   category: 'utilities', icon: Wrench },
 ];
 
 export function HomePageClient({ initialTools }: HomePageClientProps) {
@@ -216,13 +216,24 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
         )}
 
         {/* Category Filter Tabs */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-2 mb-8">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-8">
           {CATEGORY_TABS.map((cat) => {
             const count =
               cat.id === 'all'
                 ? initialTools.length
                 : initialTools.filter((t) => t.category === cat.id).length;
             const isSelected = selectedCategory === cat.id;
+
+            // icon color per category
+            const iconColors: Record<string, string> = {
+              all: 'text-slate-500',
+              pdf: 'text-rose-500',
+              images: 'text-purple-500',
+              documents: 'text-blue-500',
+              security: 'text-amber-600',
+              ocr: 'text-emerald-600',
+              utilities: 'text-slate-600',
+            };
 
             return (
               <button
@@ -237,9 +248,16 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 active:bg-slate-100'
                 }`}
               >
+                {cat.icon && (
+                  <cat.icon
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      isSelected ? 'text-white' : (iconColors[cat.id] || 'text-slate-500')
+                    }`}
+                  />
+                )}
                 {cat.label}
                 <span
-                  className={`text-[11px] px-1.5 py-0.2 rounded-md ${
+                  className={`text-[11px] px-1.5 py-0.5 rounded-md ${
                     isSelected ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-500'
                   }`}
                 >

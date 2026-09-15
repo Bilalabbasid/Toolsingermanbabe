@@ -1,7 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Lock, Cpu, Globe, Heart } from 'lucide-react';
+import { 
+  ShieldCheck, Lock, Cpu, Globe, Heart,
+  FileText, Image as ImageIcon, FileSpreadsheet, 
+  Wrench, Scale, ScanText, Trash2, Music,
+} from 'lucide-react';
 import { CookiePreferencesButton } from './CookiePreferencesButton';
+
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -52,7 +57,8 @@ export function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 mb-10 sm:mb-12 text-sm">
           {/* Col 1: PDF Tools */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-rose-400" />
               Beliebte PDF-Tools
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
@@ -91,7 +97,8 @@ export function Footer() {
 
           {/* Col 2: Bild Tools */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
+              <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
               Bild-Konverter
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
@@ -130,8 +137,9 @@ export function Footer() {
 
           {/* Col 3: Sicherheit & OCR */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
-              Sicherheit & OCR
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+              Sicherheit &amp; OCR
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
@@ -169,8 +177,9 @@ export function Footer() {
 
           {/* Col 4: Dokumente & Audio/Video */}
           <div>
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
-              Office & Medien
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
+              <FileSpreadsheet className="w-3.5 h-3.5 text-blue-400" />
+              Office &amp; Medien
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
@@ -208,8 +217,9 @@ export function Footer() {
 
           {/* Col 5: Rechtliches & Service */}
           <div className="col-span-2 sm:col-span-1">
-            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4">
-              Rechtliches & Service
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
+              <Scale className="w-3.5 h-3.5 text-slate-400" />
+              Rechtliches &amp; Service
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
