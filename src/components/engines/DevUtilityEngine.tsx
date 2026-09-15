@@ -382,51 +382,280 @@ export function DevUtilityEngine({ toolId }: DevUtilityEngineProps) {
   }, [toolId, input]);
 
   // -------------------------------------------------------------
-  // 8. REGEX TESTER
+  // 8. REGEX TESTER (Worker-Isolated with ReDoS Protection)
   // -------------------------------------------------------------
-  const regexResult = useMemo(() => {
-    if (toolId !== 'regex-tester' || !regexPattern) return null;
-    try {
-      const reg = new RegExp(regexPattern, regexFlags);
-      const matches = Array.from(input.matchAll(reg));
-      return {
-        count: matches.length,
-        matches: matches.map((m) => ({
-          match: m[0],
-          index: m.index,
-          groups: m.slice(1),
-        })),
-        valid: true as const,
-        error: null,
-      };
-    } catch (err: any) {
-      return { valid: false as const, error: err?.message || 'Ungültiger Regex', count: 0, matches: [] };
+  const [regexResult, setRegexResult] = useState<{
+    count: number;
+    matches: Array<{ match: string; index?: number; groups?: string[] }>;
+    valid: boolean;
+    error: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    if (toolId !== 'regex-tester' || !regexPattern) {
+      setRegexResult(null);
+      return;
     }
+
+    if (regexPattern.length > 500) {
+      setRegexResult({
+        count: 0,
+        matches: [],
+        valid: false,
+        error: 'Regex-Muster überschreitet die maximale Länge von 500 Zeichen.',
+      });
+      return;
+    }
+
+    if (input.length > 200000) {
+      setRegexResult({
+        count: 0,
+        matches: [],
+        valid: false,
+        error: 'Test-Text überschreitet das Limit von 200.000 Zeichen.',
+      });
+      return;
+    }
+
+    const workerCode = `
+      self.onmessage = function(e) {
+        var pattern = e.data.pattern;
+        var flags = e.data.flags;
+        var text = e.data.text;
+        try {
+          var reg = new RegExp(pattern, flags);
+          var matches = [];
+          var m;
+          var count = 0;
+          var cap = 1000;
+          if (!flags.includes('g')) {
+            var single = reg.exec(text);
+            if (single) {
+              matches.push({ match: single[0], index: single.index, groups: Array.from(single.slice(1)) });
+            }
+          } else {
+            while ((m = reg.exec(text)) !== null) {
+              matches.push({ match: m[0], index: m.index, groups: Array.from(m.slice(1)) });
+              count++;
+              if (count >= cap) break;
+              if (m[0].length === 0) reg.lastIndex++;
+            }
+          }
+          self.postMessage({ success: true, matches: matches });
+        } catch (err) {
+          self.postMessage({ success: false, error: err.message });
+        }
+      };
+    `;
+
+    let worker: Worker | null = null;
+    let workerUrl = '';
+    try {
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      workerUrl = URL.createObjectURL(blob);
+      worker = new Worker(workerUrl);
+    } catch {
+      try {
+        const reg = new RegExp(regexPattern, regexFlags);
+        const matches = Array.from(input.matchAll(reg)).slice(0, 1000);
+        setRegexResult({
+          count: matches.length,
+          matches: matches.map((m) => ({ match: m[0], index: m.index, groups: m.slice(1) })),
+          valid: true,
+          error: null,
+        });
+      } catch (err: any) {
+        setRegexResult({ count: 0, matches: [], valid: false, error: err?.message || 'Ungültiger Regex' });
+      }
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      if (worker) {
+        worker.terminate();
+        setRegexResult({
+          count: 0,
+          matches: [],
+          valid: false,
+          error: 'Zeitüberschreitung (ReDoS-Schutz): Der reguläre Ausdruck benötigt zu viele Backtracking-Schritte und wurde nach 500ms gestoppt.',
+        });
+      }
+    }, 500);
+
+    worker.onmessage = (e) => {
+      clearTimeout(timeout);
+      if (e.data.success) {
+        setRegexResult({
+          count: e.data.matches.length,
+          matches: e.data.matches,
+          valid: true,
+          error: null,
+        });
+      } else {
+        setRegexResult({
+          count: 0,
+          matches: [],
+          valid: false,
+          error: e.data.error || 'Ungültiger regulärer Ausdruck',
+        });
+      }
+      worker?.terminate();
+      if (workerUrl) URL.revokeObjectURL(workerUrl);
+    };
+
+    worker.onerror = (err) => {
+      clearTimeout(timeout);
+      setRegexResult({
+        count: 0,
+        matches: [],
+        valid: false,
+        error: 'Fehler bei der Regex-Auswertung: ' + err.message,
+      });
+      worker?.terminate();
+      if (workerUrl) URL.revokeObjectURL(workerUrl);
+    };
+
+    worker.postMessage({ pattern: regexPattern, flags: regexFlags, text: input });
+
+    return () => {
+      clearTimeout(timeout);
+      if (worker) worker.terminate();
+      if (workerUrl) URL.revokeObjectURL(workerUrl);
+    };
   }, [toolId, regexPattern, regexFlags, input]);
 
   // -------------------------------------------------------------
-  // 9. CODE FORMATTERS (HTML, CSS, JS)
+  // 9. CODE FORMATTERS (HTML, CSS, JS with String Preservation)
   // -------------------------------------------------------------
+  const safeMinifyJs = (code: string): string => {
+    let result = '';
+    let inSingle = false;
+    let inDouble = false;
+    let inTemplate = false;
+    let inBlockComment = false;
+    let inLineComment = false;
+
+    for (let i = 0; i < code.length; i++) {
+      const char = code[i];
+      const next = code[i + 1];
+
+      if (inLineComment) {
+        if (char === '\n') {
+          inLineComment = false;
+          result += '\n';
+        }
+        continue;
+      }
+
+      if (inBlockComment) {
+        if (char === '*' && next === '/') {
+          inBlockComment = false;
+          i++;
+        }
+        continue;
+      }
+
+      if (inSingle) {
+        result += char;
+        if (char === '\\') {
+          result += next || '';
+          i++;
+        } else if (char === "'") {
+          inSingle = false;
+        }
+        continue;
+      }
+
+      if (inDouble) {
+        result += char;
+        if (char === '\\') {
+          result += next || '';
+          i++;
+        } else if (char === '"') {
+          inDouble = false;
+        }
+        continue;
+      }
+
+      if (inTemplate) {
+        result += char;
+        if (char === '\\') {
+          result += next || '';
+          i++;
+        } else if (char === '`') {
+          inTemplate = false;
+        }
+        continue;
+      }
+
+      if (char === '/' && next === '/') {
+        inLineComment = true;
+        i++;
+        continue;
+      }
+      if (char === '/' && next === '*') {
+        inBlockComment = true;
+        i++;
+        continue;
+      }
+
+      if (char === "'") {
+        inSingle = true;
+        result += char;
+        continue;
+      }
+      if (char === '"') {
+        inDouble = true;
+        result += char;
+        continue;
+      }
+      if (char === '`') {
+        inTemplate = true;
+        result += char;
+        continue;
+      }
+
+      result += char;
+    }
+
+    return result
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .join(' ')
+      .replace(/\s*([{};:,=+\-*/<>!&|])\s*/g, '$1')
+      .trim();
+  };
+
+  const safeMinifyCss = (css: string): string => {
+    return css
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s*([{};:,>+~])\s*/g, '$1')
+      .replace(/;}/g, '}')
+      .trim();
+  };
+
+  const safeMinifyHtml = (html: string): string => {
+    return html
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/>\s+</g, '><')
+      .trim();
+  };
+
   const handleFormatCode = (type: 'html' | 'css' | 'js', mode: 'beautify' | 'minify') => {
     setError(null);
     if (!input.trim()) return;
     try {
       if (mode === 'minify') {
         if (type === 'html') {
-          setOutput(input.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ').trim());
+          setOutput(safeMinifyHtml(input));
         } else if (type === 'css') {
-          setOutput(
-            input
-              .replace(/\/\*[\s\S]*?\*\//g, '')
-              .replace(/\s*([\{\}:;,])\s*/g, '$1')
-              .replace(/;\}/g, '}')
-              .trim()
-          );
+          setOutput(safeMinifyCss(input));
         } else {
-          setOutput(input.replace(/\/\/[^\n]*|\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim());
+          setOutput(safeMinifyJs(input));
         }
       } else {
-        // Simple beautifier
+        // Beautifier
         if (type === 'html') {
           let indent = 0;
           const formatted = input
@@ -452,7 +681,6 @@ export function DevUtilityEngine({ toolId }: DevUtilityEngineProps) {
             .trim();
           setOutput(formatted);
         } else {
-          // JS / JSON format
           try {
             const parsed = JSON.parse(input);
             setOutput(JSON.stringify(parsed, null, 2));

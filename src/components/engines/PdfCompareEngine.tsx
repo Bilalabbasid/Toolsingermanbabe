@@ -282,9 +282,9 @@ export function PdfCompareEngine() {
       {!result ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
           <div className="text-center max-w-xl mx-auto mb-8">
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Zwei PDF-Dokumente gegenüberstellen</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-2">PDF Text-Vergleich & Differenz-Analyse</h2>
             <p className="text-sm text-slate-600">
-              Laden Sie das Original und die überarbeitete Fassung hoch. CoolWave analysiert Texte, Wörter und Absätze seitenweise und hebt Änderungen farblich hervor.
+              Laden Sie das Original und die überarbeitete Fassung hoch. CoolWave analysiert Texte, Wörter und Absätze seitenweise und hebt Textabweichungen farblich hervor. (Hinweis: Semantischer Text- und Wortvergleich, kein visueller Pixel-Diff).
             </p>
           </div>
 

@@ -22,6 +22,7 @@ import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { runConcurrentBatch } from '@/lib/batch-queue';
 import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
+import { getClientSubscription } from '@/lib/monetization/subscription';
 
 export type RepairOptimizeMode = 'repair' | 'optimize' | 'pdfa' | 'flatten' | 'strip-annotations';
 
@@ -49,7 +50,7 @@ export function PdfRepairOptimizeEngine({
   const [isZipping, setIsZipping] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const isPro = getClientSubscription().isPro;
   const limits = getBatchLimits(isPro);
 
   const handleFilesSelected = (files: File[]) => {
@@ -128,47 +129,56 @@ export function PdfRepairOptimizeEngine({
       pdf.setCreator('CoolWave');
       audit = `Objektströme komprimiert und ungenutzte Strukturdaten bereinigt.`;
     } else if (mode === 'pdfa') {
-      onProgress?.(50, 'PDF/A-1b XMP-Metadaten & Farbprofil einbetten...');
-      suffix = '_pdfa.pdf';
-      pdf.setTitle(file.name.replace(/\.[^/.]+$/, ''));
-      pdf.setSubject('ISO 19005-1 PDF/A-1b Archivdokument');
-      pdf.setProducer('CoolWave PDF/A Archival Engine');
-      pdf.setCreator('CoolWave');
-      try {
-        pdf.catalog.delete(PDFName.of('JavaScript'));
-        pdf.catalog.delete(PDFName.of('AA'));
-        pdf.catalog.delete(PDFName.of('OpenAction'));
+      onProgress?.(30, 'Dokument an PDF/A-Archivierungsservice übermitteln...');
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'pdf_pdfa');
 
-        // Embed PDF/A OutputIntent
-        const outputIntent = pdf.context.obj({
-          Type: 'OutputIntent',
-          S: 'GTS_PDFA1',
-          OutputConditionIdentifier: PDFName.of('Custom'),
-          Info: 'sRGB IEC61966-2.1',
-        });
-        const outputIntentRef = pdf.context.register(outputIntent);
-        pdf.catalog.set(PDFName.of('OutputIntents'), pdf.context.obj([outputIntentRef]));
+      const res = await fetch('/api/v1/jobs', {
+        method: 'POST',
+        body: formData,
+      });
 
-        // Embed PDF/A-1b XMP metadata packet
-        const xmp = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
-<x:xmpmeta xmlns:x="adobe:ns:meta/">
-  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
-      <pdfaid:part>1</pdfaid:part>
-      <pdfaid:conformance>B</pdfaid:conformance>
-    </rdf:Description>
-  </rdf:RDF>
-</x:xmpmeta>
-<?xpacket end="w"?>`;
-        const xmpStream = pdf.context.flateStream(xmp);
-        xmpStream.dict.set(PDFName.of('Type'), PDFName.of('Metadata'));
-        xmpStream.dict.set(PDFName.of('Subtype'), PDFName.of('XML'));
-        const xmpRef = pdf.context.register(xmpStream);
-        pdf.catalog.set(PDFName.of('Metadata'), xmpRef);
-      } catch (e) {
-        console.warn('PDF/A XMP embedding warning:', e);
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || 'Serverfehler bei der PDF/A-Konvertierung.');
       }
-      audit = `ISO 19005-1 (PDF/A-1b) Konformitätspaket integriert. Dynamische Skripte entfernt.`;
+
+      const jobData = await res.json();
+      const jobId = jobData.jobId;
+
+      onProgress?.(50, 'Ghostscript ISO 19005 Konvertierung läuft...');
+      let attempts = 0;
+      let completedJob = null;
+      while (attempts < 60) {
+        await new Promise((r) => setTimeout(r, 1000));
+        attempts++;
+        const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+        if (!pollRes.ok) continue;
+        const statusData = await pollRes.json();
+        if (statusData.status === 'completed') {
+          completedJob = statusData;
+          break;
+        }
+        if (statusData.status === 'failed') {
+          throw new Error(statusData.error || 'PDF/A-Konvertierung fehlgeschlagen.');
+        }
+      }
+
+      if (!completedJob) throw new Error('Zeitüberschreitung bei der PDF/A-Konvertierung.');
+
+      const downloadRes = await fetch(`/api/v1/jobs/${jobId}/download`);
+      if (!downloadRes.ok) throw new Error('Download des PDF/A-Dokuments fehlgeschlagen.');
+
+      const blob = await downloadRes.blob();
+      const outName = `${file.name.replace(/\.[^/.]+$/, '')}_pdfa.pdf`;
+      onProgress?.(100, 'Fertig');
+      return {
+        blob,
+        fileName: outName,
+        audit: 'Authentische ISO 19005-1 (PDF/A-1b) Archivierung erfolgreich abgeschlossen.',
+        size: blob.size,
+      };
     } else if (mode === 'flatten') {
       onProgress?.(50, 'Formularfelder dauerhaft einbrennen...');
       suffix = '_abgeflacht.pdf';

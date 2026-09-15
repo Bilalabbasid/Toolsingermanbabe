@@ -11,6 +11,7 @@ import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { runConcurrentBatch } from '@/lib/batch-queue';
 import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
+import { getClientSubscription } from '@/lib/monetization/subscription';
 
 export function ImageCompressEngine() {
   const [singleFile, setSingleFile] = useState<File | null>(null);
@@ -28,7 +29,7 @@ export function ImageCompressEngine() {
   const [isZipping, setIsZipping] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const isPro = getClientSubscription().isPro;
   const limits = getBatchLimits(isPro);
 
   const handleFilesSelected = (files: File[]) => {
@@ -101,6 +102,21 @@ export function ImageCompressEngine() {
       if (file.type === 'image/png' || /\.png$/i.test(file.name)) {
         targetMime = 'image/png';
         ext = '.png';
+        // Genuine PNG optimization: Palette reduction & quantization for DEFLATE compression efficiency
+        if (qualityLevel < 95) {
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imgData.data;
+          const step = Math.max(2, Math.round((100 - qualityLevel) / 3));
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] = Math.min(255, Math.round(data[i] / step) * step);
+            data[i + 1] = Math.min(255, Math.round(data[i + 1] / step) * step);
+            data[i + 2] = Math.min(255, Math.round(data[i + 2] / step) * step);
+            if (data[i + 3] > 15) {
+              data[i + 3] = Math.min(255, Math.round(data[i + 3] / step) * step);
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+        }
       } else if (file.type === 'image/webp' || /\.webp$/i.test(file.name)) {
         targetMime = 'image/webp';
         ext = '.webp';

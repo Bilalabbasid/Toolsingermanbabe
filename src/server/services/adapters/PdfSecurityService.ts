@@ -123,8 +123,13 @@ export class PdfSecurityService implements IConversionService {
 
       const recryptOptions: Record<string, unknown> = {};
       if (userPassword) recryptOptions.userPassword = userPassword;
-      // Always enforce an independent owner password to prevent user password from having owner/admin rights
-      recryptOptions.ownerPassword = ownerPassword || crypto.randomBytes(16).toString('hex');
+      // Always enforce an independent owner password. In ISO 32000, if ownerPassword equals userPassword,
+      // the document permissions are bypassed by anyone with the user password.
+      if (!ownerPassword || ownerPassword === userPassword) {
+        recryptOptions.ownerPassword = crypto.randomBytes(16).toString('hex');
+      } else {
+        recryptOptions.ownerPassword = ownerPassword;
+      }
 
       if (permissions) {
         recryptOptions.userProtectionFlag = computeUserProtectionFlag(permissions);
@@ -228,7 +233,8 @@ export class PdfSecurityService implements IConversionService {
   }
 
   /**
-   * Completely removes all metadata, producer/author tags, dates, and Adobe XMP XML packets
+   * Completely removes all metadata, producer/author tags, custom Info keys,
+   * embedded file names, and Adobe XMP XML packets
    */
   async stripMetadata(inputBuffer: Buffer): Promise<Buffer> {
     const doc = await PDFDocument.load(inputBuffer, { ignoreEncryption: true });
@@ -243,12 +249,31 @@ export class PdfSecurityService implements IConversionService {
     doc.setCreationDate(new Date(0));
     doc.setModificationDate(new Date(0));
 
+    // Wipe all custom keys in the Info dictionary
+    try {
+      const infoDict = (doc as any).getInfoDict();
+      if (infoDict && typeof infoDict.keys === 'function') {
+        const keys = infoDict.keys();
+        for (const key of keys) {
+          infoDict.delete(key);
+        }
+      }
+    } catch {}
+
     // 2. Erase Adobe XMP /Metadata stream, PieceInfo, and Names from catalog
     if (doc.catalog.has(PDFName.of('Metadata'))) {
       doc.catalog.delete(PDFName.of('Metadata'));
     }
     if (doc.catalog.has(PDFName.of('PieceInfo'))) {
       doc.catalog.delete(PDFName.of('PieceInfo'));
+    }
+    if (doc.catalog.has(PDFName.of('Names'))) {
+      try {
+        const names = doc.catalog.get(PDFName.of('Names'));
+        if (names && typeof (names as any).delete === 'function') {
+          (names as any).delete(PDFName.of('EmbeddedFiles'));
+        }
+      } catch {}
     }
 
     // 3. Clear piece info on individual pages
@@ -264,7 +289,7 @@ export class PdfSecurityService implements IConversionService {
   }
 
   /**
-   * Cryptographic and visual PDF signing
+   * Visual PDF signature and document stamp
    */
   async signPdf(
     inputBuffer: Buffer,
@@ -290,10 +315,10 @@ export class PdfSecurityService implements IConversionService {
     });
 
     const signer = options.signerName || 'CoolWave Benutzer';
-    const reason = options.reason || 'Dokumentenfreigabe & Integrität';
+    const reason = options.reason || 'Dokumentenfreigabe & Sichtvermerk';
 
-    const stampWidth = options.width || 220;
-    const stampHeight = options.height || 70;
+    const stampWidth = options.width || 230;
+    const stampHeight = options.height || 75;
     const posX = options.x ?? Math.max(30, pageWidth - stampWidth - 40);
     const posY = options.y ?? Math.max(30, 40);
 
@@ -330,11 +355,11 @@ export class PdfSecurityService implements IConversionService {
       }
     }
 
-    // 3. Draw verification text
-    targetPage.drawText('CoolWave Elektronische Signatur', {
+    // 3. Draw verification text (accurately labeled as visual signature / stamp)
+    targetPage.drawText('CoolWave Visuelle Signatur / Dokumentenstempel', {
       x: posX,
       y: posY + stampHeight - 8,
-      size: 8,
+      size: 7.5,
       font: fontBold,
       color: rgb(0.1, 0.4, 0.8),
     });
@@ -363,7 +388,7 @@ export class PdfSecurityService implements IConversionService {
       color: rgb(0.4, 0.4, 0.4),
     });
 
-    targetPage.drawText(`SHA-256 Integrität: #${docHash.toUpperCase()}`, {
+    targetPage.drawText(`Dokument-Hash (SHA-256): #${docHash.toUpperCase()}`, {
       x: posX,
       y: posY + stampHeight - 52,
       size: 6.5,
@@ -371,10 +396,10 @@ export class PdfSecurityService implements IConversionService {
       color: rgb(0.2, 0.5, 0.2),
     });
 
-    // 3. Set PDF metadata audit record
-    doc.setCreator('CoolWave Secure Sign Engine');
-    doc.setProducer('CoolWave Cloud Verification Service');
-    doc.setSubject(`Digital signiert durch ${signer} am ${formattedDate} (${reason})`);
+    // 4. Set PDF metadata audit record
+    doc.setCreator('CoolWave Sign Engine');
+    doc.setProducer('CoolWave Visual Signature Service');
+    doc.setSubject(`Visuell signiert durch ${signer} am ${formattedDate} (${reason})`);
 
     const outputBytes = await doc.save({ useObjectStreams: true });
     return Buffer.from(outputBytes);

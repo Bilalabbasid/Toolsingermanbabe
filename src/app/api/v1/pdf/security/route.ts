@@ -8,7 +8,7 @@ import { privacyLog } from '@/server/utils/privacyLogger';
 export async function POST(req: NextRequest) {
   try {
     const apiKey = req.headers.get('x-api-key');
-    const isPro = isProRequest(req);
+    const isPro = await isProRequest(req);
 
     // 0. Rate limiting
     const ip = getClientIp(req);

@@ -13,7 +13,7 @@ export async function submitJobs(req: NextRequest, batch: boolean): Promise<Next
   const savedPaths: string[] = [];
   let committed = false;
   try {
-    const isPro = isProRequest(req);
+    const isPro = await isProRequest(req);
     const limits = getBatchLimits(isPro);
     const rate = rateLimiter.check(getClientIp(req), batch ? 'batch' : 'job', isPro);
     if (!rate.allowed) return NextResponse.json({ error: 'Zu viele Anfragen.', code: 'RATE_LIMIT_EXCEEDED' }, { status: 429, headers: { 'Retry-After': String(rate.resetSeconds) } });

@@ -143,7 +143,7 @@ export function PdfSignEngine() {
     setIsProcessing(true);
     setError(null);
     setProgress(20);
-    setStatusText('Signatur und SHA-256 Integritätsstempel werden generiert...');
+    setStatusText('Visuelle Signatur und Prüfstempel werden vorbereitet...');
 
     try {
       const formData = new FormData();
@@ -174,7 +174,7 @@ export function PdfSignEngine() {
       }
 
       setProgress(85);
-      setStatusText('Kryptografische Signatur wird eingebettet...');
+      setStatusText('Visuelle Signatur und Prüfstempel werden eingebettet...');
 
       const blob = await res.blob();
       const contentDisposition = res.headers.get('Content-Disposition');
@@ -239,7 +239,7 @@ export function PdfSignEngine() {
           maxFileSizeMB={50}
           onFilesSelected={handleFileSelected}
           title="PDF zum Signieren ablegen"
-          subtitle="Rechtssichere digitale Signatur mit SHA-256 Integritätsprüfung erstellen"
+          subtitle="Visuelle Signatur (Unterschrift & Prüfstempel) in PDF einfügen"
         />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
@@ -410,11 +410,12 @@ export function PdfSignEngine() {
             <div className="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-1.5 text-xs text-emerald-950">
               <div className="flex items-center gap-1.5 font-bold text-emerald-900">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Digitale CoolWave Prüfmarke</span>
+                <span>Visuelle CoolWave Prüfmarke</span>
               </div>
               <p className="text-emerald-900/80 leading-relaxed text-[11px]">
-                Das Dokument erhält auf der letzten Seite einen fälschungssicheren Prüfstempel
-                inklusive aktuellem Zeitstempel und SHA-256 Integritätshash.
+                Das Dokument erhält auf der letzten Seite einen sichtbaren Prüfstempel inklusive
+                Zeitstempel und SHA-256 Dokumenten-Hash als Nachweis der Freigabe. Hinweis:
+                Dies ist eine einfache visuelle Signatur (kein qualifiziertes X.509-Zertifikat).
               </p>
             </div>
 

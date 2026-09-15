@@ -466,20 +466,20 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     sourceFormats: ['.pdf'],
     targetFormats: ['.pdf'],
     nameDe: 'PDF signieren',
-    shortDescriptionDe: 'Signieren Sie Verträge und PDF-Dokumente digital mit eigener Unterschrift und fälschungssicherer SHA-256 Integritätsprüfung.',
-    titleDe: 'PDF signieren – kostenlos digital & elektronisch unterschreiben | CoolWave',
-    metaDescriptionDe: 'PDF kostenlos online digital signieren. Eigene Unterschrift zeichnen, tippen oder hochladen. Mit Zeitstempel & SHA-256 Prüfmarke nach europäischen Standards.',
-    h1De: 'PDF signieren – digital, schnell & rechtssicher',
-    introDe: 'Bringen Sie Ihre verbindliche Unterschrift schnell und unkompliziert auf PDF-Dokumente. Zeichnen Sie per Maus oder Touchscreen, tippen Sie Ihren Namen in ansprechender Handschrift oder laden Sie ein Signaturbild hoch. Zusätzlich bettet CoolWave auf Wunsch eine kryptografische SHA-256 Prüfmarke mit exaktem Zeitstempel ein.',
+    shortDescriptionDe: 'Fügen Sie Ihre handschriftliche Unterschrift und einen Prüfstempel mit Zeitangabe und SHA-256 Hash visuell in PDF-Dokumente ein.',
+    titleDe: 'PDF signieren – visuell & unkompliziert unterschreiben | CoolWave',
+    metaDescriptionDe: 'PDF online visuell signieren. Eigene Unterschrift zeichnen, tippen oder hochladen. Mit Zeitstempel & Prüfstempel.',
+    h1De: 'PDF signieren – visuelle Unterschrift & Dokumentenstempel',
+    introDe: 'Bringen Sie Ihre handschriftliche Unterschrift schnell und unkompliziert auf PDF-Dokumente. Zeichnen Sie per Maus oder Touchscreen, tippen Sie Ihren Namen in ansprechender Handschrift oder laden Sie ein Signaturbild hoch. Zusätzlich bettet CoolWave auf Wunsch eine visuelle Prüfmarke mit exaktem Zeitstempel und Dokumenten-Hash ein.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Laden Sie das zu unterzeichnende Dokument in das Signatur-Tool hoch.' },
       { step: 2, title: 'Signatur erstellen', text: 'Zeichnen Sie Ihre Unterschrift, tippen Sie Ihren Namen oder laden Sie eine transparente Bilddatei hoch.' },
-      { step: 3, title: 'Signiertes PDF laden', text: 'Klicken Sie auf „PDF jetzt signieren“ und laden Sie Ihr rechtssicher vorbereitetes Dokument herunter.' }
+      { step: 3, title: 'Signiertes PDF laden', text: 'Klicken Sie auf „PDF jetzt signieren“ und laden Sie Ihr vorbereitetes Dokument herunter.' }
     ],
     faqDe: [
-      { question: 'Ist die Signatur mit CoolWave rechtlich bindend?', answer: 'Für die meisten vertraglichen Vereinbarungen des Alltags (z. B. Mietverträge, Angebote, Genehmigungen) ist die einfache elektronische Signatur gemäß eIDAS vollumfänglich anerkannt.' },
+      { question: 'Ist die Signatur mit CoolWave ein qualifiziertes digitales Zertifikat?', answer: 'Nein, CoolWave fügt eine visuelle elektronische Signatur (Dokumentenstempel / Unterschriftsabbildung) ein. Für Verträge, die gesetzlich eine qualifizierte elektronische Signatur (QES) mit kryptografischem Hardware-Zertifikat vorschreiben, ist ein spezieller Signatur-Dienstleister erforderlich.' },
       { question: 'Wird meine Unterschrift auf fremden Servern gespeichert?', answer: 'Nein! CoolWave speichert Ihre Unterschrift niemals in Benutzerprofilen oder Datenbanken. Nach Abschluss der Verarbeitung wird der temporäre Speicher sofort gelöscht.' },
-      { question: 'Was bedeutet der SHA-256 Integritätsstempel?', answer: 'Er berechnet einen eindeutigen mathematischen Fingerabdruck der Originaldatei, sodass spätere Manipulationen am Dokument sofort auffallen.' }
+      { question: 'Was bedeutet der SHA-256 Prüfstempel?', answer: 'Er dokumentiert den SHA-256 Prüfwert des Originaldokuments zum Zeitpunkt der visuellen Signaturerstellung im Stempel.' }
     ],
     troubleshootingDe: [
       {

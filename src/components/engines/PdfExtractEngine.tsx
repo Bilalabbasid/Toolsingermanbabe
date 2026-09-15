@@ -187,35 +187,7 @@ export function PdfExtractEngine({
           }
         }
 
-        // Fallback: If no raw XObjects were extracted, render page snapshots as high-res images
-        if (images.length === 0) {
-          for (let p = 1; p <= Math.min(totalPages, 5); p++) {
-            const page = await doc.getPage(p);
-            const viewport = page.getViewport({ scale: 1.5 });
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-              await page.render({ canvasContext: ctx, viewport }).promise;
-              const blob = await new Promise<Blob | null>((resolve) =>
-                canvas.toBlob((b) => resolve(b), 'image/png')
-              );
-              if (blob) {
-                images.push({
-                  id: `fallback_${p}`,
-                  name: `seite_${p}.png`,
-                  blob,
-                  width: Math.round(viewport.width),
-                  height: Math.round(viewport.height),
-                  size: blob.size,
-                  dataUrl: canvas.toDataURL('image/png'),
-                });
-              }
-            }
-          }
-        }
-
+        // Store only genuine embedded images (XObjects)
         setExtractedImages(images);
       } else if (mode === 'attachments') {
         setProgress(50);
@@ -271,6 +243,58 @@ export function PdfExtractEngine({
       setIsProcessing(false);
       alert(`Fehler beim Extrahieren: ${err?.message || 'Unbekannter Fehler'}`);
       trackEvent('conversion_failed', { toolSlug, mode });
+    }
+  };
+
+  const renderAllPageSnapshots = async () => {
+    if (!file) return;
+    setIsProcessing(true);
+    setProgress(15);
+    setStatusText('PDF-Seiten werden als Bilder gerendert...');
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfjsLib = await getClientPdfJs();
+      const doc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+      const totalPages = doc.numPages;
+      const images: ExtractedImage[] = [];
+
+      for (let p = 1; p <= totalPages; p++) {
+        setProgress(15 + Math.round((p / totalPages) * 80));
+        setStatusText(`Seite ${p} von ${totalPages} wird als Bild gerendert...`);
+
+        const page = await doc.getPage(p);
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          await page.render({ canvasContext: ctx, viewport }).promise;
+          const blob = await new Promise<Blob | null>((resolve) =>
+            canvas.toBlob((b) => resolve(b), 'image/png')
+          );
+          if (blob) {
+            images.push({
+              id: `page_${p}`,
+              name: `seite_${p}.png`,
+              blob,
+              width: Math.round(viewport.width),
+              height: Math.round(viewport.height),
+              size: blob.size,
+              dataUrl: canvas.toDataURL('image/png'),
+            });
+          }
+        }
+      }
+
+      setExtractedImages(images);
+      setProgress(100);
+      setIsProcessing(false);
+    } catch (err) {
+      console.error(err);
+      setIsProcessing(false);
+      alert('Fehler beim Rendern der Seiten als Bilder.');
     }
   };
 
@@ -458,10 +482,20 @@ export function PdfExtractEngine({
           {mode === 'images' && (
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
               {extractedImages.length === 0 ? (
-                <div className="text-center py-12 text-slate-500">
+                <div className="text-center py-12 text-slate-500 max-w-md mx-auto">
                   <ImageIcon className="w-10 h-10 mx-auto mb-3 text-slate-300" />
                   <p className="font-semibold text-slate-700">Keine eingebetteten Rasterbilder gefunden</p>
-                  <p className="text-xs text-slate-500 mt-1">Dieses Dokument enthält reine Vektorgrafiken oder reinen Text.</p>
+                  <p className="text-xs text-slate-500 mt-1 mb-6">
+                    Dieses Dokument enthält keine separat eingebetteten JPG/PNG-Bilder (XObjects), sondern besteht aus Vektorgrafiken und Text.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={renderAllPageSnapshots}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold transition-colors shadow-sm"
+                  >
+                    <Layers className="w-4 h-4" />
+                    <span>Alle PDF-Seiten als Bild rendern (Seiten-Snapshot)</span>
+                  </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

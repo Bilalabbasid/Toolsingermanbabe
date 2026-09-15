@@ -15,6 +15,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     poppler-utils \
     ghostscript \
+    libreoffice-nogui \
+    libreoffice-writer \
+    libreoffice-calc \
+    libreoffice-impress \
+    tesseract-ocr \
+    tesseract-ocr-deu \
+    tesseract-ocr-eng \
     fonts-dejavu-core \
     fonts-liberation \
     p7zip-full \

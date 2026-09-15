@@ -12,8 +12,22 @@ export function secretMatches(value: string | null | undefined, secret: string |
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-export function isProRequest(req: NextRequest): boolean {
-  return secretMatches(req.headers.get('x-api-key'), process.env.PRO_API_KEY);
+export async function isProRequest(req: NextRequest): Promise<boolean> {
+  if (secretMatches(req.headers.get('x-api-key'), process.env.PRO_API_KEY)) {
+    return true;
+  }
+
+  try {
+    const { getCurrentUser } = await import('@/server/auth/guards');
+    const user = await getCurrentUser(req);
+    if (user && (user.plan === 'pro' || user.plan === 'business' || user.role === 'ADMIN')) {
+      return true;
+    }
+  } catch {
+    // Ignore auth lookup errors and safely fallback
+  }
+
+  return false;
 }
 
 export async function isAdminRequest(req?: NextRequest, secret = process.env.ADMIN_SECRET || process.env.CRON_SECRET): Promise<boolean> {

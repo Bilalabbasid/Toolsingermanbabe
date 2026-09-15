@@ -23,6 +23,7 @@ import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { runConcurrentBatch } from '@/lib/batch-queue';
 import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
+import { getClientSubscription } from '@/lib/monetization/subscription';
 
 export type ImageTargetFormat =
   | 'PNG'
@@ -59,7 +60,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
   const [isZipping, setIsZipping] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const isPro = getClientSubscription().isPro;
   const limits = getBatchLimits(isPro);
 
   const handleFilesSelected = (newFiles: File[]) => {

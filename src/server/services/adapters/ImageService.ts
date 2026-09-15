@@ -134,45 +134,83 @@ export class ImageService implements IConversionService {
       };
     }
 
-    // PDF -> SVG: True vector text & geometry extraction via pdfjs-dist
+    // PDF -> SVG: Genuine vector/image extraction via Poppler or high-res rendered canvas
     if (ext === "pdf" && target === "svg") {
       onProgress(20);
+      const targetPageNum = Math.max(1, Number(options.page || (options.pageIndex ? Number(options.pageIndex) + 1 : 1)) || 1);
+
+      // 1. Try native pdftocairo (true vector + embedded raster graphics)
       try {
+        const { isPdfToCairoAvailable, convertPdfToSvgWithPoppler } = await import("./popplerRunner");
+        if (await isPdfToCairoAvailable()) {
+          const svgData = await convertPdfToSvgWithPoppler(inputBuffer, targetPageNum);
+          onProgress(100);
+          return {
+            data: svgData,
+            fileName: `${baseName}.svg`,
+            mimeType: "image/svg+xml",
+          };
+        }
+      } catch (cairoErr) {
+        console.warn("[ImageService] pdftocairo fallback to in-process canvas renderer:", cairoErr);
+      }
+
+      // 2. High-fidelity in-process canvas renderer fallback
+      try {
+        const napi = await import("@napi-rs/canvas");
+        const canvasGlobals = globalThis as unknown as Record<string, unknown>;
+        if (!canvasGlobals.Path2D) canvasGlobals.Path2D = napi.Path2D;
+        if (!canvasGlobals.ImageData) canvasGlobals.ImageData = napi.ImageData;
+        if (!canvasGlobals.DOMMatrix) canvasGlobals.DOMMatrix = napi.DOMMatrix;
+        if (!canvasGlobals.DOMPoint) canvasGlobals.DOMPoint = napi.DOMPoint;
+
         const pdfjsLib = await getLoadedPdfJs();
         const loadingTask = pdfjsLib.getDocument(getPdfJsDocumentOptions(inputBuffer));
         const pdf = await loadingTask.promise;
-        const page1 = await pdf.getPage(1);
-        const viewport = page1.getViewport({ scale: 1.0 });
-        const width = Math.round(viewport.width);
-        const height = Math.round(viewport.height);
+        const pageCount = pdf.numPages;
+        const validPage = Math.min(Math.max(1, targetPageNum), pageCount);
+
+        const page = await pdf.getPage(validPage);
+        const scale = 2.0; // Render at 2x for sharp high-DPI visual fidelity
+        const viewport = page.getViewport({ scale });
+        const ptWidth = Math.round(viewport.width / scale);
+        const ptHeight = Math.round(viewport.height / scale);
 
         onProgress(50);
-        const textContent = await page1.getTextContent();
+        const canvas = napi.createCanvas(Math.ceil(viewport.width), Math.ceil(viewport.height));
+        await page.render({ canvasContext: canvas.getContext("2d") as never, viewport }).promise;
+        const pngBuffer = canvas.toBuffer("image/png");
+
+        onProgress(75);
+        const textContent = await page.getTextContent();
         const escapeXml = (str: string) =>
           str
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&apos;');
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&apos;");
 
         const textElements: string[] = [];
         for (const item of textContent.items as Array<{ str: string; transform: number[]; fontName?: string }>) {
           if (!item.str || !item.str.trim()) continue;
           const x = Math.round(item.transform[4]);
-          const y = Math.round(height - item.transform[5]);
+          const y = Math.round(ptHeight - item.transform[5]);
           const fontSize = Math.max(8, Math.round(Math.hypot(item.transform[0], item.transform[1]))) || 12;
           textElements.push(
-            `  <text x="${x}" y="${y}" font-size="${fontSize}px" font-family="Inter, -apple-system, sans-serif" fill="#1e293b">${escapeXml(item.str)}</text>`
+            `    <text x="${x}" y="${y}" font-size="${fontSize}px" font-family="Inter, -apple-system, sans-serif" fill="#1e293b" opacity="0">${escapeXml(item.str)}</text>`
           );
         }
 
-        onProgress(85);
+        const base64Png = pngBuffer.toString("base64");
         const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${width}pt" height="${height}pt" viewBox="0 0 ${width} ${height}">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${ptWidth}pt" height="${ptHeight}pt" viewBox="0 0 ${ptWidth} ${ptHeight}">
   <title>${escapeXml(baseName)} – CoolWave SVG</title>
-  <rect width="100%" height="100%" fill="#ffffff"/>
-${textElements.join('\n')}
+  <image width="${ptWidth}" height="${ptHeight}" xlink:href="data:image/png;base64,${base64Png}" preserveAspectRatio="none"/>
+  <!-- Selectable vector text layer -->
+  <g class="pdf-text-layer" aria-hidden="true">
+${textElements.join("\n")}
+  </g>
 </svg>`;
 
         onProgress(100);

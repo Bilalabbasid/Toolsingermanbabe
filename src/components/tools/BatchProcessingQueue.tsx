@@ -18,8 +18,10 @@ import {
   StopCircle,
   Archive
 } from 'lucide-react';
+import Link from 'next/link';
 import { formatBytes, downloadBlob } from '@/lib/utils';
 import { batchConfig, getBatchLimits, BatchTierLimits } from '@/config/batch.config';
+import { getClientSubscription } from '@/lib/monetization/subscription';
 
 export type BatchItemStatus = 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
 
@@ -62,23 +64,17 @@ export function BatchProcessingQueue({
   isZipping = false,
   toolTitle = 'Stapelverarbeitung',
 }: BatchProcessingQueueProps) {
-  // Pro simulation state persisted in localStorage
-  const [isPro, setIsPro] = useState<boolean>(false);
+  // Authenticated subscription state
+  const [isPro, setIsPro] = useState<boolean>(() => getClientSubscription().isPro);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('coolwave_pro_active');
-      if (stored === 'true') setIsPro(true);
-    }
+    const checkSub = () => {
+      setIsPro(getClientSubscription().isPro);
+    };
+    checkSub();
+    window.addEventListener('coolwave_subscription_changed', checkSub);
+    return () => window.removeEventListener('coolwave_subscription_changed', checkSub);
   }, []);
-
-  const togglePro = () => {
-    const next = !isPro;
-    setIsPro(next);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('coolwave_pro_active', next ? 'true' : 'false');
-    }
-  };
 
   const limits: BatchTierLimits = getBatchLimits(isPro);
 
@@ -118,7 +114,7 @@ export function BatchProcessingQueue({
             </div>
           </div>
 
-          {/* User Tier Badge & Pro Switch */}
+          {/* User Tier Badge */}
           <div className="flex items-center gap-3 bg-slate-800/80 border border-slate-700/60 px-4 py-2 rounded-xl backdrop-blur-sm self-start md:self-auto">
             <div className="flex items-center gap-2">
               <Zap className={`w-4 h-4 ${isPro ? 'text-amber-400 fill-amber-400' : 'text-slate-400'}`} />
@@ -131,17 +127,14 @@ export function BatchProcessingQueue({
                 </div>
               </div>
             </div>
-            <button
-              onClick={togglePro}
-              type="button"
-              className={`text-[10px] px-2.5 py-1 rounded-md font-semibold transition-colors ${
-                isPro
-                  ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-500'
-              }`}
-            >
-              {isPro ? 'Pro deaktivieren' : 'Pro testen'}
-            </button>
+            {!isPro && (
+              <Link
+                href="/preise"
+                className="text-[10px] px-2.5 py-1 rounded-md font-semibold transition-colors bg-indigo-600 text-white hover:bg-indigo-500"
+              >
+                Upgrade
+              </Link>
+            )}
           </div>
         </div>
 

@@ -20,7 +20,7 @@ export async function GET(req: NextRequest, { params }: Params) {
 
   // Enforce rate limiting per client IP
   const ip = getClientIp(req);
-  const isPro = isProRequest(req);
+  const isPro = await isProRequest(req);
   const rateLimit = rateLimiter.check(ip, 'download', isPro);
   if (!rateLimit.allowed) {
     return NextResponse.json(

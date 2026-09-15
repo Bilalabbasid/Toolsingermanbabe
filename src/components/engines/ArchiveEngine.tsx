@@ -20,6 +20,7 @@ import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { getClientSubscription } from '@/lib/monetization/subscription';
 
 export type ArchiveToolId =
   | 'zip-erstellen'
@@ -33,7 +34,7 @@ interface ArchiveEngineProps {
 }
 
 export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
-  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const isPro = getClientSubscription().isPro;
 
   const isCreate = toolId === 'zip-erstellen';
 

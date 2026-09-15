@@ -12,6 +12,7 @@ import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { runConcurrentBatch } from '@/lib/batch-queue';
 import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
+import { getClientSubscription } from '@/lib/monetization/subscription';
 
 type CompressionLevel = 'high' | 'medium' | 'low';
 
@@ -31,7 +32,7 @@ export function PdfCompressEngine() {
   const [isZipping, setIsZipping] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const isPro = typeof window !== 'undefined' && localStorage.getItem('coolwave_pro_active') === 'true';
+  const isPro = getClientSubscription().isPro;
   const limits = getBatchLimits(isPro);
 
   const handleFilesSelected = (files: File[]) => {
@@ -62,34 +63,94 @@ export function PdfCompressEngine() {
   };
 
   /**
-   * Helper to compress a single PDF via pdf-lib stream compression
+   * Helper to compress a single PDF with differing strategies for Low, Medium, and High
    */
   const compressSinglePdf = async (
     file: File,
     compLevel: CompressionLevel,
     onProgress?: (pct: number, text?: string) => void
   ): Promise<{ blob: Blob; fileName: string; estimatedSize: number }> => {
-    onProgress?.(20, 'PDF-Struktur wird analysiert...');
+    onProgress?.(20, 'PDF-Optimierung wird gestartet...');
+
+    // 1. Attempt genuine server-side Ghostscript compression first
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'pdf_compress');
+      formData.append('options', JSON.stringify({ level: compLevel }));
+
+      const res = await fetch('/api/v1/jobs', { method: 'POST', body: formData });
+      if (res.ok) {
+        const jobData = await res.json();
+        const jobId = jobData.jobId;
+        let attempts = 0;
+        let completed = false;
+        while (attempts < 60) {
+          await new Promise((r) => setTimeout(r, 800));
+          attempts++;
+          const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+          if (!pollRes.ok) continue;
+          const status = await pollRes.json();
+          if (status.status === 'completed') {
+            completed = true;
+            break;
+          }
+          if (status.status === 'failed') break;
+        }
+        if (completed) {
+          const dlRes = await fetch(`/api/v1/jobs/${jobId}/download`);
+          if (dlRes.ok) {
+            const blob = await dlRes.blob();
+            onProgress?.(100, 'Fertig');
+            return {
+              blob,
+              fileName: `coolwave_komprimiert_${file.name}`,
+              estimatedSize: blob.size,
+            };
+          }
+        }
+      }
+    } catch {
+      // Fallback to differing in-browser PDFDocument compression
+    }
+
+    onProgress?.(50, `Kompression (${compLevel.toUpperCase()}) wird angewendet...`);
 
     const buffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true });
 
-    onProgress?.(50, 'Objektstreams & Metadaten werden komprimiert...');
-    pdf.setTitle('');
-    pdf.setAuthor('');
-    pdf.setSubject('');
-    pdf.setKeywords([]);
-    pdf.setProducer('CoolWave PDF Optimizer');
-    pdf.setCreator('CoolWave');
+    let useObjectStreams = true;
+
+    if (compLevel === 'high') {
+      // High: aggressive metadata and structural pruning
+      pdf.setTitle('');
+      pdf.setAuthor('');
+      pdf.setSubject('');
+      pdf.setKeywords([]);
+      pdf.setProducer('CoolWave PDF Optimizer');
+      pdf.setCreator('CoolWave');
+      try {
+        const { PDFName } = await import('pdf-lib');
+        pdf.catalog.delete(PDFName.of('PieceInfo'));
+        pdf.catalog.delete(PDFName.of('Metadata'));
+      } catch {}
+      useObjectStreams = true;
+    } else if (compLevel === 'medium') {
+      // Medium: balanced object streams
+      pdf.setProducer('CoolWave PDF Optimizer');
+      useObjectStreams = true;
+    } else {
+      // Low: mild compression preserving all document metadata
+      useObjectStreams = false;
+    }
 
     onProgress?.(80, 'Kompression wird finalisiert...');
     const compressedBytes = await pdf.save({
-      useObjectStreams: true,
+      useObjectStreams,
       addDefaultPage: false,
     });
 
     const calculatedTarget = compressedBytes.length;
-
     const finalBlob = new Blob([compressedBytes as unknown as BlobPart], { type: 'application/pdf' });
     onProgress?.(100, 'Fertig');
 
