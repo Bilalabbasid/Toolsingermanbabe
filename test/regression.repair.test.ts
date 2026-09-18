@@ -12,6 +12,7 @@ import ExcelJS from 'exceljs';
 import { getClientIp } from '../src/server/security/rateLimiter';
 import { hydrateClientSubscription, getClientSubscription } from '../src/lib/monetization/subscription';
 import { POST as stripeCheckoutPost } from '../src/app/api/v1/stripe/checkout/route';
+import { CheckoutSelectionError, resolveCheckoutSelection } from '../src/server/stripe/checkoutPlan';
 
 describe('CoolWave Comprehensive Repair Regressions', () => {
   // -------------------------------------------------------------
@@ -288,5 +289,27 @@ describe('CoolWave Comprehensive Repair Regressions', () => {
     sub = getClientSubscription();
     expect(sub.isPro).toBe(false);
     expect(sub.tier).toBe('free');
+  });
+
+  it('Remediation: Stripe checkout resolves distinct monthly and yearly prices', () => {
+    const env = {
+      STRIPE_PRICE_ID_PRO_MONTHLY: 'price_monthly',
+      STRIPE_PRICE_ID_PRO_YEARLY: 'price_yearly',
+    };
+
+    expect(resolveCheckoutSelection({ planId: 'pro', interval: 'monthly' }, env).priceId).toBe('price_monthly');
+    expect(resolveCheckoutSelection({ planId: 'pro', interval: 'yearly' }, env).priceId).toBe('price_yearly');
+  });
+
+  it('Remediation: Stripe checkout rejects unsupported plans and missing prices', () => {
+    expect(() => resolveCheckoutSelection(
+      { planId: 'business', interval: 'monthly' },
+      {},
+    )).toThrow(CheckoutSelectionError);
+
+    expect(() => resolveCheckoutSelection(
+      { planId: 'pro', interval: 'yearly' },
+      { STRIPE_PRICE_ID_PRO_MONTHLY: 'price_monthly' },
+    )).toThrow('jährliche');
   });
 });

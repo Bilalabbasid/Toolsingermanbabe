@@ -12,7 +12,7 @@ import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { runConcurrentBatch } from '@/lib/batch-queue';
 import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
-import { getClientSubscription } from '@/lib/monetization/subscription';
+import { useClientSubscription } from '@/hooks/useClientSubscription';
 
 type CompressionLevel = 'high' | 'medium' | 'low';
 
@@ -32,7 +32,7 @@ export function PdfCompressEngine() {
   const [isZipping, setIsZipping] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const isPro = getClientSubscription().isPro;
+  const isPro = useClientSubscription().isPro;
   const limits = getBatchLimits(isPro);
 
   const handleFilesSelected = (files: File[]) => {

@@ -95,7 +95,8 @@ Add these variables to your production `.env` (or host environment manager):
 STRIPE_SECRET_KEY="sk_live_..."
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_live_..."
 STRIPE_WEBHOOK_SECRET="whsec_..."
-STRIPE_PRO_PRICE_ID="price_..."
+STRIPE_PRICE_ID_PRO_MONTHLY="price_..."
+STRIPE_PRICE_ID_PRO_YEARLY="price_..."
 ```
 
 ---

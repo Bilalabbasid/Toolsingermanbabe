@@ -46,7 +46,8 @@ export const AUTH_CONFIG = {
 export const STRIPE_CONFIG = {
   secretKey: process.env.STRIPE_SECRET_KEY || '',
   webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
-  proPriceId: process.env.STRIPE_PRO_PRICE_ID || '',
+  proMonthlyPriceId: process.env.STRIPE_PRICE_ID_PRO_MONTHLY || process.env.STRIPE_PRO_PRICE_ID || '',
+  proYearlyPriceId: process.env.STRIPE_PRICE_ID_PRO_YEARLY || '',
   isConfigured: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.trim().length > 0),
 };
 

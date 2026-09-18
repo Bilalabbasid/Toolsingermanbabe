@@ -5,6 +5,7 @@ import { prisma, isDatabaseConfigured } from '@/server/db/prisma';
 
 import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
 import { PUBLIC_CONFIG, IS_PRODUCTION } from '@/config/env.config';
+import { CheckoutSelectionError, resolveCheckoutSelection } from '@/server/stripe/checkoutPlan';
 
 export async function POST(req: NextRequest) {
   try {
@@ -59,13 +60,17 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const priceId = process.env.STRIPE_PRO_PRICE_ID;
-
-    if (!priceId) {
-      return NextResponse.json(
-        { error: 'CONFIGURATION_ERROR', message: 'STRIPE_PRO_PRICE_ID ist nicht konfiguriert.' },
-        { status: 500 }
-      );
+    let selection;
+    try {
+      selection = resolveCheckoutSelection(await req.json());
+    } catch (error) {
+      if (error instanceof CheckoutSelectionError) {
+        return NextResponse.json(
+          { error: error.code, message: error.message },
+          { status: error.status },
+        );
+      }
+      return NextResponse.json({ error: 'INVALID_CHECKOUT_SELECTION', message: 'Ungültige Tarifauswahl.' }, { status: 400 });
     }
 
     let customerId: string | undefined;
@@ -104,7 +109,7 @@ export async function POST(req: NextRequest) {
       customer: customerId,
       line_items: [
         {
-          price: priceId,
+          price: selection.priceId,
           quantity: 1,
         },
       ],
@@ -113,10 +118,14 @@ export async function POST(req: NextRequest) {
       cancel_url: `${origin}/de/preise?checkout_canceled=true`,
       metadata: {
         userId: user.id,
+        planId: selection.planId,
+        interval: selection.interval,
       },
       subscription_data: {
         metadata: {
           userId: user.id,
+          planId: selection.planId,
+          interval: selection.interval,
         },
       },
       allow_promotion_codes: true,

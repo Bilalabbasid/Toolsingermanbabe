@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
-import { getClientSubscription } from '@/lib/monetization/subscription';
+import { useClientSubscription } from '@/hooks/useClientSubscription';
 import { DownloadBox } from '@/components/tools/DownloadBox';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
@@ -38,7 +38,7 @@ interface MediaEngineProps {
 }
 
 export function MediaEngine({ toolId }: MediaEngineProps) {
-  const isPro = getClientSubscription().isPro;
+  const isPro = useClientSubscription().isPro;
 
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);

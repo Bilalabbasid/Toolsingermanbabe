@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Check, Sparkles, Shield, Building2, ArrowRight } from 'lucide-react';
 import { PRICING_PLANS } from '@/config/plans.config';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
-import { setClientSubscription } from '@/lib/monetization/subscription';
 import { trackProViewed, trackProClicked, trackSignupStarted, trackSignupCompleted } from '@/lib/analytics';
 
 export function PricingClient() {
@@ -26,6 +25,11 @@ export function PricingClient() {
       return;
     }
 
+    if (planId === 'business') {
+      window.location.href = '/de/kontakt?thema=business';
+      return;
+    }
+
     setLoadingPlanId(planId);
     trackProClicked(planId, isAnnual ? 'yearly' : 'monthly');
     trackSignupStarted(planId);
@@ -39,7 +43,14 @@ export function PricingClient() {
         }),
       });
 
-      if (!res.ok) throw new Error('Checkout fehlgeschlagen');
+      if (res.status === 401) {
+        window.location.href = '/de/login?redirect=/de/preise';
+        return;
+      }
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Checkout fehlgeschlagen');
+      }
 
       const data = await res.json();
       if (data.mode === 'sandbox') {
@@ -53,8 +64,7 @@ export function PricingClient() {
       }
     } catch (err) {
       console.error(err);
-      // Paid access is granted only by the server.
-      alert('Das Upgrade ist derzeit nicht verfuegbar. Ihr Tarif wurde nicht geaendert.');
+      alert(err instanceof Error ? err.message : 'Das Upgrade ist derzeit nicht verfügbar. Ihr Tarif wurde nicht geändert.');
     } finally {
       setLoadingPlanId(null);
     }

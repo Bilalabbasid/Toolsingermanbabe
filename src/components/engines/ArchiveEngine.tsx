@@ -20,7 +20,7 @@ import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
-import { getClientSubscription } from '@/lib/monetization/subscription';
+import { useClientSubscription } from '@/hooks/useClientSubscription';
 
 export type ArchiveToolId =
   | 'zip-erstellen'
@@ -34,7 +34,7 @@ interface ArchiveEngineProps {
 }
 
 export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
-  const isPro = getClientSubscription().isPro;
+  const isPro = useClientSubscription().isPro;
 
   const isCreate = toolId === 'zip-erstellen';
 

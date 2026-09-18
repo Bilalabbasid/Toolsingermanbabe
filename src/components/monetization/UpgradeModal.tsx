@@ -9,7 +9,6 @@ import {
   Loader2 
 } from 'lucide-react';
 import { getPlan, formatPlanPrice, calculateAnnualSavings } from '@/config/plans.config';
-import { setClientSubscription } from '@/lib/monetization/subscription';
 import { trackProViewed, trackProClicked, trackSignupStarted, trackSignupCompleted } from '@/lib/analytics';
 
 interface UpgradeModalProps {
@@ -68,7 +67,14 @@ export function UpgradeModal({
         body: JSON.stringify({ planId: 'pro', interval }),
       });
 
-      if (!res.ok) throw new Error('Checkout konnte nicht initiiert werden');
+      if (res.status === 401) {
+        window.location.href = '/de/login?redirect=/de/preise';
+        return;
+      }
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Checkout konnte nicht initiiert werden');
+      }
 
       const data = await res.json();
       if (data.url) {
@@ -77,9 +83,7 @@ export function UpgradeModal({
       }
     } catch (err) {
       console.error(err);
-      // Fallback local activation
-      // Paid access is granted only by the server.
-      alert('Das Upgrade ist derzeit nicht verfuegbar. Ihr Tarif wurde nicht geaendert.');
+      alert(err instanceof Error ? err.message : 'Das Upgrade ist derzeit nicht verfügbar. Ihr Tarif wurde nicht geändert.');
       onClose();
     } finally {
       setIsLoading(false);
