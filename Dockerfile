@@ -25,6 +25,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr-eng \
     fonts-dejavu-core \
     fonts-liberation \
+    fonts-opensymbol \
+    fonts-freefont-ttf \
+    fonts-noto-core \
+    librsvg2-bin \
     p7zip-full \
     && rm -rf /var/lib/apt/lists/*
 
@@ -66,12 +70,12 @@ WORKDIR /app
 RUN groupadd --system --gid 1001 nodejs && \
     useradd --system --uid 1001 nextjs
 
-# Set directories and permissions
-RUN mkdir -p /app/public /app/.next /app/temp_uploads && \
-    chown -R nextjs:nodejs /app
+# Set directories and permissions for temporary conversion workspace
+RUN mkdir -p /app/public /app/.next /app/temp_uploads /app/.tmp /tmp/coolwave && \
+    chown -R nextjs:nodejs /app /tmp/coolwave
 
 # Copy necessary files from builder
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
@@ -81,9 +85,10 @@ USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV COOLWAVE_TEMP_DIR="/app/.tmp"
 
-# Container healthcheck using /api/health/ready for deployment readiness
+# Container healthcheck ensuring all external binaries and API readiness are online
 HEALTHCHECK --interval=30s --timeout=8s --start-period=20s --retries=3 \
-  CMD sh -c "command -v soffice >/dev/null && command -v gs >/dev/null && command -v ffmpeg >/dev/null && command -v pdftocairo >/dev/null && command -v 7z >/dev/null && curl -f http://localhost:3000/api/health/ready"
+  CMD sh -c "command -v soffice >/dev/null && command -v gs >/dev/null && command -v ffmpeg >/dev/null && command -v pdftocairo >/dev/null && command -v 7z >/dev/null && command -v tesseract >/dev/null && curl -f http://localhost:3000/api/health/ready"
 
 CMD ["node", "server.js"]

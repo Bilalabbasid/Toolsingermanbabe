@@ -50,6 +50,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [outputFilename, setOutputFilename] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [autoDownload, setAutoDownload] = useState(true);
 
   // Conversion options
   const isAudioTool =
@@ -254,6 +255,9 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
       setResultUrl(url);
       setOutputFilename(completedJob.output.fileName);
       setProgress(100);
+      if (autoDownload) {
+        downloadBlob(blob, completedJob.output.fileName);
+      }
       trackEvent('conversion_completed', { toolId, inputSize: file.size, outputSize: blob.size });
     } catch (err: any) {
       console.error('[MediaEngine Error]:', err);
@@ -469,6 +473,8 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
           statusText={statusText}
           isLargeFile={Boolean(file && file.size > 15 * 1024 * 1024)}
           isBackgroundSafe={true}
+          autoDownload={autoDownload}
+          onAutoDownloadChange={setAutoDownload}
         />
       )}
 

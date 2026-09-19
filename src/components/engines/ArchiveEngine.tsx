@@ -54,6 +54,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
   const [outputFilename, setOutputFilename] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [autoDownload, setAutoDownload] = useState(true);
 
   // Extracted manifest preview
   const [extractedFiles, setExtractedFiles] = useState<Array<{ name: string; size: number }>>([]);
@@ -180,6 +181,9 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
       setResultBlob(blob);
       setOutputFilename(filename);
       setProgress(100);
+      if (autoDownload) {
+        downloadBlob(blob, filename);
+      }
       trackEvent('conversion_completed', { toolId, fileCount: selectedFiles.length, outputSize: blob.size });
     } catch (err: any) {
       console.error('[Archive Create Error]:', err);
@@ -265,6 +269,9 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
       } catch {}
       setResultBlob(blob);
       setOutputFilename(completedJob.output.fileName);
+      if (autoDownload) {
+        downloadBlob(blob, completedJob.output.fileName);
+      }
 
       // If output is zip, inspect its internal files to display file tree
       if (completedJob.output.fileName.endsWith('.zip')) {
@@ -458,6 +465,8 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
           statusText={statusText}
           isLargeFile={Boolean(archiveFile && archiveFile.size > 15 * 1024 * 1024)}
           isBackgroundSafe={!isCreate}
+          autoDownload={autoDownload}
+          onAutoDownloadChange={setAutoDownload}
         />
       )}
 

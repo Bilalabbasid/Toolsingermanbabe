@@ -117,10 +117,10 @@ const profiles: Record<AppEnvironment, EnvironmentProfile> = {
       mediaMs: parseInt(process.env.MEDIA_TIMEOUT_MS || '180000', 10),
     },
     storage: {
-      retentionMinutes: parseInt(process.env.TEMP_FILE_RETENTION_MINUTES || '15', 10),
-      cleanupIntervalMinutes: parseInt(process.env.CLEANUP_INTERVAL_MINUTES || '5', 10),
+      retentionMinutes: parseInt(process.env.TEMP_FILE_RETENTION_MINUTES || '10', 10),
+      cleanupIntervalMinutes: parseInt(process.env.CLEANUP_INTERVAL_MINUTES || '3', 10),
       purgeInputImmediately: true,
-      deleteOnDownload: process.env.AUTO_DELETE_ON_DOWNLOAD === 'true',
+      deleteOnDownload: process.env.AUTO_DELETE_ON_DOWNLOAD !== 'false', // Default true: delete from Azure immediately after download
       streamChunkSizeBytes: 64 * 1024, // 64 KB
     },
     caching: {

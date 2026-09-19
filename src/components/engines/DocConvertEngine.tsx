@@ -67,6 +67,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
   const [error, setError] = useState<string | null>(null);
   const [ocrLanguage, setOcrLanguage] = useState<'deu' | 'eng'>('deu');
   const [scanMode, setScanMode] = useState<'layout' | 'text'>('text');
+  const [autoDownload, setAutoDownload] = useState(true);
 
   // Batch states
   const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
@@ -370,6 +371,9 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       setOutputFilename(result.fileName);
       setProgress(100);
       setIsProcessing(false);
+      if (autoDownload) {
+        downloadBlob(result.blob, result.fileName);
+      }
       trackEvent('conversion_completed', { mode, size: result.size });
     } catch (err: any) {
       console.error(err);
@@ -520,6 +524,8 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
         statusText={statusText}
         isLargeFile={Boolean(singleFile && singleFile.size > 15 * 1024 * 1024)}
         isBackgroundSafe={true}
+        autoDownload={autoDownload}
+        onAutoDownloadChange={setAutoDownload}
         onCancel={() => {
           abortControllerRef.current?.abort();
           setIsProcessing(false);
