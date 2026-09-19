@@ -17,6 +17,7 @@ import {
 import { ShieldCheck, Cpu, CheckCircle2, Sparkles, ArrowRight, AlertCircle, Lock } from 'lucide-react';
 import { ToolIcon } from '@/components/common/ToolIcon';
 import Link from 'next/link';
+import { featureFlags } from '@/config/featureFlags.config';
 
 interface ToolPageProps {
   tool: ToolDefinition;
@@ -24,6 +25,7 @@ interface ToolPageProps {
 }
 
 export function ToolPage({ tool, locale }: ToolPageProps) {
+  const activeFreeLimits = featureFlags.enableStripeCheckout ? tool.freeLimits : tool.proLimits;
   const categoryInfo = CATEGORIES[tool.category];
   const categoryName = categoryInfo ? categoryInfo.name : 'Werkzeuge';
 
@@ -178,20 +180,20 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
                 Kapazität & Limitierungen:
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className={`grid grid-cols-1 gap-3 sm:gap-4 ${featureFlags.enableStripeCheckout ? 'sm:grid-cols-2' : ''}`}>
                 <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200">
                   <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
                     Kostenlose Version
                   </div>
                   <div className="text-sm font-bold text-slate-900">
-                    Bis zu {tool.freeLimits.maxFileSizeMB} MB / Datei
+                    Bis zu {activeFreeLimits.maxFileSizeMB} MB / Datei
                   </div>
                   <div className="text-xs text-slate-600 mt-1">
-                    Maximal {tool.freeLimits.maxBatch} {tool.freeLimits.maxBatch === 1 ? 'Datei' : 'Dateien'} gleichzeitig
+                    Maximal {activeFreeLimits.maxBatch} {activeFreeLimits.maxBatch === 1 ? 'Datei' : 'Dateien'} gleichzeitig
                   </div>
                 </div>
 
-                <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50/60 border border-sky-200">
+                {featureFlags.enableStripeCheckout && <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50/60 border border-sky-200">
                   <div className="flex items-center justify-between">
                     <div className="text-xs font-bold text-sky-700 uppercase tracking-wider mb-1 flex items-center gap-1">
                       <Sparkles className="w-3.5 h-3.5" />
@@ -210,7 +212,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
                   <div className="text-xs text-slate-600 mt-1">
                     Bis zu {tool.proLimits.maxBatch} Dateien gleichzeitig im Stapel
                   </div>
-                </div>
+                </div>}
               </div>
             </div>
           </div>

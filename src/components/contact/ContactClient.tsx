@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, MessageSquare, Clock, ShieldCheck, Send, CheckCircle2 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export function ContactClient() {
   const [name, setName] = useState('');
@@ -50,7 +51,7 @@ export function ContactClient() {
           Wir sind für Sie da
         </h1>
         <p className="mt-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-          Haben Sie Fragen zu unseren Datei- & PDF-Tools, Anregungen, Feedback oder benötigen Sie Unterstützung bei Ihrem Pro-Abonnement? Unser Support-Team hilft Ihnen gerne weiter.
+          Haben Sie Fragen zu unseren Datei- & PDF-Tools, Anregungen oder Feedback? Unser Support-Team hilft Ihnen gerne weiter.
         </p>
       </div>
 
@@ -79,7 +80,7 @@ export function ContactClient() {
             </div>
             <h3 className="font-bold text-slate-900 text-sm">Reaktionszeit</h3>
             <p className="text-xs text-slate-600 mt-1">
-              Wir antworten in der Regel innerhalb von <strong>24 Stunden</strong> (Montag bis Freitag, 09:00 – 18:00 Uhr MEZ). Pro-Nutzer erhalten Prioritätsbearbeitung.
+              Wir antworten in der Regel innerhalb von <strong>24 Stunden</strong> (Montag bis Freitag, 09:00 – 18:00 Uhr MEZ).
             </p>
           </div>
 
@@ -163,9 +164,9 @@ export function ContactClient() {
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 bg-slate-50/50"
                 >
                   <option value="support">Hilfe bei einer Konvertierung / Technischer Support</option>
-                  <option value="billing">Fragen zu CoolWave Pro / Rechnung</option>
+                  {featureFlags.enableStripeCheckout && <option value="billing">Fragen zu CoolWave Pro / Rechnung</option>}
                   <option value="feature">Feedback & Vorschlag für neue Werkzeuge</option>
-                  <option value="business">Business & Enterprise / Team-Lizenz</option>
+                  {featureFlags.enableStripeCheckout && <option value="business">Business & Enterprise / Team-Lizenz</option>}
                   <option value="privacy">Datenschutz & DSGVO</option>
                 </select>
               </div>

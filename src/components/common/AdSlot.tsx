@@ -6,6 +6,7 @@ import { adsConfig, getAdSlotConfig } from '@/config/ads.config';
 import { getClientSubscription } from '@/lib/monetization/subscription';
 import { getCookieConsent } from '@/components/common/CookieBanner';
 import { canDisplayAds, loadAdSenseScript, requestAdRender } from '@/lib/monetization/adsense';
+import { featureFlags } from '@/config/featureFlags.config';
 
 interface AdSlotProps {
   slotKey?: 'homepage_top' | 'homepage_bottom' | 'category_top' | 'tool_content' | 'sidebar';
@@ -102,12 +103,12 @@ export function AdSlot({
           <span className="uppercase tracking-wider font-semibold text-slate-400">
             Anzeige
           </span>
-          <Link
+          {featureFlags.enableStripeCheckout ? <Link
             href="/de/preise"
             className="hover:text-sky-600 transition underline underline-offset-2"
           >
             Werbefrei mit Pro
-          </Link>
+          </Link> : <span>Werbung</span>}
         </div>
 
         {/* Ad Container */}

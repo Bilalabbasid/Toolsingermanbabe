@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Check, Sparkles, Shield, Building2, ArrowRight } from 'lucide-react';
 import { PRICING_PLANS } from '@/config/plans.config';
+import { featureFlags } from '@/config/featureFlags.config';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { trackProViewed, trackProClicked, trackSignupStarted, trackSignupCompleted } from '@/lib/analytics';
 
 export function PricingClient() {
+  const billingEnabled = featureFlags.enableStripeCheckout;
   const [isAnnual, setIsAnnual] = useState(true);
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
 
@@ -29,6 +31,8 @@ export function PricingClient() {
       window.location.href = '/de/kontakt?thema=business';
       return;
     }
+
+    if (!billingEnabled) return;
 
     setLoadingPlanId(planId);
     trackProClicked(planId, isAnnual ? 'yearly' : 'monthly');
@@ -88,6 +92,7 @@ export function PricingClient() {
         </p>
 
         {/* Monthly / Annual Toggle */}
+        {billingEnabled ? (
         <div className="mt-8 inline-flex items-center p-1.5 rounded-2xl bg-slate-100 border border-slate-200">
           <button
             onClick={() => setIsAnnual(false)}
@@ -113,6 +118,12 @@ export function PricingClient() {
             </span>
           </button>
         </div>
+        ) : (
+          <div className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-5 py-3 text-sm font-bold text-sky-800">
+            <Sparkles className="h-4 w-4" />
+            CoolWave Pro kommt bald
+          </div>
+        )}
       </div>
 
       {/* Heading Level 2 for Plans */}
@@ -121,6 +132,7 @@ export function PricingClient() {
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-12 items-stretch">
         {PRICING_PLANS.map((plan) => {
+          const isUnavailablePro = plan.id === 'pro' && !billingEnabled;
           const price = isAnnual
             ? (plan.priceYearlyEUR / 12).toFixed(2)
             : plan.priceMonthlyEUR.toFixed(2);
@@ -134,7 +146,7 @@ export function PricingClient() {
                   : 'bg-white text-slate-900 border border-slate-200 shadow-sm hover:border-slate-300'
               }`}
             >
-              {plan.badge && (
+              {(isUnavailablePro || plan.badge) && (
                 <span
                   className={`absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full shadow-sm ${
                     plan.isPopular
@@ -142,7 +154,7 @@ export function PricingClient() {
                       : 'bg-slate-800 text-slate-200'
                   }`}
                 >
-                  {plan.badge}
+                  {isUnavailablePro ? 'Demnächst' : plan.badge}
                 </span>
               )}
 
@@ -161,6 +173,15 @@ export function PricingClient() {
 
                 {/* Price block */}
                 <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+                  {isUnavailablePro ? (
+                    <div>
+                      <span className="text-2xl font-black tracking-tight">Demnächst verfügbar</span>
+                      <span className="text-[11px] block mt-2 text-slate-400">
+                        Bis dahin bleiben alle kostenlosen Werkzeuge verfügbar.
+                      </span>
+                    </div>
+                  ) : (
+                  <>
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-black tracking-tight">
                       {plan.priceMonthlyEUR === 0 ? '€0' : `€${price}`}
@@ -184,6 +205,8 @@ export function PricingClient() {
                       ? `€${plan.priceYearlyEUR} jährlich abgerechnet`
                       : plan.periodLabel}
                   </span>
+                  </>
+                  )}
                 </div>
 
                 {/* Features List */}
@@ -221,7 +244,7 @@ export function PricingClient() {
               <button
                 type="button"
                 onClick={() => handlePlanSelect(plan.id)}
-                disabled={loadingPlanId === plan.id}
+                disabled={loadingPlanId === plan.id || isUnavailablePro}
                 className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm cursor-pointer ${
                   plan.isPopular
                     ? 'bg-sky-600 hover:bg-sky-500 text-white'
@@ -230,7 +253,11 @@ export function PricingClient() {
                     : 'bg-slate-900 hover:bg-slate-800 text-white'
                 }`}
               >
-                {loadingPlanId === plan.id ? 'Wird vorbereitet...' : plan.ctaText}
+                {isUnavailablePro
+                  ? 'Pro kommt bald'
+                  : loadingPlanId === plan.id
+                    ? 'Wird vorbereitet...'
+                    : plan.ctaText}
               </button>
             </div>
           );
@@ -261,17 +288,21 @@ export function PricingClient() {
         </Link>
       </div>
 
-      {/* Trust & Guarantee Box */}
+      {/* Billing availability / guarantee */}
       <div className="max-w-3xl mx-auto p-6 rounded-2xl bg-sky-50/50 border border-sky-100 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
         <div className="p-3 rounded-xl bg-sky-600 text-white shrink-0">
           <Shield className="w-6 h-6" />
         </div>
         <div>
           <h3 className="font-bold text-slate-900 text-sm">
-            14-tägige Geld-zurück-Garantie & jederzeit monatlich kündbar
+            {billingEnabled
+              ? '14-tägige Geld-zurück-Garantie & jederzeit monatlich kündbar'
+              : 'CoolWave Pro ist in Vorbereitung'}
           </h3>
           <p className="text-xs text-slate-600 mt-0.5">
-            Sie können Ihr Abonnement mit einem Klick in Ihrem Kundenkonto kündigen. Rechnungen mit ausgewiesener Mehrwertsteuer für das Finanzamt werden automatisch generiert.
+            {billingEnabled
+              ? 'Sie können Ihr Abonnement mit einem Klick in Ihrem Kundenkonto kündigen. Rechnungen mit ausgewiesener Mehrwertsteuer für das Finanzamt werden automatisch generiert.'
+              : 'Es werden noch keine Zahlungen angenommen. Registrierung, Anmeldung und alle kostenlosen Werkzeuge funktionieren weiterhin wie gewohnt.'}
           </p>
         </div>
       </div>

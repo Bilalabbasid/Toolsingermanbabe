@@ -4,15 +4,17 @@ import { pdfSecurityService, PdfPermissions, RedactionZone } from '@/server/serv
 import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
 import { validateUploadedFile } from '@/server/security/fileValidator';
 import { privacyLog } from '@/server/utils/privacyLogger';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export async function POST(req: NextRequest) {
   try {
     const apiKey = req.headers.get('x-api-key');
     const isPro = await isProRequest(req);
+    const expandedAccess = isPro || !featureFlags.enableStripeCheckout;
 
     // 0. Rate limiting
     const ip = getClientIp(req);
-    const rateLimit = rateLimiter.check(ip, 'security', isPro);
+    const rateLimit = rateLimiter.check(ip, 'security', expandedAccess);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         {
@@ -30,7 +32,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const formData = await boundedFormData(req, (isPro ? 250 : 50) * 1024 * 1024 + 65536);
+    const formData = await boundedFormData(req, (expandedAccess ? 250 : 50) * 1024 * 1024 + 65536);
     const file = formData.get('file') as File | null;
     const action = (formData.get('action') as string) || 'protect';
 
@@ -42,7 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Limit free file sizes to 50MB
-    const maxMB = isPro ? 250 : 50;
+    const maxMB = expandedAccess ? 250 : 50;
     if (file.size > maxMB * 1024 * 1024) {
       return NextResponse.json(
         { error: `Die Datei überschreitet die maximale Größe von ${maxMB} MB.` },

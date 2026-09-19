@@ -6,6 +6,7 @@ import {
   Wrench, Scale, ScanText, Trash2, Music,
 } from 'lucide-react';
 import { CookiePreferencesButton } from './CookiePreferencesButton';
+import { featureFlags } from '@/config/featureFlags.config';
 
 
 export function Footer() {
@@ -255,11 +256,11 @@ export function Footer() {
                   Kontakt &amp; Support
                 </Link>
               </li>
-              <li>
+              {featureFlags.enableStripeCheckout && <li>
                 <Link href="/de/preise" className="py-1 block hover:text-white transition-colors text-amber-400 font-semibold">
                   CoolWave Pro
                 </Link>
-              </li>
+              </li>}
             </ul>
           </div>
         </div>

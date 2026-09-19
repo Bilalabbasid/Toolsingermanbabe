@@ -8,14 +8,16 @@ import { getBatchLimits, batchConfig, validateBatchFiles } from '@/config/batch.
 import { rateLimiter, getClientIp } from './security/rateLimiter';
 import { validateUploadedFile } from './security/fileValidator';
 import { boundedFormData, isProRequest, ownerId, setOwnerCookie, RequestError, requestError, parseOptions } from './security/request';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export async function submitJobs(req: NextRequest, batch: boolean): Promise<NextResponse> {
   const savedPaths: string[] = [];
   let committed = false;
   try {
     const isPro = await isProRequest(req);
+    const expandedAccess = isPro || !featureFlags.enableStripeCheckout;
     const limits = getBatchLimits(isPro);
-    const rate = rateLimiter.check(getClientIp(req), batch ? 'batch' : 'job', isPro);
+    const rate = rateLimiter.check(getClientIp(req), batch ? 'batch' : 'job', expandedAccess);
     if (!rate.allowed) return NextResponse.json({ error: 'Zu viele Anfragen.', code: 'RATE_LIMIT_EXCEEDED' }, { status: 429, headers: { 'Retry-After': String(rate.resetSeconds) } });
     const form = await boundedFormData(req, ((batch ? limits.maxTotalBatchMB : limits.maxFileSizeMB) * 1024 * 1024) + 65536);
     const entries = batch && form.has('files') ? form.getAll('files') : form.getAll('file');
@@ -50,7 +52,7 @@ export async function submitJobs(req: NextRequest, batch: boolean): Promise<Next
       savedPaths.push(saved.storagePath);
       jobs.push({ id: `job_${crypto.randomUUID()}`, ownerId: owner, type, status: 'queued',
         input: { originalName: validation.safeFilename, mimeType: file.type || 'application/octet-stream', ...saved },
-        progress: 0, options: { ...options, isPro, ...(batch ? { batchId } : {}) }, createdAt: new Date().toISOString(), expiration });
+        progress: 0, options: { ...options, isPro: expandedAccess, ...(batch ? { batchId } : {}) }, createdAt: new Date().toISOString(), expiration });
     }
     // Atomic capacity check/enqueue prevents partially accepted batches and upload races.
     if (!await jobQueue.enqueueMany(jobs, batchConfig.maxQueueCapacity)) throw new RequestError('QUEUE_CAPACITY_EXCEEDED', 503);

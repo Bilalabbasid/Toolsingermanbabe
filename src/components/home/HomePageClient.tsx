@@ -25,6 +25,7 @@ import { ToolCard } from '@/components/tools/ToolCard';
 import { ToolGrid } from '@/components/tools/ToolGrid';
 import { ToolIcon } from '@/components/common/ToolIcon';
 import { searchToolsWithRelevance, getRecentTools, clearRecentTools } from '@/lib/search';
+import { featureFlags } from '@/config/featureFlags.config';
 
 interface HomePageClientProps {
   initialTools: ToolDefinition[];
@@ -516,7 +517,8 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
       {/* Homepage Bottom Ad Placement */}
       <AdSlot slotKey="homepage_bottom" className="my-6 max-w-5xl" />
 
-      {/* Pro Upsell Callout */}
+      {/* Pro Upsell Callout (kept dormant until billing is enabled) */}
+      {featureFlags.enableStripeCheckout && (
       <section className="py-10 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-6 sm:p-12 rounded-2xl sm:rounded-3xl bg-slate-900 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8 shadow-xl">
           <div className="max-w-xl">
@@ -542,6 +544,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
           </div>
         </div>
       </section>
+      )}
     </div>
   );
 }

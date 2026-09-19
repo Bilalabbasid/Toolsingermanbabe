@@ -6,12 +6,14 @@ import { ToolDispatcher } from '@/components/tools/ToolDispatcher';
 import { Cpu, ShieldCheck, HardDrive, Layers } from 'lucide-react';
 import { recordRecentTool } from '@/lib/search';
 import { trackToolView } from '@/lib/analytics';
+import { featureFlags } from '@/config/featureFlags.config';
 
 interface ToolInterfaceProps {
   tool: ToolDefinition;
 }
 
 export function ToolInterface({ tool }: ToolInterfaceProps) {
+  const activeLimits = featureFlags.enableStripeCheckout ? tool.freeLimits : tool.proLimits;
   useEffect(() => {
     recordRecentTool(tool.slug);
     trackToolView(tool.slug, tool.category);
@@ -53,11 +55,11 @@ export function ToolInterface({ tool }: ToolInterfaceProps) {
         <div className="flex items-center gap-2 sm:gap-3 text-slate-500 text-[10px] sm:text-xs ml-auto">
           <span className="flex items-center gap-1">
             <HardDrive className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
-            Max. {tool.freeLimits.maxFileSizeMB} MB
+            Max. {activeLimits.maxFileSizeMB} MB
           </span>
           <span className="hidden xs:flex sm:flex items-center gap-1">
             <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
-            Bis zu {tool.freeLimits.maxBatch} {tool.freeLimits.maxBatch === 1 ? 'Datei' : 'Dateien'}
+            Bis zu {activeLimits.maxBatch} {activeLimits.maxBatch === 1 ? 'Datei' : 'Dateien'}
           </span>
         </div>
       </div>

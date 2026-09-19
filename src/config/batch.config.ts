@@ -1,3 +1,5 @@
+import { featureFlags } from './featureFlags.config';
+
 export interface BatchTierLimits {
   maxBatchFiles: number;
   maxFileSizeMB: number;
@@ -33,7 +35,9 @@ export const batchConfig: BatchSystemConfig = {
 };
 
 export function getBatchLimits(isPro: boolean): BatchTierLimits {
-  return isPro ? batchConfig.pro : batchConfig.free;
+  // While billing is disabled, the paid-capacity profile is available to
+  // everyone. Ads remain controlled separately by the advertising layer.
+  return isPro || !featureFlags.enableStripeCheckout ? batchConfig.pro : batchConfig.free;
 }
 
 export interface BatchValidationResult {

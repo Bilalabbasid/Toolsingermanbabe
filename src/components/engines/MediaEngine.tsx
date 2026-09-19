@@ -19,6 +19,7 @@ import {
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { useClientSubscription } from '@/hooks/useClientSubscription';
+import { featureFlags } from '@/config/featureFlags.config';
 import { DownloadBox } from '@/components/tools/DownloadBox';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
@@ -39,6 +40,7 @@ interface MediaEngineProps {
 
 export function MediaEngine({ toolId }: MediaEngineProps) {
   const isPro = useClientSubscription().isPro;
+  const expandedAccess = isPro || !featureFlags.enableStripeCheckout;
 
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -81,7 +83,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
     if (files.length === 0) return;
     const selected = files[0];
 
-    const maxMB = isAudioTool ? (isPro ? 200 : 50) : (isPro ? 500 : 100);
+    const maxMB = isAudioTool ? (expandedAccess ? 200 : 50) : (expandedAccess ? 500 : 100);
     if (selected.size > maxMB * 1024 * 1024) {
       setError(`Datei zu groß. Das maximale Limit beträgt ${maxMB} MB.`);
       return;
@@ -222,7 +224,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
               ? 'Unterstützt MP3, WAV, AAC, FLAC, OGG, M4A bis zu 50 MB kostenlos (200 MB Pro)'
               : 'Unterstützt MP4, MOV, AVI, MKV, WebM bis zu 100 MB kostenlos (500 MB Pro)'
           }
-          maxFileSizeMB={isAudioTool ? (isPro ? 200 : 50) : (isPro ? 500 : 100)}
+          maxFileSizeMB={isAudioTool ? (expandedAccess ? 200 : 50) : (expandedAccess ? 500 : 100)}
         />
       )}
 

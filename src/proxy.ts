@@ -6,6 +6,22 @@ import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@/config/i18n.config';
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const accountsEnabled = process.env.NEXT_PUBLIC_ENABLE_ACCOUNTS === 'true';
+  const billingEnabled = process.env.NEXT_PUBLIC_ENABLE_STRIPE === 'true';
+  const localizedPath = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '');
+  if (!accountsEnabled && /^\/(?:login|register|konto)(?:\/|$)/.test(localizedPath)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/de';
+    url.search = '';
+    return NextResponse.redirect(url, 307);
+  }
+  if (!billingEnabled && /^\/preise(?:\/|$)/.test(localizedPath)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/de';
+    url.search = '';
+    return NextResponse.redirect(url, 307);
+  }
+
   if (/^\/(?:[a-z]{2}\/)?admin(?:\/|$)/.test(pathname) && !(await isAdminRequest(request))) {
     return new NextResponse('Nicht autorisiert.', { status: 401, headers: { 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store' } });
   }

@@ -21,6 +21,7 @@ import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { useClientSubscription } from '@/hooks/useClientSubscription';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export type ArchiveToolId =
   | 'zip-erstellen'
@@ -35,6 +36,7 @@ interface ArchiveEngineProps {
 
 export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
   const isPro = useClientSubscription().isPro;
+  const expandedAccess = isPro || !featureFlags.enableStripeCheckout;
 
   const isCreate = toolId === 'zip-erstellen';
 
@@ -269,7 +271,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
               ? 'Fügen Sie beliebig viele Dateien hinzu, um sie als kompaktes ZIP-Archiv zu bündeln.'
               : 'Sichere Dekomprimierung mit Schutz vor Decompression-Bombs und Path-Traversal.'
           }
-          maxFileSizeMB={isPro ? 250 : 100}
+          maxFileSizeMB={expandedAccess ? 250 : 100}
         />
       )}
 

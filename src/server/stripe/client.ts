@@ -2,13 +2,13 @@ import Stripe from 'stripe';
 import { STRIPE_CONFIG } from '@/config/env.config';
 
 export function isStripeConfigured(): boolean {
-  return STRIPE_CONFIG.isConfigured;
+  return process.env.NEXT_PUBLIC_ENABLE_STRIPE === 'true' && STRIPE_CONFIG.isConfigured;
 }
 
 let stripeInstance: Stripe | null = null;
 
 export function getStripe(): Stripe | null {
-  if (!STRIPE_CONFIG.isConfigured) {
+  if (!isStripeConfigured()) {
     return null;
   }
 
@@ -29,4 +29,3 @@ export function getStripeClient(): Stripe {
   }
   return stripe;
 }
-

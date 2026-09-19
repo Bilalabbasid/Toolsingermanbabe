@@ -1,3 +1,5 @@
+import { featureFlags } from '@/config/featureFlags.config';
+
 export interface DailyUsage {
   date: string;
   conversionsCount: number;
@@ -69,7 +71,7 @@ export function recordConversionUsage(bytesProcessed: number, isOcr: boolean = f
  * Generous daily limits for free tier before soft upsell reminder
  */
 export function isDailyQuotaExceeded(tier: string): { exceeded: boolean; current: number; limit: number } {
-  if (tier === 'pro' || tier === 'business') {
+  if (!featureFlags.enableStripeCheckout || tier === 'pro' || tier === 'business') {
     return { exceeded: false, current: 0, limit: Infinity };
   }
 

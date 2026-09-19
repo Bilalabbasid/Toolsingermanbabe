@@ -1,5 +1,6 @@
 import { PlanEntitlements } from '@/config/plans.config';
 import { getEntitlements } from './entitlements';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export type SubscriptionTier = 'free' | 'pro' | 'business';
 
@@ -38,6 +39,10 @@ export function hydrateClientSubscription(user: { plan?: SubscriptionTier } | nu
 export function initClientSubscription(): void {
   if (typeof window === 'undefined' || hasInitiatedFetch) return;
   hasInitiatedFetch = true;
+  if (!featureFlags.enableAccounts) {
+    hydrateClientSubscription(null);
+    return;
+  }
   fetch('/api/v1/auth/me')
     .then((res) => (res.ok ? res.json() : null))
     .then((data) => {

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { privacyConfig } from '@/config/privacy.config';
 import Link from 'next/link';
+import { featureFlags } from '@/config/featureFlags.config';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
@@ -91,17 +92,19 @@ export default function AgbPage() {
           </ul>
         </section>
 
-        {/* 5. Zahlungsabwicklung & Kündigung */}
+        {/* Payment terms are preserved but dormant while billing is disabled. */}
+        {featureFlags.enableStripeCheckout && (
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">5. Pro-Abonnements, Zahlungsabwicklung & Kündigung</h2>
           <p className="text-xs text-slate-600">
             Die Abrechnung von Pro-Abonnements erfolgt über zertifizierte Zahlungsdienstleister (z. B. Stripe). Das Abonnement verlängert sich automatisch um den gewählten Abrechnungszeitraum (monatlich oder jährlich), sofern es nicht vor Ablauf der jeweiligen Laufzeit gekündigt wird. Die Kündigung kann jederzeit mit wenigen Klicks im Nutzerkonto vorgenommen werden.
           </p>
         </section>
+        )}
 
         {/* 6. Gewährleistung & Haftungsbeschränkung */}
         <section>
-          <h2 className="text-lg font-bold text-slate-900 mb-2">6. Gewährleistung & Haftung</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-2">{featureFlags.enableStripeCheckout ? '6' : '5'}. Gewährleistung & Haftung</h2>
           <p className="text-xs text-slate-600 leading-relaxed">
             Wir bemühen uns um eine hohe Verfügbarkeit und optimale Konvertierungsergebnisse. Für den kostenlosen Dienst wird keine Garantie für eine unterbrechungsfreie Verfügbarkeit übernommen. Die Haftung für Datenverluste ist ausgeschlossen, es sei denn, diese beruhen auf vorsätzlichem oder grob fahrlässigem Handeln. Nutzer sind angehalten, Sicherheitskopien ihrer Originaldokumente vorzuhalten.
           </p>
@@ -109,7 +112,7 @@ export default function AgbPage() {
 
         {/* 7. Schlussbestimmungen */}
         <section>
-          <h2 className="text-lg font-bold text-slate-900 mb-2">7. Schlussbestimmungen</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-2">{featureFlags.enableStripeCheckout ? '7' : '6'}. Schlussbestimmungen</h2>
           <p className="text-xs text-slate-600">
             Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts (CISG), soweit dem keine zwingenden verbraucherrechtlichen Vorschriften entgegenstehen.
           </p>

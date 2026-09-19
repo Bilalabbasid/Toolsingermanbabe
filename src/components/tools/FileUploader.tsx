@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { UploadCloud, File, AlertCircle, Plus, X, Smartphone, Sparkles, ArrowRight, Minimize2, CheckCircle2 } from 'lucide-react';
 import { formatBytes } from '@/lib/utils';
 import { trackUploadStarted, trackUploadCompleted, getActiveToolSlug } from '@/lib/analytics';
+import { featureFlags } from '@/config/featureFlags.config';
 
 interface FileUploaderProps {
   acceptedExtensions: string[];
@@ -218,13 +219,13 @@ export function FileUploader({
                     </Link>
                   )}
 
-                  <Link
+                  {featureFlags.enableStripeCheckout && <Link
                     href="/de/preise"
                     className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-2xs transition-colors"
                   >
                     <span>Bis zu 500 MB mit Pro verarbeiten</span>
                     <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                  </Link>}
                 </div>
               </div>
             </div>

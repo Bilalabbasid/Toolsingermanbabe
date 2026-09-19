@@ -19,6 +19,7 @@ import { formatBytes } from '@/lib/utils';
 import { AdSlot } from '@/components/common/AdSlot';
 import { TOOLS_CONFIG } from '@/config/tools.config';
 import { ToolCard } from '@/components/tools/ToolCard';
+import { featureFlags } from '@/config/featureFlags.config';
 
 interface DownloadBoxProps {
   filename: string;
@@ -264,7 +265,8 @@ export function DownloadBox({
           </span>
         </div>
 
-        {/* Subtle Pro Upsell Banner (non-intrusive) */}
+        {/* Subtle Pro Upsell Banner (kept dormant until billing is enabled) */}
+        {featureFlags.enableStripeCheckout && (
         <div className="max-w-xl mx-auto p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-slate-50 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-lg bg-amber-100 text-amber-700 shrink-0 mt-0.5" aria-hidden="true">
@@ -286,6 +288,7 @@ export function DownloadBox({
             Pro entdecken →
           </Link>
         </div>
+        )}
 
         {/* Policy-Compliant Post-Completion Ad Placement (Safely placed with ample margin below actions) */}
         <div className="mt-8 pt-6 border-t border-slate-100">

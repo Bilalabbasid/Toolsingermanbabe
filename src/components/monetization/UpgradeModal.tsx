@@ -9,6 +9,7 @@ import {
   Loader2 
 } from 'lucide-react';
 import { getPlan, formatPlanPrice, calculateAnnualSavings } from '@/config/plans.config';
+import { featureFlags } from '@/config/featureFlags.config';
 import { trackProViewed, trackProClicked, trackSignupStarted, trackSignupCompleted } from '@/lib/analytics';
 
 interface UpgradeModalProps {
@@ -24,6 +25,7 @@ export function UpgradeModal({
   triggerReason = 'Maximale Leistung und Freiheit ohne Limits',
   recommendedPlanId = 'pro',
 }: UpgradeModalProps) {
+  const billingEnabled = featureFlags.enableStripeCheckout;
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('yearly');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,6 +59,7 @@ export function UpgradeModal({
   const savings = calculateAnnualSavings(proPlan);
 
   const handleCheckout = async () => {
+    if (!billingEnabled) return;
     setIsLoading(true);
     trackProClicked('pro', interval);
     trackSignupStarted('pro');
@@ -90,11 +93,6 @@ export function UpgradeModal({
     }
   };
 
-  const handleInstantActivate = () => {
-    // Paid access is granted only by the server.
-    onClose();
-  };
-
   return (
     <div 
       role="dialog"
@@ -120,17 +118,18 @@ export function UpgradeModal({
 
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[11px] sm:text-xs font-bold mb-2 sm:mb-3">
             <Sparkles className="w-3.5 h-3.5 fill-amber-400" aria-hidden="true" />
-            <span>CoolWave Pro Upgrade</span>
+            <span>{billingEnabled ? 'CoolWave Pro Upgrade' : 'CoolWave Pro · Demnächst'}</span>
           </div>
 
           <h2 id="upgrade-modal-heading" className="text-lg sm:text-2xl font-black tracking-tight pr-8">
-            Arbeiten Sie schneller &amp; ohne Grenzen
+            {billingEnabled ? 'Arbeiten Sie schneller & ohne Grenzen' : 'CoolWave Pro kommt bald'}
           </h2>
           <p id="upgrade-modal-description" className="text-[11px] sm:text-xs text-indigo-200 mt-1 max-w-md line-clamp-2 sm:line-clamp-none">
             {triggerReason}
           </p>
 
           {/* Billing interval switch */}
+          {billingEnabled && (
           <div 
             role="radiogroup" 
             aria-label="Abrechnungsintervall"
@@ -166,6 +165,7 @@ export function UpgradeModal({
               </span>
             </button>
           </div>
+          )}
         </div>
 
         {/* Scrollable Content Body */}
@@ -193,6 +193,8 @@ export function UpgradeModal({
 
           <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <div className="text-center sm:text-left w-full sm:w-auto">
+              {billingEnabled ? (
+              <>
               <div className="text-xl sm:text-2xl font-black text-slate-900">
                 {formatPlanPrice(proPlan, interval)}
                 <span className="text-xs font-normal text-slate-500 ml-1">/ Monat</span>
@@ -200,18 +202,19 @@ export function UpgradeModal({
               <p className="text-[10px] sm:text-[11px] text-slate-400">
                 {interval === 'yearly' ? 'Jährlich abgerechnet (59,00 €/Jahr)' : 'Monatlich kündbar'} • Inkl. MwSt.
               </p>
+              </>
+              ) : (
+                <>
+                  <div className="text-xl sm:text-2xl font-black text-slate-900">Demnächst verfügbar</div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-500">
+                    Bis dahin können Sie alle kostenlosen Werkzeuge weiter nutzen.
+                  </p>
+                </>
+              )}
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row items-center gap-2 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={handleInstantActivate}
-                className="w-full sm:w-auto min-h-[44px] px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 active:bg-slate-100 transition whitespace-nowrap touch-manipulation"
-                title="Sofort im Browser für diesen Browser aktivieren"
-              >
-                Lokal testen
-              </button>
-
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              {billingEnabled ? (
               <button
                 type="button"
                 onClick={handleCheckout}
@@ -230,6 +233,15 @@ export function UpgradeModal({
                   </>
                 )}
               </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="w-full sm:w-auto min-h-[48px] px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold shadow-md transition"
+                >
+                  Kostenlose Werkzeuge weiter nutzen
+                </button>
+              )}
             </div>
           </div>
         </div>

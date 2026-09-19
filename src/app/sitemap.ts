@@ -4,13 +4,16 @@ import { CATEGORIES } from '@/config/categories.config';
 import { getAllArticles } from '@/config/blog.config';
 import { SITE_URL } from '@/lib/seo';
 import { getAlternateUrls } from '@/config/i18n.config';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // 1. Static high-level pages
   const staticRoutes = [
     { path: '/', priority: 1.0, changeFrequency: 'daily' as const },
     { path: '/blog', priority: 0.85, changeFrequency: 'daily' as const },
-    { path: '/preise', priority: 0.8, changeFrequency: 'weekly' as const },
+    ...(featureFlags.enableStripeCheckout
+      ? [{ path: '/preise', priority: 0.8, changeFrequency: 'weekly' as const }]
+      : []),
     { path: '/kontakt', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/datenschutz', priority: 0.3, changeFrequency: 'monthly' as const },
     { path: '/impressum', priority: 0.3, changeFrequency: 'monthly' as const },

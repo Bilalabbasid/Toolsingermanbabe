@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error: 'BILLING_UNAVAILABLE',
-          message: 'Das Bezahlsystem ist derzeit in Vorbereitung. Alle Pro-Funktionen stehen derzeit kostenlos zur Verfügung.',
+          message: 'CoolWave Pro ist noch nicht verfügbar. Die kostenlosen Werkzeuge können weiterhin vollständig genutzt werden.',
         },
         { status: 503 }
       );

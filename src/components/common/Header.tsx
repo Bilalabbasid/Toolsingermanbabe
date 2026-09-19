@@ -24,8 +24,12 @@ import { SearchModal } from './SearchModal';
 import { UpgradeModal } from '@/components/monetization/UpgradeModal';
 import { ConversionHistoryDrawer } from '@/components/monetization/ConversionHistoryDrawer';
 import { getClientSubscription, hydrateClientSubscription, SubscriptionTier } from '@/lib/monetization/subscription';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export function Header() {
+  const accountsEnabled = featureFlags.enableAccounts;
+  const billingEnabled = featureFlags.enableStripeCheckout;
+  const historyEnabled = featureFlags.enableConversionHistory;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
@@ -34,6 +38,10 @@ export function Header() {
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
+    if (!accountsEnabled) {
+      hydrateClientSubscription(null);
+      return;
+    }
     fetch('/api/v1/auth/me')
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
@@ -47,7 +55,7 @@ export function Header() {
       .catch(() => {
         hydrateClientSubscription(null);
       });
-  }, []);
+  }, [accountsEnabled]);
 
   useEffect(() => {
     const updateSubscription = () => {
@@ -139,13 +147,13 @@ export function Header() {
               <Wrench className="w-3.5 h-3.5 text-slate-500" />
               Werkzeuge
             </Link>
-            <Link
+            {billingEnabled && <Link
               href="/de/preise"
               className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-semibold text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
             >
               <Sparkles className="w-4 h-4 text-amber-500" />
               <span>Preise &amp; Tarife</span>
-            </Link>
+            </Link>}
           </nav>
 
           {/* Right Actions: Search, History, User Tier, Upgrade */}
@@ -165,7 +173,7 @@ export function Header() {
             </button>
 
             {/* Conversion History Button */}
-            <button
+            {historyEnabled && <button
               onClick={() => setIsHistoryOpen(true)}
               type="button"
               className="p-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-white transition cursor-pointer touch-target-44"
@@ -174,10 +182,10 @@ export function Header() {
               title="Konvertierungsverlauf anzeigen"
             >
               <History className="w-4 h-4" />
-            </button>
+            </button>}
 
             {/* User Tier Badge — Desktop only */}
-            <button
+            {billingEnabled && <button
               onClick={() => setIsUpgradeOpen(true)}
               type="button"
               aria-label={isPro ? "Pro-Abonnement aktiv – Details anzeigen" : "Kostenlose Version – Zu Pro wechseln"}
@@ -199,10 +207,10 @@ export function Header() {
                   <span>Kostenlos</span>
                 </>
               )}
-            </button>
+            </button>}
 
             {/* User Account / Login Button */}
-            {currentUser ? (
+            {accountsEnabled && (currentUser ? (
               <Link
                 href="/de/konto"
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition"
@@ -223,10 +231,10 @@ export function Header() {
               >
                 <span>Anmelden</span>
               </Link>
-            )}
+            ))}
 
             {/* Pro Upgrade CTA — Desktop only */}
-            {!isPro && (
+            {billingEnabled && !isPro && (
               <button
                 onClick={() => setIsUpgradeOpen(true)}
                 type="button"
@@ -327,7 +335,7 @@ export function Header() {
                   <span className="flex-1">Werkzeuge &amp; Hilfsmittel</span>
                   <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
-                <Link
+                {billingEnabled && <Link
                   href="/de/preise"
                   onClick={closeMobileMenu}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-sky-700 hover:bg-sky-50 active:bg-sky-100 transition-colors touch-target-48"
@@ -337,9 +345,9 @@ export function Header() {
                   </span>
                   <span className="flex-1">Preise &amp; Tarife</span>
                   <ChevronRight className="w-4 h-4 text-slate-300" />
-                </Link>
+                </Link>}
 
-                {currentUser ? (
+                {accountsEnabled && (currentUser ? (
                   <Link
                     href="/de/konto"
                     onClick={closeMobileMenu}
@@ -364,13 +372,13 @@ export function Header() {
                     <User className="w-4 h-4 text-slate-600" />
                     <span>Anmelden / Registrieren</span>
                   </Link>
-                )}
+                ))}
 
                 {/* Divider */}
-                <div className="border-t border-slate-100 my-2" />
+                {(accountsEnabled || billingEnabled) && <div className="border-t border-slate-100 my-2" />}
 
                 {/* Tier Badge (mobile-visible) */}
-                <div className="flex items-center justify-between px-4 py-2">
+                {billingEnabled && <div className="flex items-center justify-between px-4 py-2">
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border ${
                     isPro
                       ? 'bg-amber-500/10 text-amber-700 border-amber-300/50'
@@ -382,10 +390,10 @@ export function Header() {
                       <><Zap className="w-3.5 h-3.5 text-slate-500" /> Kostenlos</>
                     )}
                   </span>
-                </div>
+                </div>}
 
                 {/* Pro Upgrade CTA (mobile) */}
-                {!isPro && (
+                {billingEnabled && !isPro && (
                   <button
                     onClick={() => {
                       closeMobileMenu();
@@ -407,12 +415,12 @@ export function Header() {
 
       {/* Global Modals & Drawers */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <UpgradeModal isOpen={isUpgradeOpen} onClose={() => setIsUpgradeOpen(false)} />
-      <ConversionHistoryDrawer
+      {billingEnabled && <UpgradeModal isOpen={isUpgradeOpen} onClose={() => setIsUpgradeOpen(false)} />}
+      {historyEnabled && <ConversionHistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         onOpenUpgradeModal={() => setIsUpgradeOpen(true)}
-      />
+      />}
     </>
   );
 }

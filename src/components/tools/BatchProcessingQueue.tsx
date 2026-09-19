@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { formatBytes, downloadBlob } from '@/lib/utils';
 import { batchConfig, getBatchLimits, BatchTierLimits } from '@/config/batch.config';
 import { getClientSubscription } from '@/lib/monetization/subscription';
+import { featureFlags } from '@/config/featureFlags.config';
 
 export type BatchItemStatus = 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
 
@@ -127,7 +128,7 @@ export function BatchProcessingQueue({
                 </div>
               </div>
             </div>
-            {!isPro && (
+            {featureFlags.enableStripeCheckout && !isPro && (
               <Link
                 href="/preise"
                 className="text-[10px] px-2.5 py-1 rounded-md font-semibold transition-colors bg-indigo-600 text-white hover:bg-indigo-500"
