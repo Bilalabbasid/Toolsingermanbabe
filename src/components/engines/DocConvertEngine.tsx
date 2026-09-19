@@ -297,7 +297,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     onProgress?.(35, 'In Warteschlange...');
 
     let attempts = 0;
-    const maxAttempts = 60;
+    const maxAttempts = 150; // Allow up to 90s for large files / OCR
     let completedJob = null;
 
     while (attempts < maxAttempts) {
@@ -518,6 +518,8 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       <ProcessingStatus
         progress={progress}
         statusText={statusText}
+        isLargeFile={Boolean(singleFile && singleFile.size > 15 * 1024 * 1024)}
+        isBackgroundSafe={true}
         onCancel={() => {
           abortControllerRef.current?.abort();
           setIsProcessing(false);

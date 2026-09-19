@@ -79,13 +79,73 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
     };
   }, [resultUrl]);
 
+  // Restore unfinished or completed job if window was reloaded/reopened
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(`coolwave_media_${toolId}`);
+      if (!saved) return;
+      const { jobId, filename } = JSON.parse(saved);
+      if (!jobId) return;
+
+      let isCancelled = false;
+      setIsProcessing(true);
+      setStatusText('Vorherige Konvertierung wird im Hintergrund fortgeführt...');
+      setProgress(40);
+
+      const restore = async () => {
+        let attempts = 0;
+        while (attempts < 120 && !isCancelled) {
+          attempts++;
+          await new Promise((r) => setTimeout(r, 1000));
+          if (isCancelled) return;
+          try {
+            const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+            if (!pollRes.ok) {
+              sessionStorage.removeItem(`coolwave_media_${toolId}`);
+              setIsProcessing(false);
+              return;
+            }
+            const currentJob = await pollRes.json();
+            if (currentJob.status === 'processing') {
+              const curPct = Math.max(35, Math.min(currentJob.progress || 50, 90));
+              setProgress(curPct);
+              setStatusText(`Wird transkodiert (${curPct}%)...`);
+            } else if (currentJob.status === 'completed') {
+              const dlRes = await fetch(currentJob.output.downloadUrl || `/api/v1/jobs/${jobId}/download`);
+              if (dlRes.ok) {
+                const blob = await dlRes.blob();
+                setResultBlob(blob);
+                setOutputFilename(currentJob.output?.fileName || `${filename}.converted`);
+                sessionStorage.removeItem(`coolwave_media_${toolId}`);
+              }
+              setIsProcessing(false);
+              return;
+            } else if (currentJob.status === 'failed' || currentJob.status === 'expired') {
+              sessionStorage.removeItem(`coolwave_media_${toolId}`);
+              setIsProcessing(false);
+              return;
+            }
+          } catch {
+            // Ignore temporary network hiccup
+          }
+        }
+        setIsProcessing(false);
+      };
+
+      void restore();
+      return () => {
+        isCancelled = true;
+      };
+    } catch {}
+  }, [toolId]);
+
   const handleFilesSelected = (files: File[]) => {
     if (files.length === 0) return;
     const selected = files[0];
 
-    const maxMB = isAudioTool ? (expandedAccess ? 200 : 50) : (expandedAccess ? 500 : 100);
+    const maxMB = 50;
     if (selected.size > maxMB * 1024 * 1024) {
-      setError(`Datei zu groß. Das maximale Limit beträgt ${maxMB} MB.`);
+      setError(`Datei zu groß. Das maximale Limit für Medien beträgt ${maxMB} MB.`);
       return;
     }
 
@@ -140,6 +200,9 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
       }
 
       const { jobId } = await res.json();
+      try {
+        sessionStorage.setItem(`coolwave_media_${toolId}`, JSON.stringify({ jobId, filename: file.name }));
+      } catch {}
       setStatusText('In Verarbeitungswarteschlange...');
       setProgress(30);
 
@@ -184,6 +247,9 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
 
       const blob = await downloadRes.blob();
       const url = URL.createObjectURL(blob);
+      try {
+        sessionStorage.removeItem(`coolwave_media_${toolId}`);
+      } catch {}
       setResultBlob(blob);
       setResultUrl(url);
       setOutputFilename(completedJob.output.fileName);
@@ -401,6 +467,8 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
         <ProcessingStatus
           progress={progress}
           statusText={statusText}
+          isLargeFile={Boolean(file && file.size > 15 * 1024 * 1024)}
+          isBackgroundSafe={true}
         />
       )}
 

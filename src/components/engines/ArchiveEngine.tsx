@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 import {
   Archive,
@@ -57,6 +57,67 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
 
   // Extracted manifest preview
   const [extractedFiles, setExtractedFiles] = useState<Array<{ name: string; size: number }>>([]);
+
+  // Restore unfinished or completed job if window was reloaded/reopened
+  useEffect(() => {
+    if (isCreate) return;
+    try {
+      const saved = sessionStorage.getItem(`coolwave_archive_${toolId}`);
+      if (!saved) return;
+      const { jobId, filename } = JSON.parse(saved);
+      if (!jobId) return;
+
+      let isCancelled = false;
+      setIsProcessing(true);
+      setStatusText('Vorherige Entpackung wird im Hintergrund fortgeführt...');
+      setProgress(40);
+
+      const restore = async () => {
+        let attempts = 0;
+        while (attempts < 120 && !isCancelled) {
+          attempts++;
+          await new Promise((r) => setTimeout(r, 1000));
+          if (isCancelled) return;
+          try {
+            const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+            if (!pollRes.ok) {
+              sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+              setIsProcessing(false);
+              return;
+            }
+            const currentJob = await pollRes.json();
+            if (currentJob.status === 'processing') {
+              const curPct = Math.max(35, Math.min(currentJob.progress || 50, 90));
+              setProgress(curPct);
+              setStatusText(`Wird dekomprimiert (${curPct}%)...`);
+            } else if (currentJob.status === 'completed') {
+              const dlRes = await fetch(currentJob.output.downloadUrl || `/api/v1/jobs/${jobId}/download`);
+              if (dlRes.ok) {
+                const blob = await dlRes.blob();
+                setResultBlob(blob);
+                setOutputFilename(currentJob.output?.fileName || `${filename}.extracted.zip`);
+                sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+              }
+              setIsProcessing(false);
+              return;
+            } else if (currentJob.status === 'failed' || currentJob.status === 'expired') {
+              sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+              setIsProcessing(false);
+              return;
+            }
+          } catch {
+            // Ignore network hiccup
+          }
+        }
+        setIsProcessing(false);
+      };
+
+      void restore();
+      return () => {
+        isCancelled = true;
+      };
+    } catch {}
+  }, [toolId, isCreate]);
 
   const handleFilesSelected = (files: File[]) => {
     if (files.length === 0) return;
@@ -155,6 +216,9 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
       }
 
       const { jobId } = await res.json();
+      try {
+        sessionStorage.setItem(`coolwave_archive_${toolId}`, JSON.stringify({ jobId, filename: archiveFile.name }));
+      } catch {}
       setStatusText('Archiv wird sicher entpackt & geprüft...');
       setProgress(30);
 
@@ -196,6 +260,9 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
       }
 
       const blob = await downloadRes.blob();
+      try {
+        sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+      } catch {}
       setResultBlob(blob);
       setOutputFilename(completedJob.output.fileName);
 
@@ -389,6 +456,8 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
         <ProcessingStatus
           progress={progress}
           statusText={statusText}
+          isLargeFile={Boolean(archiveFile && archiveFile.size > 15 * 1024 * 1024)}
+          isBackgroundSafe={!isCreate}
         />
       )}
 

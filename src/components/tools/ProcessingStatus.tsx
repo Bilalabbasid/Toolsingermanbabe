@@ -1,16 +1,30 @@
 'use client';
 
 import React from 'react';
-import { Loader2, X, CheckCircle2 } from 'lucide-react';
+import { Loader2, X, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
 
 interface ProcessingStatusProps {
   progress?: number;
   statusText: string;
   onCancel?: () => void;
   stage?: 'uploading' | 'processing' | 'optimizing' | 'completed';
+  isLargeFile?: boolean;
+  isBackgroundSafe?: boolean;
 }
 
-export function ProcessingStatus({ progress, statusText, onCancel }: ProcessingStatusProps) {
+export function ProcessingStatus({ progress, statusText, onCancel, isLargeFile, isBackgroundSafe = true }: ProcessingStatusProps) {
+  const [showLargeNotice, setShowLargeNotice] = React.useState(Boolean(isLargeFile));
+
+  React.useEffect(() => {
+    if (isLargeFile) {
+      setShowLargeNotice(true);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setShowLargeNotice(true);
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, [isLargeFile]);
   const isIndeterminate = progress === undefined || progress < 0;
   const clampedProgress = isIndeterminate ? 0 : Math.min(100, Math.max(0, progress));
   const roundedPercent = Math.round(clampedProgress);
@@ -72,6 +86,28 @@ export function ProcessingStatus({ progress, statusText, onCancel }: ProcessingS
             <span className="font-semibold text-slate-700 font-mono text-xs sm:text-sm">
               {roundedPercent}%
             </span>
+          </div>
+        )}
+
+        {showLargeNotice && (
+          <div className="mt-5 p-3.5 sm:p-4 rounded-xl bg-amber-50/90 border border-amber-200/90 text-left flex items-start gap-3 shadow-2xs animate-in fade-in duration-300 w-full">
+            <Clock className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+            <div className="space-y-1 text-xs text-amber-950 leading-relaxed">
+              <p className="font-semibold flex items-center gap-1.5">
+                <span>Größere Datei &amp; Rechenvorgang</span>
+              </p>
+              <p className="text-amber-900/90">
+                Die Datei ist groß oder rechenintensiv, daher benötigt die Konvertierung einen kurzen Moment.
+              </p>
+              {isBackgroundSafe && (
+                <p className="text-amber-800 text-[11px] font-medium pt-0.5 flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 inline" />
+                  <span>
+                    <strong>Hintergrund-Garantie:</strong> Sie können das Browserfenster schließen – die Verarbeitung auf dem Server wird dadurch nicht unterbrochen!
+                  </span>
+                </p>
+              )}
+            </div>
           </div>
         )}
 

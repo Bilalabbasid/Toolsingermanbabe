@@ -308,7 +308,14 @@ export function PdfCompressEngine() {
   }
 
   if (isProcessing && !isBatchMode) {
-    return <ProcessingStatus progress={progress} statusText={statusText} />;
+    return (
+      <ProcessingStatus
+        progress={progress}
+        statusText={statusText}
+        isLargeFile={Boolean(singleFile && singleFile.size > 15 * 1024 * 1024)}
+        isBackgroundSafe={true}
+      />
+    );
   }
 
   return (
