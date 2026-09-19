@@ -274,7 +274,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
           category={tool.category}
           title={`Ratgeber & Anleitungen zu ${tool.nameDe}`}
           subtitle="Praxistipps, Hintergrundwissen und Schritt-für-Schritt-Anleitungen für Ihre Dokumente."
-          limit={3}
+          limit={4}
         />
       </div>
     </>

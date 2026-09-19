@@ -91,1162 +91,2406 @@ export interface BlogArticle {
 }
 
 export const BLOG_ARTICLES: BlogArticle[] = [
-  // 1. PDF in Word umwandeln
   {
-    slug: 'pdf-in-word-umwandeln-anleitung',
-    title: 'PDF in Word umwandeln: Anleitung ohne Formatierungsverlust',
-    metaTitle: 'PDF in Word umwandeln – kostenlos & online | CoolWave',
-    metaDescription: 'PDF kostenlos in Word (DOCX) umwandeln – direkt im Browser und ohne Installation. Datei ablegen, konvertieren und bearbeitbares Word-Dokument sichern.',
-    h1: 'PDF in Word umwandeln: So geht es kostenlos online',
-    excerpt: 'Erfahren Sie, wie Sie schreibgeschützte PDF-Dateien ohne Adobe Acrobat in bearbeitbare Word-Dokumente (DOCX) umwandeln – 100% kostenlos im Browser.',
-    category: 'documents',
-    primaryKeyword: 'pdf in word umwandeln',
-    secondaryKeywords: ['pdf zu word', 'pdf in docx konvertieren', 'pdf bearbeitbar machen word'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-in-word-umwandeln',
-    ctaHeadline: 'PDF jetzt direkt in Word umwandeln',
-    ctaButtonLabel: 'PDF in Word umwandeln',
-    relatedToolSlugs: ['word-in-pdf-umwandeln', 'scan-zu-word', 'pdf-bearbeiten'],
-    relatedArticleSlugs: ['gescannte-pdf-in-word-umwandeln', 'pdf-in-word-ohne-formatierungsverlust', 'word-in-pdf-umwandeln-kostenlos'],
-    directAnswer: 'Um eine PDF in Word umzuwandeln, ziehen Sie Ihre Datei einfach in den CoolWave PDF-zu-Word-Konverter. Die Struktur, Texte und Formatierungen werden automatisch in ein bearbeitbares DOCX-Dokument übertragen, das Sie sofort in Microsoft Word, LibreOffice oder Google Docs öffnen und anpassen können – ohne Registrierung, verschlüsselt und mit automatischer Löschung nach 15 Minuten.',
-    steps: [
-      { step: 1, title: 'PDF-Datei auswählen', text: 'Laden Sie Ihre PDF-Datei über das Auswahlfeld hoch oder ziehen Sie sie per Drag & Drop in den Konverter.' },
-      { step: 2, title: 'Automatische Konvertierung starten', text: 'CoolWave analysiert Absätze, Überschriften, Tabellen und eingebettete Bilder für eine saubere DOCX-Übernahme.' },
-      { step: 3, title: 'DOCX-Datei herunterladen', text: 'Laden Sie Ihr bearbeitbares Word-Dokument mit einem Klick herunter und beginnen Sie direkt mit der Textbearbeitung.' },
+    "slug": "pdf-datei-verkleinern",
+    "title": "PDF-Datei verkleinern: So reduzieren Sie die Dateigröße",
+    "metaTitle": "PDF-Datei verkleinern: Dateigröße online reduzieren | CoolWave",
+    "metaDescription": "PDF-Datei verkleinern ohne Qualitätsverlust: Reduzieren Sie die Dateigröße für E-Mail, Uploads und Speicherplatz direkt online im Browser.",
+    "h1": "PDF-Datei verkleinern: So reduzieren Sie die Dateigröße effektiv",
+    "excerpt": "Große PDF-Dateien blockieren Postfächer und scheitern an Upload-Grenzen. Erfahren Sie, wie Sie Ihre PDF schnell, sicher und ohne sichtbaren Qualitätsverlust verkleinern.",
+    "category": "pdf",
+    "primaryKeyword": "pdf verkleinern datei",
+    "secondaryKeywords": [
+      "verkleinern von pdf dateien",
+      "pdf dateigröße reduzieren",
+      "große pdf kleiner machen",
+      "pdf komprimieren"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-komprimieren",
+    "ctaHeadline": "PDF-Datei jetzt kostenlos verkleinern",
+    "ctaButtonLabel": "PDF jetzt verkleinern",
+    "relatedToolSlugs": [
+      "pdf-teilen",
+      "bild-komprimieren",
+      "pdf-seiten-loeschen"
+    ],
+    "relatedArticleSlugs": [
+      "warum-ist-meine-pdf-so-gross",
+      "pdf-fuer-email-verkleinern",
+      "pdf-unter-5-mb-verkleinern"
+    ],
+    "directAnswer": "Um eine PDF-Datei zu verkleinern, laden Sie das Dokument in das CoolWave Komprimierungs-Tool hoch. Das Tool analysiert eingebettete Rastergrafiken, berechnet optimale Auflösungen (DPI) neu, entfernt redundante Schriftendubletten und bereinigt Metadaten. So schrumpft die Dateigröße in wenigen Sekunden um bis zu 85 %, während Texte und Vektoren gestochen scharf bleiben.",
+    "steps": [
       {
-        heading: 'Warum sollte man eine PDF in Word umwandeln?',
-        content: 'Das Portable Document Format (PDF) wurde entwickelt, um Dokumente layoutgetreu auf allen Geräten darzustellen. Diese Eigenschaft macht nachträgliche Textkorrekturen, Umformulierungen oder das Ersetzen von Zahlenreihen jedoch mühsam. Durch die Konvertierung in das offene DOCX-Format erhalten Sie wieder die volle Bearbeitungsfreiheit.',
+        "step": 1,
+        "title": "PDF-Datei auswählen",
+        "text": "Ziehen Sie Ihre zu große PDF per Drag & Drop in den Upload-Bereich oder wählen Sie sie von Ihrem Gerät aus."
       },
       {
-        heading: 'Worauf kommt es bei der Konvertierung an?',
-        content: 'Wichtig ist der Erhalt von Schriftarten, Zeilenabständen und Tabellengittern. Einfache Konverter wandeln Text oft in unzusammenhängende Textboxen um. Der CoolWave-Algorithmus erkennt natürliche Fließtexte und Absätze, sodass Sie in Microsoft Word ganz normal Absätze einfügen und formatieren können.',
+        "step": 2,
+        "title": "Optimierung automatisch starten",
+        "text": "CoolWave analysiert automatisch Bildauflösungen, Schrifteinbettungen und Datenströme, um das beste Verhältnis zwischen Größe und Schärfe zu erzielen."
       },
       {
-        heading: 'Datenschutz: Werden Dokumente online gespeichert?',
-        content: 'Nein. Bei clientseitigen Konvertierungen verbleiben Ihre Daten vollständig in Ihrem Webbrowser. Handelt es sich um komplexe Layouts mit Server-Unterstützung, erfolgt die Löschung unmittelbar nach Abschluss der Konvertierung. Es werden keine Benutzerkonten oder Dateiarchive angelegt.',
+        "step": 3,
+        "title": "Verkleinerte PDF herunterladen",
+        "text": "Nach Abschluss sehen Sie sofort die eingesparte Speichermenge in Prozent und Kilobyte und laden Ihre schlanke PDF mit einem Klick herunter."
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Warum PDF-Dateien oft ungewollt gigantisch werden",
+        "content": "PDF-Dokumente sind Container, die neben reinem Text auch Schriften, Metadaten, Vektorgrafiken und Rasterbilder beherbergen. Besonders gescannte Dokumente oder Druck-PDFs aus Grafikprogrammen enthalten oft unkomprimierte Fotos mit 300 bis 600 DPI Farbtiefe. Für die Darstellung auf Bildschirmen oder den Versand per Mail reichen 144 oder 96 DPI völlig aus. Die Neuberechnung dieser Bilddaten senkt das Dateivolumen drastisch, ohne dass das menschliche Auge beim Lesen einen Unterschied bemerkt."
       },
+      {
+        "heading": "Der Unterschied zwischen Bildkompression und Vektorerhalt",
+        "content": "Ein moderner PDF-Kompressor greift niemals die Textschärfe an: Schriftarten werden als Vektorkurven definiert. CoolWave dedupliziert Schriften (Subsetting) und packt Textströme mit verlustfreiem Flate-Algorithmus. Lediglich hochauflösende Rastergrafiken werden gezielt und intelligent nachkomprimiert. So bleibt jeder Buchstabe selbst bei starkem Hineinzoomen gestochen scharf."
+      },
+      {
+        "heading": "Sicherheit und Datenschutz bei der Online-Verkleinerung",
+        "content": "Gerade bei Verträgen, Gehaltsabrechnungen oder vertraulichen Dokumenten ist Datensicherheit Pflicht. Bei CoolWave werden Ihre Dateien verschlüsselt verarbeitet. Nach der Konvertierung verbleiben keine Daten dauerhaft auf externen Servern, sodass Sie auch behördliche und geschäftliche Dokumente bedenkenlos optimieren können."
+      }
     ],
-    faqs: [
-      { question: 'Kann ich das umgewandelte Dokument in allen Word-Versionen öffnen?', answer: 'Ja. CoolWave erzeugt moderne DOCX-Dateien, die mit Microsoft Word ab Version 2007, Office 365, Google Docs, Apple Pages und LibreOffice Writer voll kompatibel sind.' },
-      { question: 'Was tun, wenn die PDF ein Scan oder Foto ist?', answer: 'Für eingescannte Dokumente ohne echten Textlayer nutzen Sie bitte unser spezialisiertes Tool "Scan zu Word" mit integrierter OCR-Texterkennung.' },
+    "faqs": [
+      {
+        "question": "Wird mein Text durch das Verkleinern unscharf?",
+        "answer": "Nein. Textzeichen und Vektoren bleiben mathematisch exakte Kurven und verlieren keinerlei Schärfe. Nur eingebettete Fotos werden bei Bedarf auf praxistaugliche Bildschirmauflösungen herabgerechnet."
+      },
+      {
+        "question": "Wie viel Prozent Dateigröße kann man einsparen?",
+        "answer": "Bei bildlastigen Scans und Präsentationen lassen sich häufig zwischen 60 % und 90 % der ursprünglichen Dateigröße einsparen. Reine Text-PDFs sind bereits sehr klein und lassen sich meist um 10 % bis 30 % optimieren."
+      },
+      {
+        "question": "Gibt es eine Begrenzung bei der Seitenzahl?",
+        "answer": "CoolWave verarbeitet auch mehrseitige Skripte, Kataloge und Verträge mit Hunderten Seiten zuverlässig."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-08-10',
-    updatedAt: '2026-09-12',
-    author: 'CoolWave Redaktion',
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-15",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 2. Gescannte PDF in Word umwandeln
   {
-    slug: 'gescannte-pdf-in-word-umwandeln',
-    title: 'Gescannte PDF in Word umwandeln: OCR-Texterkennung erklärt',
-    metaTitle: 'Gescannte PDF in Word umwandeln (OCR) | CoolWave',
-    metaDescription: 'Gescannte Dokumente und Papier-PDFs mit OCR in bearbeitbares Word (DOCX) umwandeln. Kostenlose optische Texterkennung direkt im Webbrowser.',
-    h1: 'Gescannte PDF in Word umwandeln mit OCR',
-    excerpt: 'Wenn Ihre PDF nur aus Bildern oder Papier-Scans besteht, hilft normale Konvertierung nicht weiter. Erfahren Sie, wie optische Zeichenerkennung (OCR) den Text rettet.',
-    category: 'ocr',
-    primaryKeyword: 'gescannte pdf in word umwandeln',
-    secondaryKeywords: ['scan zu word', 'ocr pdf in docx', 'text aus gescannter pdf kopieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'scan-zu-word',
-    ctaHeadline: 'Scan jetzt per OCR in Word umwandeln',
-    ctaButtonLabel: 'Gescannte PDF in Word umwandeln',
-    relatedToolSlugs: ['ocr-pdf', 'pdf-in-word-umwandeln', 'bild-zu-text'],
-    relatedArticleSlugs: ['pdf-in-word-umwandeln-anleitung', 'ocr-text-aus-bild-kopieren'],
-    directAnswer: 'Gescannte PDFs enthalten keinen auswählbaren Computertext, sondern lediglich Pixelbilder der Seiten. Mit dem CoolWave OCR-Tool analysiert ein intelligenter Algorithmus die Buchstabenformen und erzeugt ein echtes, formatiertes Word-Dokument (DOCX), in dem Sie Text frei editieren, durchsuchen und kopieren können.',
-    steps: [
-      { step: 1, title: 'Scan hochladen', text: 'Ziehen Sie die gescannte PDF oder Fotodatei in das Tool "Scan zu Word".' },
-      { step: 2, title: 'Spracherkennung wählen', text: 'Wählen Sie die Dokumentsprache (z. B. Deutsch), um Umlaute und Sonderzeichen fehlerfrei zu erkennen.' },
-      { step: 3, title: 'Word-Dokument herunterladen', text: 'Nach dem OCR-Durchlauf erhalten Sie eine fertige DOCX-Datei mit editierbarem Text.' },
+    "slug": "pdf-bearbeiten-was-kann-man-aendern",
+    "title": "PDF bearbeiten: Was kann man in einer PDF ändern?",
+    "metaTitle": "PDF bearbeiten: Was kann man in einer PDF ändern? | CoolWave",
+    "metaDescription": "Welche Elemente einer PDF lassen sich nachträglich bearbeiten? Erfahren Sie, wie Sie Texte, Bilder, Seiten und Formulare online anpassen.",
+    "h1": "PDF bearbeiten: Was lässt sich in einem PDF-Dokument anpassen?",
+    "excerpt": "Ein PDF ist eigentlich als druckfestes Endformat gedacht. Moderne Werkzeuge erlauben dennoch umfassende Korrekturen. Wir zeigen, welche Änderungen möglich sind und wo technische Hürden bestehen.",
+    "category": "pdf",
+    "primaryKeyword": "pdf bearbeiten was ist möglich",
+    "secondaryKeywords": [
+      "kann man pdf bearbeiten",
+      "pdf inhalt ändern",
+      "pdf nachträglich korrigieren",
+      "pdf online bearbeiten"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-bearbeiten",
+    "ctaHeadline": "PDF jetzt direkt im Browser bearbeiten",
+    "ctaButtonLabel": "PDF jetzt online bearbeiten",
+    "relatedToolSlugs": [
+      "pdf-unterschreiben",
+      "pdf-schwaerzen",
+      "pdf-in-word-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "text-in-pdf-bearbeiten",
+      "pdf-online-bearbeiten-moeglichkeiten-grenzen",
+      "pdf-laesst-sich-nicht-bearbeiten-ursachen-loesungen"
+    ],
+    "directAnswer": "In einer Standard-PDF können Sie bestehenden Text korrigieren, neue Textfelder einfügen, Bilder austauschen oder verschieben, Notizen und Zeichnungen ergänzen sowie Formularfelder ausfüllen. Grenzen gibt es bei gescannten Dokumenten (die vorab per OCR erkannt werden müssen) oder bei Dokumenten mit restriktivem Passwort-Schreibschutz.",
+    "steps": [
       {
-        heading: 'Der Unterschied zwischen nativer PDF und Scan-PDF',
-        content: 'Eine "native PDF" entsteht beim digitalen Speichern aus Word oder InDesign. Die Buchstaben sind als Zeichencodes hinterlegt. Ein "Scan" hingegen ist eine Bilddatei, eingekapselt in eine PDF-Hülle. Ohne OCR kann kein Text markiert oder durchsucht werden.',
+        "step": 1,
+        "title": "PDF im Editor öffnen",
+        "text": "Laden Sie Ihre Datei direkt im CoolWave PDF-Editor hoch – die Anzeige erfolgt sekundenschnell im Browser."
       },
       {
-        heading: 'Tipps für beste OCR-Erkennungsgenauigkeit',
-        content: 'Achten Sie beim Einscannen auf eine Mindestauflösung von 300 DPI, gute Ausleuchtung ohne Schatten und gerade ausgerichtete Seiten. Dies minimiert Verwechslungen zwischen ähnlichen Zeichen wie "l", "I" und "1".',
+        "step": 2,
+        "title": "Elemente anpassen oder hinzufügen",
+        "text": "Wählen Sie das Text-, Bild- oder Freihand-Werkzeug, um Tippfehler zu beheben, Markierungen zu setzen oder neue Inhalte einzufügen."
       },
+      {
+        "step": 3,
+        "title": "Bearbeitetes Dokument speichern",
+        "text": "Speichern Sie das fertige Dokument ab. Alle Änderungen werden nahtlos in das PDF-Format übertragen."
+      }
     ],
-    faqs: [
-      { question: 'Werden deutsche Umlaute (ä, ö, ü, ß) zuverlässig erkannt?', answer: 'Ja. Unsere OCR-Engine ist speziell für die deutsche Rechtschreibung und typografische Eigenheiten trainiert.' },
+    "sections": [
+      {
+        "heading": "Typische Bearbeitungen im Überblick",
+        "content": "Zu den häufigsten Anpassungen zählen die Korrektur von Tippfehlern, das Einfügen von Unterschriften oder Stempeln, das Hinzufügen von Seitenzahlen sowie das Schwärzen sensibler personenbezogener Angaben. Ein Online-Editor erlaubt es, Annotationen direkt auf den Inhaltsebenen zu verankern."
+      },
+      {
+        "heading": "Unterschied zwischen echtem Text und gescannten Seiten",
+        "content": "Wenn eine PDF aus einem physischen Scanner stammt, liegt der Inhalt nicht als bearbeitbarer Buchstabencode vor, sondern als ganzseitiges Foto. In diesem Fall kann ein normaler Editor den Text nicht unmittelbar anklicken. Hier greift zunächst die optische Zeichenerkennung (OCR), welche die Pixel in editierbare Zeichen übersetzt."
+      },
+      {
+        "heading": "Formularfelder und interaktive Inhalte",
+        "content": "AcroForms und interaktive PDF-Formulare lassen sich direkt am Bildschirm ausfüllen, ankreuzen und signieren, ohne dass das Layout verrutscht. Das Ausdrucken und manuelle Wiedereinscannen entfällt damit vollständig."
+      }
     ],
-    readingTimeMinutes: 5,
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-09-10',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann man vorhandenen Text in einer PDF wie in Word umschreiben?",
+        "answer": "Ja, sofern das Dokument aus echtem Vektortext besteht und nicht geschützt ist. Bei komplexen Fließtexten über mehrere Seiten empfiehlt sich jedoch oft die Konvertierung in Word (DOCX)."
+      },
+      {
+        "question": "Kann ich Bilder in der PDF austauschen?",
+        "answer": "Ja, Logos, Fotos und Stempel lassen sich im CoolWave PDF-Editor überlagern, verdecken oder durch neue Grafiken ersetzen."
+      },
+      {
+        "question": "Brauche ich ein teures Adobe Acrobat Abonnement?",
+        "answer": "Nein. Für reguläre Korrekturen, Notizen und Textänderungen genügt der kostenlose Browser-Editor von CoolWave völlig."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-16",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 3. PDF in Word ohne Formatierungsverlust
   {
-    slug: 'pdf-in-word-ohne-formatierungsverlust',
-    title: 'PDF in Word ohne Formatierungsverlust: Layout & Tabellen behalten',
-    metaTitle: 'PDF in Word ohne Formatierungsverlust | CoolWave Ratgeber',
-    metaDescription: 'So bleibt das Layout beim Umwandeln von PDF in Word erhalten: Schriften, Spalten, Tabellen und Bilder präzise ins DOCX-Format übertragen.',
-    h1: 'PDF in Word umwandeln und Formatierung behalten',
-    excerpt: 'Verschobene Ränder, zerrissene Tabellen und falsche Zeilenumbrüche? Wir zeigen, wie Sie PDFs layoutgetreu in Word übertragen.',
-    category: 'documents',
-    primaryKeyword: 'pdf in word formatierung behalten',
-    secondaryKeywords: ['pdf zu docx layout treu', 'pdf tabellen in word übernehmen'],
-    searchIntent: 'informational',
-    primaryToolSlug: 'pdf-in-word-umwandeln',
-    ctaHeadline: 'PDF jetzt layoutgetreu umwandeln',
-    ctaButtonLabel: 'PDF in Word umwandeln',
-    relatedToolSlugs: ['word-in-pdf-umwandeln', 'pdf-in-excel-umwandeln'],
-    relatedArticleSlugs: ['pdf-in-word-umwandeln-anleitung', 'word-in-pdf-umwandeln-kostenlos'],
-    directAnswer: 'Damit beim Konvertieren einer PDF in Word das Original-Layout erhalten bleibt, analysiert CoolWave geometrische Textblöcke und Tabellenstrukturen ganzheitlich. Anstelle von starren Textfeldern wird das Dokument in native Word-Absätze mit echten Tabellengittern rekonstruiert.',
-    steps: [
-      { step: 1, title: 'PDF im Konverter öffnen', text: 'Öffnen Sie das PDF-zu-Word-Tool in Ihrem Browser.' },
-      { step: 2, title: 'Layout-Rekonstruktion abwarten', text: 'Die Engine erkennt mehrspaltige Texte, Kopfzeilen und Grafiken automatisch.' },
-      { step: 3, title: 'DOCX prüfen und weiterarbeiten', text: 'Öffnen Sie die Datei in Word – das Layout bleibt stabil und flexibel editierbar.' },
+    "slug": "text-in-pdf-bearbeiten",
+    "title": "Text in PDF bearbeiten: So funktioniert es",
+    "metaTitle": "Text in PDF bearbeiten: So ändern Sie Textstellen online | CoolWave",
+    "metaDescription": "Text in einer PDF nachträglich bearbeiten, Tippfehler korrigieren oder neue Textabschnitte einfügen – direkt im Browser ohne teure Software.",
+    "h1": "Text in PDF bearbeiten: Bestehende Texte korrigieren & ergänzen",
+    "excerpt": "Tippfehler im Angebot entdeckt oder ein Datum muss aktualisiert werden? So bearbeiten Sie den Text in einer fertigen PDF-Datei im Handumdrehen online.",
+    "category": "pdf",
+    "primaryKeyword": "pdf text bearbeiten",
+    "secondaryKeywords": [
+      "text in pdf ändern",
+      "pdf text korrigieren",
+      "textstelle in pdf bearbeiten",
+      "pdf text editieren"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-bearbeiten",
+    "ctaHeadline": "Textstellen in Ihrer PDF sofort anpassen",
+    "ctaButtonLabel": "PDF-Text jetzt bearbeiten",
+    "relatedToolSlugs": [
+      "pdf-in-word-umwandeln",
+      "pdf-schwaerzen",
+      "ocr-pdf"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-bearbeiten-was-kann-man-aendern",
+      "gescannte-pdf-bearbeiten-ocr-verwenden",
+      "pdf-laesst-sich-nicht-bearbeiten-ursachen-loesungen"
+    ],
+    "directAnswer": "Um Text in einer PDF zu bearbeiten, laden Sie das Dokument in den CoolWave PDF-Editor hoch. Klicken Sie auf das Text-Werkzeug und wählen Sie die gewünschte Stelle aus. Sie können vorhandenen Text korrigieren, neue Textfelder mit passender Schriftart und Schriftgröße ergänzen oder nicht mehr benötigte Absätze mit dem Schwärzungswerkzeug abdecken.",
+    "steps": [
       {
-        heading: 'Typische Ursachen für Layout-Fehler bei Konvertierungen',
-        content: 'Oft scheitern einfache Tools an proprietären Schriften oder komplexen Vektorgrafiken. Wenn eine Schriftart auf dem Ziel-PC fehlt, ersetzt Word sie durch eine Standardschrift mit anderer Zeichenbreite. CoolWave bettet Schrifteigenschaften so ein, dass Textüberläufe minimiert werden.',
+        "step": 1,
+        "title": "PDF öffnen",
+        "text": "Wählen Sie Ihre PDF-Datei aus und öffnen Sie sie im interaktiven Bearbeitungsbereich."
       },
+      {
+        "step": 2,
+        "title": "Text markieren und bearbeiten",
+        "text": "Aktivieren Sie das Textwerkzeug, platzieren Sie den Cursor über der fehlerhaften Stelle und geben Sie die Korrektur ein."
+      },
+      {
+        "step": 3,
+        "title": "Schriftbild abstimmen & sichern",
+        "text": "Passen Sie Schriftgröße, Farbe und Ausrichtung an das Original an und laden Sie die aktualisierte PDF herunter."
+      }
     ],
-    faqs: [
-      { question: 'Was passiert mit Vektorlogos und hochauflösenden Bildern?', answer: 'Bilder werden in voller Originalqualität ohne verlustbehaftete Neukomprimierung in das DOCX-Dokument übernommen.' },
+    "sections": [
+      {
+        "heading": "Wie Schriften in PDF-Dokumenten funktionieren",
+        "content": "Eine PDF speichert Text oft nicht als zusammenhängenden Fließtext, sondern als Ansammlung präzise positionierter Glyphen und Vektorkoordinaten. Zudem sind häufig nur Teilmengen (Subsets) der verwendeten Schriftart eingebettet. Wenn Sie einen seltenen Buchstaben ergänzen, der im Original-Subset fehlt, greift der Editor auf optisch identische Standardschriften zurück."
+      },
+      {
+        "heading": "Wann der PDF-Editor reicht und wann Word besser ist",
+        "content": "Für kurze Änderungen wie Namen, Datumsangaben, Preise oder Notizen ist der PDF-Editor der schnellste Weg. Wenn Sie jedoch ganze Absätze neu verfassen müssen und sich der automatische Zeilenumbruch über mehrere Seiten anpassen soll, empfiehlt sich die Umwandlung der PDF in Word (DOCX)."
+      },
+      {
+        "heading": "Tipps für nahtlose Schriftkorrekturen",
+        "content": "Achten Sie darauf, den exakten Farbton und die Zeilenhöhe der umliegenden Zeichen zu treffen. Mit der Zoom-Funktion können Sie Textbausteine pixelgenau ausrichten, sodass der Eindruck eines unberührten Originaldokuments gewahrt bleibt."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-08-15',
-    updatedAt: '2026-09-08',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Warum lässt sich ein bestimmter Buchstabe nicht direkt anklicken?",
+        "answer": "Dies tritt auf, wenn der Text entweder in Pfade (Vektorkonturen) umgewandelt wurde oder die Seite als gescanntes Pixelbild vorliegt. In diesem Fall hilft das OCR-Werkzeug."
+      },
+      {
+        "question": "Bleibt die Formatierung des restlichen Dokuments erhalten?",
+        "answer": "Ja, alle anderen Seiten, Grafiken und Formatierungen bleiben absolut unberührt."
+      },
+      {
+        "question": "Kann ich auch Textstellen unkenntlich machen?",
+        "answer": "Ja, mit dem integrierten Schwärzungswerkzeug können Sie vertrauliche Passagen wie Kontonummern oder Adressen manipulationssicher abdecken."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-16",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 4. Word in PDF umwandeln kostenlos
   {
-    slug: 'word-in-pdf-umwandeln-kostenlos',
-    title: 'Word in PDF umwandeln: So gelingt die Konvertierung kostenlos',
-    metaTitle: 'Word in PDF umwandeln – kostenlos & schnell | CoolWave',
-    metaDescription: 'Word-Dokumente (DOCX, DOC) kostenlos in druckfertige PDF-Dateien umwandeln. Schützt Formatierungen und Schriften zuverlässig auf allen Geräten.',
-    h1: 'Word in PDF umwandeln: So geht es kostenlos online',
-    excerpt: 'Bevor Sie Verträge, Bewerbungen oder Rechnungen versenden, sollten Sie Word-Dateien stets als PDF sichern. Hier erfahren Sie, wie es schnell und sicher online klappt.',
-    category: 'documents',
-    primaryKeyword: 'word in word umwandeln',
-    secondaryKeywords: ['docx in pdf umwandeln', 'word als pdf speichern', 'word dokument konvertieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'word-in-pdf-umwandeln',
-    ctaHeadline: 'Word-Datei jetzt in PDF umwandeln',
-    ctaButtonLabel: 'Word in PDF umwandeln',
-    relatedToolSlugs: ['pdf-in-word-umwandeln', 'pdf-komprimieren', 'pdf-schuetzen'],
-    relatedArticleSlugs: ['docx-in-pdf-umwandeln-ohne-word', 'pdf-fuer-email-verkleinern'],
-    directAnswer: 'Um eine Word-Datei (DOC oder DOCX) in ein universelles PDF umzuwandeln, laden Sie das Dokument einfach bei CoolWave hoch. Das Layout wird pixelgenau gerastert und in ein ISO-konformes PDF-Format exportiert, sodass Schriften, Ränder und Grafiken auf jedem Empfängergerät exakt gleich aussehen.',
-    steps: [
-      { step: 1, title: 'DOCX-Datei ablegen', text: 'Wählen Sie Ihre Word-Datei aus oder ziehen Sie sie per Drag & Drop in den Konverter.' },
-      { step: 2, title: 'PDF-Generierung', text: 'Das System erzeugt in Sekundenschnelle ein druckoptimiertes PDF-Dokument.' },
-      { step: 3, title: 'Download sichern', text: 'Laden Sie Ihre fertige PDF herunter und versenden Sie sie bedenkenlos per E-Mail.' },
+    "slug": "pdf-online-bearbeiten-moeglichkeiten-grenzen",
+    "title": "PDF online bearbeiten: Möglichkeiten und Grenzen",
+    "metaTitle": "PDF online bearbeiten: Möglichkeiten & Grenzen erklärt | CoolWave",
+    "metaDescription": "PDF online im Browser bearbeiten: Erfahren Sie, wann Online-Editoren ideal sind und wo technische Grenzen bei Druckvorstufen oder DRM liegen.",
+    "h1": "PDF online bearbeiten: Was moderne Browser-Tools leisten & wo die Grenzen liegen",
+    "excerpt": "Moderne Webtechnologien ermöglichen das Bearbeiten von Dokumenten direkt im Webbrowser. Doch was können Online-Editoren wirklich – und wann ist Desktop-Software unverzichtbar?",
+    "category": "pdf",
+    "primaryKeyword": "pdf bearbeiten online",
+    "secondaryKeywords": [
+      "pdf im browser bearbeiten",
+      "grenzen pdf online editor",
+      "pdf online editieren vorteile",
+      "pdf editor sicherheit"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-bearbeiten",
+    "ctaHeadline": "PDF direkt sicher im Browser anpassen",
+    "ctaButtonLabel": "PDF jetzt im Browser bearbeiten",
+    "relatedToolSlugs": [
+      "pdf-schuetzen",
+      "pdf-in-word-umwandeln",
+      "pdf-entsperren"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-bearbeiten-was-kann-man-aendern",
+      "text-in-pdf-bearbeiten",
+      "pdf-laesst-sich-nicht-bearbeiten-ursachen-loesungen"
+    ],
+    "directAnswer": "Online-Editoren eignen sich hervorragend für 95 % aller Alltagsaufgaben: Tippfehler korrigieren, Notizen hinzufügen, Seiten löschen, Formulare ausfüllen oder Unterschriften setzen. Technische Grenzen liegen bei Druckvorstufen mit CMYK-Separationen, hochspezifischen PDF/X-Prepress-Profilen oder DRM-geschützten E-Books mit proprietärem Rechtemanagement.",
+    "steps": [
       {
-        heading: 'Warum sollte man Dokumente immer als PDF versenden?',
-        content: 'Beim Öffnen einer Word-Datei auf einem fremden Computer hängen Zeilenumbrüche und Seitenumbrüche vom installierten Druckertreiber und den vorhandenen Schriften ab. Ein PDF fixiert das Layout dauerhaft und verhindert unbeabsichtigte Bearbeitungen durch den Empfänger.',
+        "step": 1,
+        "title": "Ohne Installation starten",
+        "text": "Kein Download von schwerfälligen Programmen nötig – öffnen Sie CoolWave einfach auf Desktop, Tablet oder Smartphone."
       },
+      {
+        "step": 2,
+        "title": "Intuitiv anpassen",
+        "text": "Fügen Sie Texte, Markierungen, Linien oder Bilder über die übersichtliche Werkzeugleiste ein."
+      },
+      {
+        "step": 3,
+        "title": "Sofort exportieren",
+        "text": "Laden Sie das modifizierte Dokument sofort herunter. Es entstehen keine Lizenzbindungen."
+      }
     ],
-    faqs: [
-      { question: 'Werden Hyperlinks und Inhaltsverzeichnisse im PDF klickbar bleiben?', answer: 'Ja, interne Sprungmarken und Web-Links bleiben im konvertierten PDF interaktiv erhalten.' },
+    "sections": [
+      {
+        "heading": "Die großen Vorteile webbasierter Editoren",
+        "content": "Plattformunabhängigkeit ist der größte Vorzug: Egal ob macOS, Windows, Linux, iOS oder Android – moderne WebAssembly- und Canvas-Technologien bringen professionelle PDF-Bearbeitung in jeden Standardbrowser. Es müssen keine administrativen Rechte auf Firmenrechnern vorhanden sein."
+      },
+      {
+        "heading": "Echte Grenzen im professionellen Printbereich",
+        "content": "Für alltägliche Bürodokumente, Verträge und Uni-Arbeiten reichen Online-Editoren völlig aus. Bei Offset-Druckereien, die Farbseparationen in Schmuckfarben (Pantone/HKS) oder Trapping verlangen, stößt Standard-PDF-Software an Grenzen. Hier sind spezialisierte Desktop-Suites wie Adobe InDesign erforderlich."
+      },
+      {
+        "heading": "Datenschutzkonformität nach DSGVO",
+        "content": "Bei der Wahl eines Online-Tools sollten Sie stets auf den Serverstandort und die Speicherfristen achten. CoolWave verarbeitet Dateien flüchtig und speichert Dokumente nicht dauerhaft, was volle Konformität mit europäischen Datenschutzrichtlinien gewährleistet."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-08-16',
-    updatedAt: '2026-09-11',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich ein passwortgeschütztes PDF online bearbeiten?",
+        "answer": "Wenn das Dokument mit einem Benutzerpasswort vor dem Öffnen geschützt ist, müssen Sie dieses Passwort kennen. Gegen einen bloßen Bearbeitungsschutz hilft das CoolWave Entsperr-Tool."
+      },
+      {
+        "question": "Werden meine Dokumente zum Trainieren von KI genutzt?",
+        "answer": "Nein. CoolWave verwendet niemals Kundendateien für maschinelles Lernen oder Datensammlungen."
+      },
+      {
+        "question": "Funktioniert die Online-Bearbeitung auch auf dem Smartphone?",
+        "answer": "Ja, die Oberfläche ist für Touchbedienung auf Android und iPhones optimiert."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-17",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 5. DOCX in PDF ohne Microsoft Word
   {
-    slug: 'docx-in-pdf-umwandeln-ohne-word',
-    title: 'DOCX in PDF umwandeln ohne Microsoft Office oder Word',
-    metaTitle: 'DOCX in PDF ohne Word umwandeln | CoolWave Online',
-    metaDescription: 'Kein Microsoft Office installiert? Wandeln Sie DOCX- und DOC-Dateien direkt im Browser kostenlos in PDF um – auf Mac, Windows, Linux und Mobilgeräten.',
-    h1: 'DOCX in PDF umwandeln ohne Microsoft Word',
-    excerpt: 'Sie haben eine DOCX-Datei erhalten, besitzen aber kein Word? Mit CoolWave konvertieren Sie Office-Dokumente ohne Installation und ohne Software-Lizenz.',
-    category: 'documents',
-    primaryKeyword: 'docx in pdf umwandeln ohne word',
-    secondaryKeywords: ['word ohne office umwandeln', 'docx online in pdf'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'word-in-pdf-umwandeln',
-    ctaHeadline: 'DOCX jetzt ohne Word in PDF konvertieren',
-    ctaButtonLabel: 'Word in PDF umwandeln',
-    relatedToolSlugs: ['pdf-in-word-umwandeln', 'pdf-bearbeiten'],
-    relatedArticleSlugs: ['word-in-pdf-umwandeln-kostenlos'],
-    directAnswer: 'Sie benötigen kein kostenpflichtiges Microsoft Word, um DOCX-Dateien in PDFs zu transformieren. Der webbasierte Konverter von CoolWave verarbeitet Word-Dateien direkt im Browser und erstellt normgerechte PDF-Dateien ohne jegliche Software-Installation.',
-    steps: [
-      { step: 1, title: 'Datei im Browser laden', text: 'Öffnen Sie CoolWave auf Smartphone, Tablet oder PC und laden Sie die DOCX-Datei hoch.' },
-      { step: 2, title: 'Konvertierung ausführen', text: 'In weniger als 3 Sekunden wird das Dokument in ein PDF überführt.' },
-      { step: 3, title: 'Ergebnis speichern', text: 'Laden Sie das PDF herunter oder leiten Sie es direkt weiter.' },
+    "slug": "pdf-in-word-docx-oder-doc",
+    "title": "PDF in Word: DOCX oder DOC – welches Format ist besser?",
+    "metaTitle": "PDF in Word: DOCX oder DOC – Welches Format wählen? | CoolWave",
+    "metaDescription": "DOCX vs. DOC beim Konvertieren von PDF zu Word: Erfahren Sie die Unterschiede bei Dateigröße, Formatierungstreue, XML-Struktur und Kompatibilität.",
+    "h1": "PDF in Word konvertieren: Warum DOCX dem alten DOC überlegen ist",
+    "excerpt": "Stehen Sie vor der Wahl zwischen DOCX und DOC? Wir erklären die technischen Hintergründe beider Formate und warum das moderne DOCX heute stets die beste Wahl ist.",
+    "category": "documents",
+    "primaryKeyword": "pdf in word docx oder doc",
+    "secondaryKeywords": [
+      "unterschied docx und doc",
+      "pdf zu docx umwandeln",
+      "word format vergleich",
+      "doc veraltet"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-in-word-umwandeln",
+    "ctaHeadline": "PDF jetzt direkt in das moderne DOCX-Format umwandeln",
+    "ctaButtonLabel": "PDF jetzt in DOCX umwandeln",
+    "relatedToolSlugs": [
+      "word-in-pdf-umwandeln",
+      "doc-in-docx-umwandeln",
+      "docx-in-doc-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-in-word-konvertieren-formatierung-uebernehmen",
+      "pdf-oder-word-welches-format-eignet-sich-wann",
+      "pdf-umwandeln-welche-formate-eignen-sich"
+    ],
+    "directAnswer": "Wählen Sie beim Umwandeln einer PDF in Word immer das moderne DOCX-Format. DOCX basiert auf dem offenen Open-XML-Standard, benötigt bis zu 75 % weniger Speicherplatz als das veraltete DOC-Format (aus Word 97–2003) und bietet eine wesentlich präzisere Übernahme von Tabellen, Schriften und mehrspaltigen Layouts.",
+    "steps": [
       {
-        heading: 'Plattformunabhängig auf Smartphone und Desktop',
-        content: 'Egal ob Sie ein Android-Smartphone, ein iPhone, ein Chromebook oder einen Linux-PC nutzen: CoolWave benötigt lediglich einen modernen Webbrowser wie Chrome, Safari, Firefox oder Edge.',
+        "step": 1,
+        "title": "PDF-Datei hochladen",
+        "text": "Wählen Sie Ihre PDF-Datei aus und laden Sie sie in das CoolWave Konvertierungs-Tool hoch."
       },
+      {
+        "step": 2,
+        "title": "DOCX-Standardausgabe nutzen",
+        "text": "CoolWave erzeugt standardmäßig eine saubere DOCX-Datei mit optimierten XML-Absatzstrukturen."
+      },
+      {
+        "step": 3,
+        "title": "In Word oder LibreOffice öffnen",
+        "text": "Laden Sie die DOCX-Datei herunter und bearbeiten Sie den Text frei in Ihrem bevorzugten Schreibprogramm."
+      }
     ],
-    faqs: [
-      { question: 'Funktioniert das auch mit alten .DOC-Dateien?', answer: 'Ja, sowohl das moderne DOCX- als auch das klassische DOC-Format von älteren Word-Versionen werden voll unterstützt.' },
+    "sections": [
+      {
+        "heading": "Die Evolution: Vom binären DOC zum modularen DOCX",
+        "content": "Das 1983 eingeführte .DOC-Format war eine rein binäre Datei, die tief mit alten Windows-Strukturen verknüpft war. Seit Word 2007 setzt Microsoft auf das standardisierte .DOCX (Office Open XML). Hinter einer .docx-Datei verbirgt sich ein komprimiertes ZIP-Archiv aus strukturierten XML-Dokumenten und separaten Bildordnern, was Reparaturen bei Beschädigungen enorm erleichtert."
+      },
+      {
+        "heading": "Vorteile von DOCX bei der PDF-Umwandlung",
+        "content": "Bei der Konvertierung aus PDF muss die Software komplexe geometrische Positionen in semantische Absätze, Überschriften und Tabellen übersetzen. DOCX unterstützt moderne typografische Attribute, flexible Tabellenraster und Vektorgrafiken nativ. Dadurch bleiben Spaltenumbrüche stabil, statt in zusammenhangslose Textkästen zu zerfallen."
+      },
+      {
+        "heading": "Gibt es noch Gründe für das alte DOC?",
+        "content": "Lediglich sehr alte Legacy-Systeme aus den frühen 2000er-Jahren verlangen vereinzelt noch .DOC. Alle modernen Textverarbeitungsprogramme – einschließlich Microsoft Word 365, Google Docs, Apple Pages und LibreOffice – bevorzugen heute ausnahmslos DOCX."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-08-18',
-    updatedAt: '2026-09-09',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann Microsoft Office 2003 DOCX-Dateien öffnen?",
+        "answer": "Nur mit dem offiziellen Microsoft Office Compatibility Pack. Für alle Versionen ab Word 2007 ist DOCX das Standardformat."
+      },
+      {
+        "question": "Sind meine Daten in DOCX sicherer?",
+        "answer": "Ja. Das binäre .DOC-Format war anfälliger für Makro-Viren. In standardmäßigen .docx-Dateien können Makros prinzipbedingt nicht ausgeführt werden (dafür existiert das separate Format .docm)."
+      },
+      {
+        "question": "Kann ich ein altes DOC bei Bedarf wieder in DOCX umwandeln?",
+        "answer": "Ja, dafür bietet CoolWave das direkte Umwandlungs-Tool \"DOC in DOCX\" an."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-17",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 6. PDF für E-Mail verkleinern
   {
-    slug: 'pdf-fuer-email-verkleinern',
-    title: 'PDF für E-Mail verkleinern: Dateigröße wirksam reduzieren',
-    metaTitle: 'PDF für E-Mail verkleinern – kostenlos & schnell | CoolWave',
-    metaDescription: 'PDF zu groß für den E-Mail-Versand? Reduzieren Sie die Dateigröße kostenlos online auf unter 5 MB oder 2 MB ohne sichtbaren Qualitätsverlust.',
-    h1: 'PDF für E-Mail verkleinern: So reduzieren Sie die Dateigröße',
-    excerpt: 'Mailserver lehnen große Dateianhänge über 10 MB oder 25 MB oft ab. Wir zeigen Ihnen, wie Sie Ihre PDF-Dateien im Handumdrehen fit für den Postausgang machen.',
-    category: 'pdf',
-    primaryKeyword: 'pdf für email verkleinern',
-    secondaryKeywords: ['pdf anhang zu groß', 'pdf verkleinern mail', 'pdf komprimieren email'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-komprimieren',
-    ctaHeadline: 'PDF jetzt für den E-Mail-Versand verkleinern',
-    ctaButtonLabel: 'PDF jetzt komprimieren',
-    relatedToolSlugs: ['pdf-teilen', 'pdf-zusammenfuegen', 'bild-komprimieren'],
-    relatedArticleSlugs: ['pdf-unter-2-mb-verkleinern', 'pdf-komprimieren-ohne-qualitaetsverlust'],
-    directAnswer: 'Um eine PDF für den E-Mail-Versand zu verkleinern, nutzen Sie den CoolWave PDF-Kompressor. Überflüssige Vektordaten, nicht eingebettete Metadaten und überdimensionierte Bildauflösungen werden optimiert, wodurch die Dateigröße meist um 60% bis 85% schrumpft – bei gestochen scharfer Textdarstellung.',
-    steps: [
-      { step: 1, title: 'Große PDF hochladen', text: 'Ziehen Sie die zu große Datei in den Kompressor.' },
-      { step: 2, title: 'Komprimierungsgrad wählen', text: 'Wählen Sie zwischen empfohlener Standardkompression oder starker Kompression für maximale Einsparung.' },
-      { step: 3, title: 'Verkleinerte PDF speichern', text: 'Laden Sie die kompakte Datei herunter und versenden Sie sie problemlos per E-Mail.' },
+    "slug": "pdf-in-word-konvertieren-formatierung-uebernehmen",
+    "title": "PDF in Word konvertieren: Formatierung richtig übernehmen",
+    "metaTitle": "PDF in Word umwandeln: Formatierung & Layout exakt erhalten | CoolWave",
+    "metaDescription": "So bleibt die Formatierung bei der Umwandlung von PDF in Word erhalten: Vermeiden Sie verschobene Tabellen, falsche Schriftarten und Spaltenfehler.",
+    "h1": "PDF in Word konvertieren: Layout, Schriftarten & Tabellen exakt behalten",
+    "excerpt": "Nichts ist frustrierender als eine konvertierte Word-Datei, bei der Tabellen zersplittert sind und jeder Satz in einem eigenen Textfeld liegt. Wir zeigen, wie Sie die Formatierung intakt halten.",
+    "category": "documents",
+    "primaryKeyword": "pdf in word formatierung behalten",
+    "secondaryKeywords": [
+      "pdf zu word layout behalten",
+      "pdf in docx formatierung übernehmen",
+      "tabellen aus pdf in word",
+      "pdf word ohne verschieben"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-in-word-umwandeln",
+    "ctaHeadline": "PDF jetzt mit präzisem Layout in Word umwandeln",
+    "ctaButtonLabel": "PDF formatiert in Word umwandeln",
+    "relatedToolSlugs": [
+      "pdf-in-excel-umwandeln",
+      "scan-zu-word",
+      "word-in-pdf-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-in-word-docx-oder-doc",
+      "pdf-oder-word-welches-format-eignet-sich-wann",
+      "gescannte-pdf-bearbeiten-ocr-verwenden"
+    ],
+    "directAnswer": "Um die Formatierung bei der Konvertierung von PDF in Word exakt zu erhalten, nutzt CoolWave eine KI-gestützte Layout-Rekonstruktion. Anstatt Zeichen als lose Textboxen zu platzieren, erkennt der Algorithmus Tabellenstrukturen, Absätze, Einzüge und Überschriftenhierarchien und bildet sie als echte Word-Formatvorlagen nach.",
+    "steps": [
       {
-        heading: 'Typische Grenzwerte gängiger E-Mail-Provider',
-        content: 'Während Gmail und GMX bis zu 20–25 MB erlauben, sperren viele Unternehmens-Firewalls und Behördenpostfächer bereits Anhänge ab 5 MB oder 10 MB. Eine Zielgröße von unter 3 MB ist die sicherste Wahl für fehlerfreie Zustellbarkeit.',
+        "step": 1,
+        "title": "Dokument hochladen",
+        "text": "Wählen Sie das PDF-Dokument aus, dessen Formatierung Sie beibehalten möchten."
       },
       {
-        heading: 'Warum werden PDFs so riesig?',
-        content: 'Häufigste Ursache sind Smartphone-Fotos oder Farb-Scans, die mit 600 DPI und unkomprimiertem TIFF/PNG-Format in das Dokument eingefügt wurden. Der Kompressor skaliert diese Bilder auf bildschirmtaugliche 150 DPI herunter.',
+        "step": 2,
+        "title": "Automatische Strukturanalyse",
+        "text": "CoolWave erkennt Tabellenspalten, Zeilenabstände, Bildverankerungen und Schriften vollautomatisch."
       },
+      {
+        "step": 3,
+        "title": "Perfekt formatiertes DOCX erhalten",
+        "text": "Laden Sie die fertige Word-Datei herunter. Fließtext bricht natürlich um und Tabellen lassen sich direkt editieren."
+      }
     ],
-    faqs: [
-      { question: 'Wird der Text durch die Komprimierung unscharf?', answer: 'Nein. Vektortexte bleiben mathematisch berechnet und damit unabhängig von der Zoomstufe absolut gestochen scharf.' },
+    "sections": [
+      {
+        "heading": "Die typische Fehlerquelle: Textrahmen statt Fließtext",
+        "content": "Einfache Konverter erzeugen für jeden Satz oder Absatz einen festen Textrahmen. Das sieht auf den ersten Blick ähnlich aus wie das Original, lässt sich aber kaum bearbeiten: Sobald Sie ein Wort einfügen, fließt der Text nicht weiter, sondern überlappt mit dem nächsten Kasten. Professionelle Konvertierung wandelt diese Strukturen in echte Word-Absätze mit Standard-Randabständen um."
+      },
+      {
+        "heading": "Tabellen und Spaltenstrukturen meistern",
+        "content": "Besonders Bilanzen, Preislisten oder wissenschaftliche Arbeiten erfordern fehlerfreie Tabellen. CoolWave rekonstruiert Gitternetzlinien und Spaltenbreiten so, dass in Word eine native editierbare Tabelle entsteht, in der Sie Zeilen hinzufügen oder Summenformeln anwenden können."
+      },
+      {
+        "heading": "Schriftarten und Zeichenersetzung",
+        "content": "Wenn die ursprüngliche PDF eine proprietäre Firmenschrift nutzte, die auf Ihrem PC nicht installiert ist, sorgt eine intelligente Schriftensubstitution dafür, dass Abstände und Schriftschnitt mit Standard-OpenType-Schriften harmonieren."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-08-20',
-    updatedAt: '2026-09-14',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Was passiert mit Bildern und Grafiken im Dokument?",
+        "answer": "Bilder werden in voller Originalqualität extrahiert und an der exakten Position im Word-Dokument als eingebettete Grafiken verankert."
+      },
+      {
+        "question": "Können auch gescannte Dokumente mit Formatierung umgewandelt werden?",
+        "answer": "Ja, bei Scans schaltet CoolWave automatisch die OCR-Texterkennung hinzu, um auch aus Bildvorlagen bearbeitbare Absätze zu erzeugen."
+      },
+      {
+        "question": "Kann ich die erstellte DOCX-Datei später wieder verlustfrei in PDF sichern?",
+        "answer": "Selbstverständlich. Mit dem \"Word in PDF\"-Tool verwandeln Sie die überarbeitete Fassung wieder in ein fertiges PDF-Dokument."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-18",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 7. PDF unter 2 MB verkleinern
   {
-    slug: 'pdf-unter-2-mb-verkleinern',
-    title: 'PDF unter 2 MB verkleinern: Für Bewerbungen & Behördenportale',
-    metaTitle: 'PDF unter 2 MB verkleinern – kostenlos online | CoolWave',
-    metaDescription: 'PDF gezielt unter 2 MB oder 1 MB verkleinern. Ideal für Job-Bewerbungsportale, Uni-Uploads und amtliche Formulare. Schnell & datenschutzkonform.',
-    h1: 'PDF unter 2 MB verkleinern: Schnelle Lösung für Upload-Portale',
-    excerpt: 'Bewerbungsportale verlangen oft PDF-Dateien unter 2 MB. Mit der gezielten Komprimierung erreichen Sie die geforderte Dateigröße im ersten Versuch.',
-    category: 'pdf',
-    primaryKeyword: 'pdf unter 2 mb verkleinern',
-    secondaryKeywords: ['pdf bewerbung verkleinern', 'pdf upload limit 2mb', 'pdf dateigröße reduzieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-komprimieren',
-    ctaHeadline: 'PDF jetzt unter 2 MB verkleinern',
-    ctaButtonLabel: 'PDF komprimieren',
-    relatedToolSlugs: ['pdf-zusammenfuegen', 'pdf-seiten-loeschen'],
-    relatedArticleSlugs: ['pdf-fuer-email-verkleinern', 'pdf-komprimieren-ohne-qualitaetsverlust'],
-    directAnswer: 'Wenn ein Bewerbungs- oder Behördenportal den Upload verweigert ("Datei darf maximal 2 MB groß sein"), laden Sie Ihre PDF einfach bei CoolWave hoch. Das Tool entfernt ungenutzte Objekte und optimiert hochauflösende Zeugnisscans, sodass die Gesamtgröße sicher unter 2 MB sinkt.',
-    steps: [
-      { step: 1, title: 'Bewerbungsmappe ablegen', text: 'Laden Sie Ihre zusammengestellte PDF-Datei hoch.' },
-      { step: 2, title: 'Optimierungsstufe anwenden', text: 'Die clevere Kompression berechnet die optimale Balance aus Lesbarkeit von Unterschriften/Stempeln und Dateigröße.' },
-      { step: 3, title: 'Sofort hochladen', text: 'Laden Sie die 2-MB-konforme PDF herunter und reichen Sie Ihre Unterlagen fristgerecht ein.' },
+    "slug": "pdf-umwandeln-welche-formate-eignen-sich",
+    "title": "PDF umwandeln: Welche Formate eignen sich?",
+    "metaTitle": "PDF umwandeln: Der Format-Guide für Word, Excel, JPG & Co. | CoolWave",
+    "metaDescription": "In welches Format sollten Sie Ihre PDF umwandeln? Komplette Übersicht über DOCX, XLSX, PPTX, JPG, PNG und PDF/A für jede Anforderung.",
+    "h1": "PDF umwandeln: Welches Zielformat eignet sich für welchen Zweck?",
+    "excerpt": "Eine PDF-Datei lässt sich in dutzende verschiedene Dateiformate überführen. Doch welches Format ist das richtige für Texte, Tabellen, Folien oder die Langzeitarchivierung?",
+    "category": "formats",
+    "primaryKeyword": "pdf umwandeln formate",
+    "secondaryKeywords": [
+      "in welche formate kann man pdf umwandeln",
+      "pdf zielformate vergleich",
+      "pdf konvertieren übersicht",
+      "pdf exportieren"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-in-word-umwandeln",
+    "ctaHeadline": "PDF jetzt in das ideale Format umwandeln",
+    "ctaButtonLabel": "PDF jetzt flexibel umwandeln",
+    "relatedToolSlugs": [
+      "pdf-in-excel-umwandeln",
+      "pdf-in-jpg-umwandeln",
+      "pdf-in-powerpoint-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-in-word-docx-oder-doc",
+      "pdf-oder-word-welches-format-eignet-sich-wann",
+      "dokument-in-pdf-umwandeln-wichtigste-moeglichkeiten"
+    ],
+    "directAnswer": "Das optimale Zielformat richtet sich nach dem Verwendungszweck: Wählen Sie DOCX für Fließtexte und Verträge, XLSX für Tabellenkalkulationen und Rechnungen, PPTX für Vortragsfolien, JPG oder PNG für Web- und Social-Media-Grafiken sowie PDF/A für die rechtssichere Langzeitarchivierung nach ISO-Standard.",
+    "steps": [
       {
-        heading: 'Checkliste für eine kompakte Bewerbungs-PDF',
-        content: 'Entfernen Sie leere Seiten mit unserem Tool "Seiten löschen", fassen Sie Anschreiben, Lebenslauf und Zeugnisse zusammen und komprimieren Sie die finale Mappe in einem einzigen Durchgang.',
+        "step": 1,
+        "title": "Einsatzzweck definieren",
+        "text": "Möchten Sie Zahlen berechnen, Texte umschreiben oder eine Seite als Bild teilen?"
       },
+      {
+        "step": 2,
+        "title": "Passendes Tool wählen",
+        "text": "Nutzen Sie das spezialisierte CoolWave Werkzeug für Ihr Wunschformat (z. B. PDF zu Word, Excel oder JPG)."
+      },
+      {
+        "step": 3,
+        "title": "Zieldatei abrufen",
+        "text": "Nach der Konvertierung steht Ihre Datei im nativen Zielformat bereit."
+      }
     ],
-    faqs: [
-      { question: 'Bleiben Zeugnisnoten und Stempel lesbar?', answer: 'Ja. Die adaptive Kompression schützt kontrastreiche Schriftbereiche und Stempel vor Verwischen.' },
+    "sections": [
+      {
+        "heading": "Office-Formate: DOCX, XLSX und PPTX",
+        "content": "Dokumente mit viel Fließtext gehören in Microsoft Word (DOCX). Enthält Ihre PDF hingegen Preislisten, Messreihen oder Bilanzen, erspart Ihnen die Umwandlung in Microsoft Excel (XLSX) stundenlanges manuelles Abtippen. Präsentationen mit Folienlayouts lassen sich am besten in PowerPoint (PPTX) weiterverwenden."
+      },
+      {
+        "heading": "Bildformate: JPG, PNG und WebP",
+        "content": "Wenn Sie eine PDF-Seite auf einer Website einbetten oder via WhatsApp oder Instagram teilen möchten, ist PDF oft unpraktisch. Hier eignet sich JPG für fotoreiche Seiten und PNG für kontrastreiche Grafiken mit Text oder transparenten Elementen."
+      },
+      {
+        "heading": "Spezialfall: PDF/A für Behörden und Buchhaltung",
+        "content": "PDF/A (ISO 19005) ist eine spezielle Variante für die revisionssichere Archivierung (GoBD-konform). Sie verbietet externe Schriftenverweise, Audio-Elemente und Verschlüsselung, damit das Dokument auch in 30 Jahren noch identisch dargestellt werden kann."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-08-22',
-    updatedAt: '2026-09-12',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich eine PDF auch in reinen Text (TXT) umwandeln?",
+        "answer": "Ja, wenn Sie lediglich den rohen Text ohne Formatierung oder Bilder für Datenanalysen benötigen."
+      },
+      {
+        "question": "Verliere ich bei der Konvertierung in Bildformate an Qualität?",
+        "answer": "CoolWave rendert PDF-Seiten standardmäßig in hoher Auflösung (bis zu 300 DPI), sodass Schriften auch im Bild gestochen scharf bleiben."
+      },
+      {
+        "question": "Kann man mehrere PDF-Seiten gleichzeitig in Bilder umwandeln?",
+        "answer": "Ja, unser PDF-in-JPG-Konverter erzeugt auf Wunsch ein praktisches ZIP-Archiv aller Einzelseiten."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-18",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 8. PDF komprimieren ohne Qualitätsverlust
   {
-    slug: 'pdf-komprimieren-ohne-qualitaetsverlust',
-    title: 'PDF komprimieren ohne Qualitätsverlust: So funktioniert es',
-    metaTitle: 'PDF verkleinern ohne Qualitätsverlust | CoolWave Ratgeber',
-    metaDescription: 'Erfahren Sie, wie verlustfreie PDF-Komprimierung funktioniert: Schrift-Subsetting, Flate-Dekompression und Stream-Optimierung verständlich erklärt.',
-    h1: 'PDF komprimieren ohne sichtbaren Qualitätsverlust',
-    excerpt: 'Wie kann eine PDF um 70% kleiner werden, ohne dass Bilder pixelig wirken? Wir erklären die technischen Kniffe hinter intelligenter PDF-Kompression.',
-    category: 'pdf',
-    primaryKeyword: 'pdf komprimieren ohne qualitätsverlust',
-    secondaryKeywords: ['verlustfreie pdf kompression', 'pdf verkleinern scharf bleiben'],
-    searchIntent: 'informational',
-    primaryToolSlug: 'pdf-komprimieren',
-    ctaHeadline: 'PDF jetzt verlustfrei optimieren',
-    ctaButtonLabel: 'PDF komprimieren',
-    relatedToolSlugs: ['bild-komprimieren', 'pdf-in-word-umwandeln'],
-    relatedArticleSlugs: ['pdf-fuer-email-verkleinern', 'pdf-unter-2-mb-verkleinern'],
-    directAnswer: 'Echter "Qualitätsverlust" entsteht nur, wenn Bildauflösungen zu stark verringert werden. Intelligente PDF-Kompressoren wie CoolWave nutzen sogenannte verlustfreie Optimierungen: Doppelte Schriftdefinitionen werden zusammengefasst, Metadaten bereinigt und ungenutzte Vektorpfade gestrafft.',
-    steps: [
-      { step: 1, title: 'PDF einfügen', text: 'Fügen Sie Ihr PDF-Dokument in das Komprimierungstool ein.' },
-      { step: 2, title: 'Profil "Empfohlen" wählen', text: 'Dieses Profil bewahrt volle Druckqualität bei drastisch reduzierter Dateigröße.' },
-      { step: 3, title: 'Optimierte Datei sichern', text: 'Laden Sie das Ergebnis herunter – optisch identisch, technisch schlank.' },
+    "slug": "dokument-in-pdf-umwandeln-wichtigste-moeglichkeiten",
+    "title": "Dokument in PDF umwandeln: Die wichtigsten Möglichkeiten",
+    "metaTitle": "Dokument in PDF umwandeln: Anleitungen & Formate | CoolWave",
+    "metaDescription": "Alle Wege, um Office-Dokumente, Bilder und Scans in universelle PDF-Dateien umzuwandeln – einfach, schnell und kostenlos online.",
+    "h1": "Dokument in PDF umwandeln: Word, Excel, Bilder & Textdateien konvertieren",
+    "excerpt": "Ob Bachelorarbeit, Kündigung oder Rechnung: Wer Dokumente digital verschickt, nutzt PDF. Wir stellen die einfachsten und zuverlässigsten Wege vor, Dokumente in PDF umzuwandeln.",
+    "category": "documents",
+    "primaryKeyword": "dokument in pdf umwandeln",
+    "secondaryKeywords": [
+      "dokumente als pdf speichern",
+      "datei in pdf umwandeln",
+      "office zu pdf",
+      "word excel bild zu pdf"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "word-in-pdf-umwandeln",
+    "ctaHeadline": "Ihr Dokument jetzt kostenlos in PDF umwandeln",
+    "ctaButtonLabel": "Dokument jetzt in PDF umwandeln",
+    "relatedToolSlugs": [
+      "excel-in-pdf-umwandeln",
+      "jpg-in-pdf-umwandeln",
+      "powerpoint-in-pdf-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-erstellen-dokumente-bilder-speichern",
+      "pdf-oder-word-welches-format-eignet-sich-wann",
+      "pdf-in-word-konvertieren-formatierung-uebernehmen"
+    ],
+    "directAnswer": "Um ein Dokument in PDF umzuwandeln, laden Sie die Quelldatei (DOCX, XLSX, PPTX, JPG oder TXT) in das passende CoolWave Online-Tool hoch. Das System konvertiert die Datei serverseitig mit standardisierter Schrifteneinbettung und generiert innerhalb weniger Sekunden ein druckfertiges, manipulationssicheres PDF.",
+    "steps": [
       {
-        heading: 'Was bedeutet Font-Subsetting?',
-        content: 'Oft bettet Word vollständige Schriftarten mit tausenden Sonderzeichen ein, obwohl im Dokument nur 40 Buchstaben vorkommen. Durch Font-Subsetting werden nur die tatsächlich genutzten Schriftzeichen gespeichert – das spart hunderte Kilobyte.',
+        "step": 1,
+        "title": "Quelldokument auswählen",
+        "text": "Wählen Sie Ihre Word-, Excel-, PowerPoint- oder Bilddatei aus."
       },
+      {
+        "step": 2,
+        "title": "Konvertierung durchführen",
+        "text": "CoolWave verarbeitet das Layout originalgetreu nach dem PDF-Standard."
+      },
+      {
+        "step": 3,
+        "title": "Standard-PDF herunterladen",
+        "text": "Laden Sie Ihre fertige PDF herunter – bereit für den sicheren E-Mail-Versand oder den Druck."
+      }
     ],
-    faqs: [
-      { question: 'Eignet sich das Ergebnis noch für den Farbdruck?', answer: 'Ja. Bei der Standardkompression bleiben die Druckauflösung und der CMYK/RGB-Farbraum vollständig erhalten.' },
+    "sections": [
+      {
+        "heading": "Warum PDF der unangefochtene Dokumentenstandard ist",
+        "content": "Wer ein Word-Dokument an einen Kunden oder eine Behörde schickt, riskiert peinliche Überraschungen: Hat der Empfänger eine andere Word-Version oder andere Schriften installiert, verschieben sich Zeilen und Seitenumbrüche. Eine PDF friert das optische Erscheinungsbild auf allen Betriebssystemen unveränderlich ein."
+      },
+      {
+        "heading": "Die verschiedenen Quellformate im Überblick",
+        "content": "Nahezu jedes Dateiformat lässt sich in PDF überführen: Word (DOCX/DOC) für Schriftverkehr, Excel (XLSX) für Rechnungsbelege, PowerPoint (PPTX) für Vortragshandouts sowie Grafikformate wie JPG und PNG für Zeugnisse und Ausweiskopien."
+      },
+      {
+        "heading": "Online-Konverter vs. Virtuelle PDF-Drucker",
+        "content": "Betriebssysteme bieten oft die Option \"Als PDF drucken\". Diese Funktion rastert jedoch häufig Vektoren oder erzeugt überdimensionierte Dateien ohne Lesezeichen und Hyperlinks. Ein dedizierter Konverter wie CoolWave bewahrt klickbare Links, Metadaten und optimiert gleichzeitig die Dateigröße."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-08-25',
-    updatedAt: '2026-09-05',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Bleiben Hyperlinks im Dokument nach der Umwandlung aktiv?",
+        "answer": "Ja, bei der Umwandlung von Word oder PowerPoint in PDF bleiben alle anklickbaren Weblinks und E-Mail-Adressen voll funktionsfähig."
+      },
+      {
+        "question": "Kann ich auch ältere Formate wie RTF oder ODT umwandeln?",
+        "answer": "Ja, CoolWave unterstützt neben DOCX auch OpenDocument-Texte (ODT) und Rich Text (RTF)."
+      },
+      {
+        "question": "Können andere Nutzer meine PDF nachträglich einfach verändern?",
+        "answer": "PDFs sind standardmäßig schreibgeschützt gegen versehentliches Überschreiben. Für absolute Sicherheit können Sie Ihr Dokument mit einem Passwort schützen."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-19",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 9. PDF zusammenfügen kostenlos
   {
-    slug: 'pdf-zusammenfuegen-kostenlos',
-    title: 'PDF zusammenfügen: Mehrere Dokumente kostenlos verbinden',
-    metaTitle: 'PDF zusammenfügen – kostenlos & online | CoolWave',
-    metaDescription: 'Mehrere PDF-Dateien kostenlos zu einem einzigen Dokument verbinden. Reihenfolge per Drag & Drop sortieren, ohne Registrierung und direkt im Browser.',
-    h1: 'PDF zusammenfügen: Mehrere PDFs kostenlos verbinden',
-    excerpt: 'Fügen Sie getrennte Dokumente, Zeugnisse oder Kapitel mit wenigen Klicks zu einer sauberen Gesamt-PDF zusammen. Schnell, sicher und kostenlos.',
-    category: 'pdf',
-    primaryKeyword: 'pdf zusammenfügen kostenlos',
-    secondaryKeywords: ['mehrere pdf verbinden', 'pdf zusammenführen', 'pdf dateien kombinieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-zusammenfuegen',
-    ctaHeadline: 'Jetzt mehrere PDFs verbinden',
-    ctaButtonLabel: 'PDFs zusammenfügen',
-    relatedToolSlugs: ['pdf-teilen', 'pdf-seiten-neu-anordnen', 'pdf-komprimieren'],
-    relatedArticleSlugs: ['mehrere-pdfs-zu-einer-verbinden', 'pdf-teilen-einzelne-seiten-speichern'],
-    directAnswer: 'Mit dem CoolWave PDF-Zusammenfügen-Tool ziehen Sie beliebig viele PDF-Dateien in das Browserfenster, ordnen die Reihenfolge bequem per Drag & Drop an und laden mit einem Klick eine einzige, perfekt strukturierte Gesamt-PDF herunter – 100% kostenfrei und ohne Installation.',
-    steps: [
-      { step: 1, title: 'Alle PDF-Dateien hochladen', text: 'Wählen Sie zwei oder mehr PDF-Dokumente von Ihrer Festplatte oder Ihrem Smartphone aus.' },
-      { step: 2, title: 'Reihenfolge bestimmen', text: 'Verschieben Sie die Vorschaubilder, bis alle Dokumente in der gewünschten Reihenfolge liegen.' },
-      { step: 3, title: 'Zu einer PDF verschmelzen', text: 'Klicken Sie auf "Zusammenfügen" und laden Sie das zusammengeführte Dokument herunter.' },
+    "slug": "pdf-erstellen-dokumente-bilder-speichern",
+    "title": "PDF erstellen: Dokumente und Bilder als PDF speichern",
+    "metaTitle": "PDF erstellen: Dokumente & Bilder als PDF speichern | CoolWave",
+    "metaDescription": "Wie Sie aus Texten, Fotos und Office-Dateien eine standardkonforme PDF erstellen – Schritt-für-Schritt online ohne teure Software erklärt.",
+    "h1": "PDF erstellen: So speichern Sie Dokumente und Bilder als standardisierte PDF",
+    "excerpt": "Sie müssen ein Dokument oder mehrere Fotos als PDF einreichen? Wir zeigen Ihnen die einfachsten Methoden, wie Sie auf jedem Gerät neue PDF-Dokumente erstellen.",
+    "category": "pdf",
+    "primaryKeyword": "pdf erstellen",
+    "secondaryKeywords": [
+      "pdf datei erstellen",
+      "bilder als pdf speichern",
+      "neue pdf erstellen",
+      "dokument als pdf sichern"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "jpg-in-pdf-umwandeln",
+    "ctaHeadline": "Jetzt neue PDF aus Bildern oder Dokumenten erstellen",
+    "ctaButtonLabel": "PDF jetzt kostenlos erstellen",
+    "relatedToolSlugs": [
+      "word-in-pdf-umwandeln",
+      "pdf-zusammenfuegen",
+      "scan-zu-pdf"
+    ],
+    "relatedArticleSlugs": [
+      "mehrere-bilder-als-eine-pdf-speichern",
+      "fotos-in-pdf-umwandeln-so-funktioniert-es",
+      "dokument-in-pdf-umwandeln-wichtigste-moeglichkeiten"
+    ],
+    "directAnswer": "Um eine neue PDF zu erstellen, laden Sie Ihre vorhandenen Dateien – etwa Bilder (JPG, PNG), Textdokumente oder gescannte Seiten – in das entsprechende CoolWave Tool hoch. Das Werkzeug ordnet die Seiten nach Ihren Wünschen, passt Seitengröße und Ränder an und generiert eine saubere, sofort einsatzbereite PDF-Datei.",
+    "steps": [
       {
-        heading: 'Sicherheit beim Zusammenfügen vertraulicher Dokumente',
-        content: 'Das Tool arbeitet direkt in Ihrem Browser. Vertrauliche Verträge oder persönliche Zeugnisse müssen nicht auf externe Cloud-Server hochgeladen werden, wodurch das Verfahren streng DSGVO-konform ist.',
+        "step": 1,
+        "title": "Ausgangsmaterial wählen",
+        "text": "Wählen Sie Fotos, Scans oder Textdateien aus, aus denen die PDF aufgebaut werden soll."
       },
+      {
+        "step": 2,
+        "title": "Reihenfolge & Layout anpassen",
+        "text": "Sortieren Sie die Seiten per Drag & Drop und wählen Sie das Format (z. B. DIN A4 Hochformat)."
+      },
+      {
+        "step": 3,
+        "title": "PDF generieren",
+        "text": "Klicken Sie auf \"PDF erstellen\" und laden Sie das zusammengeführte Dokument direkt herunter."
+      }
     ],
-    faqs: [
-      { question: 'Gibt es eine Beschränkung bei der Anzahl der Dateien?', answer: 'Im kostenlosen Basistarif können Sie bis zu 20 Dateien in einem Durchgang zusammenführen.' },
+    "sections": [
+      {
+        "heading": "Einzelseiten zu einem mehrseitigen Dokument bündeln",
+        "content": "Besonders häufig stehen Nutzer vor der Herausforderung, fünf verschiedene Smartphone-Fotos von Verträgen oder Zeugnissen als ein einziges Dokument einzureichen. Mit dem \"Bilder in PDF\"-Tool bündeln Sie alle Einzelaufnahmen in einer kohärenten PDF-Datei mit einheitlicher Seitengröße."
+      },
+      {
+        "heading": "Optimierung von Rändern und Ausrichtung",
+        "content": "Achten Sie beim Erstellen darauf, dass Hoch- und Querformate nicht willkürlich gemischt werden. CoolWave erlaubt es, einzelne Aufnahmen vor der PDF-Erstellung um 90 Grad zu drehen, sodass alle Seiten lesefreundlich in die gleiche Richtung ausgerichtet sind."
+      },
+      {
+        "heading": "Standardkonforme Speicherung für amtliche Zwecke",
+        "content": "Viele Online-Behördenportale (z. B. Elster, Universitäten) akzeptieren ausschließlich Dateien im PDF-Format. Eine sauber erstellte PDF stellt sicher, dass keine Kompatibilitätsfehler beim Hochladen gemeldet werden."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-08-26',
-    updatedAt: '2026-09-13',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich Bilder unterschiedlicher Formate (JPG und PNG) in eine PDF packen?",
+        "answer": "Ja, Sie können beliebig viele verschiedene Bildformate kombinieren und in einer gemeinsamen PDF abspeichern."
+      },
+      {
+        "question": "Welche Papiergröße wird für die PDF verwendet?",
+        "answer": "Standardmäßig wird das europäische DIN-A4-Format verwendet, Sie können aber auch die Originalgröße der Bilder beibehalten."
+      },
+      {
+        "question": "Kostet das Erstellen von PDFs bei CoolWave etwas?",
+        "answer": "Nein, die Basisfunktionen zur PDF-Erstellung sind komplett kostenfrei und ohne Registrierung nutzbar."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-19",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 10. Mehrere PDFs zu einer verbinden
   {
-    slug: 'mehrere-pdfs-zu-einer-verbinden',
-    title: 'Mehrere PDFs verbinden: So ordnen und kombinieren Sie Seiten',
-    metaTitle: 'Mehrere PDF-Dateien verbinden | CoolWave Anleitung',
-    metaDescription: 'Schritt-für-Schritt-Anleitung: Wie Sie Rechnungen, Belege oder Verträge aus verschiedenen Quellen zu einer einheitlichen PDF-Datei kombinieren.',
-    h1: 'Mehrere PDF-Dateien zu einer PDF zusammenfügen',
-    excerpt: 'Sie haben Rechnungen, Notizen und Verträge als einzelne PDFs verstreut? Bringen Sie Ordnung in Ihre Ablage durch das Kombinieren zu einer Gesamt-PDF.',
-    category: 'pdf',
-    primaryKeyword: 'mehrere pdfs verbinden',
-    secondaryKeywords: ['pdf sammlung erstellen', 'belege zu einer pdf zusammenfassen'],
-    searchIntent: 'informational',
-    primaryToolSlug: 'pdf-zusammenfuegen',
-    ctaHeadline: 'PDF-Dateien jetzt kombinieren',
-    ctaButtonLabel: 'PDFs verbinden',
-    relatedToolSlugs: ['pdf-seiten-neu-anordnen', 'pdf-komprimieren'],
-    relatedArticleSlugs: ['pdf-zusammenfuegen-kostenlos', 'seiten-aus-pdf-loeschen'],
-    directAnswer: 'Das Verbinden mehrerer PDF-Dateien ist die einfachste Methode, um zusammengehörige Unterlagen digital abzuheften. Ziehen Sie die Einzeldokumente in CoolWave, sortieren Sie sie chronologisch oder thematisch und exportieren Sie eine saubere Datei.',
-    steps: [
-      { step: 1, title: 'Dateien sammeln', text: 'Legen Sie alle Einzeldokumente im Tool ab.' },
-      { step: 2, title: 'Visuell sortieren', text: 'Prüfen Sie die Deckblätter und passen Sie die Reihenfolge an.' },
-      { step: 3, title: 'Kombinieren & Speichern', text: 'Generieren Sie mit einem Klick die fertige Sammeldatei.' },
+    "slug": "pdf-oder-word-welches-format-eignet-sich-wann",
+    "title": "PDF oder Word: Welches Format eignet sich wann?",
+    "metaTitle": "PDF oder Word: Welches Format eignet sich wann? | CoolWave",
+    "metaDescription": "PDF vs. Word (DOCX): Ein detaillierter Vergleich von Bearbeitbarkeit, Layouttreue, Sicherheit und Einsatzbereichen im Berufsalltag.",
+    "h1": "PDF oder Word: Welches Dateiformat ist die richtige Wahl?",
+    "excerpt": "Im Büro- und Studienalltag taucht die Frage ständig auf: Soll ich mein Dokument als Word-Datei oder als PDF verschicken? Wir vergleichen Stärken, Schwächen und Best Practices.",
+    "category": "formats",
+    "primaryKeyword": "pdf oder word",
+    "secondaryKeywords": [
+      "unterschied pdf und word",
+      "wann pdf wann docx",
+      "word vs pdf vorteile",
+      "welches format für bewerbung"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-in-word-umwandeln",
+    "ctaHeadline": "Wechseln Sie flexibel zwischen PDF und Word",
+    "ctaButtonLabel": "PDF oder Word jetzt konvertieren",
+    "relatedToolSlugs": [
+      "word-in-pdf-umwandeln",
+      "pdf-schuetzen",
+      "doc-in-docx-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-in-word-docx-oder-doc",
+      "pdf-in-word-konvertieren-formatierung-uebernehmen",
+      "dokument-in-pdf-umwandeln-wichtigste-moeglichkeiten"
+    ],
+    "directAnswer": "Verwenden Sie Word (DOCX) für Dokumente, die sich noch in der Entwurfsphase befinden, im Team kollaborativ überarbeitet werden oder variable Textbausteine erfordern. Nutzen Sie PDF, sobald ein Dokument finalisiert ist, versendet, unterschrieben, archiviert oder gedruckt werden soll, um das Layout unveränderlich zu fixieren.",
+    "steps": [
       {
-        heading: 'Tipp für die Steuererklärung und Buchhaltung',
-        content: 'Steuerberater und Finanzämter bevorzugen eine einzige Monats- oder Jahres-PDF gegenüber Dutzenden einzelnen E-Mail-Anhängen. Die strukturierte Zusammenfassung beschleunigt die Bearbeitung erheblich.',
+        "step": 1,
+        "title": "Status des Dokuments prüfen",
+        "text": "Wird noch am Text gearbeitet oder soll der Empfänger das fertige Ergebnis nur lesen?"
       },
+      {
+        "step": 2,
+        "title": "Passendes Format wählen",
+        "text": "DOCX für aktive Zusammenarbeit – PDF für Rechnungen, Verträge, Bewerbungen und Druck."
+      },
+      {
+        "step": 3,
+        "title": "Bei Bedarf flexibel umwandeln",
+        "text": "Nutzen Sie CoolWave, um jederzeit zwischen Word- und PDF-Format ohne Datenverlust hin- und herzuwechseln."
+      }
     ],
-    faqs: [
-      { question: 'Werden Lesezeichen und Hyperlinks beibehalten?', answer: 'Ja, vorhandene Dokumentengliederungen werden im kombinierten Gesamtdokument zusammengeführt.' },
+    "sections": [
+      {
+        "heading": "Layoutstabilität und Kompatibilität",
+        "content": "Word ist ein layout-elastisches Format: Je nachdem, ob die Datei auf einem Mac, einem Windows-PC oder einem Smartphone geöffnet wird, können Zeilenumbrüche verrutschen. Eine PDF hingegen ist eine digitale Druckplatte: Jeder Buchstabe und jedes Bild behalten ihre millimetergenaue Position bei jedem Betrachter."
+      },
+      {
+        "heading": "Sicherheit und Vertrauenswürdigkeit",
+        "content": "Eine offene Word-Datei wirkt beim Versand an Kunden unprofessionell und lädt zu unbeabsichtigten Manipulationen ein. Zudem enthält Word oft ausgeblendete Überarbeitungshistorien oder Kommentare. PDF schützt vor versehentlichen Änderungen und lässt sich digital signieren."
+      },
+      {
+        "heading": "Entscheidungsmatrix für den Alltag",
+        "content": "Bewerbungsunterlagen, Verträge, Exposés, Angebote und Steuerbelege gehören zwingend ins PDF-Format. Protokolle, Brainstormings, Hausarbeiten im Feedback-Prozess und Entwürfe sollten in Word verbleiben, bis alle Beteiligten die Endfassung freigegeben haben."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-08-28',
-    updatedAt: '2026-09-07',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ein Empfänger eine PDF trotzdem verändern?",
+        "answer": "Grundsätzlich ja, mit entsprechenden PDF-Editoren oder Konvertern. Allerdings passiert dies nie unbemerkt oder durch einfaches Antippen wie in Word."
+      },
+      {
+        "question": "Welches Format ist bei Bewerbungen besser?",
+        "answer": "Ausnahmslos PDF. Personaler öffnen Bewerbungen oft in spezieller Recruiting-Software, die Word-Dokumente oft fehlerhaft darstellt."
+      },
+      {
+        "question": "Kann ich geschützte PDFs wieder in bearbeitbares Word zurückholen?",
+        "answer": "Ja, mit dem CoolWave Tool \"PDF in Word umwandeln\" können Sie Text und Layout wieder voll editierbar machen."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-20",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 11. PDF teilen & einzelne Seiten extrahieren
   {
-    slug: 'pdf-teilen-einzelne-seiten-speichern',
-    title: 'PDF teilen: Einzelne Seiten kostenlos extrahieren & speichern',
-    metaTitle: 'PDF teilen & Seiten extrahieren | CoolWave Online',
-    metaDescription: 'PDF-Dateien online aufteilen: Extrahieren Sie bestimmte Seiten, trennen Sie Dokumente oder speichern Sie Einzelseiten als eigenständige PDF ab.',
-    h1: 'PDF teilen: Einzelne Seiten kostenlos extrahieren',
-    excerpt: 'Benötigen Sie nur Seite 3 aus einem 50-seitigen Handbuch oder möchten Sie ein Skript in handliche Kapitel zerlegen? So teilen Sie PDFs im Handumdrehen.',
-    category: 'pdf',
-    primaryKeyword: 'pdf seiten trennen',
-    secondaryKeywords: ['pdf teilen', 'seite aus pdf extrahieren', 'pdf aufteilen'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-teilen',
-    ctaHeadline: 'PDF jetzt in Einzelseiten aufteilen',
-    ctaButtonLabel: 'PDF teilen',
-    relatedToolSlugs: ['pdf-seiten-extrahieren', 'pdf-seiten-loeschen', 'pdf-zusammenfuegen'],
-    relatedArticleSlugs: ['seiten-aus-pdf-loeschen', 'pdf-zusammenfuegen-kostenlos'],
-    directAnswer: 'Um eine PDF aufzuteilen, laden Sie das Dokument in das CoolWave PDF-Teilen-Tool. Sie können entweder feste Seitenbereiche angeben (z. B. "1-5, 8, 12-15") oder jede Einzelseite als separates PDF exportieren – schnell, intuitiv und ohne Qualitätsverlust.',
-    steps: [
-      { step: 1, title: 'PDF hochladen', text: 'Öffnen Sie das PDF-Dokument in der visuellen Seitenübersicht.' },
-      { step: 2, title: 'Seitenbereich markieren', text: 'Wählen Sie die gewünschten Seiten durch Anklicken aus oder geben Sie den Bereich manuell ein.' },
-      { step: 3, title: 'Extrahierte PDF herunterladen', text: 'Laden Sie das neue, schlanke Dokument sofort herunter.' },
+    "slug": "bildgroesse-aendern-richtige-aufloesung-pixel",
+    "title": "Bildgröße ändern: Die richtige Auflösung und Pixelgröße",
+    "metaTitle": "Bildgröße ändern: Auflösung, Pixel & DPI richtig einstellen | CoolWave",
+    "metaDescription": "Bildgröße und Pixelabmessungen richtig ändern: Berechnen Sie die perfekte Pixelzahl für Instagram, Webseiten, E-Mails oder Drucke ohne Qualitätsverlust.",
+    "h1": "Bildgröße ändern: Pixelmaße, Auflösung & DPI für Web und Druck verstehen",
+    "excerpt": "Ob Profilbild, Webseiten-Banner oder Fotoabzug: Die falschen Abmessungen führen zu pixeligen oder verzerrten Bildern. Wir erklären, wie Sie Breite, Höhe und Auflösung perfekt anpassen.",
+    "category": "images",
+    "primaryKeyword": "bildgröße ändern",
+    "secondaryKeywords": [
+      "pixelgröße ändern",
+      "auflösung bild ändern",
+      "abmessungen foto anpassen",
+      "bild skalieren online"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bildgroesse-aendern",
+    "ctaHeadline": "Bildabmessungen jetzt schnell und exakt anpassen",
+    "ctaButtonLabel": "Bildgröße jetzt anpassen",
+    "relatedToolSlugs": [
+      "bild-skalieren",
+      "bild-komprimieren",
+      "dpi-aendern"
+    ],
+    "relatedArticleSlugs": [
+      "bild-verkleinern-oder-komprimieren-unterschied",
+      "jpeg-verkleinern-aufloesung-und-dateigroesse",
+      "bild-online-verkleinern-abmessungen"
+    ],
+    "directAnswer": "Um eine Bildgröße zu ändern, laden Sie Ihr Foto in das CoolWave Tool \"Bildgröße ändern\" hoch. Geben Sie die gewünschte Breite oder Höhe in Pixeln ein. Bei aktivierter Seitenverhältnis-Sperre (Aspect Ratio) wird die andere Dimension automatisch proportional berechnet, wodurch jede Verzerrung ausgeschlossen ist.",
+    "steps": [
       {
-        heading: 'Verschiedene Methoden zum Teilen einer PDF',
-        content: 'Sie können wählen zwischen: 1. Bestimmte Seitenbereiche zu einer neuen Datei bündeln, 2. Jede Seite als eigene PDF abspeichern oder 3. Das Dokument nach jedem Kapitel automatisch trennen.',
+        "step": 1,
+        "title": "Bild auswählen",
+        "text": "Laden Sie Ihre Bilddatei (JPG, PNG oder WebP) per Drag & Drop hoch."
       },
+      {
+        "step": 2,
+        "title": "Pixelwerte festlegen",
+        "text": "Geben Sie die gewünschte Pixelbreite oder einen Prozentsatz ein. Das Seitenverhältnis bleibt automatisch gesperrt."
+      },
+      {
+        "step": 3,
+        "title": "Perfekt skaliertes Bild herunterladen",
+        "text": "Klicken Sie auf Berechnen und sichern Sie das optimal skalierte Bild."
+      }
     ],
-    faqs: [
-      { question: 'Bleibt das Originaldokument unverändert?', answer: 'Ja. Die Quelldatei auf Ihrem Rechner wird zu keinem Zeitpunkt überschrieben.' },
+    "sections": [
+      {
+        "heading": "Pixel vs. DPI: Was bedeutet Auflösung wirklich?",
+        "content": "Auf digitalen Bildschirmen zählen ausschließlich Pixel (z. B. 1920x1080 px). Ein Monitor stellt Pixel unabhängig vom DPI-Wert (Dots Per Inch) 1:1 dar. Der DPI-Wert wird erst relevant, wenn ein Bild auf Papier gedruckt werden soll: 300 DPI bedeutet, dass 300 Bildpunkte auf einem Zoll (2,54 cm) gedruckt werden, was für das Auge gestochen scharf wirkt."
+      },
+      {
+        "heading": "Typische Standardmaße für Social Media und Web",
+        "content": "Gängige Maße erleichtern die Arbeit: Instagram-Beiträge nutzen idealerweise 1080x1080 px (Quadrat) oder 1080x1350 px (Hochformat). Webseiten-Header benötigen meist 1920 Pixel Breite, während E-Mail-Signaturen selten mehr als 400 Pixel Breite erfordern."
+      },
+      {
+        "heading": "Vergrößern vs. Verkleinern (Downsampling)",
+        "content": "Ein Bild zu verkleinern ist technisch unkritisch, da Pixel intelligent zusammengefasst werden (Bikubische Interpolation). Ein Bild drastisch über seine Originalauflösung hinaus zu vergrößern, führt hingegen zwangsläufig zu Weichzeichnung oder Kantenflimmern, da fehlende Informationen rechnerisch geschätzt werden müssen."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-08-30',
-    updatedAt: '2026-09-10',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Wie verhindere ich, dass mein Bild verzerrt aussieht?",
+        "answer": "Achten Sie darauf, dass das Häkchen \"Seitenverhältnis beibehalten\" aktiv ist. Ändern Sie nur die Breite, passt sich die Höhe automatisch an."
+      },
+      {
+        "question": "Wird durch das Ändern der Pixelgröße auch die Dateigröße kleiner?",
+        "answer": "Ja, signifikant. Ein Bild von 4000x3000 Pixeln auf 1200x900 Pixel zu verkleinern, reduziert die Dateigröße oft um mehr als 80 %."
+      },
+      {
+        "question": "Welches Format eignet sich am besten für Web-Grafiken?",
+        "answer": "Für Fotos ist WebP oder JPG ideal, für Logos und Grafiken mit transparentem Hintergrund PNG."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-20",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 12. Seiten aus PDF löschen
   {
-    slug: 'seiten-aus-pdf-loeschen',
-    title: 'Seiten aus PDF löschen: Unnötige Seiten dauerhaft entfernen',
-    metaTitle: 'Seiten aus PDF löschen – kostenlos online | CoolWave',
-    metaDescription: 'Leere oder vertrauliche Seiten ganz einfach aus PDFs löschen. Visuelle Seitenauswahl direkt im Browser ohne teure Software.',
-    h1: 'Seiten aus PDF löschen: Schnell & dauerhaft entfernen',
-    excerpt: 'Eine leere Seite am Ende oder ein überflüssiges Deckblatt? Entfernen Sie störende Seiten visuell per Mausklick aus jedem PDF-Dokument.',
-    category: 'pdf',
-    primaryKeyword: 'seiten aus pdf löschen',
-    secondaryKeywords: ['pdf seite entfernen', 'leere seite aus pdf löschen', 'pdf seiten löschen online'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-seiten-loeschen',
-    ctaHeadline: 'Jetzt störende PDF-Seiten entfernen',
-    ctaButtonLabel: 'Seiten aus PDF löschen',
-    relatedToolSlugs: ['pdf-seiten-neu-anordnen', 'pdf-teilen', 'pdf-bearbeiten'],
-    relatedArticleSlugs: ['pdf-teilen-einzelne-seiten-speichern', 'pdf-seiten-neu-anordnen-anleitung'],
-    directAnswer: 'Um Seiten aus einer PDF zu löschen, laden Sie die Datei in das Tool "PDF-Seiten löschen". Klicken Sie einfach auf das Papierkorb-Symbol der Vorschaubilder, die Sie entfernen möchten. Das Tool generiert ein bereinigtes PDF ohne die unerwünschten Seiten.',
-    steps: [
-      { step: 1, title: 'PDF anzeigen', text: 'Laden Sie die Datei hoch, um alle Seiten als übersichtliche Miniaturbilder zu sehen.' },
-      { step: 2, title: 'Seiten zum Löschen anklicken', text: 'Markieren Sie fehlerhafte, leere oder private Seiten mit einem Klick.' },
-      { step: 3, title: 'Bereinigte PDF sichern', text: 'Klicken Sie auf "Änderungen anwenden" und laden Sie das gekürzte Dokument herunter.' },
+    "slug": "bild-verkleinern-oder-komprimieren-unterschied",
+    "title": "Bild verkleinern oder komprimieren: Was ist der Unterschied?",
+    "metaTitle": "Bild verkleinern vs. komprimieren: Wo liegt der Unterschied? | CoolWave",
+    "metaDescription": "Bild skalieren vs. Dateigröße komprimieren: Lernen Sie den entscheidenden Unterschied zwischen Pixel-Resizing und Datenkompression kennen.",
+    "h1": "Bild verkleinern oder komprimieren: Auflösung vs. Dateigröße im Detail",
+    "excerpt": "Viele Begriffe werden synonym verwendet: Bild verkleinern, skalieren, komprimieren oder optimieren. Doch technisch laufen völlig unterschiedliche Prozesse ab.",
+    "category": "images",
+    "primaryKeyword": "bild verkleinern oder komprimieren",
+    "secondaryKeywords": [
+      "unterschied bild skalieren und komprimieren",
+      "abmessung vs dateigröße",
+      "pixel verkleinern komprimierung",
+      "resizing vs compression"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bild-komprimieren",
+    "ctaHeadline": "Bilder gezielt verkleinern oder komprimieren",
+    "ctaButtonLabel": "Bild jetzt komprimieren",
+    "relatedToolSlugs": [
+      "bildgroesse-aendern",
+      "bild-skalieren",
+      "bildqualitaet-optimieren"
+    ],
+    "relatedArticleSlugs": [
+      "bildgroesse-aendern-richtige-aufloesung-pixel",
+      "jpeg-komprimieren-dateigroesse-richtig-reduzieren",
+      "bilder-ohne-qualitaetsverlust-verkleinern"
+    ],
+    "directAnswer": "Der Unterschied ist grundlegend: Beim \"Verkleinern\" (Skalieren/Resizing) werden die geometrischen Pixelabmessungen (z. B. von 4000x3000 auf 1200x900 Pixel) reduziert. Beim \"Komprimieren\" bleiben die Pixelabmessungen exakt gleich, aber die zugrundeliegenden Farbinformationen und Datenströme werden effizienter codiert, um Kilobyte einzusparen.",
+    "steps": [
       {
-        heading: 'Vorteile für die Dateigröße und Professionalität',
-        content: 'Das Entfernen unnötiger Seiten reduziert die Dateigröße und verhindert peinliche Missgeschicke, wie das versehentliche Mitsenden interner Notizen oder fehlerhafter Scan-Seiten.',
+        "step": 1,
+        "title": "Ziel festlegen",
+        "text": "Brauchen Sie kleinere Bildabmessungen für ein Layout (Skalieren) oder weniger Megabyte für einen Upload (Komprimieren)?"
       },
+      {
+        "step": 2,
+        "title": "Passenden Modus wählen",
+        "text": "Wählen Sie \"Bildgröße ändern\" für Pixeländerungen oder \"Bild komprimieren\" für Dateigrößen-Optimierung."
+      },
+      {
+        "step": 3,
+        "title": "Verarbeitete Datei sichern",
+        "text": "Laden Sie das optimierte Bild herunter – schlank im Speicher und perfekt in der Darstellung."
+      }
     ],
-    faqs: [
-      { question: 'Passt sich die Seitennummerierung im Inhaltsverzeichnis automatisch an?', answer: 'Die physische Seitenreihenfolge wird neu nummeriert. Gedruckter statischer Text im Layout bleibt jedoch unverändert.' },
+    "sections": [
+      {
+        "heading": "Skalieren (Resizing): Die geometrische Anpassung",
+        "content": "Wenn ein Foto aus einer modernen 48-Megapixel-Kamera 8000 Pixel breit ist, kann kein Standard-Monitor diese Bildpunkte nativ darstellen. Durch Skalieren verringern Sie die tatsächliche Anzahl der Bildpunkte. Das Bild wird in Zentimetern oder auf dem Bildschirm kleiner dargestellt."
+      },
+      {
+        "heading": "Kompression: Das Schärfen des Datenstroms",
+        "content": "Bei der Kompression bleibt das Bild 8000 Pixel breit. Algorithmen wie die diskrete Kosinustransformation (DCT) in JPEG fassen minimal unterschiedliche Farbnuancen zusammen, die das menschliche Auge ohnehin nicht differenzieren kann. Zusätzlich werden unsichtbare Metadaten (EXIF-Kameradaten, GPS-Standorte) entfernt."
+      },
+      {
+        "heading": "Die Kombination für maximale Effizienz",
+        "content": "Die stärkste Ersparnis erzielen Sie durch die Kombination beider Methoden: Erst verringern Sie die gigantische Kameraauflösung auf webfreundliche 1920 Pixel Breite, danach komprimieren Sie die Bilddaten um 80 %. So schrumpft ein 15-MB-Foto oft auf unter 250 KB."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-01',
-    updatedAt: '2026-09-11',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich ein komprimiertes Bild später wieder in Originalqualität zurückverwandeln?",
+        "answer": "Bei verlustbehafteter Kompression (wie Standard-JPEG) nicht. Behalten Sie für wichtige Originalaufnahmen daher immer eine Sicherheitskopie des Rohbildes."
+      },
+      {
+        "question": "Was ist besser für E-Mail-Anhänge: verkleinern oder komprimieren?",
+        "answer": "Am besten beides: Reduzieren Sie die Pixelbreite auf maximal 1600 Pixel und komprimieren Sie das Bild leicht."
+      },
+      {
+        "question": "Verändert die Kompression das Seitenverhältnis?",
+        "answer": "Nein, das Seitenverhältnis bleibt bei reiner Kompression zu 100 % unverändert."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-21",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 13. PDF-Seiten neu anordnen
   {
-    slug: 'pdf-seiten-neu-anordnen-anleitung',
-    title: 'PDF-Seiten sortieren: Reihenfolge per Drag & Drop ändern',
-    metaTitle: 'PDF-Seiten neu anordnen & sortieren | CoolWave',
-    metaDescription: 'Bringen Sie Ihre PDF-Seiten in die richtige Reihenfolge. Einfaches Verschieben per Drag & Drop direkt im Browser. Kostenlos und sicher.',
-    h1: 'PDF-Seiten neu anordnen: Reihenfolge online ändern',
-    excerpt: 'Wurde beim Einscannen die Rückseite vor der Vorderseite erfasst? Bringen Sie durcheinander geratene PDF-Seiten in Sekundenschnelle wieder in Form.',
-    category: 'pdf',
-    primaryKeyword: 'pdf seiten sortieren',
-    secondaryKeywords: ['pdf seiten neu anordnen', 'pdf seitenreihenfolge ändern'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-seiten-neu-anordnen',
-    ctaHeadline: 'PDF-Seiten jetzt neu sortieren',
-    ctaButtonLabel: 'PDF-Seiten anordnen',
-    relatedToolSlugs: ['pdf-seiten-loeschen', 'pdf-drehen', 'pdf-zusammenfuegen'],
-    relatedArticleSlugs: ['seiten-aus-pdf-loeschen', 'pdf-drehen-und-dauerhaft-speichern'],
-    directAnswer: 'Mit dem visuellen Seiten-Organizer von CoolWave ordnen Sie PDF-Seiten spielend leicht: Ziehen Sie Einzelseiten einfach mit der Maus oder dem Finger an die gewünschte Position. Sie können Seiten drehen, löschen oder verschieben, bevor Sie das fertige Dokument herunterladen.',
-    steps: [
-      { step: 1, title: 'PDF laden', text: 'Öffnen Sie Ihr Dokument im Organizer.' },
-      { step: 2, title: 'Seiten verschieben', text: 'Greifen Sie eine Seite per Drag & Drop und ziehen Sie sie an die korrekte Stelle.' },
-      { step: 3, title: 'Neue PDF speichern', text: 'Laden Sie das geordnete Dokument mit korrigierter Seitenfolge herunter.' },
+    "slug": "jpeg-komprimieren-dateigroesse-richtig-reduzieren",
+    "title": "JPEG komprimieren: Dateigröße richtig reduzieren",
+    "metaTitle": "JPEG komprimieren: Dateigröße online reduzieren | CoolWave",
+    "metaDescription": "JPEG-Bilder wirksam komprimieren: So schrumpfen Sie große JPGs um bis zu 85 %, ohne störende Klötzchenbildung oder Unschärfen zu erzeugen.",
+    "h1": "JPEG komprimieren: So reduzieren Sie die KB- und MB-Größe ohne sichtbare Artefakte",
+    "excerpt": "JPEG ist das weltweit beliebteste Fotoformat. Doch unkomprimierte Kamera-Dateien überlasten Speicher und Server. Wir zeigen, wie Sie die Dateigröße drastisch senken.",
+    "category": "images",
+    "primaryKeyword": "jpeg komprimieren",
+    "secondaryKeywords": [
+      "jpg komprimieren",
+      "jpg dateigröße verkleinern",
+      "jpeg kompression online",
+      "foto mb verkleinern"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bild-komprimieren",
+    "ctaHeadline": "Große JPEG-Bilder jetzt kostenlos schrumpfen",
+    "ctaButtonLabel": "JPEG jetzt online komprimieren",
+    "relatedToolSlugs": [
+      "bildgroesse-aendern",
+      "jpg-in-webp-umwandeln",
+      "bildqualitaet-optimieren"
+    ],
+    "relatedArticleSlugs": [
+      "jpeg-verkleinern-aufloesung-und-dateigroesse",
+      "foto-komprimieren-bilder-kleiner-machen",
+      "bilder-ohne-qualitaetsverlust-verkleinern"
+    ],
+    "directAnswer": "Um eine JPEG-Datei zu komprimieren, laden Sie das Bild bei CoolWave hoch. Unser Optimierungsalgorithmus entfernt überflüssige EXIF-Header, optimiert die Huffman-Codetabellen und gleicht Quantisierungsmatrizen so ab, dass die Dateigröße um bis zu 80 % sinkt, während Konturen scharf und Farben lebendig bleiben.",
+    "steps": [
       {
-        heading: 'Perfekt für Duplex-Scans und Buchkapitel',
-        content: 'Gerade bei manuellen Dokumenteneinzügen geraten ungerade und gerade Seitenzahlen schnell durcheinander. Unser Organizer zeigt große Miniaturbilder, damit Sie jede Seite sofort erkennen.',
+        "step": 1,
+        "title": "JPEG-Datei ablegen",
+        "text": "Ziehen Sie ein oder mehrere JPG/JPEG-Bilder in das Werkzeugfenster."
       },
+      {
+        "step": 2,
+        "title": "Kompressionslevel wählen",
+        "text": "Wählen Sie die gewünschte Balance zwischen maximaler Einsparung und höchster Bildschärfe."
+      },
+      {
+        "step": 3,
+        "title": "Komprimierte Datei sichern",
+        "text": "Laden Sie das schlanke JPEG herunter – bereit für Webseiten, Shops oder den E-Mail-Versand."
+      }
     ],
-    faqs: [
-      { question: 'Funktioniert die Sortierung auch auf dem Tablet oder Smartphone?', answer: 'Ja, die Touch-Bedienung wird auf iPad, Android-Tablets und Smartphones nahtlos unterstützt.' },
+    "sections": [
+      {
+        "heading": "Wie die JPEG-Kompression im Detail arbeitet",
+        "content": "Der JPEG-Algorithmus nutzt Schwächen des menschlichen Sehapparats aus: Das Auge reagiert wesentlich empfindlicher auf Helligkeitsunterschiede (Luminanz) als auf minimale Farbabweichungen (Chrominanz). Durch Farb-Subsampling (z. B. 4:2:0) und Quantisierung werden irrelevante Hochfrequenzdaten eliminiert, ohne dass das Gesamtbild unscharf wirkt."
+      },
+      {
+        "heading": "Typische Artefakte und wie man sie vermeidet",
+        "content": "Überkomprimiert man ein JPEG zu stark, entstehen typische 8x8-Pixel-Blöcke (\"Klötzchenbildung\") oder Heiligenscheine um kontrastreiche Kanten. CoolWave setzt auf adaptive Schwellenwerte, die Artefakte verhindern und eine hervorragende optische Qualität gewährleisten."
+      },
+      {
+        "heading": "EXIF-Bereinigung für Privatsphäre und Speicher",
+        "content": "Digitalkameras und Smartphones speichern in jedem JPEG versteckte EXIF-Daten: GPS-Koordinaten des Aufnahmeorts, Kameramodell, Belichtungszeit und Vorschaubilder (Thumbnails). Das Entfernen dieser Daten spart oft 50 bis 200 KB pro Bild und schützt Ihre Privatsphäre."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-02',
-    updatedAt: '2026-09-09',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Gibt es einen Unterschied zwischen JPG und JPEG?",
+        "answer": "Nein, es handelt sich um exakt dasselbe Format. Die Dateiendung .jpg entstand früher unter MS-DOS, da Dateiendungen damals auf maximal drei Buchstaben beschränkt waren."
+      },
+      {
+        "question": "Kann ich mehrere JPEGs auf einmal komprimieren?",
+        "answer": "Ja, CoolWave unterstützt Stapelverarbeitung (Batch-Upload), sodass Sie Dutzende Fotos in einem Durchgang optimieren können."
+      },
+      {
+        "question": "Eignet sich JPEG auch für Grafiken mit transparentem Hintergrund?",
+        "answer": "Nein, JPEG unterstützt keine Transparenz. Nutzen Sie für freigestellte Motive das PNG- oder WebP-Format."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-21",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 14. PDF online bearbeiten
   {
-    slug: 'pdf-online-bearbeiten-text-einfuegen',
-    title: 'PDF bearbeiten: Text, Bilder und Formen online einfügen',
-    metaTitle: 'PDF online bearbeiten – Text & Bilder einfügen | CoolWave',
-    metaDescription: 'Kostenloser PDF-Editor im Browser: Text korrigieren, Notizen ergänzen, Bilder einfügen und Formen zeichnen ohne teures Abo.',
-    h1: 'PDF online bearbeiten: Text & Bilder kostenlos einfügen',
-    excerpt: 'Sie müssen ein PDF-Formular ausfüllen oder Tippfehler korrigieren? Mit dem CoolWave PDF-Editor fügen Sie Text, Häkchen und Grafiken direkt online ein.',
-    category: 'pdf',
-    primaryKeyword: 'pdf online bearbeiten',
-    secondaryKeywords: ['text in pdf einfügen', 'pdf editor kostenlos', 'bild in pdf einfügen'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-bearbeiten',
-    ctaHeadline: 'PDF jetzt im Browser bearbeiten',
-    ctaButtonLabel: 'PDF jetzt bearbeiten',
-    relatedToolSlugs: ['pdf-unterschreiben', 'pdf-in-word-umwandeln', 'pdf-schwaerzen'],
-    relatedArticleSlugs: ['pdf-unterschreiben-online-kostenlos', 'pdf-in-word-umwandeln-anleitung'],
-    directAnswer: 'Um ein PDF online zu bearbeiten, nutzen Sie den vollwertigen CoolWave PDF-Editor: Laden Sie Ihr Dokument hoch, klicken Sie an die gewünschte Textstelle und schreiben Sie neue Absätze, ergänzen Sie Anmerkungen, laden Sie Ihr Firmenlogo hoch oder markieren Sie Passagen mit Textmarkern.',
-    steps: [
-      { step: 1, title: 'Dokument im Editor öffnen', text: 'Laden Sie Ihre PDF-Datei in den visuellen Web-Editor.' },
-      { step: 2, title: 'Werkzeug wählen', text: 'Wählen Sie Textwerkzeug, Stift, Markierer oder Bild-Upload aus der Toolbar.' },
-      { step: 3, title: 'Speichern & Exportieren', text: 'Laden Sie das fertig bearbeitete PDF-Dokument mit allen Änderungen herunter.' },
+    "slug": "jpeg-verkleinern-aufloesung-und-dateigroesse",
+    "title": "JPEG verkleinern: Auflösung und Dateigröße reduzieren",
+    "metaTitle": "JPEG verkleinern: Pixel & Dateigröße online anpassen | CoolWave",
+    "metaDescription": "So verkleinern Sie ein JPEG zweifach: Reduzieren Sie die Pixelbreite für Web & Mail und senken Sie gleichzeitig die Dateigröße effizient.",
+    "h1": "JPEG verkleinern: Pixelabmessungen und Kilobyte gezielt verringern",
+    "excerpt": "Wenn ein Bild zu groß für das Web, Online-Formulare oder Messenger ist, müssen oft sowohl die Pixelmaße als auch das Speichervolumen angepasst werden.",
+    "category": "images",
+    "primaryKeyword": "verkleinern jpg",
+    "secondaryKeywords": [
+      "jpeg verkleinern",
+      "jpg bild verkleinern",
+      "jpeg pixel verkleinern",
+      "jpg kleiner machen online"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bildgroesse-aendern",
+    "ctaHeadline": "JPEG jetzt passgenau verkleinern",
+    "ctaButtonLabel": "JPEG jetzt verkleinern",
+    "relatedToolSlugs": [
+      "bild-komprimieren",
+      "bild-zuschneiden",
+      "jpg-in-webp-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "jpeg-komprimieren-dateigroesse-richtig-reduzieren",
+      "foto-komprimieren-bilder-kleiner-machen",
+      "bild-online-verkleinern-abmessungen"
+    ],
+    "directAnswer": "Um ein JPEG wirksam zu verkleinern, kombinieren Sie die Anpassung der Bildbreite mit Datenkompression. Mit dem CoolWave Skalierungs-Tool verringern Sie die Pixelmaße auf den gewünschten Zielwert. Im gleichen Schritt sorgt die integrierte Optimierung dafür, dass die Dateigröße auf ein Minimum sinkt.",
+    "steps": [
       {
-        heading: 'PDF-Formulare ohne Drucker ausfüllen',
-        content: 'Sparen Sie Papier und Druckertinte: Öffnen Sie behördliche Anträge oder Verträge im PDF-Editor, füllen Sie die Textfelder digital aus, setzen Sie Häkchen und speichern Sie das ausgefüllte Formular direkt ab.',
+        "step": 1,
+        "title": "JPEG hochladen",
+        "text": "Wählen Sie das zu große JPEG von Ihrem Rechner oder Smartphone aus."
       },
+      {
+        "step": 2,
+        "title": "Pixel oder Prozent wählen",
+        "text": "Geben Sie die Zielbreite ein (z. B. 1200 Pixel) oder wählen Sie eine prozentuale Verkleinerung um 50 %."
+      },
+      {
+        "step": 3,
+        "title": "Optimiertes JPEG herunterladen",
+        "text": "Laden Sie das fertige, handliche Bild mit nur einem Klick herunter."
+      }
     ],
-    faqs: [
-      { question: 'Kann ich bestehenden Text im PDF überschreiben?', answer: 'Ja. Mit unserem Text- und Abdeckwerkzeug können Sie alte Passagen weiß überdecken und durch neuen, formatierten Text ersetzen.' },
+    "sections": [
+      {
+        "heading": "Wann eine reine Kompression nicht mehr ausreicht",
+        "content": "Ein 24-Megapixel-Foto (6000x4000 px) lässt sich durch Datenkompression selten unter 1 MB drücken, ohne dass massive Unschärfen entstehen. Der Schlüssel liegt in der vorherigen Reduktion der Pixelmaße: Wird das Bild auf Full-HD-Breite (1920 px) herabgerechnet, reduziert sich die Anzahl der Bildpunkte um 75 %, wodurch die Datei mühelos unter 200 KB sinkt."
+      },
+      {
+        "heading": "Schonendes Resampling ohne Treppeneffekte",
+        "content": "Beim Verkleinern müssen Pixel zusammengefasst werden. Einfache Algorithmen führen zu kantigen Treppeneffekten an schrägen Linien. CoolWave nutzt hochwertige Lanczos- und Bikubisch-Filter, die Kanten glatt und Details klar definieren."
+      },
+      {
+        "heading": "Optimale Größen für Webseiten und Onlineshops",
+        "content": "Für schnelle Webseiten-Ladezeiten (Google PageSpeed) sollten Produktbilder im Shop selten größer als 1000 bis 1200 Pixel sein. Hero-Banner auf der Startseite kommen mit 1920 Pixeln aus. Jedes Megabyte weniger verbessert die Konversionsrate nachweislich."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-03',
-    updatedAt: '2026-09-14',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Verändert sich das Seitenverhältnis beim Verkleinern?",
+        "answer": "Nein, das proportionale Seitenverhältnis bleibt automatisch gesperrt, sodass Gesichter und Objekte nicht gestaucht werden."
+      },
+      {
+        "question": "Kann ich ein JPEG auch direkt auf eine bestimmte Kilobyte-Zahl verkleinern?",
+        "answer": "Ja, unser Komprimierungs-Tool erlaubt es, eine Ziel-Dateigröße (z. B. maximal 300 KB) anzustreben."
+      },
+      {
+        "question": "Bleiben Farben nach dem Verkleinern naturgetreu?",
+        "answer": "Ja, das Standard-sRGB-Farbprofil bleibt erhalten, sodass die Farben auf jedem Bildschirm identisch leuchten."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-22",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 15. PDF online unterschreiben
   {
-    slug: 'pdf-unterschreiben-online-kostenlos',
-    title: 'PDF online unterschreiben: Digitale Signatur kostenlos erstellen',
-    metaTitle: 'PDF online unterschreiben – kostenlos & digital | CoolWave',
-    metaDescription: 'PDFs rechtssicher und schnell online signieren. Eigene Unterschrift zeichnen, als Bild hochladen oder eintippen – 100% datenschutzkonform.',
-    h1: 'PDF unterschreiben: Kostenlos & digital im Webbrowser',
-    excerpt: 'Drucken, unterschreiben, scannen war gestern. Erstellen Sie Ihre persönliche Unterschrift digital und signieren Sie Verträge direkt am Bildschirm.',
-    category: 'pdf',
-    primaryKeyword: 'pdf online unterschreiben',
-    secondaryKeywords: ['pdf digital signieren', 'unterschrift in pdf einfügen', 'elektronische signatur pdf'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-unterschreiben',
-    ctaHeadline: 'PDF jetzt digital unterschreiben',
-    ctaButtonLabel: 'PDF unterschreiben',
-    relatedToolSlugs: ['pdf-bearbeiten', 'pdf-schuetzen'],
-    relatedArticleSlugs: ['pdf-online-bearbeiten-text-einfuegen', 'pdf-mit-passwort-schuetzen'],
-    directAnswer: 'Mit CoolWave unterschreiben Sie Verträge, Kündigungen und Vereinbarungen papierlos: Zeichnen Sie Ihre Unterschrift einfach mit Maus oder Finger, laden Sie ein Foto Ihrer Original-Unterschrift hoch oder tippen Sie Ihren Namen ein. Die Signatur wird nahtlos an der gewünschten Stelle im PDF platziert.',
-    steps: [
-      { step: 1, title: 'Vertrag hochladen', text: 'Öffnen Sie das zu signierende PDF-Dokument im Signatur-Tool.' },
-      { step: 2, title: 'Unterschrift erstellen', text: 'Zeichnen Sie Ihre Signatur auf dem Bildschirm oder laden Sie ein transparentes Signaturbild hoch.' },
-      { step: 3, title: 'Signiertes PDF exportieren', text: 'Platzieren und skalieren Sie die Unterschrift und laden Sie das fertige Dokument herunter.' },
+    "slug": "foto-komprimieren-bilder-kleiner-machen",
+    "title": "Foto komprimieren: Bilder kleiner machen",
+    "metaTitle": "Foto komprimieren: Smartphone- & Kamerafotos kleiner machen | CoolWave",
+    "metaDescription": "Große Smartphone- und Spiegelreflexfotos komprimieren: Wie Sie MB-schwere Bilder für Messenger, Bewerbungen und Mail blitzschnell verkleinern.",
+    "h1": "Foto komprimieren: Hochauflösende Aufnahmen einfach kleiner machen",
+    "excerpt": "Moderne Smartphones schießen Fotos mit 48 oder 108 Megapixeln. Für den Upload im Portal oder den Mailversand sind diese Dateien viel zu schwer. So machen Sie Fotos schnell kleiner.",
+    "category": "images",
+    "primaryKeyword": "foto komprimieren",
+    "secondaryKeywords": [
+      "fotos komprimieren",
+      "bilder kleiner machen",
+      "handyfoto verkleinern",
+      "foto dateigröße reduzieren"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bild-komprimieren",
+    "ctaHeadline": "Ihre Fotos jetzt schnell und einfach kleiner machen",
+    "ctaButtonLabel": "Fotos jetzt kleiner machen",
+    "relatedToolSlugs": [
+      "bildgroesse-aendern",
+      "heic-in-jpg-umwandeln",
+      "bildqualitaet-optimieren"
+    ],
+    "relatedArticleSlugs": [
+      "jpeg-komprimieren-dateigroesse-richtig-reduzieren",
+      "bild-verkleinern-oder-komprimieren-unterschied",
+      "bilder-ohne-qualitaetsverlust-verkleinern"
+    ],
+    "directAnswer": "Um ein Foto kleiner zu machen, laden Sie es in den CoolWave Bildkompressor hoch. Das Tool verarbeitet Aufnahmen aus Smartphones und Digitalkameras, entfernt Speicherfresser wie EXIF-Vorschaubilder und optimiert die Farbkanäle. So schrumpft das Foto von 10 MB auf unter 1 MB bei gleichbleibend brillanter Optik.",
+    "steps": [
       {
-        heading: 'Rechtliche Einordnung der einfachen elektronischen Signatur (EES)',
-        content: 'Für die meisten alltäglichen Vereinbarungen (z. B. Mietverträge, Bestellungen, Vollmachten, Freelancer-Aufträge) genügt nach europäischem eIDAS-Recht die einfache elektronische Signatur, sofern das Gesetz keine notarielle oder Schriftform zwingend vorschreibt.',
+        "step": 1,
+        "title": "Foto hochladen",
+        "text": "Wählen Sie Ihre Aufnahme direkt aus der Smartphone-Galerie oder vom Computer aus."
       },
+      {
+        "step": 2,
+        "title": "Automatische Bildoptimierung",
+        "text": "CoolWave ermittelt vollautomatisch die ideale Balance aus Dateigröße und Bildschärfe."
+      },
+      {
+        "step": 3,
+        "title": "Kleines Foto speichern",
+        "text": "Laden Sie das optimierte Foto herunter – fertig für Bewerbungsunterlagen, E-Mails oder Chatprogramme."
+      }
     ],
-    faqs: [
-      { question: 'Wird meine Unterschrift auf fremden Servern gespeichert?', answer: 'Nein. Ihre Unterschrift wird ausschließlich lokal in Ihrem Browser generiert und direkt in das PDF eingeprägt.' },
+    "sections": [
+      {
+        "heading": "Warum Handyfotos heute gigantische Ausmaße haben",
+        "content": "Aktuelle iPhone- und Android-Kameras erfassen jedes Detail mit Quad-Bayer-Sensoren und hohen Bitraten. Ein einzelnes Foto belegt oft zwischen 5 und 25 Megabyte. Wenn Sie 10 Urlaubsbilder per Mail versenden wollen, scheitert der Versand unweigerlich an der 25-MB-Grenze des Mailproviders."
+      },
+      {
+        "heading": "Verlustbehaftet vs. Wahrnehmungsoptimiert",
+        "content": "Reine Datenkompression unterscheidet zwischen mathematischem Verlust und sichtbarem Verlust. CoolWave nutzt psychoakustisch vergleichbare Sehmodelle: Feinste Farbgradienten im Himmel oder Schatten werden so zusammengefasst, dass das menschliche Auge keinen Unterschied zum unkomprimierten Original wahrnimmt."
+      },
+      {
+        "heading": "Fotos für behördliche Ausweise und Bewerbungen",
+        "content": "Passfoto-Portale und Bewerbungsmasken verlangen strenge Höchstgrenzen (oft maximal 2 MB oder gar 500 KB). Durch gezielte Kompression halten Sie diese Vorgaben zuverlässig ein, ohne dass Ihr Porträt verschwommen wirkt."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-04',
-    updatedAt: '2026-09-12',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich Fotos direkt vom iPhone komprimieren?",
+        "answer": "Ja, CoolWave funktioniert direkt im Safari-Browser auf iOS. Auch Apple-typische HEIC-Fotos können direkt verarbeitet werden."
+      },
+      {
+        "question": "Verliere ich die Originaldatei auf meinem Handy?",
+        "answer": "Nein, Ihr Original auf dem Gerät bleibt völlig unberührt. Das komprimierte Foto wird als neue Datei gespeichert."
+      },
+      {
+        "question": "Werden Personen oder Gesichter unscharf?",
+        "answer": "Nein, wichtige Kanten und Gesichtsmerkmale werden bei der Kompression priorisiert und bleiben scharf."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-22",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 16. PDF schwärzen
   {
-    slug: 'pdf-schwaerzen-vertrauliche-daten',
-    title: 'PDF schwärzen: Vertrauliche Daten & IBANs sicher unkenntlich machen',
-    metaTitle: 'PDF sicher schwärzen – Daten unkenntlich machen | CoolWave',
-    metaDescription: 'PDFs dauerhaft schwärzen: Schützen Sie DSGVO-relevante Daten, Kontonummern und Passwörter vor dem Auslesen durch Dritte.',
-    h1: 'PDF schwärzen: Vertrauliche Inhalte dauerhaft entfernen',
-    excerpt: 'Vorsicht vor einfachen schwarzen Balken: Wer PDF-Text nur optisch überdeckt, riskiert Datenlecks. Erfahren Sie, wie echtes Schwärzen funktioniert.',
-    category: 'pdf',
-    primaryKeyword: 'pdf sicher schwärzen',
-    secondaryKeywords: ['pdf schwärzen', 'iban unkenntlich machen pdf', 'text in pdf zensieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-schwaerzen',
-    ctaHeadline: 'PDF jetzt sicher schwärzen',
-    ctaButtonLabel: 'PDF schwärzen',
-    relatedToolSlugs: ['pdf-bearbeiten', 'pdf-schuetzen'],
-    relatedArticleSlugs: ['pdf-mit-passwort-schuetzen'],
-    directAnswer: 'Echtes Schwärzen bedeutet nicht nur, einen schwarzen Kasten über den Text zu zeichnen, sondern den darunterliegenden Textcode und Metadatenstrang unwiderruflich aus der PDF-Struktur zu löschen. CoolWave entfernt Textfragmente verlässlich, sodass sensible Daten nicht markiert oder herauskopiert werden können.',
-    steps: [
-      { step: 1, title: 'PDF laden', text: 'Öffnen Sie die vertrauliche Datei im Schwärzungswerkzeug.' },
-      { step: 2, title: 'Bereiche markieren', text: 'Ziehen Sie mit der Maus schwarze Zensurbalken über IBAN, Telefonnummern oder Namen.' },
-      { step: 3, title: 'Dauerhaft entfernen', text: 'Laden Sie das geschwärzte PDF herunter – die Daten sind unwiederbringlich gelöscht.' },
+    "slug": "bild-online-verkleinern-abmessungen",
+    "title": "Bild online verkleinern: So ändern Sie die Abmessungen",
+    "metaTitle": "Bild online verkleinern: Abmessungen & Pixelbreite ändern | CoolWave",
+    "metaDescription": "Ändern Sie Bildabmessungen in Pixel oder Prozent online im Browser. Mit automatischer Beibehaltung des Seitenverhältnisses ohne Verzerrung.",
+    "h1": "Bild online verkleinern: Breite und Höhe im Browser ohne Verzerrung anpassen",
+    "excerpt": "Sie möchten ein Bild auf exakte Pixelmaße zuschneiden oder herunterskalieren, ohne teure Bildbearbeitungsprogramme wie Photoshop zu installieren? So gelingt es online.",
+    "category": "images",
+    "primaryKeyword": "online bild verkleinern",
+    "secondaryKeywords": [
+      "bildabmessungen ändern",
+      "foto maße anpassen online",
+      "bildbreite verkleinern",
+      "pixel online anpassen"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bildgroesse-aendern",
+    "ctaHeadline": "Bildabmessungen jetzt direkt im Browser verkleinern",
+    "ctaButtonLabel": "Bildabmessungen jetzt ändern",
+    "relatedToolSlugs": [
+      "bild-skalieren",
+      "bild-zuschneiden",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "bildgroesse-aendern-richtige-aufloesung-pixel",
+      "jpeg-verkleinern-aufloesung-und-dateigroesse",
+      "bild-verkleinern-oder-komprimieren-unterschied"
+    ],
+    "directAnswer": "Um ein Bild online zu verkleinern, ziehen Sie es in das CoolWave Tool \"Bildgröße ändern\". Tragen Sie entweder die gewünschte Breite in Pixeln ein oder wählen Sie eine prozentuale Skalierung. Das System sperrt das Seitenverhältnis, skaliert das Bild verzerrungsfrei und stellt es sofort zum Download bereit.",
+    "steps": [
       {
-        heading: 'Die Gefahr des "Scheinschwärzens"',
-        content: 'Viele Anwender zeichnen in Word oder einfachen PDF-Viewern schwarze Rechtecke über Telefonnummern. Der Clou: Der Text darunter existiert im Dokument weiter und kann mit STRG+A und STRG+C von jedem Empfänger kopiert werden. CoolWave verhindert diesen fatalen Datenschutzfehler.',
+        "step": 1,
+        "title": "Bild im Browser ablegen",
+        "text": "Öffnen Sie das Skalierungs-Tool und laden Sie Ihre JPG-, PNG- oder WebP-Datei hoch."
       },
+      {
+        "step": 2,
+        "title": "Neue Maße eingeben",
+        "text": "Geben Sie z. B. 800 Pixel für die Breite ein – die Höhe passt sich automatisch proportional an."
+      },
+      {
+        "step": 3,
+        "title": "Verkleinertes Bild sichern",
+        "text": "Laden Sie das fertige Bild mit den neuen, exakten Abmessungen herunter."
+      }
     ],
-    faqs: [
-      { question: 'Können geschwärzte Daten wiederhergestellt werden?', answer: 'Nein. Bei echter Schwärzung werden die Vektorpunkte und Zeichencodes aus dem Datenstrom der Datei physisch entfernt.' },
+    "sections": [
+      {
+        "heading": "Vorteile von browserbasierten Bildskalierern",
+        "content": "Ein Online-Tool erfordert keine Installation, keine Updates und keine Registrierung. Sie können auf dem Smartphone, dem Firmenlaptop oder einem fremden Rechner in Sekundenschnelle Grafiken für Präsentationen, Social-Media-Kanäle oder Dokumentationen maßgenau zurechtschneiden."
+      },
+      {
+        "heading": "Proportionale Skalierung vs. Verzerren",
+        "content": "Wird die Breite unabhängig von der Höhe geändert, wird das Motiv gestaucht oder in die Länge gezogen. Das integrierte Schloss-Symbol bei CoolWave garantiert, dass das mathematische Seitenverhältnis (z. B. 16:9, 4:3 oder 3:2) stets intakt bleibt."
+      },
+      {
+        "heading": "Unterstützung moderner Webformate",
+        "content": "Neben klassischen JPEGs verarbeitet das Tool auch moderne PNG-Dateien mit Alphakanal (Transparenz) und Google WebP-Grafiken, ohne dass transparente Hintergründe plötzlich weiß oder schwarz eingefärbt werden."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-05',
-    updatedAt: '2026-09-10',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich ein Bild auch millimetergenau für den Druck verkleinern?",
+        "answer": "Rechnen Sie die Maße einfach um: Ein 10x15 cm Foto benötigt bei 300 DPI Druckauflösung ca. 1181x1772 Pixel."
+      },
+      {
+        "question": "Werden transparente PNG-Hintergründe beschädigt?",
+        "answer": "Nein, transparente Alphakanäle bleiben beim Skalieren vollständig erhalten."
+      },
+      {
+        "question": "Gibt es eine Vorschau vor dem Download?",
+        "answer": "Ja, Sie sehen die neuen Pixelmaße und die resultierende Dateigröße unmittelbar vor dem Speichern."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-23",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 17. PDF drehen
   {
-    slug: 'pdf-drehen-und-dauerhaft-speichern',
-    title: 'PDF drehen: Seiten um 90° oder 180° dauerhaft ausrichten',
-    metaTitle: 'PDF drehen & dauerhaft speichern | CoolWave Online',
-    metaDescription: 'Querformatige oder auf dem Kopf stehende PDF-Seiten um 90, 180 oder 270 Grad drehen und dauerhaft speichern. Kostenlos & sekundenschnell.',
-    h1: 'PDF drehen: Seiten dauerhaft richtig ausrichten',
-    excerpt: 'Steht Ihr gescanntes Dokument auf dem Kopf oder im falschen Querformat? Drehen Sie einzelne oder alle Seiten dauerhaft mit einem Klick.',
-    category: 'pdf',
-    primaryKeyword: 'pdf seiten drehen',
-    secondaryKeywords: ['pdf dauerhaft drehen', 'pdf 90 grad drehen', 'pdf querformat in hochformat'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-drehen',
-    ctaHeadline: 'PDF jetzt dauerhaft drehen',
-    ctaButtonLabel: 'PDF drehen',
-    relatedToolSlugs: ['pdf-seiten-neu-anordnen', 'pdf-seiten-loeschen'],
-    relatedArticleSlugs: ['pdf-seiten-neu-anordnen-anleitung'],
-    directAnswer: 'Um eine PDF dauerhaft zu drehen, laden Sie das Dokument in das CoolWave PDF-Drehen-Tool. Sie können entweder alle Seiten auf einmal oder gezielt nur bestimmte Querformatseiten um 90° im Uhrzeigersinn, gegen den Uhrzeigersinn oder um 180° drehen. Die Ausrichtung wird fest im PDF gespeichert.',
-    steps: [
-      { step: 1, title: 'PDF einfügen', text: 'Ziehen Sie die verdrehte PDF in das Tool.' },
-      { step: 2, title: 'Drehrichtung wählen', text: 'Klicken Sie auf den Drehpfeil der jeweiligen Seite oder drehen Sie alle Seiten gemeinsam.' },
-      { step: 3, title: 'Gespeichertes PDF laden', text: 'Exportieren Sie die Datei – die Ausrichtung bleibt auf allen Lesegeräten fixiert.' },
+    "slug": "bilder-ohne-qualitaetsverlust-verkleinern",
+    "title": "Bilder ohne Qualitätsverlust verkleinern: Was wirklich möglich ist",
+    "metaTitle": "Bilder ohne Qualitätsverlust verkleinern: Was ist möglich? | CoolWave",
+    "metaDescription": "Kann man Bilder ohne Qualitätsverlust verkleinern? Der ehrliche technische Vergleich: Verlustfreie Kompression, Metadaten-Entfernung vs. verlustbehaftetes Resizing.",
+    "h1": "Bilder ohne Qualitätsverlust verkleinern: Mythos & technische Realität",
+    "excerpt": "Viele Tools versprechen \"100 % verlustfreie Verkleinerung um 90 %\". Doch was ist physikalisch und mathematisch wirklich machbar? Wir trennen Marketingversprechen von der Realität.",
+    "category": "images",
+    "primaryKeyword": "bilder verkleinern ohne qualitätsverlust",
+    "secondaryKeywords": [
+      "verlustfreie bildkompression",
+      "bild verkleinern qualität behalten",
+      "lossless vs lossy bild",
+      "ohne qualitätsverlust komprimieren"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "bild-komprimieren",
+    "ctaHeadline": "Bilder jetzt nach dem neuesten Stand der Technik optimieren",
+    "ctaButtonLabel": "Bilder jetzt verlustfrei optimieren",
+    "relatedToolSlugs": [
+      "bild-metadaten-entfernen",
+      "bildqualitaet-optimieren",
+      "png-in-webp-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "bild-verkleinern-oder-komprimieren-unterschied",
+      "jpeg-komprimieren-dateigroesse-richtig-reduzieren",
+      "jpg-oder-png-welches-bildformat-ist-besser"
+    ],
+    "directAnswer": "Eine echte mathematisch verlustfreie Verkleinerung (Lossless) spart durch das Entfernen von Metadaten und die Optimierung von Entropietabellen meist zwischen 5 % und 25 % Dateigröße. Ersparnisse von 70 % bis 90 % erfordern hingegen immer eine wahrnehmungsbasierte (Lossy) Kompression oder Pixelreduktion. Diese ist zwar mathematisch verlustbehaftet, für das menschliche Auge bei normaler Betrachtung jedoch unsichtbar.",
+    "steps": [
       {
-        heading: 'Unterschied zwischen Anzeige-Drehung und echtem Speichern',
-        content: 'Viele Standard-PDF-Viewer (wie der Adobe Reader) erlauben das Drehen der Ansicht, speichern diese Änderung beim Schließen des Fensters jedoch nicht ab. CoolWave modifiziert das interne /Rotate-Attribut der PDF dauerhaft.',
+        "step": 1,
+        "title": "Foto oder Grafik hochladen",
+        "text": "Wählen Sie das Ausgangsbild in CoolWave aus."
       },
+      {
+        "step": 2,
+        "title": "Verlustfreien oder sichtoptimierten Modus wählen",
+        "text": "Wählen Sie, ob Sie absolute mathematische Bit-Identität (Lossless) oder maximale Einsparung ohne sichtbare Unterschiede wünschen."
+      },
+      {
+        "step": 3,
+        "title": "Perfektes Ergebnis laden",
+        "text": "Laden Sie das bereinigte Bild herunter – ohne Artefakte, Rauschen oder Konturfehler."
+      }
     ],
-    faqs: [
-      { question: 'Verliert das Dokument beim Drehen an Schärfe?', answer: 'Nein, es handelt sich um eine reine Transformation der Koordinatenachsen. Weder Text noch Bilder werden neu komprimiert.' },
+    "sections": [
+      {
+        "heading": "Mathematisch verlustfrei (Lossless) im Detail",
+        "content": "Bei verlustfreier Kompression (wie bei PNG mit Deflate oder WebP Lossless) wird jedes einzelne Pixel nach dem Dekodieren exakt mit denselben RGB-Werten wiederhergestellt wie im Original. Die Einsparung entsteht ausschließlich durch intelligentere Datenkompression (Huffman-Bäume, LZ77-Wörterbücher) und das Entfernen von ungenutzten Farbpaletten oder EXIF-Tags."
+      },
+      {
+        "heading": "Wahrnehmungsverlustfrei (Perceptual Lossless)",
+        "content": "Weil das Auge winzige Helligkeitsunterschiede in hochdetaillierten Mustern (z. B. Grashalme, Kieselsteine) nicht pixelgenau auflösen kann, reduzieren moderne Codecs dort die Genauigkeit. Das Ergebnis: Die Dateigröße fällt um bis zu 80 %, während selbst Grafikexperten im Vorher-Nachher-Vergleich ohne Zoomlupe keinen Unterschied sehen."
+      },
+      {
+        "heading": "Vorsicht bei pixelbasiertem Herunterskalieren",
+        "content": "Wird die Pixelzahl von 4000 auf 2000 Pixel halbiert, gehen 75 % der Bildpunkte unwiederbringlich verloren. Für den Bildschirm ist das optimal, für spätere großformatige Drucke auf Leinwand oder Plakate sollte jedoch immer das unskalierte Original aufbewahrt werden."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-06',
-    updatedAt: '2026-09-08',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann PNG absolut verlustfrei komprimiert werden?",
+        "answer": "Ja, durch Optimierung der Vorfilter (PNG-Filter 0-4) und Kompressionsstufen lässt sich PNG ohne ein einziges verändertes Pixel um bis zu 30 % verkleinern."
+      },
+      {
+        "question": "Sieht man bei CoolWave JPEG-Kompression Artefakte?",
+        "answer": "In der Standard-Einstellung nicht. CoolWave regelt die Qualitätsschwelle so ein, dass störende Kantenunschärfen vermieden werden."
+      },
+      {
+        "question": "Kann ich ein komprimiertes Bild mehrfach hintereinander komprimieren?",
+        "answer": "Nein, das sogenannte \"Generation Loss\" sollte vermieden werden: Komprimieren Sie immer vom hochauflösenden Original aus."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-23",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 18. PDF mit Passwort schützen
   {
-    slug: 'pdf-mit-passwort-schuetzen',
-    title: 'PDF mit Passwort schützen: Starke Verschlüsselung für sensible Daten',
-    metaTitle: 'PDF mit Passwort schützen – kostenlos verschlüsseln | CoolWave',
-    metaDescription: 'Schützen Sie vertrauliche PDF-Dateien mit 256-Bit-AES-Verschlüsselung. Verhindern Sie unbefugtes Öffnen, Drucken oder Kopieren direkt im Browser.',
-    h1: 'PDF mit Passwort schützen: Vertrauliche Dokumente sichern',
-    excerpt: 'Lohnabrechnungen, Verträge und Ausweiskopien sollten niemals unverschlüsselt verschickt werden. So schützen Sie Ihre PDF mit einem sicheren Passwort.',
-    category: 'pdf',
-    primaryKeyword: 'pdf mit passwort schützen',
-    secondaryKeywords: ['pdf verschlüsseln', 'passwort auf pdf setzen', 'pdf sicher sperren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-schuetzen',
-    ctaHeadline: 'PDF jetzt mit Passwort verschlüsseln',
-    ctaButtonLabel: 'PDF schützen',
-    relatedToolSlugs: ['pdf-passwort-entfernen', 'pdf-schwaerzen'],
-    relatedArticleSlugs: ['pdf-passwort-entfernen-entsperren', 'pdf-schwaerzen-vertrauliche-daten'],
-    directAnswer: 'Um eine PDF-Datei vor fremden Blicken zu schützen, laden Sie sie in das CoolWave PDF-Schützen-Tool hoch und vergeben ein persönliches Kennwort. Die Datei wird nach aktuellem Industriestandard (AES-Verschlüsselung) geschützt und kann ohne das korrekte Passwort von niemandem geöffnet werden.',
-    steps: [
-      { step: 1, title: 'Dokument auswählen', text: 'Legen Sie die zu schützende Datei im Tool ab.' },
-      { step: 2, title: 'Sicheres Passwort eingeben', text: 'Geben Sie ein starkes Kennwort mit Buchstaben, Zahlen und Sonderzeichen ein.' },
-      { step: 3, title: 'Verschlüsseltes PDF sichern', text: 'Laden Sie die verschlüsselte Datei herunter und übermitteln Sie das Kennwort auf einem getrennten Kanal.' },
+    "slug": "jpg-oder-png-welches-bildformat-ist-besser",
+    "title": "JPG oder PNG: Welches Bildformat ist besser?",
+    "metaTitle": "JPG oder PNG: Welches Format ist besser? Vergleich & Ratgeber | CoolWave",
+    "metaDescription": "JPG vs. PNG im Direktvergleich: Wann sollten Sie JPG für Fotos wählen und wann PNG für transparente Hintergründe und scharfe Schriften nutzen?",
+    "h1": "JPG oder PNG: Welches Bildformat ist für Fotos, Web & Grafiken ideal?",
+    "excerpt": "JPG und PNG sind die beiden Giganten unter den Bildformaten. Doch die falsche Wahl führt entweder zu riesigen Dateien oder matschigen Schriften. Wir klären die Fronten.",
+    "category": "formats",
+    "primaryKeyword": "jpg oder png",
+    "secondaryKeywords": [
+      "png oder jpg",
+      "unterschied jpg und png",
+      "wann jpg wann png",
+      "png vs jpg dateigröße"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "jpg-in-png-umwandeln",
+    "ctaHeadline": "Konvertieren Sie flexibel zwischen JPG und PNG",
+    "ctaButtonLabel": "JPG in PNG umwandeln",
+    "relatedToolSlugs": [
+      "png-in-jpg-umwandeln",
+      "webp-in-jpg-umwandeln",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "webp-oder-jpg-unterschiede-qualitaet-dateigroesse",
+      "bilder-ohne-qualitaetsverlust-verkleinern",
+      "bild-verkleinern-oder-komprimieren-unterschied"
+    ],
+    "directAnswer": "Keines der Formate ist pauschal besser – sie dienen unterschiedlichen Zwecken: JPG ist ideal für komplexe Fotos und Landschaftsbilder mit sanften Farbübergängen, da es Dateien extrem klein hält. PNG ist die beste Wahl für Logos, Screenshots, Icons, Texte und Grafiken mit transparentem Hintergrund, da es kantengetreu und verlustfrei arbeitet.",
+    "steps": [
       {
-        heading: 'Best Practices für den sicheren E-Mail-Versand',
-        content: 'Senden Sie das Passwort niemals in derselben E-Mail wie das verschlüsselte Dokument mit! Nutzen Sie stattdessen einen separaten Kanal wie SMS, Messenger (Signal, WhatsApp) oder teilen Sie es telefonisch mit.',
+        "step": 1,
+        "title": "Bildinhalt analysieren",
+        "text": "Enthält Ihr Bild viele Farben und Gesichter (Foto) oder harte Kanten, Schrift und Transparenz (Grafik)?"
       },
+      {
+        "step": 2,
+        "title": "Passendes Format wählen",
+        "text": "Nutzen Sie JPG für platzsparende Fotos und PNG für gestochen scharfe Grafiken."
+      },
+      {
+        "step": 3,
+        "title": "Bei Bedarf sekundenschnell konvertieren",
+        "text": "Wandeln Sie Ihre Datei mit CoolWave mühelos von JPG in PNG oder von PNG in JPG um."
+      }
     ],
-    faqs: [
-      { question: 'Kann CoolWave mein Passwort zurücksetzen, wenn ich es vergesse?', answer: 'Nein. Aufgrund der starken Ende-zu-Ende-Verschlüsselung hat niemand außer Ihnen Zugriff auf das Dokument. Notieren Sie sich das Kennwort gut.' },
+    "sections": [
+      {
+        "heading": "JPG (Joint Photographic Experts Group)",
+        "content": "JPG wurde speziell für die Fotografie entwickelt. Da Fotos Millionen Nuancen enthalten, komprimiert JPG verlustbehaftet, indem es für das Auge unmerkliche Farbdetails zusammenfasst. Bei Grafiken mit scharfen Linien (wie schwarzer Schrift auf weißem Grund) stößt JPG an Grenzen und erzeugt unschöne Flecken (Moskito-Rauschen) an den Rändern."
+      },
+      {
+        "heading": "PNG (Portable Network Graphics)",
+        "content": "PNG wurde als patentfreier Nachfolger von GIF entwickelt. Es komprimiert verlustfrei und beherrscht 24-Bit-Echtfarben plus einen 8-Bit-Alphakanal für stufenlose Transparenzen (wie weiche Schatten). Bei Fotos führt PNG jedoch zu Dateien, die oft fünf- bis zehnmal größer sind als ein vergleichbares JPEG."
+      },
+      {
+        "heading": "Direkter Vergleich: Wann welches Format?",
+        "content": "Verwenden Sie JPG für: Urlaubsfotos, Social-Media-Bilder, Shop-Produktfotos. Verwenden Sie PNG für: Firmenlogos, App-Icons, Diagramme, Benutzeroberflächen-Screenshots und Freisteller ohne Hintergrund."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-07',
-    updatedAt: '2026-09-12',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich ein JPG transparent machen, wenn ich es in PNG umwandle?",
+        "answer": "Durch die reine Umwandlung nicht automatisch. Nach der Konvertierung in PNG können Sie den Hintergrund jedoch in einem Bildbearbeitungswerkzeug transparent ausschneiden."
+      },
+      {
+        "question": "Warum ist mein Screenshot als PNG so viel schärfer als als JPG?",
+        "answer": "Weil PNG Buchstabengrenzen pixelgenau erhält, während JPG versucht, Kanten in Wellenfunktionen zu zerlegen, was zu Rauschen um Buchstaben führt."
+      },
+      {
+        "question": "Gibt es ein Format, das die Vorteile beider vereint?",
+        "answer": "Ja, das moderne WebP-Format bietet sowohl exzellente Fotokompression als auch transparente Hintergründe und scharfe Grafiken."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-24",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 19. PDF-Passwort entfernen
   {
-    slug: 'pdf-passwort-entfernen-entsperren',
-    title: 'PDF-Passwort entfernen: Gesperrte PDF dauerhaft entschlüsseln',
-    metaTitle: 'PDF-Passwort entfernen – PDF entsperren | CoolWave',
-    metaDescription: 'Entfernen Sie das Passwort aus Ihren PDF-Dokumenten, um sie ohne ständige Kennworteingabe zu öffnen, zu drucken oder zu bearbeiten. Schnell & online.',
-    h1: 'PDF-Passwort entfernen: Kennwortschutz dauerhaft aufheben',
-    excerpt: 'Ist das ständige Eintippen des Passworts bei Gehaltsabrechnungen lästig? Heben Sie die Verschlüsselung dauerhaft auf, wenn Sie das Passwort kennen.',
-    category: 'pdf',
-    primaryKeyword: 'pdf passwort entfernen',
-    secondaryKeywords: ['pdf entsperren', 'pdf schutz aufheben', 'pdf passwort löschen'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-passwort-entfernen',
-    ctaHeadline: 'PDF jetzt dauerhaft entsperren',
-    ctaButtonLabel: 'PDF entsperren',
-    relatedToolSlugs: ['pdf-schuetzen', 'pdf-bearbeiten'],
-    relatedArticleSlugs: ['pdf-mit-passwort-schuetzen'],
-    directAnswer: 'Wenn Sie das Kennwort einer geschützten PDF-Datei kennen, aber nicht bei jedem Öffnen neu eingeben möchten, nutzen Sie das CoolWave Entsperr-Tool: Geben Sie das Passwort einmalig ein, und das System erzeugt eine unverschlüsselte Version zur bequemen Archivierung.',
-    steps: [
-      { step: 1, title: 'Geschützte PDF hochladen', text: 'Wählen Sie die gesperrte Datei aus.' },
-      { step: 2, title: 'Einmalig Passwort eingeben', text: 'Geben Sie das berechtigte Kennwort ein, um die Entschlüsselung zu autorisieren.' },
-      { step: 3, title: 'Ungeschützte PDF speichern', text: 'Laden Sie die freigeschaltete PDF herunter – ab sofort öffnet sie ohne Passwortabfrage.' },
+    "slug": "webp-oder-jpg-unterschiede-qualitaet-dateigroesse",
+    "title": "WebP oder JPG: Unterschiede bei Qualität und Dateigröße",
+    "metaTitle": "WebP oder JPG: Vergleich bei Dateigröße, Qualität & Support | CoolWave",
+    "metaDescription": "WebP vs. JPG im Test: Warum Google WebP bis zu 35 % kleiner ist als JPEG bei gleicher Bildschärfe und wann sich die Konvertierung lohnt.",
+    "h1": "WebP oder JPG: Moderner Web-Standard vs. universeller Klassiker",
+    "excerpt": "Google hat WebP entwickelt, um das Internet schneller zu machen. Doch wie schlägt sich das Format im direkten Vergleich mit dem alteingesessenen JPEG?",
+    "category": "formats",
+    "primaryKeyword": "webp oder jpg",
+    "secondaryKeywords": [
+      "unterschied webp und jpg",
+      "webp vs jpg vorteile",
+      "warum webp verwenden",
+      "webp in jpg umwandeln"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "webp-in-jpg-umwandeln",
+    "ctaHeadline": "WebP-Bilder jetzt in universelles JPG umwandeln",
+    "ctaButtonLabel": "WebP jetzt in JPG umwandeln",
+    "relatedToolSlugs": [
+      "jpg-in-webp-umwandeln",
+      "png-in-webp-umwandeln",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "jpg-oder-png-welches-bildformat-ist-besser",
+      "bilder-ohne-qualitaetsverlust-verkleinern",
+      "bild-verkleinern-oder-komprimieren-unterschied"
+    ],
+    "directAnswer": "WebP ist JPEG technisch überlegen: Bei gleicher visueller Bildqualität ist eine WebP-Datei etwa 25 % bis 35 % kleiner als ein herkömmliches JPG. Zudem unterstützt WebP sowohl verlustfreie Kompression als auch transparente Hintergründe. Der einzige Nachteil von WebP liegt in der Kompatibilität mit älteren Bildbearbeitungsprogrammen oder älteren TV-Geräten, weshalb die Konvertierung in JPG oft nötig wird.",
+    "steps": [
       {
-        heading: 'Rechtlicher Hinweis zur Entschlüsselung',
-        content: 'Dieses Werkzeug dient dazu, eigene Dokumente von Schranken zu befreien. Das unbefugte Umgehen von Sicherheitsmechanismen auf Dokumenten Dritter ohne Berechtigung ist unzulässig.',
+        "step": 1,
+        "title": "WebP-Datei auswählen",
+        "text": "Laden Sie die aus dem Web heruntergeladene .webp-Datei bei CoolWave hoch."
       },
+      {
+        "step": 2,
+        "title": "Konvertierung zu JPG starten",
+        "text": "Das System übersetzt den modernen WebP-Code in ein universell kompatibles JPEG-Bild."
+      },
+      {
+        "step": 3,
+        "title": "Universelles JPG sichern",
+        "text": "Öffnen Sie Ihr Bild nun problemlos in jedem Programm, in Office oder auf jedem Gerät."
+      }
     ],
-    faqs: [
-      { question: 'Funktioniert das auch, wenn ich das Passwort komplett vergessen habe?', answer: 'Nein. Moderne AES-Verschlüsselungen können ohne das richtige Kennwort aus Sicherheitsgründen nicht geknackt werden.' },
+    "sections": [
+      {
+        "heading": "Die Technologie hinter WebP",
+        "content": "WebP basiert auf dem Videocodec VP8. Statt wie JPEG nur statische 8x8-Blöcke zu verarbeiten, nutzt WebP prädiktive Kodierung: Es prognostiziert den Inhalt benachbarter Pixelblöcke anhand bereits analysierter Bereiche und kodiert lediglich die Abweichung (Residuum). Das führt zu glatteren Farbflächen und feineren Details bei deutlich geringerer Datenmenge."
+      },
+      {
+        "heading": "Warum Onlineshops und Google WebP lieben",
+        "content": "Ladezeit ist ein offizieller Google-Rankingfaktor (Core Web Vitals). Eine Website, deren Produktbilder in WebP ausgeliefert werden, lädt signifikant schneller und spart mobiles Datenvolumen. Fast alle modernen Browser (Chrome, Safari, Firefox, Edge) unterstützen WebP heute uneingeschränkt."
+      },
+      {
+        "heading": "Die Kompatibilitätsfalle im Alltag",
+        "content": "Speichert man ein Bild aus dem Browser ab, landet oft eine .webp-Datei auf der Festplatte. Wer dieses Foto dann in ältere Versionen von Microsoft Word einfügen, an ein Fotolabor schicken oder auf einem älteren Smart-TV ansehen möchte, scheitert oft. Für diese Zwecke ist die Rückkonvertierung zu JPG mit CoolWave die schnellste Lösung."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-08',
-    updatedAt: '2026-09-11',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann Windows 10/11 WebP-Bilder standardmäßig anzeigen?",
+        "answer": "Neuere Windows-11-Versionen können WebP öffnen. Bei älteren Windows-Builds oder externen Programmen verweigert die Fotoanzeige jedoch oft den Dienst."
+      },
+      {
+        "question": "Kann man JPG in WebP umwandeln, um Speicherplatz zu sparen?",
+        "answer": "Ja, mit unserem Tool \"JPG in WebP\" reduzieren Sie die Dateigröße Ihrer Website-Bilder im Schnitt um ein Drittel."
+      },
+      {
+        "question": "Unterstützt WebP auch Animationen wie GIF?",
+        "answer": "Ja, WebP unterstützt animierte Bilder und ist dabei um ein Vielfaches kleiner als das veraltete GIF-Format."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-24",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 20. PDF in JPG umwandeln
   {
-    slug: 'pdf-in-jpg-umwandeln-hohe-aufloesung',
-    title: 'PDF in JPG umwandeln: Seiten in hochauflösende Bilder konvertieren',
-    metaTitle: 'PDF in JPG umwandeln – kostenlos & hochauflösend | CoolWave',
-    metaDescription: 'PDF-Seiten kostenlos in hochauflösende JPG-Bilder umwandeln. Einzelne Seiten oder ganze Dokumente als Bildergalerie sichern.',
-    h1: 'PDF in JPG umwandeln: Hochwertige Bilddateien erstellen',
-    excerpt: 'Möchten Sie eine PDF-Seite auf Social Media posten, in eine Präsentation einfügen oder auf einer Webseite einbinden? Wandeln Sie sie in JPG um.',
-    category: 'images',
-    primaryKeyword: 'pdf in jpg umwandeln',
-    secondaryKeywords: ['pdf zu jpg', 'pdf als bild speichern', 'pdf in bild umwandeln'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-in-jpg-umwandeln',
-    ctaHeadline: 'PDF jetzt in JPG-Bilder umwandeln',
-    ctaButtonLabel: 'PDF in JPG umwandeln',
-    relatedToolSlugs: ['jpg-in-pdf-umwandeln', 'bild-komprimieren'],
-    relatedArticleSlugs: ['jpg-in-pdf-umwandeln-anleitung', 'mehrere-bilder-in-eine-pdf'],
-    directAnswer: 'Um eine PDF in JPG-Bilder umzuwandeln, laden Sie die Datei in den CoolWave PDF-zu-JPG-Konverter. Jede Seite wird mit gestochen scharfer 300-DPI-Auflösung in eine eigenständige JPEG-Grafik gerendert, die Sie einzeln oder gebündelt als ZIP-Archiv herunterladen können.',
-    steps: [
-      { step: 1, title: 'PDF auswählen', text: 'Ziehen Sie die PDF-Datei in das Tool.' },
-      { step: 2, title: 'Auflösung festlegen', text: 'Wählen Sie Standard- (150 DPI) oder Druckauflösung (300 DPI).' },
-      { step: 3, title: 'Bilder herunterladen', text: 'Laden Sie die Einzelseiten als JPG oder das komplette ZIP-Paket herunter.' },
+    "slug": "was-ist-heic-warum-iphone-dieses-format",
+    "title": "Was ist HEIC und warum verwendet das iPhone dieses Format?",
+    "metaTitle": "Was ist HEIC? Apples Fotoformat einfach erklärt | CoolWave",
+    "metaDescription": "Was bedeutet die Dateiendung .heic? Erfahren Sie, warum Apple HEIC seit iOS 11 nutzt, welche Vorteile es bietet und wie Sie es kompatibel machen.",
+    "h1": "Was ist HEIC? Apples Fotoformat, Vorteile und Kompatibilitätsprobleme",
+    "excerpt": "Wer Fotos vom iPhone auf den Windows-PC oder an Freunde schickt, wundert sich oft über die Dateiendung .heic. Was steckt hinter dem Format und warum setzt Apple darauf?",
+    "category": "formats",
+    "primaryKeyword": "was ist heic",
+    "secondaryKeywords": [
+      "warum nutzt iphone heic",
+      "heic datei bedeutung",
+      "heif format erklärung",
+      "heic vorteile apple"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "heic-in-jpg-umwandeln",
+    "ctaHeadline": "HEIC-Fotos jetzt in kompatibles JPG umwandeln",
+    "ctaButtonLabel": "HEIC jetzt in JPG umwandeln",
+    "relatedToolSlugs": [
+      "heic-in-png-umwandeln",
+      "jpg-in-pdf-umwandeln",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "heic-fotos-unter-windows-oeffnen-und-umwandeln",
+      "jpg-oder-png-welches-bildformat-ist-besser",
+      "webp-oder-jpg-unterschiede-qualitaet-dateigroesse"
+    ],
+    "directAnswer": "HEIC (High Efficiency Image Container) ist Apples Implementierung des HEIF-Standards (High Efficiency Image File Format), basierend auf dem Videocodec H.265 (HEVC). Apple nutzt HEIC seit iOS 11, weil es Fotos bei gleicher oder besserer Bildqualität mit rund 50 % weniger Speicherplatz als das alte JPEG-Format speichert. Zudem kann eine HEIC-Datei Bildserien, Tiefenkarten (Porträtmodus) und Live Photos in einer einzigen Datei bündeln.",
+    "steps": [
       {
-        heading: 'Wann ist JPG die bessere Wahl als PDF?',
-        content: 'Bilder im JPG-Format lassen sich problemlos in Word-Berichte einfügen, auf Instagram oder LinkedIn hochladen und werden in E-Mail-Programmen direkt in der Nachrichtenvorschau dargestellt.',
+        "step": 1,
+        "title": "HEIC-Fotos ablegen",
+        "text": "Wählen Sie Ihre iPhone-Aufnahmen (.heic) aus und laden Sie sie in das Umwandlungs-Tool."
       },
+      {
+        "step": 2,
+        "title": "Automatische Dekodierung",
+        "text": "CoolWave liest die HEVC-Bilddaten aus und überträgt sie in standardkonformes JPEG."
+      },
+      {
+        "step": 3,
+        "title": "Kompatible JPGs herunterladen",
+        "text": "Laden Sie Ihre Bilder herunter – nun problemlos auf jedem PC, Fernseher oder Android-Gerät sichtbar."
+      }
     ],
-    faqs: [
-      { question: 'Was ist der Unterschied zwischen JPG und PNG beim PDF-Export?', answer: 'JPG eignet sich optimal für fotolastige PDFs und spart Speicherplatz. PNG ist ideal für Diagramme und Textdokumente mit scharfen Kanten.' },
+    "sections": [
+      {
+        "heading": "Die enormen technischen Vorteile von HEIC",
+        "content": "Das klassische JPEG-Format stammt aus dem Jahr 1992 und ist auf 8-Bit-Farbtiefe (16,7 Millionen Farben) beschränkt. HEIC unterstützt bis zu 16-Bit-Farbtiefe und einen deutlich höheren Dynamikumfang (HDR). Zudem komprimiert der moderne HEVC-Algorithmus feine Texturen viel effizienter, sodass auf iPhones mit wenig Speicher doppelt so viele Fotos Platz finden."
+      },
+      {
+        "heading": "Container für Live Photos und Tiefenschärfe",
+        "content": "HEIC ist kein einfaches Flachbild, sondern ein Container. Er speichert beispielsweise das Hauptfoto zusammen mit dem kurzen Videofragment für Live Photos sowie die stereoskopischen Tiefendaten, mit denen Sie den Unschärfe-Effekt (Bokeh) des Porträtmodus nachträglich verändern können."
+      },
+      {
+        "heading": "Das Problem: Die Windows- und Android-Welt",
+        "content": "Während im Apple-Ökosystem alles nahtlos funktioniert, verlangen Windows-PCs für HEIC oft kostenpflichtige Codec-Erweiterungen im Microsoft Store. Auch viele Online-Bewerbungsportale und Fotodrucker an Drogeriemärkten scheitern an der Dateiendung .heic. Die Konvertierung in JPG löst dieses Problem augenblicklich."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-09',
-    updatedAt: '2026-09-13',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich das iPhone so einstellen, dass es wieder direkt in JPG fotografiert?",
+        "answer": "Ja, unter Einstellungen > Kamera > Formate können Sie von \"High Efficiency\" auf \"Maximale Kompatibilität\" umstellen. Das verbraucht jedoch ca. doppelt so viel Speicherplatz."
+      },
+      {
+        "question": "Verliere ich Qualität bei der Umwandlung von HEIC in JPG?",
+        "answer": "CoolWave konvertiert HEIC-Dateien mit höchster Qualitätsstufe, sodass der Unterschied für das Auge nicht wahrnehmbar ist."
+      },
+      {
+        "question": "Bleiben Aufnahmedatum und Ort beim Konvertieren erhalten?",
+        "answer": "Ja, wichtige EXIF-Metadaten wie das Aufnahmedatum werden bei der Konvertierung in die JPG-Datei übernommen."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-25",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 21. JPG in PDF umwandeln
   {
-    slug: 'jpg-in-pdf-umwandeln-anleitung',
-    title: 'JPG in PDF umwandeln: Fotos & Bilder kostenlos als PDF sichern',
-    metaTitle: 'JPG in PDF umwandeln – kostenlos online | CoolWave',
-    metaDescription: 'Wandeln Sie Fotos und JPG-Bilder direkt im Browser in druckfertige PDF-Dateien um. Ohne Qualitätsverlust und mit automatischer Randausrichtung.',
-    h1: 'JPG in PDF umwandeln: Fotos schnell als PDF speichern',
-    excerpt: 'Ob eingescannte Dokumente, Quittungen oder Urlaubsfotos: Verwandeln Sie JPG-Bilder mit wenigen Klicks in professionelle PDF-Dokumente.',
-    category: 'images',
-    primaryKeyword: 'jpg in pdf umwandeln',
-    secondaryKeywords: ['bild in pdf umwandeln', 'foto als pdf speichern', 'jpeg zu pdf'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'jpg-in-pdf-umwandeln',
-    ctaHeadline: 'JPG-Fotos jetzt in PDF umwandeln',
-    ctaButtonLabel: 'JPG in PDF umwandeln',
-    relatedToolSlugs: ['pdf-in-jpg-umwandeln', 'pdf-zusammenfuegen', 'pdf-komprimieren'],
-    relatedArticleSlugs: ['mehrere-bilder-in-eine-pdf', 'heic-in-jpg-umwandeln-windows'],
-    directAnswer: 'Um ein JPG in ein PDF umzuwandeln, ziehen Sie das Foto in den CoolWave JPG-zu-PDF-Konverter. Das Tool passt die Seitengröße (z. B. A4) automatisch an, behält die Originalfarben bei und erstellt in Sekunden ein kompaktes PDF-Dokument zum Download.',
-    steps: [
-      { step: 1, title: 'Foto ablegen', text: 'Laden Sie ein oder mehrere JPG-Fotos hoch.' },
-      { step: 2, title: 'Ausrichtung wählen', text: 'Wählen Sie Hochformat, Querformat oder automatische Anpassung.' },
-      { step: 3, title: 'PDF erstellen', text: 'Klicken Sie auf "In PDF umwandeln" und sichern Sie das fertige Dokument.' },
+    "slug": "heic-fotos-unter-windows-oeffnen-und-umwandeln",
+    "title": "HEIC-Fotos unter Windows öffnen und umwandeln",
+    "metaTitle": "HEIC unter Windows öffnen & in JPG umwandeln | CoolWave",
+    "metaDescription": "Windows kann Ihre iPhone-Bilder nicht öffnen? So konvertieren Sie HEIC-Dateien in Sekunden kostenlos online in universelles JPG ohne Zusatzsoftware.",
+    "h1": "HEIC-Fotos unter Windows öffnen und in kompatibles JPG umwandeln",
+    "excerpt": "Sie haben Urlaubsbilder vom iPhone auf den Windows-PC übertragen, doch die Windows-Fotoanzeige meldet: \"Zum Anzeigen dieser Datei ist eine Erweiterung erforderlich\"? Hier ist die Lösung.",
+    "category": "images",
+    "primaryKeyword": "heic in jpg umwandeln windows",
+    "secondaryKeywords": [
+      "heic datei unter windows öffnen",
+      "heic auf pc ansehen",
+      "iphone fotos auf windows konvertieren",
+      "heic windows lösung"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "heic-in-jpg-umwandeln",
+    "ctaHeadline": "HEIC-Bilder jetzt kostenlos für Windows kompatibel machen",
+    "ctaButtonLabel": "HEIC-Fotos jetzt umwandeln",
+    "relatedToolSlugs": [
+      "heic-in-png-umwandeln",
+      "jpg-in-pdf-umwandeln",
+      "bildgroesse-aendern"
+    ],
+    "relatedArticleSlugs": [
+      "was-ist-heic-warum-iphone-dieses-format",
+      "fotos-in-pdf-umwandeln-so-funktioniert-es",
+      "jpg-oder-png-welches-bildformat-ist-besser"
+    ],
+    "directAnswer": "Um HEIC-Fotos unter Windows ohne kostenpflichtige Microsoft-Erweiterungen zu öffnen, laden Sie die Dateien einfach im CoolWave HEIC-in-JPG-Konverter hoch. Das Tool wandelt Ihre iPhone-Bilder direkt im Browser in universelle JPEG-Dateien um, die sich auf jedem Windows-Computer, Laptop oder USB-Stick sofort öffnen lassen.",
+    "steps": [
       {
-        heading: 'Beste Vorbereitung für den Druck im DIN-A4-Format',
-        content: 'CoolWave skaliert Ihre Bilder auf Wunsch so, dass sie perfekt auf Standard-A4-Papier passen, ohne abgeschnitten zu werden oder unschöne weiße Ränder zu hinterlassen.',
+        "step": 1,
+        "title": "HEIC-Dateien hochladen",
+        "text": "Wählen Sie Ihre iPhone-Bilder (.heic) aus Ihrem Download- oder Bilder-Ordner aus."
       },
+      {
+        "step": 2,
+        "title": "Automatische Konvertierung",
+        "text": "CoolWave wandelt die Bilder sekundenschnell in vollwertige JPGs um."
+      },
+      {
+        "step": 3,
+        "title": "Bilder auf dem PC sichern",
+        "text": "Laden Sie die fertigen JPGs einzeln oder bequem als kompaktes ZIP-Archiv herunter."
+      }
     ],
-    faqs: [
-      { question: 'Kann ich mehrere Bilder in ein einziges PDF zusammenfassen?', answer: 'Ja! Sie können Dutzende Bilder hochladen und gemeinsam in einer mehrseitigen PDF bündeln.' },
+    "sections": [
+      {
+        "heading": "Warum Windows 10 und 11 bei HEIC streiken",
+        "content": "Obwohl HEIF/HEIC ein offener Standard ist, verlangt das zugrundeliegende HEVC-Videopatent Lizenzgebühren. Microsoft liefert den entsprechenden Codec daher nicht standardmäßig auf allen Windows-PCs aus, sondern verweist im Store auf eine gebührenpflichtige \"HEVC-Videoerweiterung\". Ohne diesen Codec zeigt Windows nur ein leeres Symbol."
+      },
+      {
+        "heading": "Online-Konvertierung: Der sicherste und schnellste Weg",
+        "content": "Statt unübersichtliche Drittanbieter-Software oder verdächtige Codec-Packs aus dem Netz zu installieren, ist der Online-Weg mit CoolWave sauber und gefahrlos. Die Konvertierung erfolgt ohne Installation und hinterlässt keine Treiberreste auf Ihrem Computer."
+      },
+      {
+        "heading": "Tipp für die zukünftige Übertragung vom iPhone",
+        "content": "Wenn Sie das iPhone per USB-Kabel an den PC anschließen, können Sie unter iOS unter \"Einstellungen > Fotos > Auf Mac oder PC übertragen\" die Option \"Automatisch\" wählen. Dann wandelt iOS die Fotos bei der USB-Übertragung selbst in JPG um – allerdings kann dies bei vielen Dateien zu Verbindungsabbrüchen führen."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-10',
-    updatedAt: '2026-09-14',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Muss ich für die Umwandlung von HEIC in JPG bei CoolWave etwas bezahlen?",
+        "answer": "Nein, die Konvertierung ist vollständig kostenlos und ohne Registrierung nutzbar."
+      },
+      {
+        "question": "Kann ich mehrere HEIC-Dateien gleichzeitig umwandeln?",
+        "answer": "Ja, Sie können ganze Fotopakete auf einmal hochladen und gesammelt als JPG sichern."
+      },
+      {
+        "question": "Funktioniert das auch mit Live Photos?",
+        "answer": "Ja, das hochauflösende Hauptstandbild wird als gestochen scharfes JPG extrahiert."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-25",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 22. Mehrere Bilder in eine PDF
   {
-    slug: 'mehrere-bilder-in-eine-pdf',
-    title: 'Mehrere Bilder in eine PDF zusammenfügen: Schritt-für-Schritt',
-    metaTitle: 'Mehrere Bilder in eine PDF zusammenfügen | CoolWave',
-    metaDescription: 'Kombinieren Sie mehrere Fotos (JPG, PNG, WebP) zu einem einzigen mehrseitigen PDF-Dokument. Reihenfolge flexibel sortieren & direkt herunterladen.',
-    h1: 'Mehrere Bilder zu einer PDF zusammenfügen',
-    excerpt: 'Haben Sie einen mehrseitigen Vertrag mit dem Handy abfotografiert? Fügen Sie alle Einzelfotos in ein einziges, übersichtliches PDF zusammen.',
-    category: 'images',
-    primaryKeyword: 'bilder zu einer pdf zusammenfügen',
-    secondaryKeywords: ['mehrere fotos als eine pdf', 'handy fotos als pdf', 'jpg sammlung in pdf'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'jpg-in-pdf-umwandeln',
-    ctaHeadline: 'Bilder jetzt zu einer PDF bündeln',
-    ctaButtonLabel: 'Bilder in PDF umwandeln',
-    relatedToolSlugs: ['pdf-zusammenfuegen', 'bild-komprimieren', 'pdf-komprimieren'],
-    relatedArticleSlugs: ['jpg-in-pdf-umwandeln-anleitung', 'heic-in-jpg-umwandeln-windows'],
-    directAnswer: 'Um mehrere Bilder in eine PDF zu vereinen, laden Sie alle Fotodateien gleichzeitig im CoolWave Bild-zu-PDF-Konverter hoch. Ordnen Sie die Reihenfolge der Seiten per Drag & Drop und erstellen Sie mit einem Klick eine saubere, fortlaufende PDF-Mappe.',
-    steps: [
-      { step: 1, title: 'Alle Fotos auswählen', text: 'Wählen Sie alle Smartphone-Fotos oder Scans auf einmal aus.' },
-      { step: 2, title: 'Seitenfolge prüfen', text: 'Bringen Sie Seite 1, 2, 3 usw. in die richtige Reihenfolge.' },
-      { step: 3, title: 'PDF generieren', text: 'Laden Sie das zusammenhängende Dokument herunter.' },
+    "slug": "mehrere-bilder-als-eine-pdf-speichern",
+    "title": "Mehrere Bilder als eine PDF speichern",
+    "metaTitle": "Mehrere Bilder als eine PDF speichern: Schnell & einfach | CoolWave",
+    "metaDescription": "Kombinieren Sie mehrere JPG-, PNG- oder WebP-Bilder zu einem einzigen, sauberen PDF-Dokument. Perfekt für Rechnungen, Fotobücher und Anträge.",
+    "h1": "Mehrere Bilder als eine PDF speichern: Fotos zusammenfassen",
+    "excerpt": "Sie haben Quittungen, Ausweisseiten oder Urlaubserinnerungen als Einzelfotos vorliegen und möchten sie als ein einziges, mehrseitiges PDF-Dokument zusammenfassen? So geht es.",
+    "category": "pdf",
+    "primaryKeyword": "mehrere bilder als pdf speichern",
+    "secondaryKeywords": [
+      "mehrere fotos in eine pdf",
+      "bilder zu pdf zusammenfügen",
+      "foto collage pdf",
+      "mehrere jpg zu einer pdf verbinden"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "jpg-in-pdf-umwandeln",
+    "ctaHeadline": "Mehrere Bilder jetzt zu einer einzigen PDF verbinden",
+    "ctaButtonLabel": "Bilder jetzt als PDF speichern",
+    "relatedToolSlugs": [
+      "pdf-zusammenfuegen",
+      "png-in-pdf-umwandeln",
+      "pdf-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "fotos-in-pdf-umwandeln-so-funktioniert-es",
+      "pdf-erstellen-dokumente-bilder-speichern",
+      "pdf-datei-verkleinern"
+    ],
+    "directAnswer": "Um mehrere Bilder in einer PDF zu speichern, laden Sie Ihre Fotos in das CoolWave Tool \"JPG in PDF\" hoch. Ordnen Sie die Miniaturansichten per Drag & Drop in die gewünschte Reihenfolge, wählen Sie das Papierformat (z. B. DIN A4) und klicken Sie auf Umwandeln. Sie erhalten eine saubere, mehrseitige PDF-Datei.",
+    "steps": [
       {
-        heading: 'Praxistipp für Smartphone-Fotografen',
-        content: 'Achten Sie beim Fotografieren auf gleichmäßige Beleuchtung von oben, um Schlagschatten von Händen oder Smartphone zu vermeiden. Unser Tool richtet alle Bilder automatisch einheitlich aus.',
+        "step": 1,
+        "title": "Bilder auswählen und hochladen",
+        "text": "Wählen Sie alle gewünschten Fotos (JPG, PNG, WebP) gemeinsam aus und ziehen Sie sie ins Fenster."
       },
+      {
+        "step": 2,
+        "title": "Reihenfolge & Ausrichtung sortieren",
+        "text": "Verschieben Sie die Seiten in die richtige Reihenfolge und drehen Sie Querformatbilder bei Bedarf."
+      },
+      {
+        "step": 3,
+        "title": "Kombinierte PDF herunterladen",
+        "text": "Klicken Sie auf Zusammenführen und laden Sie Ihr mehrseitiges Dokument herunter."
+      }
     ],
-    faqs: [
-      { question: 'Werden auch unterschiedliche Bildformate (z. B. JPG und PNG gemischt) akzeptiert?', answer: 'Ja, Sie können JPG, PNG, WebP und BMP beliebig kombinieren.' },
+    "sections": [
+      {
+        "heading": "Typische Einsatzbereiche für Bild-zu-PDF-Kombinationen",
+        "content": "Besonders bei Spesenabrechnungen, Mietanträgen oder Kfz-Schadensmeldungen fordern Versicherungen und Hausverwaltungen eine einzige Gesamtdatei statt 15 loser Bildanhänge. Durch das Zusammenfassen in einer PDF stellen Sie sicher, dass keine Seite verloren geht und der Empfänger alles chronologisch überblickt."
+      },
+      {
+        "heading": "Layout-Anpassung: DIN A4 mit Rändern oder Originalgröße",
+        "content": "CoolWave bietet Ihnen flexible Optionen: Sie können die Bilder automatisch auf standardisierte DIN-A4-Seiten mit sauberem weißem Rand einpassen lassen oder die native Auflösung der Fotos beibehalten. Ein einheitliches A4-Format wirkt bei behördlichen Anträgen besonders professionell."
+      },
+      {
+        "heading": "Dateigrößen im Blick behalten",
+        "content": "Wer 20 hochauflösende Smartphone-Fotos zusammenfügt, erhält schnell eine PDF von 80 MB. CoolWave optimiert die Bilddatenströme während des Erstellungsprozesses, sodass die PDF handlich bleibt und problemlos durch Mail-Gateways passt."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-11',
-    updatedAt: '2026-09-12',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Wie viele Bilder kann ich gleichzeitig zu einer PDF zusammenfügen?",
+        "answer": "Sie können Dutzende Bilder in einem Durchgang hochladen und zu einem umfassenden Dokument bündeln."
+      },
+      {
+        "question": "Kann ich verschiedene Bildformate (z. B. JPG und PNG) mischen?",
+        "answer": "Ja, das Werkzeug verarbeitet gemischte Formate ohne Einschränkung."
+      },
+      {
+        "question": "Was passiert, wenn ein Bild falsch herum liegt?",
+        "answer": "Sie können jedes Bild direkt in der Vorschau um 90 Grad drehen, bevor die PDF generiert wird."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-26",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 23. HEIC in JPG umwandeln
   {
-    slug: 'heic-in-jpg-umwandeln-windows',
-    title: 'HEIC in JPG umwandeln: iPhone-Fotos auf Windows & Android öffnen',
-    metaTitle: 'HEIC in JPG umwandeln – schnell & kostenlos | CoolWave',
-    metaDescription: 'Apple iPhone-Fotos (.HEIC) kostenlos online in universelle JPG-Bilder umwandeln. Kompatibel mit Windows, Android und Web-Uploads ohne Installation.',
-    h1: 'HEIC in JPG umwandeln: iPhone-Fotos universell nutzbar machen',
-    excerpt: 'Windows oder Online-Portale können Ihre iPhone-Fotos nicht öffnen? Wandeln Sie Apples HEIC-Dateien in universelle JPGs um – ohne Qualitätsverlust.',
-    category: 'images',
-    primaryKeyword: 'heic in jpg umwandeln windows',
-    secondaryKeywords: ['heic in jpg', 'iphone fotos umwandeln', 'heic datei öffnen'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'heic-in-jpg-umwandeln',
-    ctaHeadline: 'HEIC-Fotos jetzt in JPG konvertieren',
-    ctaButtonLabel: 'HEIC in JPG umwandeln',
-    relatedToolSlugs: ['jpg-in-png-umwandeln', 'bild-komprimieren', 'jpg-in-pdf-umwandeln'],
-    relatedArticleSlugs: ['jpg-vs-png-vs-webp-vergleich', 'jpg-in-png-umwandeln-transparenz'],
-    directAnswer: 'Das HEIC-Format moderner iPhones spart zwar Speicherplatz, wird aber von älteren Windows-Versionen und vielen Web-Uploads nicht unterstützt. Mit dem CoolWave HEIC-zu-JPG-Konverter wandeln Sie iPhone-Bilder direkt im Browser in universelle JPGs um – blitzschnell und ohne teure Zusatzsoftware.',
-    steps: [
-      { step: 1, title: 'HEIC-Bilder ablegen', text: 'Ziehen Sie die .heic-Dateien in den Konverter.' },
-      { step: 2, title: 'Automatische Decodierung', text: 'Die High-Efficiency-Komprimierung wird verlustfrei in Standard-JPEG dekodiert.' },
-      { step: 3, title: 'JPGs sichern', text: 'Laden Sie Ihre fertigen Bilder einzeln oder als Stapel herunter.' },
+    "slug": "fotos-in-pdf-umwandeln-so-funktioniert-es",
+    "title": "Fotos in PDF umwandeln: So funktioniert es",
+    "metaTitle": "Fotos in PDF umwandeln: Schnell, online & kostenlos | CoolWave",
+    "metaDescription": "Schnellanleitung: Wie Sie Fotos vom Smartphone oder PC mit korrekter Ausrichtung und Seitengröße direkt im Browser in PDF umwandeln.",
+    "h1": "Fotos in PDF umwandeln: Smartphone-Bilder und Scans als Dokument sichern",
+    "excerpt": "Ein abfotografierter Vertrag oder ein Schnappschuss eines Dokuments soll als PDF weitergeleitet werden? Wir zeigen Ihnen den schnellsten und einfachsten Weg.",
+    "category": "pdf",
+    "primaryKeyword": "fotos in pdf umwandeln",
+    "secondaryKeywords": [
+      "jpg in pdf umwandeln",
+      "bild zu pdf konvertieren",
+      "smartphone fotos als pdf",
+      "foto datei zu pdf"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "jpg-in-pdf-umwandeln",
+    "ctaHeadline": "Fotos jetzt kostenlos und sicher in PDF umwandeln",
+    "ctaButtonLabel": "Fotos jetzt in PDF umwandeln",
+    "relatedToolSlugs": [
+      "png-in-pdf-umwandeln",
+      "pdf-seiten-neu-anordnen",
+      "pdf-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "mehrere-bilder-als-eine-pdf-speichern",
+      "pdf-erstellen-dokumente-bilder-speichern",
+      "pdf-fuer-bewerbung-verkleinern"
+    ],
+    "directAnswer": "Um ein Foto in eine PDF umzuwandeln, laden Sie das Bild im CoolWave \"JPG in PDF\"-Tool hoch. Das Programm bettet das Foto automatisch in eine standardkonforme PDF-Seite ein. Sie können Ausrichtung, Ränder und Bildqualität einstellen und das fertige PDF-Dokument sofort herunterladen.",
+    "steps": [
       {
-        heading: 'Warum nutzt Apple HEIC?',
-        content: 'HEIC (High Efficiency Image Container) basiert auf dem HEVC-Videocodec und benötigt bei gleicher visueller Qualität nur etwa halb so viel Speicherplatz wie ein altes JPG. Der Nachteil ist die mangelnde Kompatibilität mit Windows-PCs und Web-Formularen.',
+        "step": 1,
+        "title": "Foto hochladen",
+        "text": "Wählen Sie das Bild direkt von Ihrem Smartphone oder PC aus."
       },
+      {
+        "step": 2,
+        "title": "Seiteneinstellungen prüfen",
+        "text": "Stellen Sie Hoch- oder Querformat ein und prüfen Sie die Ausrichtung."
+      },
+      {
+        "step": 3,
+        "title": "PDF herunterladen",
+        "text": "Laden Sie die druckfertige PDF-Datei mit nur einem Fingertipp herunter."
+      }
     ],
-    faqs: [
-      { question: 'Bleiben Aufnahmedatum und Standortdaten (EXIF) erhalten?', answer: 'Ja, relevante Aufnahmemetadaten werden bei der Konvertierung in das JPG-Format übertragen.' },
+    "sections": [
+      {
+        "heading": "Warum Fotos als PDF verschickt werden sollten",
+        "content": "Messenger wie WhatsApp komprimieren Fotos oft extrem stark und schneiden Metadaten ab. E-Mail-Programme binden Bilder bisweilen riesig im Nachrichtentext ein. Als PDF verschickt, behält das Dokument seine formale Integrität, lässt sich nicht versehentlich verschieben und kann auf jedem Drucker maßstabsgetreu ausgegeben werden."
+      },
+      {
+        "heading": "Gute Vorbereitung des Ausgangsfotos",
+        "content": "Für beste Ergebnisse sollten Sie Dokumente bei gutem Tageslicht ohne Schattenwurf fotografieren. Achten Sie auf einen parallelen Blickwinkel, um trapezförmige Verzerrungen zu vermeiden. Ein kontrastreicher Hintergrund erleichtert das spätere Lesen."
+      },
+      {
+        "heading": "Texterkennung für durchsuchbare PDFs",
+        "content": "Möchten Sie, dass der Text auf dem abfotografierten Dokument später kopiert oder per Volltextsuche gefunden werden kann? Dann nutzen Sie nach der Umwandlung das CoolWave OCR-Tool, um aus dem Foto ein durchsuchbares PDF zu machen."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-12',
-    updatedAt: '2026-09-14',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich ein Foto direkt vom Handy in PDF umwandeln?",
+        "answer": "Ja, CoolWave läuft auf jedem Smartphone-Browser ohne App-Download."
+      },
+      {
+        "question": "Wird das Bild beim Umwandeln in PDF pixelig?",
+        "answer": "Nein, CoolWave bettet das Foto in voller Auflösung ein, sodass alle Details scharf erhalten bleiben."
+      },
+      {
+        "question": "Welche Bildformate werden akzeptiert?",
+        "answer": "Alle gängigen Formate: JPG, JPEG, PNG, WebP, GIF, BMP und TIFF."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-26",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 24. JPG in PNG umwandeln
   {
-    slug: 'jpg-in-png-umwandeln-transparenz',
-    title: 'JPG in PNG umwandeln: Verlustfreies Format & scharfe Kanten',
-    metaTitle: 'JPG in PNG umwandeln – kostenlos online | CoolWave',
-    metaDescription: 'Konvertieren Sie JPG-Bilder kostenlos in das verlustfreie PNG-Format. Ideal für Logos, Icons, Grafiken und transparente Hintergründe.',
-    h1: 'JPG in PNG umwandeln: Für verlustfreie Bildqualität',
-    excerpt: 'Verhindern Sie Kompressionsartefakte bei Logos und Grafiken. Erfahren Sie, wann und wie Sie JPGs am besten in das verlustfreie PNG-Format umwandeln.',
-    category: 'images',
-    primaryKeyword: 'jpg in png umwandeln',
-    secondaryKeywords: ['jpeg zu png', 'bild in png umwandeln', 'jpg verlustfrei speichern'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'jpg-in-png-umwandeln',
-    ctaHeadline: 'JPG jetzt in PNG konvertieren',
-    ctaButtonLabel: 'JPG in PNG umwandeln',
-    relatedToolSlugs: ['jpg-in-webp-umwandeln', 'bild-komprimieren', 'heic-in-jpg-umwandeln'],
-    relatedArticleSlugs: ['jpg-vs-png-vs-webp-vergleich', 'webp-in-jpg-umwandeln-warum-und-wie'],
-    directAnswer: 'Um ein JPG in ein PNG umzuwandeln, laden Sie das Bild bei CoolWave hoch. Das komprimierte JPEG wird in das verlustfreie PNG-Raster überführt, wodurch feine Schriften, Diagrammlinien und Grafiken vor weiteren Qualitätsverlusten bei mehrfachem Speichern geschützt werden.',
-    steps: [
-      { step: 1, title: 'JPG hochladen', text: 'Wählen Sie Ihr JPG-Bild aus.' },
-      { step: 2, title: 'In PNG transformieren', text: 'Das Tool rendert die Farbmatrix ohne verlustbehaftete Kompressionsblöcke.' },
-      { step: 3, title: 'PNG herunterladen', text: 'Laden Sie Ihre gestochen scharfe PNG-Datei herunter.' },
+    "slug": "pdf-fuer-email-verkleinern",
+    "title": "PDF für E-Mail verkleinern",
+    "metaTitle": "PDF für E-Mail verkleinern: Anhang-Limits sicher einhalten | CoolWave",
+    "metaDescription": "PDF-Dateien für den E-Mail-Versand verkleinern: Wie Sie große Anhänge unter 10 MB oder 25 MB schrumpfen, damit sie garantiert im Postfach ankommen.",
+    "h1": "PDF für E-Mail verkleinern: Anhang-Limits von Outlook, Gmail & Web.de einhalten",
+    "excerpt": "Ihre E-Mail kommt mit der Fehlermeldung \"Mail delivery failed: Message size exceeds limit\" zurück? Wir zeigen, wie Sie die Dateigröße Ihrer PDF schnell für den Mailversand optimieren.",
+    "category": "pdf",
+    "primaryKeyword": "pdf für e-mail verkleinern",
+    "secondaryKeywords": [
+      "pdf anhang verkleinern",
+      "mail anhang zu groß pdf",
+      "pdf komprimieren für versand",
+      "pdf e-mail limit"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-komprimieren",
+    "ctaHeadline": "PDF jetzt für den E-Mail-Versand verkleinern",
+    "ctaButtonLabel": "PDF jetzt verkleinern",
+    "relatedToolSlugs": [
+      "pdf-teilen",
+      "pdf-seiten-loeschen",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-datei-verkleinern",
+      "warum-ist-meine-pdf-so-gross",
+      "pdf-unter-5-mb-verkleinern"
+    ],
+    "directAnswer": "Um eine PDF für den E-Mail-Versand zu verkleinern, laden Sie das Dokument in den CoolWave PDF-Kompressor hoch. Das Tool reduziert überdimensionierte Bilddaten und bereinigt den Dateicode. So sinkt das Volumen in der Regel von 20 bis 40 MB auf handliche 2 bis 4 MB, wodurch jedes Mail-Limit spielend eingehalten wird.",
+    "steps": [
       {
-        heading: 'Warum PNG für Logos und Screenshots unverzichtbar ist',
-        content: 'Während JPG Farbverläufe in Fotos gut komprimiert, erzeugt es an scharfen Kanten von Buchstaben und Vektorlogos unschöne "Artefakt-Schlieren". PNG arbeitet verlustfrei und hält Kanten glasklar.',
+        "step": 1,
+        "title": "PDF im Kompressor ablegen",
+        "text": "Wählen Sie die zu große Datei von Ihrem Computer oder Smartphone aus."
       },
+      {
+        "step": 2,
+        "title": "E-Mail-freundliche Kompression starten",
+        "text": "CoolWave rechnet Grafiken auf ideale 144 DPI herunter – optimal für Bildschirme."
+      },
+      {
+        "step": 3,
+        "title": "Kompakte PDF versenden",
+        "text": "Laden Sie die geschrumpfte PDF herunter und hängen Sie sie sorgenfrei an Ihre E-Mail an."
+      }
     ],
-    faqs: [
-      { question: 'Wird durch die Umwandlung der Hintergrund automatisch transparent?', answer: 'Nein. Ein JPG besitzt keinen Transparenzkanal. Die Umwandlung in PNG schafft jedoch die technische Voraussetzung, um den Hintergrund anschließend freizustellen.' },
+    "sections": [
+      {
+        "heading": "Die tatsächlichen Anhang-Limits der Mail-Provider",
+        "content": "Viele Nutzer wissen nicht: Bei E-Mail-Anhängen gilt das Base64-Encoding, welches Dateien beim Versand um rund 33 % aufbläht! Ein 20-MB-Dokument belegt bei der Übertragung rund 27 MB. Anbieter wie Web.de oder GMX begrenzen kostenlose Postfächer oft auf 20 MB oder gar 10 MB, während Gmail und Outlook bei 25 MB abriegeln."
+      },
+      {
+        "heading": "Warum Postfächer von Empfängern blockieren",
+        "content": "Selbst wenn Ihr eigener Provider einen 25-MB-Anhang erlaubt: Wenn das Postfach des Empfängers voll ist oder dessen Firmen-Server strikte 10-MB-Regeln erzwingt, wird Ihre Mail abgewiesen. Als Faustregel gilt: Ein E-Mail-Anhang sollte idealerweise unter 5 MB, besser noch unter 2 MB liegen."
+      },
+      {
+        "heading": "Alternative: Unnötige Seiten entfernen",
+        "content": "Oft blähen veraltete Anhänge, überflüssige Deckblätter oder doppelte AGBs eine PDF auf. Mit dem Werkzeug \"Seiten aus PDF löschen\" entfernen Sie überflüssige Seiten vorab, bevor Sie die Datei komprimieren."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-12',
-    updatedAt: '2026-09-13',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann der Empfänger das Dokument trotzdem gestochen scharf drucken?",
+        "answer": "Ja, Text und Logos bleiben Vektoren. Auch normale Ausdrucke auf Bürodruckern sehen einwandfrei aus."
+      },
+      {
+        "question": "Was ist, wenn die PDF selbst nach der Kompression noch zu groß ist?",
+        "answer": "Teilen Sie das Dokument mit unserem Tool \"PDF teilen\" in zwei logische Teile (z. B. Teil 1 und Teil 2) auf."
+      },
+      {
+        "question": "Kann ich mehrere Dokumente gleichzeitig für den Mailversand verkleinern?",
+        "answer": "Ja, laden Sie einfach mehrere Dokumente gleichzeitig hoch, um sie im Stapel zu optimieren."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-27",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 25. WebP in JPG umwandeln
   {
-    slug: 'webp-in-jpg-umwandeln-warum-und-wie',
-    title: 'WebP in JPG umwandeln: Web-Bilder auf allen Geräten öffnen',
-    metaTitle: 'WebP in JPG umwandeln – schnell & kostenlos | CoolWave',
-    metaDescription: 'WebP-Bilder aus dem Internet kostenlos in universelle JPG-Dateien konvertieren. Öffnen und bearbeiten Sie heruntergeladene Grafiken überall problemlos.',
-    h1: 'WebP in JPG umwandeln: Gespeicherte Internet-Bilder nutzen',
-    excerpt: 'Haben Sie ein Bild aus dem Internet gespeichert, das sich in Photoshop oder Bildbetrachtern nicht öffnen lässt? Wandeln Sie WebP in Sekunden in JPG um.',
-    category: 'images',
-    primaryKeyword: 'webp in jpg umwandeln',
-    secondaryKeywords: ['webp datei umwandeln', 'webp zu jpg', 'google webp öffnen'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'webp-in-jpg-umwandeln',
-    ctaHeadline: 'WebP jetzt in JPG umwandeln',
-    ctaButtonLabel: 'WebP in JPG umwandeln',
-    relatedToolSlugs: ['jpg-in-webp-umwandeln', 'jpg-in-png-umwandeln'],
-    relatedArticleSlugs: ['jpg-vs-png-vs-webp-vergleich'],
-    directAnswer: 'WebP ist Googles modernes Bildformat für schnelle Webseiten. Viele Bildbearbeitungsprogramme und ältere Betriebssysteme können WebP-Dateien jedoch noch nicht öffnen. Mit CoolWave wandeln Sie WebP-Grafiken per Mausklick in universelle JPGs um.',
-    steps: [
-      { step: 1, title: 'WebP-Datei ablegen', text: 'Ziehen Sie das gespeicherte Web-Bild in den Konverter.' },
-      { step: 2, title: 'Konvertierung', text: 'Das Bild wird in Sekundenschnelle in das Standard-JPEG-Format übersetzt.' },
-      { step: 3, title: 'JPG speichern', text: 'Nutzen Sie das Bild sofort in jeder beliebigen Anwendung.' },
+    "slug": "warum-ist-meine-pdf-so-gross",
+    "title": "Warum ist meine PDF so groß?",
+    "metaTitle": "Warum ist meine PDF so groß? 5 Ursachen & schnelle Lösungen | CoolWave",
+    "metaDescription": "Warum hat eine einfache PDF 20 MB oder mehr? Entdecken Sie die häufigsten Ursachen wie unkomprimierte Scanner-Bilder und Schriften und wie Sie sie lösen.",
+    "h1": "Warum ist meine PDF so groß? Ursachen, Analyse und Lösungen",
+    "excerpt": "Nur drei Textseiten, aber die Datei wiegt stolze 35 Megabyte? Wir erklären die 5 häufigsten Ursachen für gigantische PDF-Dateien und wie Sie sie sofort beheben.",
+    "category": "pdf",
+    "primaryKeyword": "warum ist meine pdf so groß",
+    "secondaryKeywords": [
+      "pdf datei riesig",
+      "ursachen große pdf datei",
+      "pdf speicherplatz fresser",
+      "warum ist pdf datei so riesig"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-komprimieren",
+    "ctaHeadline": "Riesige PDF-Datei jetzt analysieren und verkleinern",
+    "ctaButtonLabel": "Große PDF jetzt verkleinern",
+    "relatedToolSlugs": [
+      "scan-zu-pdf",
+      "pdf-optimieren",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-datei-verkleinern",
+      "pdf-fuer-email-verkleinern",
+      "pdf-unter-5-mb-verkleinern"
+    ],
+    "directAnswer": "Eine PDF-Datei wird meist aus fünf Gründen unerwartet groß: 1. Scanner-Bilder mit zu hoher Auflösung (300–600 DPI als unkomprimierte Bitmaps), 2. Vollständig eingebettete Schriftarten statt Zeichensätze, 3. Unbemerkt mitgespeicherte hochauflösende Rohbilder hinter Zuschnitten, 4. Revisions- und Bearbeitungshistorien in der Dateistruktur, 5. Fehlende Datenstrom-Kompression.",
+    "steps": [
       {
-        heading: 'Der Siegeszug von WebP im Internet',
-        content: 'WebP komprimiert Bilder um ca. 30% effizienter als JPG. Deshalb liefern moderne Browser fast alle Grafiken im WebP-Format aus. Wenn Sie diese Bilder auf der Festplatte speichern, stehen Sie oft vor Kompatibilitätsproblemen.',
+        "step": 1,
+        "title": "PDF hochladen",
+        "text": "Laden Sie Ihre auffällig große PDF in das CoolWave Analyse- und Kompressionstool hoch."
       },
+      {
+        "step": 2,
+        "title": "Struktur analysieren & bereinigen",
+        "text": "CoolWave entfernt redundante Datenströme, Metadaten und optimiert Bilder automatisch."
+      },
+      {
+        "step": 3,
+        "title": "Kompakte Version sichern",
+        "text": "Laden Sie die auf einen Bruchteil geschrumpfte Datei sofort herunter."
+      }
     ],
-    faqs: [
-      { question: 'Gibt es Qualitätsverluste bei der Umwandlung?', answer: 'Praktisch nicht. CoolWave verwendet einen hohen Qualitätsfaktor (92%), sodass mit dem menschlichen Auge kein Unterschied feststellbar ist.' },
+    "sections": [
+      {
+        "heading": "Ursache 1: Die Scanner-Falle (600 DPI Farbe)",
+        "content": "Viele Multifunktionsdrucker scannen standardmäßig mit 300 oder 600 DPI im Farb-TIFF-Modus. Selbst eine rein schwarz-weiße Textseite wird so als riesiges Farbfoto mit Millionen Pixeln gespeichert. Eine einzige Seite kann dadurch 10 MB groß werden. Eine gezielte Rasterung auf 150 DPI und Umstellung auf Graustufen senkt die Größe um 95 %."
+      },
+      {
+        "heading": "Ursache 2: Unsichtbare Bildteile nach Zuschnitt",
+        "content": "Wenn Sie in Word oder PowerPoint ein 12-Megapixel-Foto einfügen und im Programm auf einen kleinen Ausschnitt zuschneiden, speichert das Programm oft das komplette Originalbild im Hintergrund weiter ab! Beim PDF-Export wandert dieses ungenutzte Riesenbild mit in das Dokument."
+      },
+      {
+        "heading": "Ursache 3: Mehrfach eingebettete Schriftarten",
+        "content": "Werden Dokumente aus verschiedenen Quellen zusammengefügt, bettet die Datei oft dieselbe Schriftart mehrfach ein – inklusive aller seltenen Sonderzeichen aus asiatischen oder kyrillischen Zeichensätzen. Subsetting (nur tatsächlich genutzte Buchstaben einbetten) spart hier enorme Datenmengen."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-13',
-    updatedAt: '2026-09-14',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann eine PDF auch Schadsoftware enthalten, die sie groß macht?",
+        "answer": "Sehr selten. In 99,9 % aller Fälle sind schlicht unkomprimierte Rasterbilder oder Druckvorstufendaten verantwortlich."
+      },
+      {
+        "question": "Wie groß sollte eine normale, mehrseitige Text-PDF sein?",
+        "answer": "Eine reine Text-PDF ohne Bilder benötigt pro Seite meist nur 20 bis 60 Kilobyte."
+      },
+      {
+        "question": "Kann CoolWave die Ursache automatisch beheben?",
+        "answer": "Ja, unser Komprimierungs-Tool setzt an allen 5 Hebeln gleichzeitig an und optimiert die Datei vollautomatisch."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-27",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 26. Bild komprimieren
   {
-    slug: 'bild-komprimieren-fuer-web-und-mail',
-    title: 'Bild komprimieren: Dateigröße verkleinern für Web & E-Mail',
-    metaTitle: 'Bild komprimieren – Dateigröße kostenlos verkleinern | CoolWave',
-    metaDescription: 'Bilder (JPG, PNG, WebP) um bis zu 80% verkleinern ohne sichtbaren Qualitätsverlust. Schnellere Ladezeiten für Websites und schlanke E-Mail-Anhänge.',
-    h1: 'Bilder komprimieren: Dateigröße drastisch reduzieren',
-    excerpt: 'Große Fotos verlangsamen Webseiten und sprengen E-Mail-Postfächer. Erfahren Sie, wie Sie Bilddateien effektiv verkleinern, ohne dass sie unscharf werden.',
-    category: 'images',
-    primaryKeyword: 'bildgröße verkleinern',
-    secondaryKeywords: ['bild komprimieren', 'foto verkleinern', 'jpg komprimieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'bild-komprimieren',
-    ctaHeadline: 'Bilder jetzt online komprimieren',
-    ctaButtonLabel: 'Bild komprimieren',
-    relatedToolSlugs: ['bildgroesse-aendern', 'jpg-in-webp-umwandeln', 'pdf-komprimieren'],
-    relatedArticleSlugs: ['pdf-fuer-email-verkleinern', 'jpg-vs-png-vs-webp-vergleich'],
-    directAnswer: 'Mit dem CoolWave Bildkompressor reduzieren Sie die Dateigröße von JPG, PNG und WebP-Bildern um bis zu 85%. Dank intelligenter psychoakustischer Kompressionsalgorithmen werden für das menschliche Auge unsichtbare Farbinformationen entfernt, während das Bild gestochen scharf bleibt.',
-    steps: [
-      { step: 1, title: 'Bilder hochladen', text: 'Ziehen Sie ein oder mehrere Fotos in den Kompressor.' },
-      { step: 2, title: 'Kompression anpassen', text: 'Wählen Sie die gewünschte Kompressionsstufe oder nutzen Sie die smarte Automatik.' },
-      { step: 3, title: 'Optimierte Bilder laden', text: 'Speichern Sie Ihre schlanken Bilddateien sofort ab.' },
+    "slug": "pdf-unter-5-mb-verkleinern",
+    "title": "PDF unter 5 MB verkleinern: Möglichkeiten und Grenzen",
+    "metaTitle": "PDF unter 5 MB verkleinern: Schritt-für-Schritt | CoolWave",
+    "metaDescription": "Wie Sie große PDF-Dateien sicher unter 5 MB bringen, um Upload-Grenzen von Jobportalen, Universitäten und Behörden zuverlässig zu erfüllen.",
+    "h1": "PDF unter 5 MB verkleinern: Dateigröße für Upload-Portale zielsicher anpassen",
+    "excerpt": "Das Upload-Formular akzeptiert maximal 5 MB, doch Ihre Datei hat 12 MB? Wir zeigen Ihnen die praxiserprobten Methoden, wie Sie Ihre PDF exakt unter die 5-MB-Grenze bringen.",
+    "category": "pdf",
+    "primaryKeyword": "pdf unter 5 mb verkleinern",
+    "secondaryKeywords": [
+      "pdf maximal 5mb",
+      "upload limit pdf 5mb",
+      "pdf größe begrenzen 5 mb",
+      "große pdf unter 5 mb bringen"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-komprimieren",
+    "ctaHeadline": "PDF jetzt zielsicher unter 5 MB verkleinern",
+    "ctaButtonLabel": "PDF jetzt unter 5 MB verkleinern",
+    "relatedToolSlugs": [
+      "pdf-teilen",
+      "pdf-seiten-loeschen",
+      "bild-komprimieren"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-fuer-bewerbung-verkleinern",
+      "pdf-datei-verkleinern",
+      "warum-ist-meine-pdf-so-gross"
+    ],
+    "directAnswer": "Um eine PDF-Datei unter 5 MB zu verkleinern, laden Sie das Dokument in das CoolWave Komprimierungs-Tool hoch. Durch die gezielte Reduktion überflüssiger Bildauflösungen auf 150 DPI und das Bereinigen redundanter Schriftarten schrumpfen selbst 30-MB-Dateien im ersten Durchlauf zuverlässig unter die 5-MB-Marke.",
+    "steps": [
       {
-        heading: 'Warum Bildoptimierung für Google & SEO entscheidend ist',
-        content: 'Bilder machen oft über 70% der Ladezeit einer Webseite aus. Durch die Komprimierung verbessern Sie Ihre Google Core Web Vitals (LCP) und bieten Ihren Besuchern blitzschnelle Ladezeiten.',
+        "step": 1,
+        "title": "Datei hochladen",
+        "text": "Wählen Sie Ihre PDF aus, die aktuell das 5-MB-Limit überschreitet."
       },
+      {
+        "step": 2,
+        "title": "Starke Kompression aktivieren",
+        "text": "CoolWave optimiert die internen Datenströme gezielt für Web-Upload-Standards."
+      },
+      {
+        "step": 3,
+        "title": "Upload-fertige PDF prüfen",
+        "text": "Überprüfen Sie die neue Dateigröße in der Erfolgsanzeige und laden Sie das Dokument herunter."
+      }
     ],
-    faqs: [
-      { question: 'Werden EXIF- und Kameradaten entfernt?', answer: 'Ja, das Entfernen unnötiger Metadaten spart zusätzlichen Speicherplatz und schützt Ihre Privatsphäre (z. B. GPS-Standortdaten).' },
+    "sections": [
+      {
+        "heading": "Warum 5 MB die magische Grenze vieler Portale ist",
+        "content": "Viele Content-Management-Systeme, Hochschul-Server und Recruiting-Plattformen begrenzen den Datei-Upload serverseitig auf exakt 5 Megabyte (5.242.880 Bytes). Ein einziger Kilobyte zu viel führt zu einem frustrierenden Upload-Abbruch."
+      },
+      {
+        "heading": "Was tun, wenn die PDF trotz Kompression über 5 MB bleibt?",
+        "content": "Wenn ein Dokument 100 Seiten mit hochauflösenden Plänen oder Fotos umfasst, stößt eine bloße Bildkompression irgendwann an Grenzen, bevor Unleserlichkeit droht. In diesem Fall gibt es zwei elegante Auswege: 1. Unwichtige Trennseiten oder Anhänge löschen. 2. Das Dokument mit \"PDF teilen\" in zwei logische Teile splitten."
+      },
+      {
+        "heading": "Qualitätskontrolle vor dem Absenden",
+        "content": "Öffnen Sie die komprimierte Datei vor dem Upload und zoomen Sie auf eine Textseite und ein Zeugnis. Bei CoolWave bleibt der Text als Vektor erhalten und ist auch nach der Kompression gestochen scharf lesbar."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-13',
-    updatedAt: '2026-09-14',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann eine 50-MB-Datei wirklich unter 5 MB schrumpfen?",
+        "answer": "Ja, besonders wenn die Datei aus vielen Scans besteht, ist eine Verkleinerung um 90 % bis 95 % keine Seltenheit."
+      },
+      {
+        "question": "Gibt es ein Risiko, dass Inhalte gelöscht werden?",
+        "answer": "Nein, es werden niemals Seiten, Texte oder Absätze entfernt. Es werden lediglich die Datenbytes optimiert."
+      },
+      {
+        "question": "Ist der Service auch für vertrauliche Geschäftsberichte sicher?",
+        "answer": "Ja, alle Daten werden verschlüsselt verarbeitet und nach der Sitzung nicht dauerhaft gespeichert."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-28",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 27. OCR Text aus Bild kopieren
   {
-    slug: 'ocr-text-aus-bild-kopieren',
-    title: 'Text aus Bild kopieren: Kostenlose OCR-Texterkennung online',
-    metaTitle: 'Text aus Bild kopieren – OCR online kostenlos | CoolWave',
-    metaDescription: 'Extrahieren Sie Text aus Screenshots, Fotos und Quittungen. Kopieren Sie Text direkt in die Zwischenablage mit kostenloser OCR-Texterkennung.',
-    h1: 'Text aus Bild kopieren: OCR-Texterkennung online nutzen',
-    excerpt: 'Ein Zitat aus einem Buch, eine IBAN von einem Foto oder eine Tabelle aus einem Screenshot abtippen? Sparen Sie sich die Arbeit mit automatischer OCR.',
-    category: 'ocr',
-    primaryKeyword: 'text aus bild kopieren',
-    secondaryKeywords: ['ocr online deutsch', 'text aus foto erkennen', 'screenshot in text umwandeln'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'bild-zu-text',
-    ctaHeadline: 'Text jetzt aus Bild extrahieren',
-    ctaButtonLabel: 'Bild in Text umwandeln',
-    relatedToolSlugs: ['ocr-pdf', 'scan-zu-word'],
-    relatedArticleSlugs: ['gescannte-pdf-in-word-umwandeln'],
-    directAnswer: 'Um Text aus einem Bild oder Screenshot zu kopieren, laden Sie die Grafik in das CoolWave Bild-zu-Text-Tool. Eine KI-gestützte OCR-Engine erkennt alle Buchstaben und Zahlen und stellt Ihnen den extrahierten Text sofort zum Kopieren in die Zwischenablage bereit.',
-    steps: [
-      { step: 1, title: 'Foto oder Screenshot hochladen', text: 'Legen Sie die Bilddatei im Tool ab oder fügen Sie sie direkt mit STRG+V aus der Zwischenablage ein.' },
-      { step: 2, title: 'Texterkennung starten', text: 'Die OCR analysiert Zeichen, Zeilen und Absätze in Bruchteilen einer Sekunde.' },
-      { step: 3, title: 'Text kopieren', text: 'Kopieren Sie den erkannten Text mit einem Klick in Ihre Zwischenablage.' },
+    "slug": "gescannte-pdf-bearbeiten-ocr-verwenden",
+    "title": "Gescannte PDF bearbeiten: OCR richtig verwenden",
+    "metaTitle": "Gescannte PDF bearbeiten: OCR-Texterkennung richtig nutzen | CoolWave",
+    "metaDescription": "Gescannte PDFs lassen sich nicht anklicken oder bearbeiten? Erfahren Sie, wie optische Zeichenerkennung (OCR) Bildtexte in echten Text umwandelt.",
+    "h1": "Gescannte PDF bearbeiten: Mit OCR-Texterkennung Scans in bearbeitbare Dokumente verwandeln",
+    "excerpt": "Sie möchten ein eingescanntes Dokument korrigieren, aber der Text lässt sich weder markieren noch verändern? Wir erklären die Funktionsweise von OCR und wie Sie Scans editierbar machen.",
+    "category": "ocr",
+    "primaryKeyword": "gescannte pdf bearbeiten ocr",
+    "secondaryKeywords": [
+      "ocr pdf bearbeiten",
+      "scan text erkennung",
+      "gescanntes dokument editieren",
+      "ocr texterkennung pdf"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "scan-zu-word",
+    "ctaHeadline": "Gescannte PDF jetzt mit OCR in editierbaren Text verwandeln",
+    "ctaButtonLabel": "Gescannte PDF mit OCR umwandeln",
+    "relatedToolSlugs": [
+      "ocr-pdf",
+      "pdf-in-word-umwandeln",
+      "pdf-durchsuchbar-machen"
+    ],
+    "relatedArticleSlugs": [
+      "text-aus-gescannter-pdf-kopieren",
+      "text-in-pdf-bearbeiten",
+      "pdf-laesst-sich-nicht-bearbeiten-ursachen-loesungen"
+    ],
+    "directAnswer": "Um eine gescannte PDF zu bearbeiten, nutzen Sie das CoolWave OCR-Werkzeug (Scan zu Word). Die OCR-Engine (Optical Character Recognition) analysiert die Pixelmuster der Scanseite, erkennt Buchstaben, Wörter und Zeilen und erzeugt daraus ein bearbeitbares Word-Dokument (DOCX) oder bettet eine durchsuchbare Textebene direkt in die PDF ein.",
+    "steps": [
       {
-        heading: 'Typische Einsatzbereiche für Bild-zu-Text',
-        content: 'Ideal zum Erfassen von Buchzitaten, Visitenkarten, Rechnungsdaten (IBAN/Betrag) oder zum Auslesen von Texten aus geschützten Web-Präsentationen.',
+        "step": 1,
+        "title": "Gescanntes PDF hochladen",
+        "text": "Laden Sie Ihre Scan-Datei oder ein abfotografiertes Dokument hoch."
       },
+      {
+        "step": 2,
+        "title": "Sprache & OCR-Erkennung starten",
+        "text": "Wählen Sie die Dokumentsprache (z. B. Deutsch) für maximale Erkennungsgenauigkeit."
+      },
+      {
+        "step": 3,
+        "title": "Bearbeitbare Datei öffnen",
+        "text": "Laden Sie das umgewandelte Word-Dokument herunter und bearbeiten Sie den Text nach Belieben."
+      }
     ],
-    faqs: [
-      { question: 'Funktioniert die Erkennung auch bei Handschriften?', answer: 'Sehr ordentlich geschriebene Blockschrift wird oft erkannt. Für beste Resultate empfiehlt sich jedoch Maschinenschrift.' },
+    "sections": [
+      {
+        "heading": "Warum ein Scan für den Computer nur ein \"dummes Foto\" ist",
+        "content": "Wenn ein Scanner ein Blatt Papier einliest, speichert er Millionen schwarzer, weißer und farbiger Bildpunkte. Für ein Standard-PDF-Programm gibt es darin keine Wörter, sondern nur ein einziges großes Hintergrundbild. Deshalb schlägt jeder Versuch fehl, Text mit der Maus zu markieren."
+      },
+      {
+        "heading": "Wie OCR Buchstaben und Tabellen erkennt",
+        "content": "Moderne OCR-Systeme wie Tesseract kombinieren Mustervergleiche mit neuronalen Sprachmodellen. Sie erkennen nicht nur isolierte Buchstaben, sondern analysieren Wortzusammenhänge und Satzstrukturen nach Wörterbüchern. So wird ein verwaschenes \"rn\" nicht fälschlicherweise als \"m\" interpretiert."
+      },
+      {
+        "heading": "Tipps für 99 % fehlerfreie OCR-Ergebnisse",
+        "content": "Die Erkennungsqualität hängt stark von der Vorlage ab: Scannen Sie Dokumente möglichst gerade ein. Eine Auflösung von 300 DPI ist ideal. Schalten Sie bei reinem Text den Schwarz-Weiß-Modus ein, um störendes Papiergrau oder Hintergrundrauschen zu eliminieren."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-14',
-    updatedAt: '2026-09-15',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann OCR auch handschriftliche Notizen erkennen?",
+        "answer": "Saubere Druckbuchstaben werden oft gut erkannt, bei flüchtiger Schreibschrift stößt Standard-OCR jedoch an Grenzen."
+      },
+      {
+        "question": "Welche Sprachen werden bei CoolWave unterstützt?",
+        "answer": "Unsere OCR-Engine unterstützt Deutsch (inklusive Umlauten und ß), Englisch, Französisch, Spanisch und viele weitere Sprachen."
+      },
+      {
+        "question": "Bleibt das ursprüngliche Layout der gescannten Seite erhalten?",
+        "answer": "Ja, CoolWave rekonstruiert Spalten, Überschriften und Absätze möglichst originalgetreu."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-28",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 28. PDF in Excel umwandeln
   {
-    slug: 'pdf-in-excel-tabelle-umwandeln',
-    title: 'PDF in Excel umwandeln: Tabellen fehlerfrei in XLSX extrahieren',
-    metaTitle: 'PDF in Excel umwandeln – Tabellen extrahieren | CoolWave',
-    metaDescription: 'PDF-Tabellen kostenlos in bearbeitbare Excel-Dateien (XLSX) umwandeln. Spalten, Zeilen und Zahlenformate sauber übernehmen ohne lästiges Abtippen.',
-    h1: 'PDF in Excel umwandeln: Tabellen online extrahieren',
-    excerpt: 'Haben Sie Preislisten, Finanzberichte oder Statistiken im PDF-Format gefangen? Wandeln Sie sie direkt in echte Microsoft Excel Tabellen um.',
-    category: 'documents',
-    primaryKeyword: 'pdf in excel umwandeln',
-    secondaryKeywords: ['pdf zu excel', 'pdf tabelle in xlsx', 'pdf in excel konvertieren'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-in-excel-umwandeln',
-    ctaHeadline: 'PDF jetzt in Excel umwandeln',
-    ctaButtonLabel: 'PDF in Excel umwandeln',
-    relatedToolSlugs: ['pdf-in-word-umwandeln', 'excel-in-pdf-umwandeln'],
-    relatedArticleSlugs: ['pdf-in-word-umwandeln-anleitung'],
-    directAnswer: 'Um eine PDF-Tabelle in Excel zu übernehmen, laden Sie das Dokument in den CoolWave PDF-zu-Excel-Konverter. Das Tool erkennt Zeilen- und Spaltengitter automatisch und erzeugt eine echte XLSX-Arbeitsmappe mit editierbaren Zahlen und Formaten, statt nur statischem Text.',
-    steps: [
-      { step: 1, title: 'PDF mit Tabellen hochladen', text: 'Ziehen Sie das Dokument in das Upload-Feld.' },
-      { step: 2, title: 'Tabellenanalyse', text: 'Algorithmen trennen Spalten und erkennen Zahlenformate.' },
-      { step: 3, title: 'XLSX herunterladen', text: 'Öffnen Sie die Datei in Microsoft Excel, LibreOffice Calc oder Google Sheets.' },
+    "slug": "text-aus-gescannter-pdf-kopieren",
+    "title": "Text aus einer gescannten PDF kopieren",
+    "metaTitle": "Text aus gescannter PDF kopieren: Schnell per OCR | CoolWave",
+    "metaDescription": "Nie wieder Scans mühsam abtippen: So extrahieren und kopieren Sie Text aus gescannten PDF-Dokumenten und Bildern mit automatischer OCR-Erkennung.",
+    "h1": "Text aus einer gescannten PDF kopieren: OCR ohne Abtippen einsetzen",
+    "excerpt": "Sie haben einen 10-seitigen Vertrag als Scan erhalten und müssen Textpassagen weiterverwenden, können sie aber nicht markieren? So kopieren Sie den Text sekundenschnell.",
+    "category": "ocr",
+    "primaryKeyword": "text aus gescannter pdf kopieren",
+    "secondaryKeywords": [
+      "text aus pdf kopieren geht nicht",
+      "gescannten text markieren",
+      "pdf bild in text kopieren",
+      "scan kopieren ocr"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "scan-zu-word",
+    "ctaHeadline": "Text aus gescannter PDF jetzt sofort extrahieren",
+    "ctaButtonLabel": "Text aus Scan jetzt extrahieren",
+    "relatedToolSlugs": [
+      "ocr-pdf",
+      "bild-zu-text",
+      "pdf-text-extrahieren"
+    ],
+    "relatedArticleSlugs": [
+      "gescannte-pdf-bearbeiten-ocr-verwenden",
+      "text-in-pdf-bearbeiten",
+      "pdf-in-word-konvertieren-formatierung-uebernehmen"
+    ],
+    "directAnswer": "Um Text aus einer gescannten PDF zu kopieren, laden Sie das Dokument in das CoolWave OCR-Tool hoch. Die integrierte Schrifterkennung extrahiert den gesamten Text der Scan-Seiten und stellt ihn als sauberen Fließtext oder formatierte Word-Datei bereit, aus der Sie jeden Satz mit Strg+C frei kopieren können.",
+    "steps": [
       {
-        heading: 'Nie wieder Zahlen mühsam von Hand abtippen',
-        content: 'Das manuelle Übertragen von Tabellendaten aus PDFs kostet Stunden und birgt hohe Fehlerquoten bei Dezimalstellen. Die automatisierte Tabellenrekonstruktion liefert sofort rechenbare Arbeitsblätter.',
+        "step": 1,
+        "title": "Scan-PDF ablegen",
+        "text": "Laden Sie Ihre Datei per Drag & Drop in das Texterkennungs-Werkzeug hoch."
       },
+      {
+        "step": 2,
+        "title": "Textextraktion durchführen",
+        "text": "Das System scannt alle Seiten vollautomatisch nach Buchstaben und Wörtern."
+      },
+      {
+        "step": 3,
+        "title": "Text kopieren oder als Datei laden",
+        "text": "Kopieren Sie den erkannten Text direkt in Ihre Zwischenablage oder laden Sie das Dokument herunter."
+      }
     ],
-    faqs: [
-      { question: 'Werden Zahlen auch als Zahlen und nicht als Text formatiert?', answer: 'Ja. Beträge und Ziffern werden als nummerische Werte formatiert, sodass Sie sofort SUMME- und Berechnungsformeln anwenden können.' },
+    "sections": [
+      {
+        "heading": "Warum das klassische Markieren mit der Maus versagt",
+        "content": "Wenn Sie mit dem Mauszeiger über eine gescannte Seite fahren, markieren Sie im besten Fall das gesamte Bild als blaues Rechteck. Das liegt daran, dass das Dokument keine Unicode-Zeichen enthält. Erst durch OCR wird hinter jedem Bildbereich eine unsichtbare Textschicht hinterlegt, die Sie wie gewohnt markieren können."
+      },
+      {
+        "heading": "Vorteile gegenüber dem manuellen Abtippen",
+        "content": "Das manuelle Abtippen von Verträgen, Buchseiten oder Rechnungen kostet Stunden und birgt hohe Fehlerquoten bei Zahlen und Fachbegriffen. Das CoolWave Texterkennungs-Tool verarbeitet 20 Seiten in weniger als 30 Sekunden mit höchster Präzision."
+      },
+      {
+        "heading": "Sonderzeichen und Umlaute fehlerfrei übernehmen",
+        "content": "Deutsche Eigenheiten wie ä, ö, ü und ß führen bei minderwertigen Konvertern oft zu kryptischen Zeichenfolgen (Mojibake). CoolWave nutzt moderne Sprachmodelle mit vollem UTF-8-Zeichensatz, sodass Umlaute und Währungssymbole (€) exakt übernommen werden."
+      }
     ],
-    readingTimeMinutes: 4,
-    publishedAt: '2026-09-14',
-    updatedAt: '2026-09-15',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich auch Text aus einem Foto vom Handy kopieren?",
+        "answer": "Ja, unser Werkzeug \"Bild zu Text\" verarbeitet auch direkt JPG- oder PNG-Fotos von Dokumenten."
+      },
+      {
+        "question": "Werden Formatierungen wie Absätze und Listen beibehalten?",
+        "answer": "Ja, Zeilenumbrüche und Absätze werden erkannt und sauber im Textblock strukturiert."
+      },
+      {
+        "question": "Funktioniert das auch mit alten, vergilbten Dokumenten?",
+        "answer": "Ja, die Bildvorverarbeitung filtert Verfärbungen und schwachen Kontrast automatisch heraus."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-29",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 29. PDF in PowerPoint umwandeln
   {
-    slug: 'pdf-in-powerpoint-praesentation',
-    title: 'PDF in PowerPoint umwandeln: Folien in PPTX zurückholen',
-    metaTitle: 'PDF in PowerPoint umwandeln – kostenlos & online | CoolWave',
-    metaDescription: 'Wandeln Sie exportierte PDF-Folien zurück in bearbeitbare PowerPoint-Präsentationen (PPTX). Schriften, Grafiken und Layouts direkt weiterbearbeiten.',
-    h1: 'PDF in PowerPoint umwandeln: Folien bearbeitbar machen',
-    excerpt: 'Die Original-Präsentation ging verloren und es existiert nur noch das PDF? Verwandeln Sie die Seiten zurück in eine echte PPTX-Folienserie.',
-    category: 'documents',
-    primaryKeyword: 'pdf in powerpoint umwandeln',
-    secondaryKeywords: ['pdf zu pptx', 'pdf als folien bearbeiten', 'pdf in präsentation umwandeln'],
-    searchIntent: 'transactional',
-    primaryToolSlug: 'pdf-in-powerpoint-umwandeln',
-    ctaHeadline: 'PDF jetzt in PowerPoint umwandeln',
-    ctaButtonLabel: 'PDF in PowerPoint umwandeln',
-    relatedToolSlugs: ['powerpoint-in-pdf-umwandeln', 'pdf-in-word-umwandeln'],
-    relatedArticleSlugs: ['pdf-in-word-umwandeln-anleitung'],
-    directAnswer: 'Mit dem CoolWave PDF-zu-PowerPoint-Konverter übertragen Sie jede Seite einer PDF in eine vollwertige PowerPoint-Folie (PPTX). Grafiken, Textblöcke und Hintergründe bleiben flexibel anpassbar, sodass Sie sofort neue Notizen und Folien ergänzen können.',
-    steps: [
-      { step: 1, title: 'Präsentations-PDF hochladen', text: 'Wählen Sie Ihre PDF-Datei aus.' },
-      { step: 2, title: 'Folien-Konvertierung', text: 'Jede PDF-Seite wird in ein eigenständiges Folien-Layout überführt.' },
-      { step: 3, title: 'PPTX-Datei sichern', text: 'Laden Sie die Datei herunter und präsentieren Sie direkt in PowerPoint.' },
+    "slug": "pdf-laesst-sich-nicht-bearbeiten-ursachen-loesungen",
+    "title": "PDF lässt sich nicht bearbeiten: Ursachen und Lösungen",
+    "metaTitle": "PDF lässt sich nicht bearbeiten? Ursachen & Lösungen | CoolWave",
+    "metaDescription": "Schreibschutz, Scan-Bild oder Passwortsperre? Wir erklären die 4 häufigsten Gründe, warum eine PDF blockiert ist, und wie Sie die Bearbeitung freischalten.",
+    "h1": "PDF lässt sich nicht bearbeiten: Warum das Dokument gesperrt ist & wie Sie es lösen",
+    "excerpt": "Sie möchten ein Formular ausfüllen oder eine Passage korrigieren, aber die Werkzeuge im Programm sind ausgegraut? Wir zeigen die Ursachen und wie Sie die Sperre aufheben.",
+    "category": "pdf",
+    "primaryKeyword": "pdf lässt sich nicht bearbeiten",
+    "secondaryKeywords": [
+      "pdf schreibschutz aufheben",
+      "warum kann ich pdf nicht bearbeiten",
+      "pdf formular schreibgeschützt",
+      "pdf bearbeitung gesperrt"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-entsperren",
+    "ctaHeadline": "Schreibschutz und Bearbeitungssperren jetzt aufheben",
+    "ctaButtonLabel": "PDF jetzt entsperren",
+    "relatedToolSlugs": [
+      "pdf-bearbeiten",
+      "scan-zu-word",
+      "pdf-passwort-entfernen"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-bearbeiten-was-kann-man-aendern",
+      "text-in-pdf-bearbeiten",
+      "gescannte-pdf-bearbeiten-ocr-verwenden"
+    ],
+    "directAnswer": "Wenn sich eine PDF nicht bearbeiten lässt, liegt das meist an einer von vier Ursachen: 1. Das Dokument ist mit einem Berechtigungspasswort schreibgeschützt, 2. Die Seite ist ein reines Scan-Bild ohne Vektortext, 3. Das Dokument ist digital signiert und damit manipulationsgeschützt, oder 4. Es handelt sich um ein schreibgeschütztes PDF/A-Archiv. Mit dem CoolWave Entsperr-Tool heben Sie Berechtigungssperren sekundenschnell auf.",
+    "steps": [
       {
-        heading: 'Perfekt für Konferenzunterlagen und Schulungen',
-        content: 'Dozenten und Veranstalter verteilen Vorträge fast ausschließlich als PDF. Durch die Konvertierung können Sie eigene Anmerkungen ergänzen oder veraltete Zahlen vor der nächsten Besprechung korrigieren.',
+        "step": 1,
+        "title": "Blockierte PDF hochladen",
+        "text": "Ziehen Sie die gesperrte PDF-Datei in das CoolWave Entsperr-Werkzeug."
       },
+      {
+        "step": 2,
+        "title": "Berechtigungs-Schreibschutz entfernen",
+        "text": "Das Tool analysiert die Sicherheitsflags und entfernt Bearbeitungs-, Druck- und Kopierbeschränkungen."
+      },
+      {
+        "step": 3,
+        "title": "Freigeschaltete PDF bearbeiten",
+        "text": "Laden Sie das ungeschützte Dokument herunter und öffnen Sie es im CoolWave PDF-Editor."
+      }
     ],
-    faqs: [
-      { question: 'Werden Folienübergänge und Animationen wiederhergestellt?', answer: 'Da PDFs statische Dokumente sind, können Animationen nicht rekonstruiert werden. Das visuelle Folienlayout und alle Objekte bleiben jedoch voll editierbar.' },
+    "sections": [
+      {
+        "heading": "Ursache 1: Das \"Permissions Password\" (Berechtigungssperre)",
+        "content": "Der offizielle PDF-Standard unterscheidet zwei Passwortarten: Das Benutzerpasswort (ohne das man die Datei gar nicht erst öffnen kann) und das Eigentümer- bzw. Berechtigungspasswort. Letzteres erlaubt zwar das Lesen, verbietet aber das Ändern von Texten, das Extrahieren von Seiten oder das Drucken. Diese rein formularmäßige Sperre lässt sich problemlos entfernen."
+      },
+      {
+        "heading": "Ursache 2: Digitale Zertifikats-Signaturen",
+        "content": "Wurde eine PDF mit einer rechtsverbindlichen digitalen Signatur (z. B. DocuSign oder Adobe Sign) unterzeichnet, sperrt der PDF-Reader das Dokument absichtlich gegen jede weitere Veränderung. Jede nachträgliche Änderung würde die kryptografische Signatur entwerten."
+      },
+      {
+        "heading": "Ursache 3: PDF/A-Archivmodus",
+        "content": "Dateien im Format PDF/A werden von Programmen wie Adobe Acrobat oft automatisch im \"schreibgeschützten Lesemodus\" geöffnet, um die Archivkonformität zu wahren. Ein Klick auf \"Bearbeitung aktivieren\" oder eine Konvertierung in Standard-PDF hebt diesen Modus auf."
+      }
     ],
-    readingTimeMinutes: 3,
-    publishedAt: '2026-09-14',
-    updatedAt: '2026-09-15',
-    author: 'CoolWave Redaktion',
+    "faqs": [
+      {
+        "question": "Kann ich ein Dokument entsperren, wenn ich das Öffnungspasswort vergessen habe?",
+        "answer": "Wenn eine PDF mit starkem AES-256-Passwort vor dem Öffnen verschlüsselt ist, kann sie ohne Kenntnis des Passworts aus Sicherheitsgründen nicht geöffnet werden. Bloße Bearbeitungssperren können hingegen sofort entfernt werden."
+      },
+      {
+        "question": "Darf man den Schreibschutz einer eigenen PDF rechtlich aufheben?",
+        "answer": "Ja, wenn Sie berechtigter Inhaber des Dokuments sind, ist das Aufheben von Berechtigungsbeschränkungen vollkommen legal."
+      },
+      {
+        "question": "Was mache ich, wenn das Dokument schreibgeschützt ist, weil es ein Scan ist?",
+        "answer": "In diesem Fall liegt keine Passwortsperre vor: Nutzen Sie unser OCR-Werkzeug \"Scan zu Word\", um die Bildpunkte in echten Text umzuwandeln."
+      }
+    ],
+    "readingTimeMinutes": 5,
+    "publishedAt": "2026-08-29",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
   },
-
-  // 30. JPG vs PNG vs WebP Vergleich
   {
-    slug: 'jpg-vs-png-vs-webp-vergleich',
-    title: 'JPG vs. PNG vs. WebP: Welches Bildformat eignet sich für was?',
-    metaTitle: 'JPG vs. PNG vs. WebP – Der ultimative Formatvergleich | CoolWave',
-    metaDescription: 'Der große Bildformat-Vergleich: Wann Sie JPG, PNG oder modernes WebP nutzen sollten. Kompressionsunterschiede, Transparenz und Ladezeiten erklärt.',
-    h1: 'JPG vs. PNG vs. WebP: Bildformate im direkten Vergleich',
-    excerpt: 'Transparenz, Farbtiefe oder minimale Dateigröße? Wir erklären die Stärken und Schwächen der wichtigsten Bildformate und welches Sie wann wählen sollten.',
-    category: 'formats',
-    primaryKeyword: 'jpg png webp vergleich',
-    secondaryKeywords: ['jpg oder png', 'webp vorteile nachteile', 'bestes bildformat website'],
-    searchIntent: 'informational',
-    primaryToolSlug: 'jpg-in-webp-umwandeln',
-    ctaHeadline: 'Bilder jetzt in das ideale Format konvertieren',
-    ctaButtonLabel: 'JPG in WebP umwandeln',
-    relatedToolSlugs: ['jpg-in-png-umwandeln', 'webp-in-jpg-umwandeln', 'bild-komprimieren'],
-    relatedArticleSlugs: ['heic-in-jpg-umwandeln-windows', 'webp-in-jpg-umwandeln-warum-und-wie', 'jpg-in-png-umwandeln-transparenz'],
-    directAnswer: 'Die Faustregel: JPG eignet sich ideal für Fotos und Farbverläufe, wenn kleine Dateigrößen wichtig sind. PNG ist die beste Wahl für Logos, Icons und Screenshots mit scharfen Kanten oder transparentem Hintergrund. WebP kombiniert das Beste aus beiden Welten und spart bis zu 35% Speicherplatz bei gleicher Qualität.',
-    steps: [
-      { step: 1, title: 'Zweck bestimmen', text: 'Foto, Screenshot, Logo oder Website-Grafik?' },
-      { step: 2, title: 'Ideales Format wählen', text: 'WebP für Websites, PNG für Transparenz, JPG für maximale Kompatibilität.' },
-      { step: 3, title: 'Bei Bedarf umwandeln', text: 'Nutzen Sie die kostenlosen CoolWave Konverter, um Bilder per Klick umzuwandeln.' },
+    "slug": "pdf-fuer-bewerbung-verkleinern",
+    "title": "PDF für eine Bewerbung verkleinern",
+    "metaTitle": "PDF für Bewerbung verkleinern: Für Karriereportale optimieren | CoolWave",
+    "metaDescription": "Bewerbungsunterlagen verkleinern: So reduzieren Sie Lebenslauf, Zeugnisse und Anschreiben unter 2 MB bis 5 MB, ohne dass Schrift oder Zeugnisnoten unscharf werden.",
+    "h1": "PDF für eine Bewerbung verkleinern: Dateigröße optimal für Jobportale anpassen",
+    "excerpt": "Sie möchten Ihre Bewerbungsmappe online abschicken, doch das Karriereportal streikt wegen zu großer Dateigröße? Wir zeigen, wie Sie Zeugnisse und Anschreiben perfekt verkleinern.",
+    "category": "pdf",
+    "primaryKeyword": "pdf für bewerbung verkleinern",
+    "secondaryKeywords": [
+      "bewerbungsmappe pdf kleiner machen",
+      "lebenslauf pdf dateigröße",
+      "zeugnisse pdf komprimieren",
+      "bewerbung upload zu groß"
     ],
-    sections: [
+    "searchIntent": "informational",
+    "primaryToolSlug": "pdf-komprimieren",
+    "ctaHeadline": "Bewerbungsunterlagen jetzt für Jobportale verkleinern",
+    "ctaButtonLabel": "Bewerbungs-PDF jetzt verkleinern",
+    "relatedToolSlugs": [
+      "pdf-zusammenfuegen",
+      "pdf-seiten-neu-anordnen",
+      "jpg-in-pdf-umwandeln"
+    ],
+    "relatedArticleSlugs": [
+      "pdf-unter-5-mb-verkleinern",
+      "pdf-datei-verkleinern",
+      "pdf-fuer-email-verkleinern"
+    ],
+    "directAnswer": "Um eine Bewerbungs-PDF zu verkleinern, laden Sie Ihre Bewerbungsmappe in den CoolWave PDF-Kompressor hoch. Das Tool komprimiert gescannte Zeugnisse und Arbeitsnachweise intelligent, während Lebenslauf und Anschreiben kristallklar bleiben. So schrumpft die Datei meist von 15 MB auf unter 2 MB – passend für jedes Online-Bewerbungsportal.",
+    "steps": [
       {
-        heading: 'Direkte Vergleichstabelle der Bildformate',
-        content: 'JPG: Verlustbehaftet, keine Transparenz, universelle Kompatibilität. PNG: Verlustfrei, transparente Hintergründe, größere Dateien. WebP: Sowohl verlustbehaftet als auch verlustfrei, Transparenz, optimiert für das moderne Web.',
+        "step": 1,
+        "title": "Bewerbungsmappe hochladen",
+        "text": "Ziehen Sie Ihre fertige Bewerbungs-PDF in den Upload-Bereich."
       },
+      {
+        "step": 2,
+        "title": "Bewerbungs-optimierte Kompression",
+        "text": "CoolWave bewahrt die Lesbarkeit von Zeugnisnoten und Stempeln bei maximaler Einsparung."
+      },
+      {
+        "step": 3,
+        "title": "Perfekte Bewerbungs-PDF abschicken",
+        "text": "Laden Sie die schlanke PDF herunter und laden Sie sie erfolgreich im Karriereportal hoch."
+      }
     ],
-    faqs: [
-      { question: 'Unterstützen heute alle Browser WebP?', answer: 'Ja. Alle modernen Versionen von Chrome, Safari (ab iOS 14 / macOS Big Sur), Edge und Firefox unterstützen WebP zu 100%.' },
+    "sections": [
+      {
+        "heading": "Typische Hürden in modernen Recruiting-Portalen",
+        "content": "Unternehmen wie Personio, Workday oder SAP SuccessFactors setzen oft strikte Obergrenzen von 2 MB bis maximal 5 MB für die gesamte Bewerbungsmappe fest. Da Bewerbungsunterlagen neben dem Lebenslauf meist Arbeitszeugnisse, Universitätsabschlüsse und Zertifikate enthalten, scheitert der Upload häufig an unkomprimierten Scans."
+      },
+      {
+        "heading": "Gefahr von Billig-Kompressoren: Verschwommene Zeugnisse",
+        "content": "Nichts hinterlässt einen schlechteren Eindruck bei Personalern als ein Zeugnis, dessen Noten oder Beurteilungstexte pixelig oder unlesbar sind. CoolWave rechnet Schriften nicht als Bild um, sondern optimiert nur Hintergrundrauschen und scanbedingte Farbtiefe. Dadurch bleiben Unterschriften, Stempel und Notenangaben einwandfrei erkennbar."
+      },
+      {
+        "heading": "Die ideale Struktur vor dem Verkleinern",
+        "content": "Fügen Sie alle Einzeldokumente (Anschreiben, Lebenslauf, Zeugnisse) vorab mit dem Werkzeug \"PDF zusammenfügen\" in die richtige chronologische Reihenfolge. Ein einziges, kompaktes Dokument wirkt weitaus professioneller als sieben einzelne Dateien."
+      }
     ],
-    readingTimeMinutes: 5,
-    publishedAt: '2026-09-14',
-    updatedAt: '2026-09-15',
-    author: 'CoolWave Redaktion',
-  },
+    "faqs": [
+      {
+        "question": "Welche Dateigröße ist für eine Bewerbung ideal?",
+        "answer": "Ein Zielwert zwischen 1,5 MB und 3 MB ist optimal: Groß genug für exzellente Bildschärfe der Zeugnisse und klein genug für jedes Upload-Portal."
+      },
+      {
+        "question": "Wird mein Bewerbungsfoto durch die Kompression unscharf?",
+        "answer": "Nein, Porträtfotos im Lebenslauf bleiben sauber und klar erkennbar."
+      },
+      {
+        "question": "Sind meine sensiblen Lebenslaufdaten bei CoolWave sicher?",
+        "answer": "Absolut. Ihre Unterlagen werden streng nach DSGVO behandelt, über eine gesicherte Verbindung verarbeitet und nicht dauerhaft gespeichert."
+      }
+    ],
+    "readingTimeMinutes": 4,
+    "publishedAt": "2026-08-30",
+    "updatedAt": "2026-09-19",
+    "author": "CoolWave Redaktion"
+  }
 ];
 
 // Helper functions
