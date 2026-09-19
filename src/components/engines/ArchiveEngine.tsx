@@ -267,10 +267,10 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
           }
           subtitle={
             isCreate
-              ? 'Fügen Sie beliebig viele Dateien hinzu, um sie als kompaktes ZIP-Archiv zu bündeln.'
-              : 'Sichere Dekomprimierung mit Schutz vor Decompression-Bombs und Path-Traversal.'
+              ? 'Bündeln Sie beliebig viele Dateien bis zu 500 MB direkt und geschützt in Ihrem Browser.'
+              : 'Sichere Dekomprimierung von Archiven bis zu 50 MB mit Schutz vor Decompression-Bombs.'
           }
-          maxFileSizeMB={expandedAccess ? 250 : 100}
+          maxFileSizeMB={isCreate ? 500 : 50}
         />
       )}
 

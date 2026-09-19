@@ -212,9 +212,10 @@ export function ImageCropEngine({ circleMode = false }: ImageCropEngineProps) {
   return (
     <div className="w-full">
       {!imgEl ? (
-        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']} maxFileSizeMB={50} onFilesSelected={handleFileSelected}
+        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']} maxFileSizeMB={500} onFilesSelected={handleFileSelected}
           title={circleMode ? 'Bild fuer kreisfoermigen Zuschnitt ablegen' : 'Bild zum Zuschneiden ablegen'}
-          subtitle={circleMode ? 'Fuer Profilbilder: Bild auf einen Kreis zuschneiden' : 'Definieren Sie den Ausschnitt per Drag-and-Drop'} />
+          subtitle={circleMode ? 'Fuer Profilbilder: Bild auf einen Kreis zuschneiden (bis 500 MB, lokal im Browser)' : 'Definieren Sie den Ausschnitt per Drag-and-Drop (bis 500 MB, lokal im Browser)'}
+          isLocal={true} />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4">
           {!circleMode && (

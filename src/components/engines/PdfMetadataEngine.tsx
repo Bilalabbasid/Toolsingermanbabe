@@ -204,14 +204,15 @@ export function PdfMetadataEngine({ mode }: PdfMetadataEngineProps) {
         <FileUploader
           onFilesSelected={handleFileSelected}
           allowMultiple={false}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           acceptedExtensions={['.pdf']}
           title="PDF-Dokument hier ablegen"
           subtitle={
             mode === 'view'
-              ? 'PDF wählen, um Dokumenteigenschaften, Abmessungen & Metadaten anzuzeigen'
-              : 'PDF wählen, um alle Autoren- & Ersteller-Metadaten restlos zu löschen'
+              ? 'PDF wählen (bis zu 500 MB, 100% lokal im Browser) für Eigenschaften & Metadaten'
+              : 'PDF wählen (bis zu 500 MB, 100% lokal im Browser), um Metadaten zu löschen'
           }
+          isLocal={true}
         />
       )}
 

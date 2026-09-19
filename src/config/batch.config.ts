@@ -35,9 +35,10 @@ export const batchConfig: BatchSystemConfig = {
 };
 
 export function getBatchLimits(isPro: boolean): BatchTierLimits {
-  // While billing is disabled, the paid-capacity profile is available to
-  // everyone. Ads remain controlled separately by the advertising layer.
-  return isPro || !featureFlags.enableStripeCheckout ? batchConfig.pro : batchConfig.free;
+  // Server-side conversions use the 50 MB free limit to protect Azure CPU,
+  // RAM (preventing OOM), and bandwidth costs.
+  // Pro limits (500 MB) only apply if a verified Pro subscriber is active.
+  return isPro ? batchConfig.pro : batchConfig.free;
 }
 
 export interface BatchValidationResult {

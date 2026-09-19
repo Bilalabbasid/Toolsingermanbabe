@@ -162,10 +162,10 @@ export function PdfSplitEngine() {
       {!file ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           onFilesSelected={handleFileSelected}
           title="PDF zum Teilen ablegen"
-          subtitle="Wählen Sie eine PDF-Datei aus, um einzelne Seiten zu extrahieren"
+          subtitle="Wählen Sie eine PDF-Datei aus (bis zu 500 MB, 100% lokal im Browser verarbeitet)"
           isLocal={true}
         />
       ) : (

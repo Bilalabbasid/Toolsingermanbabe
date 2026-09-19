@@ -220,14 +220,10 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
           title={isAudioTool ? 'Audiodatei hier ablegen oder auswählen' : 'Videodatei hier ablegen oder auswählen'}
           subtitle={
             isAudioTool
-              ? expandedAccess
-                ? 'Unterstützt MP3, WAV, AAC, FLAC, OGG und M4A bis zu 200 MB kostenlos'
-                : 'Unterstützt MP3, WAV, AAC, FLAC, OGG und M4A bis zu 50 MB kostenlos'
-              : expandedAccess
-                ? 'Unterstützt MP4, MOV, AVI, MKV und WebM bis zu 500 MB kostenlos'
-                : 'Unterstützt MP4, MOV, AVI, MKV und WebM bis zu 100 MB kostenlos'
+              ? 'Unterstützt MP3, WAV, AAC, FLAC, OGG und M4A bis zu 50 MB kostenlos'
+              : 'Unterstützt MP4, MOV, AVI, MKV und WebM bis zu 50 MB kostenlos'
           }
-          maxFileSizeMB={isAudioTool ? (expandedAccess ? 200 : 50) : (expandedAccess ? 500 : 100)}
+          maxFileSizeMB={50}
         />
       )}
 

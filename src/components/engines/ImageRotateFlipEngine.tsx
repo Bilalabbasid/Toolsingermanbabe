@@ -116,9 +116,10 @@ export function ImageRotateFlipEngine({ mode = 'rotate' }: ImageRotateFlipEngine
   return (
     <div className="w-full">
       {!imgEl ? (
-        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']} maxFileSizeMB={50} onFilesSelected={handleFileSelected}
+        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']} maxFileSizeMB={500} onFilesSelected={handleFileSelected}
           title={mode === 'flip' ? 'Bild zum Spiegeln ablegen' : 'Bild zum Drehen ablegen'}
-          subtitle={mode === 'flip' ? 'Horizontal oder vertikal spiegeln' : 'In 90-Grad-Schritten oder auf einen genauen Winkel drehen'} />
+          subtitle={mode === 'flip' ? 'Horizontal oder vertikal spiegeln (bis 500 MB, lokal im Browser)' : 'In 90-Grad-Schritten oder auf genauen Winkel drehen (bis 500 MB, lokal im Browser)'}
+          isLocal={true} />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4">
           <div className="flex flex-col items-center gap-4">

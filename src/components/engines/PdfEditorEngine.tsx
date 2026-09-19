@@ -1020,11 +1020,12 @@ export function PdfEditorEngine() {
         <div className="max-w-4xl mx-auto">
           <FileUploader
             acceptedExtensions={['.pdf']}
-            maxFileSizeMB={50}
+            maxFileSizeMB={500}
             allowMultiple={false}
             onFilesSelected={handleFileSelected}
             title="PDF-Dokument hier ablegen oder auswählen"
-            subtitle="100% Clientseitig im Browser • Text, Formen, Zeichnungen & Signaturen hinzufügen"
+            subtitle="100% Clientseitig im Browser (bis zu 500 MB) • Text, Formen, Zeichnungen & Signaturen hinzufügen"
+            isLocal={true}
           />
         </div>
       )}

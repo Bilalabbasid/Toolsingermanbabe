@@ -156,9 +156,10 @@ export function ImageDpiEngine({ stripMetadata = false }: ImageDpiEngineProps) {
   return (
     <div className="w-full">
       {!imgEl ? (
-        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png']} maxFileSizeMB={50} onFilesSelected={handleFileSelected}
+        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png']} maxFileSizeMB={500} onFilesSelected={handleFileSelected}
           title={stripMetadata ? 'Bild zum Bereinigen ablegen' : 'Bild fuer DPI-Aenderung ablegen'}
-          subtitle={stripMetadata ? 'Entfernt EXIF, IPTC, XMP und alle Metadaten aus JPEG/PNG-Dateien' : 'DPI-Wert fuer Druck und Veroeffentlichung festlegen'} />
+          subtitle={stripMetadata ? 'Entfernt EXIF, IPTC, XMP und Metadaten (bis 500 MB, lokal im Browser)' : 'DPI-Wert fuer Druck festlegen (bis 500 MB, lokal im Browser)'}
+          isLocal={true} />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-5">
           <div className="flex items-center gap-4 pb-4 border-b border-slate-100">

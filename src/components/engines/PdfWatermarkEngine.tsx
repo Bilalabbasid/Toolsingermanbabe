@@ -189,10 +189,11 @@ export function PdfWatermarkEngine() {
       {!file ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           onFilesSelected={handleFileSelected}
           title="PDF für Wasserzeichen ablegen"
-          subtitle="Fügen Sie Status-Texte wie „Vertraulich“, „Entwurf“ oder Ihr Firmenlogo ein"
+          subtitle="Fügen Sie Wasserzeichen ein (bis zu 500 MB, 100% lokal im Browser verarbeitet)"
+          isLocal={true}
         />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">

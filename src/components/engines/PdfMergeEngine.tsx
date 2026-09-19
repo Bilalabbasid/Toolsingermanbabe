@@ -138,11 +138,11 @@ export function PdfMergeEngine() {
       {files.length === 0 ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           allowMultiple={true}
           onFilesSelected={handleFilesSelected}
           title="PDF-Dateien hier ablegen"
-          subtitle="Wählen Sie zwei oder mehr PDF-Dateien aus, die Sie zusammenführen möchten"
+          subtitle="Wählen Sie zwei oder mehr PDF-Dateien aus (bis zu 500 MB, 100% lokal im Browser verarbeitet)"
           isLocal={true}
         />
       ) : (

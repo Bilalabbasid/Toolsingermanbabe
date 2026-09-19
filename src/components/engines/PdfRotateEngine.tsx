@@ -98,10 +98,10 @@ export function PdfRotateEngine() {
       {!file ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           onFilesSelected={handleFileSelected}
           title="PDF zum Drehen ablegen"
-          subtitle="Drehen Sie querliegende oder auf dem Kopf stehende Seiten dauerhaft"
+          subtitle="Drehen Sie Seiten dauerhaft (bis zu 500 MB, 100% lokal im Browser verarbeitet)"
           isLocal={true}
         />
       ) : (

@@ -206,10 +206,11 @@ export function PdfPageOrganizerEngine({ mode }: PdfPageOrganizerEngineProps) {
         <FileUploader
           onFilesSelected={handleFileSelected}
           allowMultiple={false}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           acceptedExtensions={['.pdf']}
           title="PDF-Dokument hier ablegen"
-          subtitle="Wählen Sie eine PDF-Datei aus, um Seiten anzupassen"
+          subtitle="Wählen Sie eine PDF-Datei aus (bis zu 500 MB, 100% lokal im Browser verarbeitet)"
+          isLocal={true}
         />
       )}
 

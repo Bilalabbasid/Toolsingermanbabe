@@ -232,7 +232,7 @@ export function PdfHeaderFooterEngine({
       {!file ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           onFilesSelected={handleFileSelected}
           title={
             mode === 'numbering' 
@@ -241,7 +241,8 @@ export function PdfHeaderFooterEngine({
                 ? 'PDF für Kopfzeile ablegen' 
                 : 'PDF für Fußzeile ablegen'
           }
-          subtitle="Passen Sie Seitenzahlen, Dokumenttitel oder Vertraulichkeitshinweise flexibel an"
+          subtitle="Passen Sie Seitenzahlen, Titel oder Hinweise an (bis zu 500 MB, 100% lokal im Browser)"
+          isLocal={true}
         />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">

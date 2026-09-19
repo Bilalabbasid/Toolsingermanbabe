@@ -179,14 +179,15 @@ export function ImageResizeEngine({ isGrayscaleMode = false }: ImageResizeEngine
       {!file ? (
         <FileUploader
           acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           onFilesSelected={handleFileSelected}
           title={isGrayscaleMode ? 'Bild für Schwarzweiß ablegen' : 'Bild zum Skalieren ablegen'}
           subtitle={
             isGrayscaleMode
-              ? 'Wandeln Sie Farbbilder sofort in stilvolle Graustufen-Grafiken um'
-              : 'Passen Sie Breite und Höhe in Pixeln an oder skalieren Sie prozentual'
+              ? 'Wandeln Sie Farbbilder sofort in stilvolle Graustufen-Grafiken um (bis 500 MB, lokal im Browser)'
+              : 'Passen Sie Breite und Höhe in Pixeln an oder skalieren Sie prozentual (bis 500 MB, lokal im Browser)'
           }
+          isLocal={true}
         />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">

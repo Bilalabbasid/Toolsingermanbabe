@@ -350,7 +350,7 @@ export function PdfExtractEngine({
       {!file ? (
         <FileUploader
           acceptedExtensions={['.pdf']}
-          maxFileSizeMB={50}
+          maxFileSizeMB={500}
           onFilesSelected={handleFileSelected}
           title={
             mode === 'images'
@@ -359,7 +359,8 @@ export function PdfExtractEngine({
                 ? 'PDF für Text-Extraktion ablegen'
                 : 'PDF für Anhänge-Extraktion ablegen'
           }
-          subtitle="Schnelle und sichere Extraktion von Elementen direkt in Ihrem Browser"
+          subtitle="Schnelle und sichere Extraktion von Elementen (bis zu 500 MB direkt in Ihrem Browser)"
+          isLocal={true}
         />
       ) : !hasExtracted ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">

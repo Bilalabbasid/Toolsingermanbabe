@@ -187,8 +187,9 @@ export function ImageEffectsEngine({ mode = 'sharpen' }: ImageEffectsEngineProps
   return (
     <div className="w-full">
       {!imgEl ? (
-        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.bmp']} maxFileSizeMB={50} onFilesSelected={handleFileSelected}
-          title={titles[mode] || 'Bild bearbeiten'} subtitle={subtitles[mode] || ''} />
+        <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.bmp']} maxFileSizeMB={500} onFilesSelected={handleFileSelected}
+          title={titles[mode] || 'Bild bearbeiten'} subtitle={`${subtitles[mode] || ''} (bis 500 MB, lokal im Browser)`}
+          isLocal={true} />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-5">
           <div className="flex flex-col items-center">
