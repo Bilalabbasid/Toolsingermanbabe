@@ -1,4 +1,13 @@
+import path from 'node:path';
+
 let cachedPdfJs: any = null;
+
+const standardFontDataUrl = `${path.join(
+  process.cwd(),
+  'node_modules',
+  'pdfjs-dist',
+  'standard_fonts',
+)}${path.sep}`;
 
 /**
  * Safely loads the legacy Node.js build of pdfjs-dist in Next.js server runtime without requiring external web workers.
@@ -20,5 +29,6 @@ export function getPdfJsDocumentOptions(data: Uint8Array | Buffer) {
   return {
     data: u8,
     disableFontFace: true,
+    standardFontDataUrl,
   };
 }

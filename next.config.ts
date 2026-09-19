@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '500mb',
     },
   },
+  outputFileTracingIncludes: {
+    '/api/*': ['./node_modules/pdfjs-dist/standard_fonts/**/*'],
+  },
   serverExternalPackages: [
     'muhammara',
     'tesseract.js',
