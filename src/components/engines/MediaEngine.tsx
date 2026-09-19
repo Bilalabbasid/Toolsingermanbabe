@@ -155,8 +155,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
         const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
         if (!pollRes.ok) continue;
 
-        const pollData = await pollRes.json();
-        const currentJob = pollData.job;
+        const currentJob = await pollRes.json();
 
         if (currentJob.status === 'processing') {
           const curPct = Math.max(35, Math.min(currentJob.progress || 50, 90));
@@ -221,8 +220,12 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
           title={isAudioTool ? 'Audiodatei hier ablegen oder auswählen' : 'Videodatei hier ablegen oder auswählen'}
           subtitle={
             isAudioTool
-              ? 'Unterstützt MP3, WAV, AAC, FLAC, OGG, M4A bis zu 50 MB kostenlos (200 MB Pro)'
-              : 'Unterstützt MP4, MOV, AVI, MKV, WebM bis zu 100 MB kostenlos (500 MB Pro)'
+              ? expandedAccess
+                ? 'Unterstützt MP3, WAV, AAC, FLAC, OGG und M4A bis zu 200 MB kostenlos'
+                : 'Unterstützt MP3, WAV, AAC, FLAC, OGG und M4A bis zu 50 MB kostenlos'
+              : expandedAccess
+                ? 'Unterstützt MP4, MOV, AVI, MKV und WebM bis zu 500 MB kostenlos'
+                : 'Unterstützt MP4, MOV, AVI, MKV und WebM bis zu 100 MB kostenlos'
           }
           maxFileSizeMB={isAudioTool ? (expandedAccess ? 200 : 50) : (expandedAccess ? 500 : 100)}
         />

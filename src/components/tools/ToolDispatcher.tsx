@@ -326,7 +326,7 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       else if (s === 'csv-in-xlsx-umwandeln') mode = 'csv-to-xlsx';
       else if (s === 'xlsx-in-csv-umwandeln') mode = 'xlsx-to-csv';
       else if (s === 'csv-in-pdf-umwandeln') mode = 'csv-to-pdf';
-      else if (s === 'ppt-to-pptx-umwandeln') mode = 'ppt-to-pptx';
+      else if (s === 'ppt-in-pptx-umwandeln') mode = 'ppt-to-pptx';
       else if (s === 'pptx-in-ppt-umwandeln') mode = 'pptx-to-ppt';
       else if (s === 'odp-in-pptx-umwandeln') mode = 'odp-to-pptx';
       else if (s === 'epub-in-pdf-umwandeln') mode = 'epub-to-pdf';
@@ -356,7 +356,12 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       else if (s === 'eps-in-svg-umwandeln') designMode = 'eps-to-svg';
       else if (s === 'eps-in-pdf-umwandeln') designMode = 'eps-to-pdf';
       else if (s.startsWith('psd-')) designMode = 'psd-to-raster';
-      return <DesignConvertEngine mode={designMode} />;
+      return (
+        <DesignConvertEngine
+          mode={designMode}
+          targetFormat={(tool.targetFormats[0] || '').replace('.', '').toLowerCase()}
+        />
+      );
     }
 
     default:

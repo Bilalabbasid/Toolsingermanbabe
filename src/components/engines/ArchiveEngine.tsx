@@ -169,8 +169,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
         const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
         if (!pollRes.ok) continue;
 
-        const pollData = await pollRes.json();
-        const currentJob = pollData.job;
+        const currentJob = await pollRes.json();
 
         if (currentJob.status === 'processing') {
           const curPct = Math.max(35, Math.min(currentJob.progress || 50, 90));

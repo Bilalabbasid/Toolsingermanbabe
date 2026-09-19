@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
   },
+  experimental: {
+    proxyClientMaxBodySize: '500mb',
+    serverActions: {
+      bodySizeLimit: '500mb',
+    },
+  },
   serverExternalPackages: [
     'muhammara',
     'tesseract.js',

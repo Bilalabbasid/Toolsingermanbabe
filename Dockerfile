@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     poppler-utils \
     ghostscript \
+    ffmpeg \
     libreoffice-nogui \
     libreoffice-writer \
     libreoffice-calc \
@@ -82,7 +83,7 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Container healthcheck using /api/health/ready for deployment readiness
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3000/api/health/ready || exit 1
+HEALTHCHECK --interval=30s --timeout=8s --start-period=20s --retries=3 \
+  CMD sh -c "command -v soffice >/dev/null && command -v gs >/dev/null && command -v ffmpeg >/dev/null && command -v pdftocairo >/dev/null && command -v 7z >/dev/null && curl -f http://localhost:3000/api/health/ready"
 
 CMD ["node", "server.js"]

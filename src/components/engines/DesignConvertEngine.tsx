@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AlertTriangle, Info, Download, RotateCcw, Layers } from "lucide-react";
 import { FileUploader } from "@/components/tools/FileUploader";
 import { ProcessingStatus } from "@/components/tools/ProcessingStatus";
@@ -123,8 +123,12 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
   const cfg = MODE_CONFIG[mode];
   const disclaimer = DISCLAIMERS[mode];
 
+  const configuredRasterTarget = ["png", "jpg", "webp"].includes((targetFormat || "").toLowerCase())
+    ? (targetFormat!.toLowerCase() as "png" | "jpg" | "webp")
+    : "png";
+
   const [file, setFile] = useState<File | null>(null);
-  const [rasterTarget, setRasterTarget] = useState<"png" | "jpg" | "webp">("png");
+  const [rasterTarget, setRasterTarget] = useState<"png" | "jpg" | "webp">(configuredRasterTarget);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState("");
@@ -134,6 +138,10 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(
     disclaimer?.type === "info" // auto-accept info, require confirm for warning
   );
+
+  useEffect(() => {
+    if (mode === "psd-to-raster") setRasterTarget(configuredRasterTarget);
+  }, [configuredRasterTarget, mode]);
 
   const handleFileSelected = (files: File[]) => {
     if (files.length === 0) return;

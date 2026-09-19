@@ -56,8 +56,10 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except static files and icons
+     * Keep upload APIs out of Proxy entirely. Next.js buffers proxied request
+     * bodies and truncates them at 10 MB by default, which corrupts large
+     * multipart file uploads before the route-level limits can validate them.
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
   ],
 };
