@@ -10,6 +10,7 @@ FROM node:22-bookworm-slim AS base
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# The no-GUI metapackage already includes Writer, Calc, and Impress variants.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
@@ -17,9 +18,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
     ffmpeg \
     libreoffice-nogui \
-    libreoffice-writer \
-    libreoffice-calc \
-    libreoffice-impress \
     tesseract-ocr \
     tesseract-ocr-deu \
     tesseract-ocr-eng \
