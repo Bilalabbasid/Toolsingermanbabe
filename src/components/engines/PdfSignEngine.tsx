@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { PenTool, FileText, CheckCircle2, ShieldCheck, RotateCcw, Upload, Type } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
@@ -157,7 +159,7 @@ export function PdfSignEngine() {
 
       setProgress(55);
 
-      const res = await fetch('/api/v1/pdf/security', {
+      const res = await apiFetch('/api/v1/pdf/security', {
         method: 'POST',
         body: formData,
       });

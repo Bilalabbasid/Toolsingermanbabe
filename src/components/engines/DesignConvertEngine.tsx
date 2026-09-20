@@ -1,5 +1,7 @@
 "use client";
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useEffect, useState } from "react";
 import { AlertTriangle, Info, Download, RotateCcw, Layers } from "lucide-react";
 import { FileUploader } from "@/components/tools/FileUploader";
@@ -171,7 +173,7 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
         backgroundColor: "#ffffff",
       }));
 
-      const res = await fetch("/api/v1/jobs", { method: "POST", body: formData });
+      const res = await apiFetch("/api/v1/jobs", { method: "POST", body: formData });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.error || `Server-Fehler: ${res.status} ${res.statusText}`);
@@ -185,7 +187,7 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
       while (pollCount < 90) {
         await new Promise((r) => setTimeout(r, 1500));
         pollCount++;
-        const check = await fetch(`/api/v1/jobs/${jobId}`);
+        const check = await apiFetch(`/api/v1/jobs/${jobId}`);
         if (!check.ok) continue;
         const poll = await check.json();
         if (poll.progress) setProgress(Math.max(30, poll.progress));
@@ -193,7 +195,7 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
         if (poll.status === "completed" && poll.output?.downloadUrl) {
           setStatusText("Download wird vorbereitet...");
           setProgress(100);
-          const fileRes = await fetch(poll.output.downloadUrl);
+          const fileRes = await apiFetch(poll.output.downloadUrl);
           const blob = await fileRes.blob();
           setResultBlob(blob);
           const base = file.name.replace(/\.[^.]+$/, "");

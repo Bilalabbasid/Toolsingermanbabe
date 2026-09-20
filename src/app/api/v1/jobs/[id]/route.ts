@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jobQueue } from '@/server/queue/queue';
 import { ownsJob } from '@/server/security/request';
+import { apiCorsPreflight, withApiCors } from '@/server/security/apiCors';
 
 interface Params {
   params: Promise<{
@@ -8,7 +9,7 @@ interface Params {
   }>;
 }
 
-export async function GET(req: NextRequest, { params }: Params) {
+const get = async (req: NextRequest, { params }: Params) => {
   const { id } = await params;
   const job = await jobQueue.getJob(id);
 
@@ -37,9 +38,9 @@ export async function GET(req: NextRequest, { params }: Params) {
         }
       : undefined,
   }, { headers: { 'Cache-Control': 'no-store' } });
-}
+};
 
-export async function DELETE(req: NextRequest, { params }: Params) {
+const remove = async (req: NextRequest, { params }: Params) => {
   const { id } = await params;
   const job = await jobQueue.getJob(id);
   if (!job || !ownsJob(req, job)) return NextResponse.json({ error: 'Auftrag nicht gefunden.' }, { status: 404 });
@@ -56,4 +57,8 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     success: true,
     message: `Auftrag „${id}“ wurde erfolgreich abgebrochen.`,
   });
-}
+};
+
+export const GET = withApiCors(get);
+export const DELETE = withApiCors(remove);
+export const OPTIONS = apiCorsPreflight;

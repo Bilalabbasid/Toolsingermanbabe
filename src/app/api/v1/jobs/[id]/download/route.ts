@@ -8,6 +8,7 @@ import { privacyConfig } from '@/config/privacy.config';
 import { getInfrastructureConfig } from '@/config/infrastructure.config';
 import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
 import { analyticsService } from '@/server/analytics/analytics.service';
+import { apiCorsPreflight, withApiCors } from '@/server/security/apiCors';
 
 interface Params {
   params: Promise<{
@@ -15,7 +16,7 @@ interface Params {
   }>;
 }
 
-export async function GET(req: NextRequest, { params }: Params) {
+const get = async (req: NextRequest, { params }: Params) => {
   const { id } = await params;
 
   // Enforce rate limiting per client IP
@@ -117,4 +118,7 @@ export async function GET(req: NextRequest, { params }: Params) {
       { status: 500 }
     );
   }
-}
+};
+
+export const GET = withApiCors(get);
+export const OPTIONS = apiCorsPreflight;

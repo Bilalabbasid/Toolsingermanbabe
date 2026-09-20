@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
@@ -207,7 +209,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
         })
       );
 
-      const res = await fetch('/api/v1/jobs', {
+      const res = await apiFetch('/api/v1/jobs', {
         method: 'POST',
         body: formData,
       });
@@ -225,7 +227,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
         await new Promise((r) => setTimeout(r, 1200));
         pollCount++;
 
-        const checkRes = await fetch(`/api/v1/jobs/${jobId}`);
+        const checkRes = await apiFetch(`/api/v1/jobs/${jobId}`);
         if (!checkRes.ok) continue;
 
         const pollData = await checkRes.json();
@@ -234,7 +236,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
         }
 
         if (pollData.status === 'completed' && pollData.output?.downloadUrl) {
-          const downloadRes = await fetch(pollData.output.downloadUrl);
+          const downloadRes = await apiFetch(pollData.output.downloadUrl);
           const blob = await downloadRes.blob();
           onProgress?.(100, 'Fertig');
           return { blob, fileName: pollData.output.fileName || outName, size: blob.size };

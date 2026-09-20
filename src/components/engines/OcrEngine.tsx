@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch, apiUrl } from '@/lib/apiClient';
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ScanText,
@@ -84,7 +86,7 @@ export function OcrEngine({ defaultOutputType = 'pdf', toolSlug = 'ocr-pdf' }: O
       formData.append('language', language);
       formData.append('outputType', outputType);
 
-      const res = await fetch('/api/v1/jobs', {
+      const res = await apiFetch('/api/v1/jobs', {
         method: 'POST',
         body: formData,
       });
@@ -121,7 +123,7 @@ export function OcrEngine({ defaultOutputType = 'pdf', toolSlug = 'ocr-pdf' }: O
 
     pollIntervalRef.current = setInterval(async () => {
       try {
-        const res = await fetch(`/api/v1/jobs/${id}`);
+        const res = await apiFetch(`/api/v1/jobs/${id}`);
         if (!res.ok) return;
 
         const job: ConversionJob = await res.json();
@@ -142,7 +144,7 @@ export function OcrEngine({ defaultOutputType = 'pdf', toolSlug = 'ocr-pdf' }: O
 
           // If output is text, fetch preview
           if (job.output?.downloadUrl && outputType === 'txt') {
-            fetch(job.output.downloadUrl)
+            apiFetch(job.output.downloadUrl)
               .then((r) => r.text())
               .then((txt) => setTextPreview(txt.substring(0, 2000)))
               .catch(() => {});
@@ -161,7 +163,7 @@ export function OcrEngine({ defaultOutputType = 'pdf', toolSlug = 'ocr-pdf' }: O
 
   const handleDownload = () => {
     if (!completedJob?.output?.downloadUrl) return;
-    window.location.href = completedJob.output.downloadUrl;
+    window.location.href = apiUrl(completedJob.output.downloadUrl);
     trackEvent('download_completed', { toolSlug });
   };
 

@@ -5,8 +5,9 @@ import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
 import { validateUploadedFile } from '@/server/security/fileValidator';
 import { privacyLog } from '@/server/utils/privacyLogger';
 import { featureFlags } from '@/config/featureFlags.config';
+import { apiCorsPreflight, withApiCors } from '@/server/security/apiCors';
 
-export async function POST(req: NextRequest) {
+const post = async (req: NextRequest) => {
   try {
     const apiKey = req.headers.get('x-api-key');
     const isPro = await isProRequest(req);
@@ -214,4 +215,7 @@ export async function POST(req: NextRequest) {
     privacyLog('error', '[PDF Security Error]', { error: errorMsg });
     return err instanceof RequestError ? requestError(err) : NextResponse.json({ error: 'PDF-Verarbeitung fehlgeschlagen. Bitte pruefen Sie Datei und Passwort.', code: 'INVALID_PDF' }, { status: 422 });
   }
-}
+};
+
+export const POST = withApiCors(post);
+export const OPTIONS = apiCorsPreflight;

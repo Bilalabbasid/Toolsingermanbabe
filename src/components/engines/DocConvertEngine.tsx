@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import JSZip from 'jszip';
@@ -281,7 +283,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       formData.append('scanMode', scanMode);
     }
 
-    const res = await fetch('/api/v1/jobs', {
+    const res = await apiFetch('/api/v1/jobs', {
       method: 'POST',
       body: formData,
       signal,
@@ -309,7 +311,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
         throw new Error('Konvertierung abgebrochen.');
       }
 
-      const pollRes = await fetch(`/api/v1/jobs/${jobId}`, { signal });
+      const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`, { signal });
       if (!pollRes.ok) continue;
 
       const pollData = await pollRes.json();
@@ -331,7 +333,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     }
 
     onProgress?.(90, 'Ergebnis wird empfangen...');
-    const downloadRes = await fetch(completedJob.output.downloadUrl, { signal });
+    const downloadRes = await apiFetch(completedJob.output.downloadUrl, { signal });
     if (!downloadRes.ok) {
       throw new Error('Download der Datei fehlgeschlagen.');
     }

@@ -129,6 +129,7 @@ For Hostinger KVM VPS or custom Linux instances:
 * [DATABASE.md](./DATABASE.md) — Schema, migrations, PostgreSQL setup, SSL, and backups.
 * [STRIPE_SETUP.md](./STRIPE_SETUP.md) — Stripe keys, webhook configuration, price IDs, and verification.
 * [DEPLOYMENT.md](./DEPLOYMENT.md) — Production deployment on Azure, Hostinger VPS, Docker, and Cloudflare.
+* [DEPLOYMENT_FREE_SPLIT.md](./DEPLOYMENT_FREE_SPLIT.md) — Free launch with a Vercel frontend and scale-to-zero Azure Docker backend.
 * [DEPLOYMENT_HOSTINGER.md](./DEPLOYMENT_HOSTINGER.md) — Hostinger VPS setup, systemd, Nginx reverse proxy, and SSL.
 * [TESTING.md](./TESTING.md) — Vitest test suites, coverage details, and end-to-end user verification flows.
 

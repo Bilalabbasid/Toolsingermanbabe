@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState } from 'react';
 import { Lock, Unlock, FileText, Eye, EyeOff, ShieldCheck, Printer, Copy, Edit3 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
@@ -114,7 +116,7 @@ export function PdfSecurityEngine({ mode }: PdfSecurityEngineProps) {
 
       setProgress(55);
 
-      const res = await fetch('/api/v1/pdf/security', {
+      const res = await apiFetch('/api/v1/pdf/security', {
         method: 'POST',
         body: formData,
       });

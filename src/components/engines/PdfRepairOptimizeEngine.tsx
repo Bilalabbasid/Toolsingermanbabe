@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState, useRef } from 'react';
 import { PDFDocument, PDFName, PDFArray, PDFDict, rgb } from 'pdf-lib';
 import JSZip from 'jszip';
@@ -134,7 +136,7 @@ export function PdfRepairOptimizeEngine({
       formData.append('file', file);
       formData.append('type', 'pdf_pdfa');
 
-      const res = await fetch('/api/v1/jobs', {
+      const res = await apiFetch('/api/v1/jobs', {
         method: 'POST',
         body: formData,
       });
@@ -153,7 +155,7 @@ export function PdfRepairOptimizeEngine({
       while (attempts < 60) {
         await new Promise((r) => setTimeout(r, 1000));
         attempts++;
-        const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+        const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`);
         if (!pollRes.ok) continue;
         const statusData = await pollRes.json();
         if (statusData.status === 'completed') {
@@ -167,7 +169,7 @@ export function PdfRepairOptimizeEngine({
 
       if (!completedJob) throw new Error('Zeitüberschreitung bei der PDF/A-Konvertierung.');
 
-      const downloadRes = await fetch(`/api/v1/jobs/${jobId}/download`);
+      const downloadRes = await apiFetch(`/api/v1/jobs/${jobId}/download`);
       if (!downloadRes.ok) throw new Error('Download des PDF/A-Dokuments fehlgeschlagen.');
 
       const blob = await downloadRes.blob();

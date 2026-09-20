@@ -5,8 +5,9 @@ import { storageProvider } from '@/server/storage/storage';
 import { boundedBody, ownsJob, requestError, RequestError } from '@/server/security/request';
 import { rateLimiter, getClientIp } from '@/server/security/rateLimiter';
 import { sanitizeFilename } from '@/server/security/fileValidator';
+import { apiCorsPreflight, withApiCors } from '@/server/security/apiCors';
 
-export async function POST(req: NextRequest) {
+const post = async (req: NextRequest) => {
   try {
     const rate = rateLimiter.check(getClientIp(req), 'download');
     if (!rate.allowed) return NextResponse.json({ code: 'RATE_LIMIT_EXCEEDED' }, { status: 429, headers: { 'Retry-After': String(rate.resetSeconds) } });
@@ -86,4 +87,7 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+};
+
+export const POST = withApiCors(post);
+export const OPTIONS = apiCorsPreflight;

@@ -8,8 +8,7 @@ build
 coverage
 *.log
 npm-debug.log*
-.env
-.env.local
-.env.production
+.env*
+!.env.example
 temp_uploads
 scratch

@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
@@ -79,7 +81,7 @@ export function PdfCompressEngine() {
       formData.append('type', 'pdf_compress');
       formData.append('options', JSON.stringify({ level: compLevel }));
 
-      const res = await fetch('/api/v1/jobs', { method: 'POST', body: formData });
+      const res = await apiFetch('/api/v1/jobs', { method: 'POST', body: formData });
       if (res.ok) {
         const jobData = await res.json();
         const jobId = jobData.jobId;
@@ -88,7 +90,7 @@ export function PdfCompressEngine() {
         while (attempts < 60) {
           await new Promise((r) => setTimeout(r, 800));
           attempts++;
-          const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+          const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`);
           if (!pollRes.ok) continue;
           const status = await pollRes.json();
           if (status.status === 'completed') {
@@ -98,7 +100,7 @@ export function PdfCompressEngine() {
           if (status.status === 'failed') break;
         }
         if (completed) {
-          const dlRes = await fetch(`/api/v1/jobs/${jobId}/download`);
+          const dlRes = await apiFetch(`/api/v1/jobs/${jobId}/download`);
           if (dlRes.ok) {
             const blob = await dlRes.blob();
             onProgress?.(100, 'Fertig');

@@ -6,6 +6,7 @@ import { rateLimiter } from '@/server/security/rateLimiter';
 import { generateSignedDownloadUrl, verifySignedDownloadToken } from '@/server/security/signedUrl';
 import { getUserEntitlements, PLAN_CONFIGS } from '@/lib/monetization/entitlements';
 import { NextRequest } from 'next/server';
+import { apiCorsPreflight, withApiCors } from '@/server/security/apiCors';
 
 describe('CoolWave Security Suite: Adversarial Verification', () => {
   describe('1. Authentication & Admin Authorization', () => {
@@ -146,6 +147,63 @@ describe('CoolWave Security Suite: Adversarial Verification', () => {
       expect(blocked.allowed).toBe(false);
       expect(blocked.remaining).toBe(0);
       expect(blocked.resetSeconds).toBeGreaterThan(0);
+    });
+  });
+
+  describe('7. Split Frontend/API Origin Protection', () => {
+    it('allows the production frontend and emits credentialed CORS headers', async () => {
+      const handler = withApiCors(async () => Response.json({ ok: true }));
+      const request = new NextRequest('https://api.coolwave.cool/api/health/ready', {
+        headers: { Origin: 'https://coolwave.cool' },
+      });
+      const response = await handler(request);
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Access-Control-Allow-Origin')).toBe('https://coolwave.cool');
+      expect(response.headers.get('Access-Control-Allow-Credentials')).toBe('true');
+    });
+
+    it('rejects unapproved browser origins', async () => {
+      const handler = withApiCors(async () => Response.json({ ok: true }));
+      const request = new NextRequest('https://api.coolwave.cool/api/v1/jobs', {
+        method: 'POST',
+        headers: { Origin: 'https://attacker.example' },
+      });
+      const response = await handler(request);
+
+      expect(response.status).toBe(403);
+      await expect(response.json()).resolves.toMatchObject({ code: 'ORIGIN_NOT_ALLOWED' });
+    });
+
+    it('answers approved preflight requests without reading an upload body', () => {
+      const request = new NextRequest('https://api.coolwave.cool/api/v1/jobs/batch/download', {
+        method: 'OPTIONS',
+        headers: { Origin: 'https://coolwave.cool' },
+      });
+      const response = apiCorsPreflight(request);
+
+      expect(response.status).toBe(204);
+      expect(response.headers.get('Access-Control-Allow-Methods')).toContain('POST');
+      expect(response.headers.get('Access-Control-Allow-Origin')).toBe('https://coolwave.cool');
+    });
+
+    it('disables conversion handlers on the Vercel frontend deployment', async () => {
+      const previousRole = process.env.COOLWAVE_DEPLOYMENT_ROLE;
+      process.env.COOLWAVE_DEPLOYMENT_ROLE = 'frontend';
+      try {
+        const handler = withApiCors(async () => Response.json({ shouldNotRun: true }));
+        const request = new NextRequest('https://coolwave.cool/api/v1/jobs', {
+          method: 'POST',
+          headers: { Origin: 'https://coolwave.cool' },
+        });
+        const response = await handler(request);
+
+        expect(response.status).toBe(503);
+        await expect(response.json()).resolves.toMatchObject({ code: 'REMOTE_API_REQUIRED' });
+      } finally {
+        if (previousRole === undefined) delete process.env.COOLWAVE_DEPLOYMENT_ROLE;
+        else process.env.COOLWAVE_DEPLOYMENT_ROLE = previousRole;
+      }
     });
   });
 });

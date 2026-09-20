@@ -1,0 +1,88 @@
+name: Build and deploy conversion container
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: coolwave-production-container
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/bilalabbasid/coolwave
+
+jobs:
+  build:
+    name: Build and publish Docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.image.outputs.value }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Sign in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Select immutable image tag
+        id: image
+        shell: bash
+        run: echo "value=${IMAGE}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and publish image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ steps.image.outputs.value }}
+            ${{ env.IMAGE }}:latest
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=https://coolwave.cool
+            NEXT_PUBLIC_ENABLE_ACCOUNTS=false
+            NEXT_PUBLIC_ENABLE_STRIPE=false
+            NEXT_PUBLIC_ENABLE_BUSINESS_TIER=false
+            NEXT_PUBLIC_ENABLE_HISTORY=false
+            NEXT_PUBLIC_ENABLE_ADS=false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy immutable image to Azure
+    needs: build
+    if: ${{ vars.AZURE_CONTAINER_APP_NAME != '' && vars.AZURE_RESOURCE_GROUP != '' }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Sign in to Azure with GitHub OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy new Container Apps revision
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az extension add --name containerapp --upgrade
+            az containerapp update \
+              --name "${{ vars.AZURE_CONTAINER_APP_NAME }}" \
+              --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+              --image "${{ needs.build.outputs.image }}"

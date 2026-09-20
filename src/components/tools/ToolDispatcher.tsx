@@ -10,6 +10,7 @@ import type { DocConvertMode } from '@/components/engines/DocConvertEngine';
 import type { HeaderFooterMode } from '@/components/engines/PdfHeaderFooterEngine';
 import type { RepairOptimizeMode } from '@/components/engines/PdfRepairOptimizeEngine';
 import type { ExtractMode } from '@/components/engines/PdfExtractEngine';
+import { BackendWakeup } from '@/components/common/BackendWakeup';
 
 // Zero-CLS Skeleton Loader for asynchronous engine chunk hydration
 function EngineSkeleton() {
@@ -153,6 +154,8 @@ interface ToolDispatcherProps {
 }
 
 export function ToolDispatcher({ tool }: ToolDispatcherProps) {
+  const backend = (engine: React.ReactNode) => <BackendWakeup>{engine}</BackendWakeup>;
+
   switch (tool.processingEngine) {
     case 'pdf-merge':
       return <PdfMergeEngine />;
@@ -178,7 +181,7 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
     }
 
     case 'pdf-compress':
-      return <PdfCompressEngine />;
+      return backend(<PdfCompressEngine />);
 
     case 'pdf-rotate':
       return <PdfRotateEngine />;
@@ -187,19 +190,19 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       return <PdfEditorEngine />;
 
     case 'pdf-protect':
-      return <PdfSecurityEngine mode="protect" />;
+      return backend(<PdfSecurityEngine mode="protect" />);
 
     case 'pdf-unlock':
-      return <PdfSecurityEngine mode="unlock" />;
+      return backend(<PdfSecurityEngine mode="unlock" />);
 
     case 'pdf-permissions':
-      return <PdfSecurityEngine mode="permissions" />;
+      return backend(<PdfSecurityEngine mode="permissions" />);
 
     case 'pdf-redact':
-      return <PdfRedactionEngine />;
+      return backend(<PdfRedactionEngine />);
 
     case 'pdf-sign':
-      return <PdfSignEngine />;
+      return backend(<PdfSignEngine />);
 
     case 'pdf-watermark':
       return <PdfWatermarkEngine />;
@@ -216,19 +219,19 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       return <PdfCompareEngine />;
 
     case 'pdf-repair':
-      return <PdfRepairOptimizeEngine mode="repair" toolSlug={tool.slug} />;
+      return backend(<PdfRepairOptimizeEngine mode="repair" toolSlug={tool.slug} />);
 
     case 'pdf-optimize':
-      return <PdfRepairOptimizeEngine mode="optimize" toolSlug={tool.slug} />;
+      return backend(<PdfRepairOptimizeEngine mode="optimize" toolSlug={tool.slug} />);
 
     case 'pdf-pdfa':
-      return <PdfRepairOptimizeEngine mode="pdfa" toolSlug={tool.slug} />;
+      return backend(<PdfRepairOptimizeEngine mode="pdfa" toolSlug={tool.slug} />);
 
     case 'pdf-flatten':
-      return <PdfRepairOptimizeEngine mode="flatten" toolSlug={tool.slug} />;
+      return backend(<PdfRepairOptimizeEngine mode="flatten" toolSlug={tool.slug} />);
 
     case 'pdf-annotations-remove':
-      return <PdfRepairOptimizeEngine mode="strip-annotations" toolSlug={tool.slug} />;
+      return backend(<PdfRepairOptimizeEngine mode="strip-annotations" toolSlug={tool.slug} />);
 
     case 'pdf-extract': {
       let extMode: ExtractMode = 'images';
@@ -245,7 +248,7 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       const validTargets = ['PNG', 'JPG', 'WebP', 'GIF', 'SVG', 'BMP', 'TIFF', 'ICO', 'AVIF', 'PDF'];
       const targetFormat = (validTargets.includes(primaryTarget) ? primaryTarget : 'PNG') as any;
 
-      return (
+      return backend(
         <ImageConvertEngine
           targetFormat={targetFormat}
           sourceExtensions={tool.sourceFormats}
@@ -299,7 +302,7 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       } else if (tool.slug === 'pdf-durchsuchbar-machen' || tool.slug === 'scan-zu-pdf') {
         defaultOutput = 'pdf';
       }
-      return <OcrEngine defaultOutputType={defaultOutput} toolSlug={tool.slug} />;
+      return backend(<OcrEngine defaultOutputType={defaultOutput} toolSlug={tool.slug} />);
     }
 
     case 'doc-convert': {
@@ -331,7 +334,7 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       else if (s === 'odp-in-pptx-umwandeln') mode = 'odp-to-pptx';
       else if (s === 'epub-in-pdf-umwandeln') mode = 'epub-to-pdf';
       else if (s === 'epub-in-txt-umwandeln') mode = 'epub-to-txt';
-      return <DocConvertEngine mode={mode} />;
+      return backend(<DocConvertEngine mode={mode} />);
     }
 
     case 'text-utility':
@@ -341,11 +344,11 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       return <DevUtilityEngine toolId={tool.id as any} />;
 
     case 'media-convert':
-      return <MediaEngine toolId={tool.slug as any} />;
+      return backend(<MediaEngine toolId={tool.slug as any} />);
 
     case 'archive':
     case 'archive-tool':
-      return <ArchiveEngine toolId={tool.slug as any} />;
+      return backend(<ArchiveEngine toolId={tool.slug as any} />);
 
     case 'design-convert': {
       let designMode: DesignConvertMode = 'psd-to-raster';
@@ -356,7 +359,7 @@ export function ToolDispatcher({ tool }: ToolDispatcherProps) {
       else if (s === 'eps-in-svg-umwandeln') designMode = 'eps-to-svg';
       else if (s === 'eps-in-pdf-umwandeln') designMode = 'eps-to-pdf';
       else if (s.startsWith('psd-')) designMode = 'psd-to-raster';
-      return (
+      return backend(
         <DesignConvertEngine
           mode={designMode}
           targetFormat={(tool.targetFormats[0] || '').replace('.', '').toLowerCase()}

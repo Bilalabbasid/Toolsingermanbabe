@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@/lib/apiClient';
+
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 import {
@@ -80,7 +82,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
           await new Promise((r) => setTimeout(r, 1000));
           if (isCancelled) return;
           try {
-            const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+            const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`);
             if (!pollRes.ok) {
               sessionStorage.removeItem(`coolwave_archive_${toolId}`);
               setIsProcessing(false);
@@ -92,7 +94,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
               setProgress(curPct);
               setStatusText(`Wird dekomprimiert (${curPct}%)...`);
             } else if (currentJob.status === 'completed') {
-              const dlRes = await fetch(currentJob.output.downloadUrl || `/api/v1/jobs/${jobId}/download`);
+              const dlRes = await apiFetch(currentJob.output.downloadUrl || `/api/v1/jobs/${jobId}/download`);
               if (dlRes.ok) {
                 const blob = await dlRes.blob();
                 setResultBlob(blob);
@@ -209,7 +211,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
     formData.append('type', toolId);
 
     try {
-      const res = await fetch('/api/v1/jobs', {
+      const res = await apiFetch('/api/v1/jobs', {
         method: 'POST',
         body: formData,
       });
@@ -234,7 +236,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
         attempts++;
         await new Promise((r) => setTimeout(r, 600));
 
-        const pollRes = await fetch(`/api/v1/jobs/${jobId}`);
+        const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`);
         if (!pollRes.ok) continue;
 
         const currentJob = await pollRes.json();
@@ -258,7 +260,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
       setProgress(90);
       setStatusText('Entpackte Dateien werden vorbereitet...');
 
-      const downloadRes = await fetch(completedJob.output.downloadUrl);
+      const downloadRes = await apiFetch(completedJob.output.downloadUrl);
       if (!downloadRes.ok) {
         throw new Error('Fehler beim Abrufen des entpackten Archivs.');
       }
