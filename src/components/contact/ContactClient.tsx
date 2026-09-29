@@ -67,10 +67,10 @@ export function ContactClient() {
               Für allgemeine Anfragen und Hilfe zu allen Funktionen:
             </p>
             <a
-              href="mailto:support@coolwave.cool"
+              href="mailto:support@datei-tools.de"
               className="text-sm font-semibold text-sky-600 hover:text-sky-700 underline"
             >
-              support@coolwave.cool
+              support@datei-tools.de
             </a>
           </div>
 
@@ -122,7 +122,7 @@ export function ContactClient() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <h2 className="text-lg font-bold text-slate-900 mb-4">
-                Nachricht an das CoolWave-Team senden
+                Nachricht an das Datei Tools-Team senden
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -164,7 +164,7 @@ export function ContactClient() {
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 bg-slate-50/50"
                 >
                   <option value="support">Hilfe bei einer Konvertierung / Technischer Support</option>
-                  {featureFlags.enableStripeCheckout && <option value="billing">Fragen zu CoolWave Pro / Rechnung</option>}
+                  {featureFlags.enableStripeCheckout && <option value="billing">Fragen zu Datei Tools Pro / Rechnung</option>}
                   <option value="feature">Feedback & Vorschlag für neue Werkzeuge</option>
                   {featureFlags.enableStripeCheckout && <option value="business">Business & Enterprise / Team-Lizenz</option>}
                   <option value="privacy">Datenschutz & DSGVO</option>

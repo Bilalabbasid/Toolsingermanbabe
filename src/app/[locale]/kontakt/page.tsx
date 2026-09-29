@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: ContactPageProps): Promise<Me
   const { locale } = await params;
 
   return generatePageMetadata({
-    title: 'Kontakt & Kundenservice – Hilfe & Feedback | CoolWave',
+    title: 'Kontakt & Kundenservice – Hilfe & Feedback | Datei Tools',
     description: 'Haben Sie Fragen zu unseren Datei- & PDF-Tools oder Ihrem Pro-Abonnement? Unser Support-Team hilft Ihnen gerne weiter. Schnelle Antwort garantiert.',
     path: '/kontakt',
     locale,

@@ -760,7 +760,7 @@ export function DevUtilityEngine({ toolId }: DevUtilityEngineProps) {
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder='{"name": "CoolWave", "features": ["PDF", "Convert"]}'
+                placeholder='{"name": "Datei Tools", "features": ["PDF", "Convert"]}'
                 rows={12}
                 className="w-full p-4 text-xs font-mono rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
               />

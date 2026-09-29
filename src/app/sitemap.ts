@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { getActiveTools } from '@/config/tools.config';
+import { getActiveTools, getToolsByCategory } from '@/config/tools.config';
 import { CATEGORIES } from '@/config/categories.config';
 import { getAllArticles } from '@/config/blog.config';
 import { SITE_URL } from '@/lib/seo';
@@ -30,15 +30,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   }));
 
-  // 2. Category pages
-  const categoryPages: MetadataRoute.Sitemap = Object.keys(CATEGORIES).map((cat) => ({
-    url: `${SITE_URL}/de/kategorie/${cat}`,
-    changeFrequency: 'weekly',
-    priority: 0.8,
-    alternates: {
-      languages: getAlternateUrls(SITE_URL, `/kategorie/${cat}`),
-    },
-  }));
+  // 2. Category pages (Only categories with active, working tools)
+  const categoryPages: MetadataRoute.Sitemap = Object.keys(CATEGORIES)
+    .filter((cat) => getToolsByCategory(cat).length > 0)
+    .map((cat) => ({
+      url: `${SITE_URL}/de/kategorie/${cat}`,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+      alternates: {
+        languages: getAlternateUrls(SITE_URL, `/kategorie/${cat}`),
+      },
+    }));
 
   // 3. Programmatic Tool Landing Pages (Real, working tools only)
   const toolPages: MetadataRoute.Sitemap = getActiveTools()

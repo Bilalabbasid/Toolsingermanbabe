@@ -99,4 +99,11 @@ export interface ToolDefinition {
   troubleshootingDe?: TroubleshootingItem[];
   privacyExplanationDe?: string;
   searchKeywordsDe?: string[];
+  /**
+   * Optional per-tool override for Vercel availability.
+   * When undefined, the engine-level capability from deployment.config.ts is used.
+   * Set to false for tools within a Vercel-capable engine that still require
+   * server-side native modules (e.g. TIFF/ICO conversions using Sharp).
+   */
+  vercelAvailable?: boolean;
 }

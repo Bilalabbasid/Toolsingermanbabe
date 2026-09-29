@@ -377,7 +377,7 @@ export function PdfExtractEngine({
           <div className="py-6 max-w-xl text-xs text-slate-600 leading-relaxed">
             {mode === 'images' && (
               <p>
-                CoolWave durchsucht das Dokument nach allen eingebetteten Rastergrafiken und Fotos. Sie können jedes Bild einzeln ansehen oder alle Bilder gebündelt als ZIP-Archiv herunterladen.
+                Datei Tools durchsucht das Dokument nach allen eingebetteten Rastergrafiken und Fotos. Sie können jedes Bild einzeln ansehen oder alle Bilder gebündelt als ZIP-Archiv herunterladen.
               </p>
             )}
             {mode === 'text' && (

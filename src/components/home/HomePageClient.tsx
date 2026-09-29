@@ -32,27 +32,27 @@ interface HomePageClientProps {
 }
 
 const QUICK_SEARCH_CHIPS = [
-  'PDF in Word',
   'PDF zusammenfügen',
   'PDF komprimieren',
-  'Word in PDF',
+  'PDF bearbeiten',
+  'PDF teilen',
   'Bild komprimieren',
   'JPG in PNG',
   'PDF unterschreiben',
-  'OCR',
-  'PDF entsperren',
+  'PDF drehen',
+  'ZIP erstellen',
 ];
 
-// Curated top 8 popular tools
+// Curated top 8 popular tools (verified Vercel-compatible)
 const POPULAR_SLUGS = [
   'pdf-zusammenfuegen',
-  'pdf-in-word-umwandeln',
   'pdf-komprimieren',
-  'word-in-pdf-umwandeln',
-  'bild-komprimieren',
+  'pdf-teilen',
+  'pdf-bearbeiten',
   'pdf-unterschreiben',
-  'pdf-ocr-texterkennung',
-  'pdf-entsperren',
+  'bild-komprimieren',
+  'jpg-in-png-umwandeln',
+  'pdf-drehen',
 ];
 
 interface CategoryTab {
@@ -66,9 +66,7 @@ const CATEGORY_TABS: CategoryTab[] = [
   { id: 'all',       label: 'Alle Werkzeuge' },
   { id: 'pdf',       label: 'PDF-Tools',               category: 'pdf',       icon: FileText },
   { id: 'images',    label: 'Bild-Tools',              category: 'images',    icon: ImageIcon },
-  { id: 'documents', label: 'Dokumente',               category: 'documents', icon: FileSpreadsheet },
   { id: 'security',  label: 'Sicherheit',              category: 'security',  icon: Lock },
-  { id: 'ocr',       label: 'OCR & Texterkennung',     category: 'ocr',       icon: ScanText },
   { id: 'utilities', label: 'Text & Hilfsprogramme',   category: 'utilities', icon: Wrench },
 ];
 
@@ -361,99 +359,107 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
               <ToolGrid tools={imageTools.slice(0, 8)} />
             </div>
 
-            {/* 4. Dokumenten- & Tabellen-Konverter */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
-                    <FileSpreadsheet className="w-4 h-4" />
+            {/* 4. Dokumenten- & Tabellen-Konverter (wenn verfügbar) */}
+            {docTools.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+                      <FileSpreadsheet className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-bold text-slate-900">Dokumente &amp; Office</h2>
+                      <p className="text-xs text-slate-500">Word, Excel, PowerPoint, Text- und Tabellenformate</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-slate-900">Dokumente &amp; Office</h2>
-                    <p className="text-xs text-slate-500">Word, Excel, PowerPoint, Text- und Tabellenformate</p>
-                  </div>
+                  <button
+                    onClick={() => setSelectedCategory('documents')}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
+                  >
+                    <span>Alle {docTools.length} Dokument-Tools</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setSelectedCategory('documents')}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
-                >
-                  <span>Alle {docTools.length} Dokument-Tools</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                <ToolGrid tools={docTools.slice(0, 8)} />
               </div>
-              <ToolGrid tools={docTools.slice(0, 8)} />
-            </div>
+            )}
 
-            {/* 5. Sicherheit, OCR & Utilities */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+            {/* 5. Sicherheit & Utilities */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               {/* Security Box */}
-              <div className="p-5 rounded-2xl bg-white border border-slate-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200/60">
-                      <Lock className="w-3.5 h-3.5" />
+              {securityTools.length > 0 && (
+                <div className="p-5 rounded-2xl bg-white border border-slate-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200/60">
+                        <Lock className="w-3.5 h-3.5" />
+                      </div>
+                      <h3 className="font-bold text-slate-900 text-sm sm:text-base">Sicherheit &amp; Schutz</h3>
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">Sicherheit &amp; Schutz</h3>
+                    <button
+                      onClick={() => setSelectedCategory('security')}
+                      className="text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
+                    >
+                      Alle ({securityTools.length}) →
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setSelectedCategory('security')}
-                    className="text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
-                  >
-                    Alle ({securityTools.length}) →
-                  </button>
+                  <div className="space-y-2">
+                    {securityTools.slice(0, 4).map((tool) => (
+                      <ToolCard key={tool.id} tool={tool} compact={true} />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  {securityTools.slice(0, 4).map((tool) => (
-                    <ToolCard key={tool.id} tool={tool} compact={true} />
-                  ))}
-                </div>
-              </div>
+              )}
 
-              {/* OCR Box */}
-              <div className="p-5 rounded-2xl bg-white border border-slate-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100">
-                      <ScanText className="w-3.5 h-3.5" />
+              {/* OCR Box (wenn verfügbar) */}
+              {ocrTools.length > 0 && (
+                <div className="p-5 rounded-2xl bg-white border border-slate-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100">
+                        <ScanText className="w-3.5 h-3.5" />
+                      </div>
+                      <h3 className="font-bold text-slate-900 text-sm sm:text-base">OCR &amp; Texterkennung</h3>
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">OCR &amp; Texterkennung</h3>
+                    <button
+                      onClick={() => setSelectedCategory('ocr')}
+                      className="text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
+                    >
+                      Alle ({ocrTools.length}) →
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setSelectedCategory('ocr')}
-                    className="text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
-                  >
-                    Alle ({ocrTools.length}) →
-                  </button>
+                  <div className="space-y-2">
+                    {ocrTools.slice(0, 4).map((tool) => (
+                      <ToolCard key={tool.id} tool={tool} compact={true} />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  {ocrTools.slice(0, 4).map((tool) => (
-                    <ToolCard key={tool.id} tool={tool} compact={true} />
-                  ))}
-                </div>
-              </div>
+              )}
 
               {/* Utilities Box */}
-              <div className="p-5 rounded-2xl bg-white border border-slate-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200">
-                      <Wrench className="w-3.5 h-3.5" />
+              {utilityTools.length > 0 && (
+                <div className="p-5 rounded-2xl bg-white border border-slate-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200">
+                        <Wrench className="w-3.5 h-3.5" />
+                      </div>
+                      <h3 className="font-bold text-slate-900 text-sm sm:text-base">Text &amp; Hilfsmittel</h3>
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">Text &amp; Hilfsmittel</h3>
+                    <button
+                      onClick={() => setSelectedCategory('utilities')}
+                      className="text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
+                    >
+                      Alle ({utilityTools.length}) →
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setSelectedCategory('utilities')}
-                    className="text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
-                  >
-                    Alle ({utilityTools.length}) →
-                  </button>
+                  <div className="space-y-2">
+                    {utilityTools.slice(0, 4).map((tool) => (
+                      <ToolCard key={tool.id} tool={tool} compact={true} />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  {utilityTools.slice(0, 4).map((tool) => (
-                    <ToolCard key={tool.id} tool={tool} compact={true} />
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
           </div>
         )}
@@ -470,7 +476,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
               Sicherheit &amp; Privatsphäre nach europäischem Maßstab
             </h2>
             <p className="text-sm text-slate-500 mt-2">
-              Vertrauliche Dateien verdienen maximalen Schutz. CoolWave setzt auf ein kompromissloses Sicherheitskonzept.
+              Vertrauliche Dateien verdienen maximalen Schutz. Datei Tools setzt auf ein kompromissloses Sicherheitskonzept.
             </p>
           </div>
 
@@ -524,7 +530,7 @@ export function HomePageClient({ initialTools }: HomePageClientProps) {
           <div className="max-w-xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/20 text-sky-400 text-xs font-semibold mb-2.5 sm:mb-3 border border-sky-400/30">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>CoolWave Pro</span>
+              <span>Datei Tools Pro</span>
             </span>
             <h2 className="text-xl sm:text-3xl font-bold tracking-tight">
               Mehr Leistung für Vielnutzer &amp; Profis

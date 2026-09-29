@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEFAULT_ALLOWED_ORIGINS = ['https://coolwave.cool', 'https://www.coolwave.cool'];
+const DEFAULT_ALLOWED_ORIGINS = ['https://datei-tools.de', 'https://www.datei-tools.de'];
 
 function normalizeOrigin(value: string): string | null {
   try {
@@ -49,7 +49,7 @@ export function withApiCors<Args extends unknown[]>(handler: ApiHandler<Args>): 
   return async (req, ...args) => {
     if (process.env.COOLWAVE_DEPLOYMENT_ROLE === 'frontend' && req.nextUrl.pathname !== '/api/health/ready') {
       return addCorsHeaders(req, NextResponse.json(
-        { error: 'Dateiverarbeitung ist nur über den CoolWave-Konvertierungsdienst verfügbar.', code: 'REMOTE_API_REQUIRED' },
+        { error: 'Dateiverarbeitung ist nur über den Datei Tools-Konvertierungsdienst verfügbar.', code: 'REMOTE_API_REQUIRED' },
         { status: 503 }
       ));
     }

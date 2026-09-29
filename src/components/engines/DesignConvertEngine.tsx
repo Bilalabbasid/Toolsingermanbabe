@@ -26,7 +26,7 @@ interface DesignConvertEngineProps {
 const DISCLAIMERS: Record<DesignConvertMode, { title: string; body: string; type: "warning" | "info" } | null> = {
   "psd-to-raster": {
     title: "Hinweis zur PSD-Konvertierung",
-    body: "CoolWave liest das zusammengesetzte Vorschau-Bild der PSD-Datei. Einzelne Ebenen, Effekte, Smartobjekte und Einstellungsebenen werden nicht separat verarbeitet. Das Ergebnis entspricht der sichtbaren Gesamtansicht der PSD-Datei.",
+    body: "Datei Tools liest das zusammengesetzte Vorschau-Bild der PSD-Datei. Einzelne Ebenen, Effekte, Smartobjekte und Einstellungsebenen werden nicht separat verarbeitet. Das Ergebnis entspricht der sichtbaren Gesamtansicht der PSD-Datei.",
     type: "info",
   },
   "raster-to-psd": {
@@ -41,7 +41,7 @@ const DISCLAIMERS: Record<DesignConvertMode, { title: string; body: string; type
   },
   "pdf-to-svg": {
     title: "PDF-Vektordaten können nicht extrahiert werden",
-    body: "CoolWave kann aus einem PDF keine echten Vektordaten extrahieren. Das Ergebnis ist eine SVG-Datei, die das gerenderte Seitenbild als Rasterbild enthält, nicht als Vektorpfade. Für echte Vektorextraktion ist spezialisierte Software (z. B. Inkscape, Adobe Acrobat Pro) erforderlich.",
+    body: "Datei Tools kann aus einem PDF keine echten Vektordaten extrahieren. Das Ergebnis ist eine SVG-Datei, die das gerenderte Seitenbild als Rasterbild enthält, nicht als Vektorpfade. Für echte Vektorextraktion ist spezialisierte Software (z. B. Inkscape, Adobe Acrobat Pro) erforderlich.",
     type: "warning",
   },
   "eps-to-svg": {
@@ -199,7 +199,7 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
           const blob = await fileRes.blob();
           setResultBlob(blob);
           const base = file.name.replace(/\.[^.]+$/, "");
-          setOutputFilename(`coolwave_${base}.${effectiveTarget}`);
+          setOutputFilename(`datei_tools_${base}.${effectiveTarget}`);
           setIsProcessing(false);
           trackEvent("conversion_completed", { toolSlug: mode, target: effectiveTarget });
           return;

@@ -65,7 +65,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
   useEffect(() => {
     if (isCreate) return;
     try {
-      const saved = sessionStorage.getItem(`coolwave_archive_${toolId}`);
+      const saved = sessionStorage.getItem(`datei_tools_archive_${toolId}`);
       if (!saved) return;
       const { jobId, filename } = JSON.parse(saved);
       if (!jobId) return;
@@ -84,7 +84,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
           try {
             const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`);
             if (!pollRes.ok) {
-              sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+              sessionStorage.removeItem(`datei_tools_archive_${toolId}`);
               setIsProcessing(false);
               return;
             }
@@ -99,12 +99,12 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
                 const blob = await dlRes.blob();
                 setResultBlob(blob);
                 setOutputFilename(currentJob.output?.fileName || `${filename}.extracted.zip`);
-                sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+                sessionStorage.removeItem(`datei_tools_archive_${toolId}`);
               }
               setIsProcessing(false);
               return;
             } else if (currentJob.status === 'failed' || currentJob.status === 'expired') {
-              sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+              sessionStorage.removeItem(`datei_tools_archive_${toolId}`);
               setIsProcessing(false);
               return;
             }
@@ -223,7 +223,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
 
       const { jobId } = await res.json();
       try {
-        sessionStorage.setItem(`coolwave_archive_${toolId}`, JSON.stringify({ jobId, filename: archiveFile.name }));
+        sessionStorage.setItem(`datei_tools_archive_${toolId}`, JSON.stringify({ jobId, filename: archiveFile.name }));
       } catch {}
       setStatusText('Archiv wird sicher entpackt & geprüft...');
       setProgress(30);
@@ -267,7 +267,7 @@ export function ArchiveEngine({ toolId }: ArchiveEngineProps) {
 
       const blob = await downloadRes.blob();
       try {
-        sessionStorage.removeItem(`coolwave_archive_${toolId}`);
+        sessionStorage.removeItem(`datei_tools_archive_${toolId}`);
       } catch {}
       setResultBlob(blob);
       setOutputFilename(completedJob.output.fileName);

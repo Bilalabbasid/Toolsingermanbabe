@@ -26,7 +26,7 @@ export function AdSlot({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const slotConfig = slotKey ? getAdSlotConfig(slotKey) : null;
-  const activeSlotId = explicitSlotId || slotConfig?.slotId || 'coolwave-ad-default';
+  const activeSlotId = explicitSlotId || slotConfig?.slotId || 'datei-tools-ad-default';
   const activeFormat = explicitFormat || slotConfig?.format || 'horizontal';
 
   const evaluateEligibility = () => {
@@ -66,10 +66,12 @@ export function AdSlot({
     const handleConsentChange = () => evaluateEligibility();
 
     window.addEventListener('coolwave_subscription_changed', handleSubChange);
+    window.addEventListener('datei_tools_consent_updated', handleConsentChange);
     window.addEventListener('coolwave_consent_updated', handleConsentChange);
 
     return () => {
       window.removeEventListener('coolwave_subscription_changed', handleSubChange);
+      window.removeEventListener('datei_tools_consent_updated', handleConsentChange);
       window.removeEventListener('coolwave_consent_updated', handleConsentChange);
     };
   }, [slotKey, explicitSlotId]);
@@ -125,7 +127,7 @@ export function AdSlot({
           ) : (
             <div className="py-2.5 sm:py-4 px-3 sm:px-6 flex flex-col items-center justify-center text-center">
               <span className="text-[11px] sm:text-xs font-semibold text-slate-500">
-                CoolWave Partner-Netzwerk
+                Datei Tools Partner-Netzwerk
               </span>
               <span className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
                 Konfigurierbarer Werbeplatz • Gesichert durch Google AdSense Richtlinien

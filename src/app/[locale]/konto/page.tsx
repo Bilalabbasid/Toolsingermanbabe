@@ -247,7 +247,7 @@ export default function UserAccountPage() {
             Datenschutz &amp; Dateisicherheit
           </h2>
           <p className="text-xs text-slate-600 leading-relaxed">
-            CoolWave speichert niemals den Inhalt Ihrer hochgeladenen Dokumente dauerhaft in der Datenbank.
+            Datei Tools speichert niemals den Inhalt Ihrer hochgeladenen Dokumente dauerhaft in der Datenbank.
             Alle temporären Konvertierungsdateien werden nach Ablauf automatisch und rückstandslos von den Servern gelöscht.
             Metadaten dienen ausschließlich der technischen Nachverfolgung von Konvertierungsabbrüchen.
           </p>

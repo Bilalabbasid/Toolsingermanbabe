@@ -2,6 +2,7 @@ import { applyGermanEditorial } from './tool-editorial.config';
 import { ToolDefinition } from '@/types/tool';
 import { UTILITIES_TOOLS } from './utilities.config';
 import { MEDIA_ARCHIVE_TOOLS } from './media_archive.config';
+import { isEngineAvailable } from './deployment.config';
 
 export const TOOLS_CONFIG: ToolDefinition[] = [
   // ==========================================
@@ -15,10 +16,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF zusammenfügen',
     shortDescriptionDe: 'Fügen Sie mehrere PDF-Dateien in der gewünschten Reihenfolge zu einem einzigen Dokument zusammen – schnell, sicher und direkt im Browser.',
-    titleDe: 'PDF zusammenfügen – kostenlos mehrere PDFs verbinden | CoolWave',
+    titleDe: 'PDF zusammenfügen – kostenlos mehrere PDFs verbinden | Datei Tools',
     metaDescriptionDe: 'Mehrere PDF-Dateien kostenlos und sekundenschnell online zusammenfügen. Reihenfolge per Drag-and-Drop anpassen. 100% Datenschutz ohne Upload zum Server.',
     h1De: 'PDF zusammenfügen – kostenlos online verbinden',
-    introDe: 'Mit dem CoolWave PDF-Zusammenfügen-Tool kombinieren Sie zwei oder mehr PDF-Dokumente blitzschnell zu einer einzigen Datei. Die Bearbeitung findet zu 100% lokal auf Ihrem Endgerät statt: Ihre vertraulichen Dokumente verlassen niemals Ihren Computer oder Ihr Smartphone. Ordnen Sie die Seiten einfach per Drag-and-Drop an und laden Sie Ihr fertiges PDF mit einem Klick herunter.',
+    introDe: 'Mit dem Datei Tools PDF-Zusammenfügen-Tool kombinieren Sie zwei oder mehr PDF-Dokumente blitzschnell zu einer einzigen Datei. Die Bearbeitung findet zu 100% lokal auf Ihrem Endgerät statt: Ihre vertraulichen Dokumente verlassen niemals Ihren Computer oder Ihr Smartphone. Ordnen Sie die Seiten einfach per Drag-and-Drop an und laden Sie Ihr fertiges PDF mit einem Klick herunter.',
     howItWorksDe: [
       { step: 1, title: 'PDFs auswählen', text: 'Ziehen Sie Ihre PDF-Dateien in den Upload-Bereich oder wählen Sie diese von Ihrem Gerät aus.' },
       { step: 2, title: 'Reihenfolge sortieren', text: 'Verschieben Sie die Vorschaublöcke per Drag-and-Drop in die von Ihnen gewünschte Reihenfolge.' },
@@ -28,7 +29,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Ist das Zusammenfügen von PDFs kostenlos?', answer: 'Ja, Sie können beliebig viele PDF-Dateien vollständig kostenlos und ohne Registrierung kombinieren.' },
       { question: 'Werden meine Dateien auf Ihren Server hochgeladen?', answer: 'Nein! Dieses Tool nutzt moderne Browser-Technologie (pdf-lib). Die Dateien verbleiben vollständig in Ihrem lokalen Arbeitsspeicher.' },
       { question: 'Gibt es eine Beschränkung der Seitenzahl?', answer: 'In der kostenlosen Version können Sie Dokumente bis zu 50 MB zusammenführen, was typischerweise mehreren hundert Seiten entspricht.' },
-      { question: 'Funktioniert das Tool auch auf dem Smartphone?', answer: 'Ja, CoolWave ist uneingeschränkt auf allen mobilen Browsern wie Safari (iOS) und Chrome (Android) nutzbar.' }
+      { question: 'Funktioniert das Tool auch auf dem Smartphone?', answer: 'Ja, Datei Tools ist uneingeschränkt auf allen mobilen Browsern wie Safari (iOS) und Chrome (Android) nutzbar.' }
     ],
     troubleshootingDe: [
       {
@@ -68,10 +69,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf', '.zip'],
     nameDe: 'PDF teilen',
     shortDescriptionDe: 'Trennen Sie einzelne Seiten aus einer PDF-Datei heraus oder teilen Sie ein großes Dokument in handliche Einzeldateien auf.',
-    titleDe: 'PDF teilen – Seiten einzeln oder als Bereich trennen | CoolWave',
+    titleDe: 'PDF teilen – Seiten einzeln oder als Bereich trennen | Datei Tools',
     metaDescriptionDe: 'PDF-Dateien kostenlos online aufteilen. Wählen Sie einzelne Seiten oder Seitenbereiche aus und extrahieren Sie diese blitzschnell direkt im Browser.',
     h1De: 'PDF teilen & Seiten extrahieren',
-    introDe: 'Mit dem CoolWave PDF-Splitter zerlegen Sie umfangreiche PDF-Dateien nach Ihren Vorgaben. Wählen Sie gezielt Seitenbereiche (z. B. Seite 1-3, 5) oder extrahieren Sie jede Seite als separates Dokument. Alles geschieht sicher in Ihrem Browser ohne Weitergabe an Dritte.',
+    introDe: 'Mit dem Datei Tools PDF-Splitter zerlegen Sie umfangreiche PDF-Dateien nach Ihren Vorgaben. Wählen Sie gezielt Seitenbereiche (z. B. Seite 1-3, 5) oder extrahieren Sie jede Seite als separates Dokument. Alles geschieht sicher in Ihrem Browser ohne Weitergabe an Dritte.',
     howItWorksDe: [
       { step: 1, title: 'PDF öffnen', text: 'Laden Sie das PDF-Dokument hoch, das Sie aufteilen möchten.' },
       { step: 2, title: 'Modus & Seiten festlegen', text: 'Geben Sie den gewünschten Seitenbereich ein (z. B. 1-3) oder wählen Sie „Alle Seiten einzeln extrahieren“.' },
@@ -108,10 +109,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Seiten extrahieren',
     shortDescriptionDe: 'Wählen Sie gezielt einzelne Seiten oder Seitenbereiche aus einer PDF aus und speichern Sie diese als neues Dokument.',
-    titleDe: 'PDF Seiten extrahieren – Einzelseiten kostenlos als PDF speichern | CoolWave',
+    titleDe: 'PDF Seiten extrahieren – Einzelseiten kostenlos als PDF speichern | Datei Tools',
     metaDescriptionDe: 'Extrahieren Sie gezielt bestimmte Seiten aus einer PDF-Datei. Bereich eingeben oder Seiten anklicken. Schnell, kostenlos und 100% datenschutzkonform.',
     h1De: 'PDF Seiten extrahieren – Einzelseiten gezielt speichern',
-    introDe: 'Benötigen Sie aus einem umfangreichen Bericht nur bestimmte Seiten oder die Zusammenfassung? Mit dem CoolWave Seiten-Extraktor wählen Sie die gewünschten Seiten per Klick oder Bereichsangabe (z. B. 1, 3-5) aus und erstellen sofort ein kompaktes neues PDF.',
+    introDe: 'Benötigen Sie aus einem umfangreichen Bericht nur bestimmte Seiten oder die Zusammenfassung? Mit dem Datei Tools Seiten-Extraktor wählen Sie die gewünschten Seiten per Klick oder Bereichsangabe (z. B. 1, 3-5) aus und erstellen sofort ein kompaktes neues PDF.',
     howItWorksDe: [
       { step: 1, title: 'PDF laden', text: 'Wählen Sie das PDF-Dokument aus.' },
       { step: 2, title: 'Seiten bestimmen', text: 'Klicken Sie auf die gewünschten Seiten oder geben Sie z. B. „1, 3-5“ ein.' },
@@ -148,7 +149,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Seiten löschen',
     shortDescriptionDe: 'Entfernen Sie überflüssige, leere oder vertrauliche Seiten aus Ihrem PDF-Dokument mit einem Klick.',
-    titleDe: 'PDF Seiten löschen – unerwünschte Seiten online entfernen | CoolWave',
+    titleDe: 'PDF Seiten löschen – unerwünschte Seiten online entfernen | Datei Tools',
     metaDescriptionDe: 'Löschen Sie einzelne oder mehrere Seiten dauerhaft aus einer PDF-Datei. Seiten per Klick markieren und bereinigtes Dokument sofort herunterladen.',
     h1De: 'PDF Seiten löschen – überflüssige Seiten entfernen',
     introDe: 'Befinden sich in Ihrem Scan leere Rückseiten oder vertrauliche Anhänge, die nicht für Dritte bestimmt sind? Markieren Sie die ungewünschten Seiten in der visuellen Übersicht und entfernen Sie diese unwiderruflich aus dem PDF.',
@@ -186,10 +187,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF-Seiten neu anordnen',
     shortDescriptionDe: 'Sortieren Sie durcheinander geratene Seiten in Ihrer PDF-Datei intuitiv in die richtige Lesereihenfolge.',
-    titleDe: 'PDF-Seiten neu anordnen – Seitenreihenfolge online sortieren | CoolWave',
+    titleDe: 'PDF-Seiten neu anordnen – Seitenreihenfolge online sortieren | Datei Tools',
     metaDescriptionDe: 'Seitenreihenfolge in PDF-Dateien kostenlos online ändern. Verschieben Sie Seiten nach links oder rechts und speichern Sie die neue Sortierung.',
     h1De: 'PDF-Seiten neu anordnen – Reihenfolge intuitiv sortieren',
-    introDe: 'Wurden Seiten beim Einscannen vertauscht oder soll ein Deckblatt an den Anfang gestellt werden? Mit CoolWave verschieben Sie PDF-Seiten per Pfeilklick an die richtige Position und erzeugen ein logisch sortiertes Gesamtdokument.',
+    introDe: 'Wurden Seiten beim Einscannen vertauscht oder soll ein Deckblatt an den Anfang gestellt werden? Mit Datei Tools verschieben Sie PDF-Seiten per Pfeilklick an die richtige Position und erzeugen ein logisch sortiertes Gesamtdokument.',
     howItWorksDe: [
       { step: 1, title: 'PDF laden', text: 'Öffnen Sie Ihr Dokument in der Sortier-Übersicht.' },
       { step: 2, title: 'Positionen verschieben', text: 'Nutzen Sie die Pfeiltasten unter jeder Seite, um sie an die gewünschte Position zu setzen.' },
@@ -224,10 +225,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF komprimieren',
     shortDescriptionDe: 'Verkleinern Sie Ihre PDF-Dateien für den E-Mail-Versand oder Online-Uploads, ohne sichtbare Qualitätsverluste bei Text und Grafiken.',
-    titleDe: 'PDF komprimieren – PDF kostenlos online verkleinern | CoolWave',
+    titleDe: 'PDF komprimieren – PDF kostenlos online verkleinern | Datei Tools',
     metaDescriptionDe: 'PDF-Dateigröße online reduzieren bei bester Qualität. Transparente Anzeige der Ersparnis in % und MB. 100% datenschutzkonform im Browser.',
     h1De: 'PDF komprimieren – Dateigröße kostenlos verkleinern',
-    introDe: 'Große PDF-Dateien sind oft zu sperrig für E-Mail-Anhänge oder Web-Portale. Mit CoolWave komprimieren Sie Ihre PDFs effizient. Wählen Sie zwischen starker, mittlerer oder leichter Kompression. Nach der Optimierung sehen Sie sofort die genaue Ersparnis in Megabyte und Prozent.',
+    introDe: 'Große PDF-Dateien sind oft zu sperrig für E-Mail-Anhänge oder Web-Portale. Mit Datei Tools komprimieren Sie Ihre PDFs effizient. Wählen Sie zwischen starker, mittlerer oder leichter Kompression. Nach der Optimierung sehen Sie sofort die genaue Ersparnis in Megabyte und Prozent.',
     howItWorksDe: [
       { step: 1, title: 'PDF einfügen', text: 'Ziehen Sie die zu verkleinernde PDF-Datei in das Tool.' },
       { step: 2, title: 'Komprimierungsstufe wählen', text: 'Wählen Sie zwischen Starker (maximale Reduktion), Ausgewogener (empfohlen) oder Leichter Kompression.' },
@@ -269,7 +270,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF bearbeiten',
     shortDescriptionDe: 'Vollwertiger PDF-Editor: Fügen Sie Text, Freihandzeichnungen, Formen, Unterschriften, Datumsstempel und Schwärzungen direkt in Ihre PDF ein.',
-    titleDe: 'PDF bearbeiten – kostenloser Online-PDF-Editor | CoolWave',
+    titleDe: 'PDF bearbeiten – kostenloser Online-PDF-Editor | Datei Tools',
     metaDescriptionDe: 'Kostenloser Online-PDF-Editor: Text einfügen, Zeichnen, Formen platzieren, Schwärzen und Unterschreiben. Direkt im Browser ohne Registrierung.',
     h1De: 'PDF bearbeiten – kostenloser Online-Editor',
     introDe: 'Korrigieren oder ergänzen Sie PDF-Dokumente direkt im Browser. Unser moderner PDF-Editor erlaubt das Hinzufügen von Textblöcken, Freihand-Skizzen, Rechtecken, Pfeilen, vertraulichen Schwärzungen und Genehmigungs-Stempeln. Alles wird sauber direkt in die PDF eingebrannt.',
@@ -313,7 +314,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF unterschreiben',
     shortDescriptionDe: 'Unterschreiben Sie Verträge, Anträge und Dokumente digital ohne Ausdrucken und Einscannen.',
-    titleDe: 'PDF unterschreiben – digital signieren online kostenlos | CoolWave',
+    titleDe: 'PDF unterschreiben – digital signieren online kostenlos | Datei Tools',
     metaDescriptionDe: 'PDF-Dokumente kostenlos online unterschreiben. Unterschrift per Maus oder Touchpad zeichnen und direkt ins Dokument einfügen. 100% datenschutzkonform.',
     h1De: 'PDF unterschreiben – digital & rechtssicher vorbereiten',
     introDe: 'Unterschreiben Sie Dokumente in Sekundenschnelle ohne Drucker oder Scanner. Zeichnen Sie Ihre Signatur mit der Maus, dem Finger oder Stift auf dem Touchscreen und platzieren Sie diese präzise auf der gewünschten Vertragsseite.',
@@ -352,10 +353,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF drehen',
     shortDescriptionDe: 'Bringen Sie falsch gescannte oder querliegende PDF-Seiten schnell in die richtige Leseposition.',
-    titleDe: 'PDF drehen – Seiten dauerhaft um 90°, 180° rotieren | CoolWave',
+    titleDe: 'PDF drehen – Seiten dauerhaft um 90°, 180° rotieren | Datei Tools',
     metaDescriptionDe: 'PDF-Seiten kostenlos online drehen. Drehen Sie das gesamte Dokument oder einzelne Seiten um 90, 180 oder 270 Grad. Sofort speichern.',
     h1De: 'PDF drehen – Ausrichtung dauerhaft korrigieren',
-    introDe: 'Falsch ausgerichtete Scans oder Querformat-Seiten lassen sich mit CoolWave im Handumdrehen rotieren. Drehen Sie Ihr Dokument um 90°, 180° oder 270° im Uhrzeigersinn. Die Ausrichtung wird dauerhaft in den Metadaten des PDFs gespeichert.',
+    introDe: 'Falsch ausgerichtete Scans oder Querformat-Seiten lassen sich mit Datei Tools im Handumdrehen rotieren. Drehen Sie Ihr Dokument um 90°, 180° oder 270° im Uhrzeigersinn. Die Ausrichtung wird dauerhaft in den Metadaten des PDFs gespeichert.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Laden Sie Ihre Datei in das Dreh-Werkzeug.' },
       { step: 2, title: 'Winkel wählen', text: 'Klicken Sie auf 90° rechts, 180° oder 270°, um die gewünschte Ansicht einzustellen.' },
@@ -390,17 +391,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF schützen',
     shortDescriptionDe: 'Verhindern Sie unbefugten Zugriff auf vertrauliche Dokumente durch Vergabe eines sicheren Öffnungspassworts.',
-    titleDe: 'PDF schützen – PDF mit Passwort verschlüsseln | CoolWave',
+    titleDe: 'PDF schützen – PDF mit Passwort verschlüsseln | Datei Tools',
     metaDescriptionDe: 'Schützen Sie vertrauliche PDF-Dateien mit einem starken Passwort. Sichere Verschlüsselung direkt im Browser ohne Server-Upload.',
     h1De: 'PDF schützen & mit Passwort verschlüsseln',
-    introDe: 'Sichern Sie sensible Verträge, Gehaltsabrechnungen oder persönliche Unterlagen vor neugierigen Blicken. Mit CoolWave vergeben Sie ein sicheres Öffnungskennwort, das vor jedem Ansehen der Datei abgefragt wird.',
+    introDe: 'Sichern Sie sensible Verträge, Gehaltsabrechnungen oder persönliche Unterlagen vor neugierigen Blicken. Mit Datei Tools vergeben Sie ein sicheres Öffnungskennwort, das vor jedem Ansehen der Datei abgefragt wird.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Laden Sie das zu schützende Dokument hoch.' },
       { step: 2, title: 'Passwort vergeben', text: 'Geben Sie Ihr gewünschtes Kennwort ein und bestätigen Sie es.' },
       { step: 3, title: 'Geschütztes PDF herunterladen', text: 'Laden Sie Ihre verschlüsselte Datei herunter.' }
     ],
     faqDe: [
-      { question: 'Kann CoolWave mein vergessenes Passwort wiederherstellen?', answer: 'Nein. Da die Verschlüsselung lokal erfolgt und wir Ihre Passwörter nicht speichern, sollten Sie Ihr Passwort an einem sicheren Ort notieren.' }
+      { question: 'Kann Datei Tools mein vergessenes Passwort wiederherstellen?', answer: 'Nein. Da die Verschlüsselung lokal erfolgt und wir Ihre Passwörter nicht speichern, sollten Sie Ihr Passwort an einem sicheren Ort notieren.' }
     ],
     troubleshootingDe: [
       {
@@ -429,10 +430,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF entsperren',
     shortDescriptionDe: 'Entfernen Sie das Öffnungskennwort aus einer geschützten PDF-Datei für den bequemen Zugriff ohne ständige Passworteingabe.',
-    titleDe: 'PDF entsperren – Passwort aus PDF entfernen online | CoolWave',
+    titleDe: 'PDF entsperren – Passwort aus PDF entfernen online | Datei Tools',
     metaDescriptionDe: 'Entfernen Sie den Passwortschutz aus Ihren PDF-Dateien. Einmal Kennwort eingeben und ungeschütztes PDF dauerhaft herunterladen.',
     h1De: 'PDF entsperren & Passwortschutz entfernen',
-    introDe: 'Nervt Sie die ständige Passworteingabe bei Ihren eigenen PDF-Unterlagen? Wenn Sie das Kennwort kennen, können Sie den Schutz mit CoolWave dauerhaft entfernen und das Dokument ungeschützt abspeichern.',
+    introDe: 'Nervt Sie die ständige Passworteingabe bei Ihren eigenen PDF-Unterlagen? Wenn Sie das Kennwort kennen, können Sie den Schutz mit Datei Tools dauerhaft entfernen und das Dokument ungeschützt abspeichern.',
     howItWorksDe: [
       { step: 1, title: 'Geschütztes PDF laden', text: 'Ziehen Sie die passwortgeschützte PDF in das Tool.' },
       { step: 2, title: 'Passwort eingeben', text: 'Geben Sie das aktuelle Öffnungskennwort einmalig ein.' },
@@ -467,18 +468,18 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF signieren',
     shortDescriptionDe: 'Fügen Sie Ihre handschriftliche Unterschrift und einen Prüfstempel mit Zeitangabe und SHA-256 Hash visuell in PDF-Dokumente ein.',
-    titleDe: 'PDF signieren – visuell & unkompliziert unterschreiben | CoolWave',
+    titleDe: 'PDF signieren – visuell & unkompliziert unterschreiben | Datei Tools',
     metaDescriptionDe: 'PDF online visuell signieren. Eigene Unterschrift zeichnen, tippen oder hochladen. Mit Zeitstempel & Prüfstempel.',
     h1De: 'PDF signieren – visuelle Unterschrift & Dokumentenstempel',
-    introDe: 'Bringen Sie Ihre handschriftliche Unterschrift schnell und unkompliziert auf PDF-Dokumente. Zeichnen Sie per Maus oder Touchscreen, tippen Sie Ihren Namen in ansprechender Handschrift oder laden Sie ein Signaturbild hoch. Zusätzlich bettet CoolWave auf Wunsch eine visuelle Prüfmarke mit exaktem Zeitstempel und Dokumenten-Hash ein.',
+    introDe: 'Bringen Sie Ihre handschriftliche Unterschrift schnell und unkompliziert auf PDF-Dokumente. Zeichnen Sie per Maus oder Touchscreen, tippen Sie Ihren Namen in ansprechender Handschrift oder laden Sie ein Signaturbild hoch. Zusätzlich bettet Datei Tools auf Wunsch eine visuelle Prüfmarke mit exaktem Zeitstempel und Dokumenten-Hash ein.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Laden Sie das zu unterzeichnende Dokument in das Signatur-Tool hoch.' },
       { step: 2, title: 'Signatur erstellen', text: 'Zeichnen Sie Ihre Unterschrift, tippen Sie Ihren Namen oder laden Sie eine transparente Bilddatei hoch.' },
       { step: 3, title: 'Signiertes PDF laden', text: 'Klicken Sie auf „PDF jetzt signieren“ und laden Sie Ihr vorbereitetes Dokument herunter.' }
     ],
     faqDe: [
-      { question: 'Ist die Signatur mit CoolWave ein qualifiziertes digitales Zertifikat?', answer: 'Nein, CoolWave fügt eine visuelle elektronische Signatur (Dokumentenstempel / Unterschriftsabbildung) ein. Für Verträge, die gesetzlich eine qualifizierte elektronische Signatur (QES) mit kryptografischem Hardware-Zertifikat vorschreiben, ist ein spezieller Signatur-Dienstleister erforderlich.' },
-      { question: 'Wird meine Unterschrift auf fremden Servern gespeichert?', answer: 'Nein! CoolWave speichert Ihre Unterschrift niemals in Benutzerprofilen oder Datenbanken. Nach Abschluss der Verarbeitung wird der temporäre Speicher sofort gelöscht.' },
+      { question: 'Ist die Signatur mit Datei Tools ein qualifiziertes digitales Zertifikat?', answer: 'Nein, Datei Tools fügt eine visuelle elektronische Signatur (Dokumentenstempel / Unterschriftsabbildung) ein. Für Verträge, die gesetzlich eine qualifizierte elektronische Signatur (QES) mit kryptografischem Hardware-Zertifikat vorschreiben, ist ein spezieller Signatur-Dienstleister erforderlich.' },
+      { question: 'Wird meine Unterschrift auf fremden Servern gespeichert?', answer: 'Nein! Datei Tools speichert Ihre Unterschrift niemals in Benutzerprofilen oder Datenbanken. Nach Abschluss der Verarbeitung wird der temporäre Speicher sofort gelöscht.' },
       { question: 'Was bedeutet der SHA-256 Prüfstempel?', answer: 'Er dokumentiert den SHA-256 Prüfwert des Originaldokuments zum Zeitpunkt der visuellen Signaturerstellung im Stempel.' }
     ],
     troubleshootingDe: [
@@ -514,7 +515,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF-Passwort entfernen',
     shortDescriptionDe: 'Heben Sie den Kennwortschutz einer geschützten PDF-Datei dauerhaft auf, um das Dokument frei zu verwenden.',
-    titleDe: 'PDF-Passwort entfernen – Kennwortschutz online löschen | CoolWave',
+    titleDe: 'PDF-Passwort entfernen – Kennwortschutz online löschen | Datei Tools',
     metaDescriptionDe: 'PDF-Passwort kostenlos online entfernen. Geben Sie Ihr bekanntes Dokumentenkennwort ein und speichern Sie die Datei dauerhaft ungeschützt.',
     h1De: 'PDF-Passwort entfernen – Schutz dauerhaft aufheben',
     introDe: 'Entfernen Sie das bekannte Öffnungspasswort aus Ihren PDF-Dokumenten, um diese ohne wiederholte Passworteingabe auf all Ihren Endgeräten öffnen, weiterleiten oder archivieren zu können.',
@@ -553,7 +554,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Berechtigungen ändern',
     shortDescriptionDe: 'Steuern Sie Zugriffsrechte für Drucken, Kopieren und Bearbeiten Ihrer PDF-Dokumente nach ISO-32000.',
-    titleDe: 'PDF Berechtigungen ändern – Drucken, Kopieren & Bearbeiten steuern | CoolWave',
+    titleDe: 'PDF Berechtigungen ändern – Drucken, Kopieren & Bearbeiten steuern | Datei Tools',
     metaDescriptionDe: 'PDF-Berechtigungen präzise festlegen. Schützen Sie Inhalte vor unerlaubtem Kopieren, Drucken oder Verändern mit granularen Sicherheitsflags.',
     h1De: 'PDF Berechtigungen ändern – Druck- & Kopierschutz anpassen',
     introDe: 'Legen Sie präzise fest, was Empfänger mit Ihren PDF-Dokumenten tun dürfen. Schränken Sie das Kopieren von Texten, das Ausdrucken in hoher Auflösung oder das Verändern von Inhalten gezielt ein.',
@@ -591,7 +592,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF verschlüsseln',
     shortDescriptionDe: 'Verschlüsseln Sie PDF-Dateien mit modernem 128-Bit oder 256-Bit Standard nach ISO-32000.',
-    titleDe: 'PDF verschlüsseln – hochsichere AES-Verschlüsselung online | CoolWave',
+    titleDe: 'PDF verschlüsseln – hochsichere AES-Verschlüsselung online | Datei Tools',
     metaDescriptionDe: 'PDFs mit sicherem AES-Standard verschlüsseln. Höchste Sicherheit für vertrauliche Geschäftsberichte und persönliche Daten.',
     h1De: 'PDF verschlüsseln – standardkonformer AES-Schutz',
     introDe: 'Schützen Sie Ihre sensiblen Geschäfts- und Privatdaten mit starker kryptografischer Chiffrierung. Verschlüsseln Sie Ihre PDF-Dokumente nach dem weltweiten ISO-32000 Sicherheitsstandard, sodass unbefugte Dritte ohne das Kennwort keinen Einblick erhalten.',
@@ -629,10 +630,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF entschlüsseln',
     shortDescriptionDe: 'Entschlüsseln Sie passwortgeschützte PDFs durch Verifizierung des Schlüssels und entfernen Sie die Chiffrierung.',
-    titleDe: 'PDF entschlüsseln – gesicherte PDFs online dechiffrieren | CoolWave',
+    titleDe: 'PDF entschlüsseln – gesicherte PDFs online dechiffrieren | Datei Tools',
     metaDescriptionDe: 'PDF-Dateien sicher entschlüsseln. Geben Sie das Passwort ein und erhalten Sie das uneingeschränkt lesbare Dokument zurück.',
     h1De: 'PDF entschlüsseln – Chiffrierung aufheben',
-    introDe: 'Haben Sie ein verschlüsseltes Dokument erhalten und möchten es dauerhaft ohne Passwortabfrage aufbewahren? Mit CoolWave entschlüsseln Sie die Datei nach Passworteingabe und entfernen die Chiffrierung vollständig.',
+    introDe: 'Haben Sie ein verschlüsseltes Dokument erhalten und möchten es dauerhaft ohne Passwortabfrage aufbewahren? Mit Datei Tools entschlüsseln Sie die Datei nach Passworteingabe und entfernen die Chiffrierung vollständig.',
     howItWorksDe: [
       { step: 1, title: 'Verschlüsseltes PDF wählen', text: 'Laden Sie das chiffrierte PDF hoch.' },
       { step: 2, title: 'Passwort eingeben', text: 'Geben Sie das Entschlüsselungskennwort an.' },
@@ -667,17 +668,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF schwärzen',
     shortDescriptionDe: 'Entfernen Sie vertrauliche Begriffe, IBANs und Personendaten physisch und unwiderruflich aus dem PDF-Datenstrom.',
-    titleDe: 'PDF schwärzen – vertrauliche Daten echt & unwiderruflich redigieren | CoolWave',
+    titleDe: 'PDF schwärzen – vertrauliche Daten echt & unwiderruflich redigieren | Datei Tools',
     metaDescriptionDe: 'PDF kostenlos und sicher schwärzen. True Redaction: Sensible Daten werden dauerhaft aus dem Datenstrom gelöscht und können nicht mehr kopiert werden.',
     h1De: 'PDF schwärzen – vertrauliche Daten unwiderruflich löschen',
-    introDe: 'Schützen Sie vertrauliche Geschäftsdaten, persönliche Namen, IBAN-Nummern oder Adressen vor unbefugter Weitergabe. Im Gegensatz zu oberflächlichen Markierungen löscht CoolWave die Textzeichenfolgen physisch aus den PDF-Inhaltsströmen und deckt sie mit blickdichten Sperrbalken ab. Die geschwärzten Inhalte können danach weder kopiert, durchsucht noch wiederhergestellt werden.',
+    introDe: 'Schützen Sie vertrauliche Geschäftsdaten, persönliche Namen, IBAN-Nummern oder Adressen vor unbefugter Weitergabe. Im Gegensatz zu oberflächlichen Markierungen löscht Datei Tools die Textzeichenfolgen physisch aus den PDF-Inhaltsströmen und deckt sie mit blickdichten Sperrbalken ab. Die geschwärzten Inhalte können danach weder kopiert, durchsucht noch wiederhergestellt werden.',
     howItWorksDe: [
       { step: 1, title: 'PDF hochladen', text: 'Ziehen Sie die zu bereinigende PDF-Datei in das Tool.' },
       { step: 2, title: 'Begriffe festlegen', text: 'Geben Sie Namen, Kontonummern oder vertrauliche Begriffe ein, die geschwärzt werden sollen.' },
       { step: 3, title: 'Unwiderruflich schwärzen', text: 'Klicken Sie auf den Button und laden Sie das datenschutzsichere PDF herunter.' }
     ],
     faqDe: [
-      { question: 'Kann jemand den Text unter den schwarzen Balken kopieren?', answer: 'Nein! CoolWave führt eine echte Redigierung (True Redaction) durch: Die Textzeichen werden physisch aus dem internen PDF-Datenstrom herausgeschnitten. Selbst mit Suchfunktionen oder Programmier-Tools lässt sich der Text nicht wiederherstellen.' },
+      { question: 'Kann jemand den Text unter den schwarzen Balken kopieren?', answer: 'Nein! Datei Tools führt eine echte Redigierung (True Redaction) durch: Die Textzeichen werden physisch aus dem internen PDF-Datenstrom herausgeschnitten. Selbst mit Suchfunktionen oder Programmier-Tools lässt sich der Text nicht wiederherstellen.' },
       { question: 'Erfüllt dies die Anforderungen der DSGVO?', answer: 'Ja. Durch die vollständige Tilgung der Daten aus dem Dokument entspricht das Ergebnis den strengen Vorgaben zur Anonymisierung und Vertraulichkeit.' }
     ],
     troubleshootingDe: [
@@ -713,7 +714,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Wasserzeichen',
     shortDescriptionDe: 'Fügen Sie Text-Wasserzeichen wie „Vertraulich“, „Entwurf“ oder Ihren Firmennamen diagonal oder horizontal auf allen Seiten ein.',
-    titleDe: 'PDF Wasserzeichen einfügen – kostenlos online | CoolWave',
+    titleDe: 'PDF Wasserzeichen einfügen – kostenlos online | Datei Tools',
     metaDescriptionDe: 'Wasserzeichen in PDF-Dateien einfügen. Text, Farbe, Transparenz und Winkel individuell anpassen. Schutz vor unbefugter Weitergabe.',
     h1De: 'PDF Wasserzeichen online einfügen',
     introDe: 'Schützen Sie Ihre Entwürfe und vertraulichen Dokumente vor Urheberrechtsverletzungen. Platzieren Sie individuelle Text-Wasserzeichen diagonal über alle Seiten Ihrer PDF-Datei – mit anpassbarer Deckkraft und Schriftgröße.',
@@ -751,10 +752,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.txt'],
     nameDe: 'PDF Metadaten anzeigen',
     shortDescriptionDe: 'Sehen Sie verborgene Metadaten wie Autor, Erstellungsprogramm, Titel und Datumsangaben Ihrer PDF ein.',
-    titleDe: 'PDF Metadaten anzeigen – verborgene Datei-Informationen einsehen | CoolWave',
+    titleDe: 'PDF Metadaten anzeigen – verborgene Datei-Informationen einsehen | Datei Tools',
     metaDescriptionDe: 'PDF-Metadaten kostenlos online auslesen. Sehen Sie Autor, Ersteller, Producer, Erstellungsdatum und Schlagwörter direkt im Browser ein.',
     h1De: 'PDF Metadaten anzeigen & verborgene Details prüfen',
-    introDe: 'PDF-Dateien speichern unbemerkt zahlreiche Hintergrundinformationen: den Namen des Computers, den Autor, das genaue Erstellungsdatum und die verwendete Software. Prüfen Sie mit CoolWave vor dem Weiterversand, welche Daten in Ihrem Dokument hinterlegt sind.',
+    introDe: 'PDF-Dateien speichern unbemerkt zahlreiche Hintergrundinformationen: den Namen des Computers, den Autor, das genaue Erstellungsdatum und die verwendete Software. Prüfen Sie mit Datei Tools vor dem Weiterversand, welche Daten in Ihrem Dokument hinterlegt sind.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Ziehen Sie die zu analysierende PDF in das Tool.' },
       { step: 2, title: 'Metadaten prüfen', text: 'Lesen Sie Titel, Autor, Ersteller und Datumsstempel in der übersichtlichen Tabelle ab.' },
@@ -789,10 +790,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Metadaten entfernen',
     shortDescriptionDe: 'Löschen Sie Autorenangaben, Erstellungssoftware und Zeitstempel restlos aus Ihren PDFs für maximale Diskretion.',
-    titleDe: 'PDF Metadaten entfernen – sensible Datei-Infos restlos löschen | CoolWave',
+    titleDe: 'PDF Metadaten entfernen – sensible Datei-Infos restlos löschen | Datei Tools',
     metaDescriptionDe: 'PDF-Metadaten kostenlos online entfernen. Löschen Sie Autor, Ersteller-Software, Titel und Zeitstempel vor der Weitergabe für 100% Datenschutz.',
     h1De: 'PDF Metadaten entfernen – Dokumente anonymisieren',
-    introDe: 'Schützen Sie Ihre Privatsphäre und Geschäftsgeheimnisse: Bevor Sie Angebote, Verträge oder Veröffentlichungen versenden, sollten Sie verborgene Autorendaten und Tracking-Metadaten entfernen. CoolWave bereinigt alle Header-Einträge mit einem Klick.',
+    introDe: 'Schützen Sie Ihre Privatsphäre und Geschäftsgeheimnisse: Bevor Sie Angebote, Verträge oder Veröffentlichungen versenden, sollten Sie verborgene Autorendaten und Tracking-Metadaten entfernen. Datei Tools bereinigt alle Header-Einträge mit einem Klick.',
     howItWorksDe: [
       { step: 1, title: 'PDF laden', text: 'Wählen Sie das zu bereinigende Dokument aus.' },
       { step: 2, title: 'Metadaten löschen', text: 'Klicken Sie auf „Alle Metadaten restlos löschen“.' },
@@ -804,7 +805,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     troubleshootingDe: [
       {
         issue: 'Prüfprogramme zeigen immer noch Metadaten an.',
-        solution: 'CoolWave überschreibt alle Standard-Felder (Titel, Autor, Betreff, Keywords, Creator, Producer). Nutzen Sie anschließend unser Tool „PDF Metadaten anzeigen“, um das bereinigte Ergebnis zu überprüfen.'
+        solution: 'Datei Tools überschreibt alle Standard-Felder (Titel, Autor, Betreff, Keywords, Creator, Producer). Nutzen Sie anschließend unser Tool „PDF Metadaten anzeigen“, um das bereinigte Ergebnis zu überprüfen.'
       }
     ],
     privacyExplanationDe: '100% lokale Bereinigung im Browser.',
@@ -832,7 +833,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.docx', '.doc'],
     nameDe: 'PDF in Word umwandeln',
     shortDescriptionDe: 'Wandeln Sie PDF-Text in bearbeitbares Word um. Bei Scans wählen Sie zwischen OCR-Text und einer originalgetreuen, nicht bearbeitbaren Seitenansicht.',
-    titleDe: 'PDF in Word umwandeln – kostenlos online konvertieren | CoolWave',
+    titleDe: 'PDF in Word umwandeln – kostenlos online konvertieren | Datei Tools',
     metaDescriptionDe: 'PDF kostenlos in Word (DOCX) umwandeln: bearbeitbarer OCR-Text für Scans oder originalgetreue Seitenansicht als Bild. Ohne Registrierung.',
     h1De: 'PDF in Word umwandeln – kostenlos & online',
     introDe: 'Sie möchten Text aus einer PDF in Word bearbeiten? Bei PDF-Dateien mit auswählbarem Text erstellen wir ein DOCX mit bearbeitbaren Absätzen. Für Bildscans erkennt OCR den Text und nähert Zeilenpositionen und Überschriften an. Wenn die genaue Ansicht wichtiger ist, können Sie die Seite stattdessen als nicht bearbeitbares Bild in Word übernehmen.',
@@ -877,7 +878,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'Word in PDF umwandeln',
     shortDescriptionDe: 'Erstellen Sie aus Ihren Word-Dokumenten (DOCX, DOC) professionelle PDFs mit unveränderlichem Schriftbild und perfekter Druckqualität.',
-    titleDe: 'Word in PDF umwandeln – kostenlos online konvertieren | CoolWave',
+    titleDe: 'Word in PDF umwandeln – kostenlos online konvertieren | Datei Tools',
     metaDescriptionDe: 'Word-Dokumente (DOCX, DOC) kostenlos online in PDF umwandeln. Layouttreu, sicher und ohne Microsoft Office direkt im Browser nutzen.',
     h1De: 'Word in PDF umwandeln – layouttreu & sicher',
     introDe: 'Verwandeln Sie Word-Dateien (DOCX, DOC) in universell lesbare PDF-Dokumente. PDFs garantieren, dass Schriftarten, Zeilenumbrüche und Grafiken auf jedem Computer, Smartphone oder Tablet exakt so aussehen wie von Ihnen beabsichtigt. Ideal für Bewerbungen, Rechnungen und offizielle Mitteilungen.',
@@ -887,7 +888,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'Fertiges PDF speichern', text: 'Laden Sie Ihr druckfertiges, layoutgetreues PDF-Dokument herunter.' }
     ],
     faqDe: [
-      { question: 'Benötige ich Microsoft Office auf meinem PC?', answer: 'Nein, CoolWave führt die gesamte Umwandlung eigenständig online durch.' },
+      { question: 'Benötige ich Microsoft Office auf meinem PC?', answer: 'Nein, Datei Tools führt die gesamte Umwandlung eigenständig online durch.' },
       { question: 'Werden Bilder und Schriftarten exakt übernommen?', answer: 'Ja, Standardlayouts und Schriften werden präzise in die PDF-Vektorstruktur übertragen.' }
     ],
     troubleshootingDe: [
@@ -917,10 +918,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.xlsx', '.xls', '.csv'],
     nameDe: 'PDF in Excel umwandeln',
     shortDescriptionDe: 'Extrahieren Sie Tabellen und Zahlen aus PDF-Berichten, Rechnungen und Auswertungen direkt in bearbeitbare Excel-Tabellen (XLSX, CSV).',
-    titleDe: 'PDF in Excel umwandeln – Tabellen kostenlos online extrahieren | CoolWave',
+    titleDe: 'PDF in Excel umwandeln – Tabellen kostenlos online extrahieren | Datei Tools',
     metaDescriptionDe: 'Wandeln Sie PDF-Dateien mit Tabellen kostenlos in bearbeitbare Excel-Tabellen (XLSX, CSV) um. Spalten und Zeilen sauber extrahieren.',
     h1De: 'PDF in Excel umwandeln – Tabellen online extrahieren',
-    introDe: 'Das manuelle Abtippen von Tabellen, Finanzberichten oder Preiskatalogen aus PDF-Dateien kostet wertvolle Zeit. CoolWave erkennt Tabellenstrukturen in Ihren PDFs und extrahiert Zellendaten, Spalten und Zeilen direkt in das Microsoft Excel- oder CSV-Format für die sofortige Weiterverarbeitung.',
+    introDe: 'Das manuelle Abtippen von Tabellen, Finanzberichten oder Preiskatalogen aus PDF-Dateien kostet wertvolle Zeit. Datei Tools erkennt Tabellenstrukturen in Ihren PDFs und extrahiert Zellendaten, Spalten und Zeilen direkt in das Microsoft Excel- oder CSV-Format für die sofortige Weiterverarbeitung.',
     howItWorksDe: [
       { step: 1, title: 'PDF mit Tabelle hochladen', text: 'Ziehen Sie die PDF-Datei mit den Tabellendaten in das Tool.' },
       { step: 2, title: 'Tabellenextraktion starten', text: 'Klicken Sie auf „In Excel umwandeln“.' },
@@ -956,7 +957,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'Excel in PDF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie Excel-Tabellen (XLSX, XLS) in druckfertige PDFs mit sauberer Spaltenaufteilung.',
-    titleDe: 'Excel in PDF umwandeln – Tabellen kostenlos als PDF speichern | CoolWave',
+    titleDe: 'Excel in PDF umwandeln – Tabellen kostenlos als PDF speichern | Datei Tools',
     metaDescriptionDe: 'Excel-Arbeitsblätter (XLSX, XLS, CSV) kostenlos online in PDF umwandeln. Layouts und Tabellenformate bleiben erhalten.',
     h1De: 'Excel in PDF umwandeln – Tabellen sauber sichern',
     introDe: 'Exportieren Sie Kalkulationen, Bilanzen und Übersichten als unveränderbare PDF-Dateien. Dadurch verhindern Sie versehentliche Formeländerungen durch Dritte und stellen sicher, dass Ihre Tabelle auf jedem Bildschirm sauber auf DIN-A4-Seiten dargestellt wird.',
@@ -994,7 +995,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pptx'],
     nameDe: 'PDF in PowerPoint umwandeln',
     shortDescriptionDe: 'Wandeln Sie PDF-Präsentationen in PowerPoint-Folien (PPTX) mit hochauflösendem Layout und Textüberlagerung um.',
-    titleDe: 'PDF in PowerPoint umwandeln – Folien online bearbeiten | CoolWave',
+    titleDe: 'PDF in PowerPoint umwandeln – Folien online bearbeiten | Datei Tools',
     metaDescriptionDe: 'PDF-Folien kostenlos online in PowerPoint (PPTX) umwandeln. Hochauflösende Folien mit auswählbarem Text.',
     h1De: 'PDF in PowerPoint umwandeln – Präsentationen reaktivieren',
     introDe: 'Haben Sie eine Präsentation als PDF vorliegen? Unser PDF-zu-PowerPoint-Konverter überträgt jede PDF-Seite in eine eigenständige PowerPoint-Folie (PPTX) mit hochauflösendem Layout und Textüberlagerung zum flexiblen Sortieren, Erweitern und Präsentieren.',
@@ -1032,7 +1033,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PowerPoint in PDF umwandeln',
     shortDescriptionDe: 'Speichern Sie Ihre PowerPoint-Präsentationen (PPTX, PPT) als kompakte PDF für Handouts und Vorträge.',
-    titleDe: 'PowerPoint in PDF umwandeln – PPTX kostenlos online konvertieren | CoolWave',
+    titleDe: 'PowerPoint in PDF umwandeln – PPTX kostenlos online konvertieren | Datei Tools',
     metaDescriptionDe: 'PowerPoint-Folien (PPTX, PPT) kostenlos in PDF konvertieren. Perfekt für Handouts, E-Mail-Versand und plattformunabhängige Vorträge.',
     h1De: 'PowerPoint in PDF umwandeln – Folien sicher teilen',
     introDe: 'Vermeiden Sie Pannen bei Kundenvorträgen: Wenn der Präsentations-Laptop andere Schriften installiert hat, verschieben sich Folienlayouts. Als PDF abgespeichert sieht Ihre Präsentation auf jedem Gerät garantiert perfekt aus.',
@@ -1070,17 +1071,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'DOC in PDF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie ältere Microsoft Word-Dokumente (DOC-Format) sicher und schnell in moderne, universell lesbare PDF-Dateien.',
-    titleDe: 'DOC in PDF umwandeln – ältere Word-Dokumente kostenlos konvertieren | CoolWave',
+    titleDe: 'DOC in PDF umwandeln – ältere Word-Dokumente kostenlos konvertieren | Datei Tools',
     metaDescriptionDe: 'Klassische DOC-Dateien (Word 97-2003) kostenlos und sicher in PDF umwandeln. Layouts und Texte universell sichern ohne Qualitätsverlust.',
     h1De: 'DOC in PDF umwandeln – ältere Word-Dateien sichern',
-    introDe: 'Ältere Word-Dateien mit der Endung .doc lassen sich auf modernen Smartphones oder ohne installiertes Microsoft Office oft nicht öffnen. Wandeln Sie Ihre Dokumente mit CoolWave in standardisierte PDF-Dateien um, die auf jedem Gerät gestochen scharf angezeigt werden.',
+    introDe: 'Ältere Word-Dateien mit der Endung .doc lassen sich auf modernen Smartphones oder ohne installiertes Microsoft Office oft nicht öffnen. Wandeln Sie Ihre Dokumente mit Datei Tools in standardisierte PDF-Dateien um, die auf jedem Gerät gestochen scharf angezeigt werden.',
     howItWorksDe: [
       { step: 1, title: 'DOC-Datei auswählen', text: 'Ziehen Sie Ihre .doc-Datei in das Upload-Feld oder wählen Sie sie aus.' },
       { step: 2, title: 'Konvertierung starten', text: 'Klicken Sie auf „In PDF umwandeln“ für eine präzise Umwandlung.' },
       { step: 3, title: 'PDF herunterladen', text: 'Laden Sie Ihr fertiges PDF-Dokument direkt herunter.' }
     ],
     faqDe: [
-      { question: 'Was ist der Unterschied zwischen DOC und DOCX?', answer: 'DOC ist das ältere Binärformat von Microsoft Word bis 2003. DOCX ist das moderne XML-basierte Standardformat ab Word 2007. CoolWave unterstützt beide Formate zuverlässig.' },
+      { question: 'Was ist der Unterschied zwischen DOC und DOCX?', answer: 'DOC ist das ältere Binärformat von Microsoft Word bis 2003. DOCX ist das moderne XML-basierte Standardformat ab Word 2007. Datei Tools unterstützt beide Formate zuverlässig.' },
       { question: 'Bleibt die Formatierung erhalten?', answer: 'Ja, Schriftarten, Absätze und Tabellenstrukturen werden so originalgetreu wie technisch möglich in das PDF übertragen.' }
     ],
     troubleshootingDe: [
@@ -1109,17 +1110,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'ODT in PDF umwandeln',
     shortDescriptionDe: 'Verwandeln Sie OpenOffice- und LibreOffice Writer-Dokumente (ODT) in universell kompatible PDF-Dateien.',
-    titleDe: 'ODT in PDF umwandeln – OpenOffice & LibreOffice Dateien kostenlos speichern | CoolWave',
+    titleDe: 'ODT in PDF umwandeln – OpenOffice & LibreOffice Dateien kostenlos speichern | Datei Tools',
     metaDescriptionDe: 'ODT-Textdokumente kostenlos online in PDF umwandeln. Kompatibel mit OpenOffice und LibreOffice Writer. Sofortiger Download ohne Installation.',
     h1De: 'ODT in PDF umwandeln – OpenDocument-Texte archivieren',
-    introDe: 'Dokumente im OpenDocument Text-Format (.odt) sind der Open-Source-Standard von LibreOffice und OpenOffice. Um sicherzustellen, dass Empfänger Ihr Dokument ohne spezielle Office-Suite öffnen können, konvertieren Sie ODT mit CoolWave in ein universelles PDF.',
+    introDe: 'Dokumente im OpenDocument Text-Format (.odt) sind der Open-Source-Standard von LibreOffice und OpenOffice. Um sicherzustellen, dass Empfänger Ihr Dokument ohne spezielle Office-Suite öffnen können, konvertieren Sie ODT mit Datei Tools in ein universelles PDF.',
     howItWorksDe: [
       { step: 1, title: 'ODT-Datei hochladen', text: 'Wählen Sie Ihre OpenDocument-Datei aus.' },
       { step: 2, title: 'In PDF überführen', text: 'Starten Sie den Konvertierungsauftrag mit einem Klick.' },
       { step: 3, title: 'Fertige PDF sichern', text: 'Speichern Sie das fertige PDF-Dokument auf Ihrem Gerät.' }
     ],
     faqDe: [
-      { question: 'Benötige ich LibreOffice auf meinem PC?', answer: 'Nein, CoolWave konvertiert ODT-Dokumente serverseitig in der Cloud – Sie benötigen keinerlei Software-Installation.' },
+      { question: 'Benötige ich LibreOffice auf meinem PC?', answer: 'Nein, Datei Tools konvertiert ODT-Dokumente serverseitig in der Cloud – Sie benötigen keinerlei Software-Installation.' },
       { question: 'Werden Tabellen und Aufzählungen übernommen?', answer: 'Ja, das Dokument wird strukturell analysiert und alle Absätze, Überschriften und Tabellen werden in das PDF gerendert.' }
     ],
     troubleshootingDe: [
@@ -1148,7 +1149,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'RTF in PDF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie Rich Text Format-Dateien (RTF) in kompakte, druckfertige PDF-Dokumente.',
-    titleDe: 'RTF in PDF umwandeln – Rich Text Dateien online konvertieren | CoolWave',
+    titleDe: 'RTF in PDF umwandeln – Rich Text Dateien online konvertieren | Datei Tools',
     metaDescriptionDe: 'RTF-Dokumente kostenlos online in PDF konvertieren. Formatierter Text, Tabellen und Schriftstile sauber als PDF speichern.',
     h1De: 'RTF in PDF umwandeln – Rich-Text universell lesbar machen',
     introDe: 'Das Rich Text Format (.rtf) wurde für den plattformübergreifenden Textaustausch entwickelt. Da verschiedene Texteditoren RTF unterschiedlich interpretieren, sorgt die Umwandlung in PDF für ein einheitliches, unveränderliches Erscheinungsbild.',
@@ -1158,7 +1159,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'PDF speichern', text: 'Laden Sie Ihre fehlerfrei gerenderte PDF-Datei herunter.' }
     ],
     faqDe: [
-      { question: 'Bleiben Textformatierungen wie Fett oder Kursiv erhalten?', answer: 'Ja, CoolWave analysiert die RTF-Steuerzeichen und überträgt alle Textstile sauber in das PDF.' }
+      { question: 'Bleiben Textformatierungen wie Fett oder Kursiv erhalten?', answer: 'Ja, Datei Tools analysiert die RTF-Steuerzeichen und überträgt alle Textstile sauber in das PDF.' }
     ],
     troubleshootingDe: [
       {
@@ -1186,17 +1187,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'TXT in PDF umwandeln',
     shortDescriptionDe: 'Verwandeln Sie einfache Textdateien (.txt) in professionell paginierte PDF-Dokumente mit sauberen Seitenrändern.',
-    titleDe: 'TXT in PDF umwandeln – Textdateien als druckreifes PDF sichern | CoolWave',
+    titleDe: 'TXT in PDF umwandeln – Textdateien als druckreifes PDF sichern | Datei Tools',
     metaDescriptionDe: 'Reine Textdateien (TXT) kostenlos in PDF konvertieren. Automatische Zeilenumbrüche, Randabstände und Seitenzahlen direkt im Browser.',
     h1De: 'TXT in PDF umwandeln – Textdokumente professionell formatieren',
-    introDe: 'Einfache Textdateien (.txt) haben keine feste Seitenstruktur oder Ränder. CoolWave setzt Ihre Textdateien professionell in DIN A4-Seiten mit sauberen Rändern, proportionalem Schriftsatz und automatischer Seitennummerierung.',
+    introDe: 'Einfache Textdateien (.txt) haben keine feste Seitenstruktur oder Ränder. Datei Tools setzt Ihre Textdateien professionell in DIN A4-Seiten mit sauberen Rändern, proportionalem Schriftsatz und automatischer Seitennummerierung.',
     howItWorksDe: [
       { step: 1, title: 'Textdatei hochladen', text: 'Wählen Sie Ihre .txt-Datei aus.' },
       { step: 2, title: 'PDF layouten', text: 'Starten Sie die Generierung mit optimaler Paginierung.' },
       { step: 3, title: 'Fertiges PDF herunterladen', text: 'Speichern Sie das druckreife PDF sofort ab.' }
     ],
     faqDe: [
-      { question: 'Werden lange Zeilen automatisch umgebrochen?', answer: 'Ja, CoolWave führt einen intelligenten Zeilenumbruch durch, sodass keine Wörter am Seitenrand abgeschnitten werden.' },
+      { question: 'Werden lange Zeilen automatisch umgebrochen?', answer: 'Ja, Datei Tools führt einen intelligenten Zeilenumbruch durch, sodass keine Wörter am Seitenrand abgeschnitten werden.' },
       { question: 'Gibt es eine Beschränkung der Textlänge?', answer: 'Sie können Textdateien mit bis zu mehreren tausend Zeilen und 50 MB problemlos konvertieren.' }
     ],
     troubleshootingDe: [
@@ -1225,10 +1226,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'HTML in PDF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie HTML-Dateien und Webcode in druckreife PDF-Dokumente mit Überschriften, Listen und Tabellen.',
-    titleDe: 'HTML in PDF umwandeln – Webseiten & HTML-Code als PDF speichern | CoolWave',
+    titleDe: 'HTML in PDF umwandeln – Webseiten & HTML-Code als PDF speichern | Datei Tools',
     metaDescriptionDe: 'HTML-Dateien kostenlos und sauber in druckfertige PDF-Dokumente umwandeln. Überschriften, Tabellen, Listen und Links erhalten.',
     h1De: 'HTML in PDF umwandeln – HTML-Dateien und Webcode als PDF drucken',
-    introDe: 'Konvertieren Sie HTML-Dokumente, Rechnungs-Templates oder Webseiten-Quelltexte in druckreife PDF-Dateien. CoolWave analysiert semantische Tags wie Überschriften, Absätze, Aufzählungen und Tabellenstrukturen für ein exzellentes Druckergebnis.',
+    introDe: 'Konvertieren Sie HTML-Dokumente, Rechnungs-Templates oder Webseiten-Quelltexte in druckreife PDF-Dateien. Datei Tools analysiert semantische Tags wie Überschriften, Absätze, Aufzählungen und Tabellenstrukturen für ein exzellentes Druckergebnis.',
     howItWorksDe: [
       { step: 1, title: 'HTML-Datei auswählen', text: 'Ziehen Sie Ihre .html- oder .htm-Datei in das Upload-Feld.' },
       { step: 2, title: 'In PDF rendern', text: 'Klicken Sie auf „In PDF umwandeln“.' },
@@ -1268,7 +1269,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'PDF in JPG umwandeln',
     shortDescriptionDe: 'Extrahieren Sie alle Seiten oder gezielte Abschnitte einer PDF-Datei als hochwertige JPG-Bilder.',
-    titleDe: 'PDF in JPG umwandeln – PDF-Seiten kostenlos als Bild speichern | CoolWave',
+    titleDe: 'PDF in JPG umwandeln – PDF-Seiten kostenlos als Bild speichern | Datei Tools',
     metaDescriptionDe: 'PDF-Seiten kostenlos online in JPG-Bilder umwandeln. Hohe Bildqualität, sofortiger Download ohne Upload zum Server.',
     h1De: 'PDF in JPG umwandeln – PDF-Seiten als Bilder sichern',
     introDe: 'Konvertieren Sie PDF-Seiten in universell teilbare JPG-Bilder. Ideal, um Dokumente in PowerPoint-Präsentationen, Websites oder Social-Media-Beiträge einzubinden.',
@@ -1307,7 +1308,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'JPG in PDF umwandeln',
     shortDescriptionDe: 'Verbinden Sie ein oder mehrere JPG-Fotos und Grafiken zu einem kompakten, sauberen PDF-Dokument.',
-    titleDe: 'JPG in PDF umwandeln – Bilder kostenlos zusammenfügen | CoolWave',
+    titleDe: 'JPG in PDF umwandeln – Bilder kostenlos zusammenfügen | Datei Tools',
     metaDescriptionDe: 'JPG-Bilder kostenlos online in PDF umwandeln. Mehrere Fotos zu einem Dokument zusammenfügen. 100% lokal im Browser.',
     h1De: 'JPG in PDF umwandeln – Fotos als Dokument sichern',
     introDe: 'Machen Sie aus Ihren Fotos, Scans und Belegen ein professionelles PDF. Sie können mehrere JPGs gleichzeitig hochladen und in der gewünschten Reihenfolge zu einem einzigen Gesamtdokument verbinden.',
@@ -1346,7 +1347,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'PDF in PNG umwandeln',
     shortDescriptionDe: 'Extrahieren Sie PDF-Seiten als verlustfreie PNG-Bilder mit scharfen Kanten und optionaler Transparenz.',
-    titleDe: 'PDF in PNG umwandeln – verlustfreie Bilder online | CoolWave',
+    titleDe: 'PDF in PNG umwandeln – verlustfreie Bilder online | Datei Tools',
     metaDescriptionDe: 'PDF kostenlos in PNG umwandeln. Gestochen scharfe Text- und Vektordarstellung ohne Kompressionsartefakte.',
     h1De: 'PDF in PNG umwandeln – verlustfrei & gestochen scharf',
     introDe: 'Während JPG kompressionsbedingt leichte Unschärfen an Texträndern erzeugt, liefert das PNG-Format eine 100% pixelgenaue und verlustfreie Abbildung Ihrer PDF-Dokumente. Perfekt für Grafiken, Logos und Textdokumente.',
@@ -1384,7 +1385,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PNG in PDF umwandeln',
     shortDescriptionDe: 'Wandeln Sie transparente PNG-Grafiken und Screenshots in ein kompaktes, druckreifes PDF um.',
-    titleDe: 'PNG in PDF umwandeln – Grafiken online als PDF speichern | CoolWave',
+    titleDe: 'PNG in PDF umwandeln – Grafiken online als PDF speichern | Datei Tools',
     metaDescriptionDe: 'PNG-Bilder kostenlos online in PDF umwandeln. Schnell, verlustfrei und direkt im Browser ohne Server-Upload.',
     h1De: 'PNG in PDF umwandeln – Grafiken & Screenshots sichern',
     introDe: 'Konvertieren Sie Screenshots, Diagramme und PNG-Grafiken in ein sauberes PDF-Dokument. Ideal für die Archivierung oder das Zusammenfassen mehrerer Bildnachweise.',
@@ -1399,7 +1400,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     troubleshootingDe: [
       {
         issue: 'Transparente Bereiche werden schwarz dargestellt.',
-        solution: 'CoolWave hinterlegt transparente PNGs automatisch mit einem neutralen weißen Hintergrund für optimalen Druck.'
+        solution: 'Datei Tools hinterlegt transparente PNGs automatisch mit einem neutralen weißen Hintergrund für optimalen Druck.'
       }
     ],
     privacyExplanationDe: '100% clientseitig im Browser.',
@@ -1422,7 +1423,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'JPG in PNG umwandeln',
     shortDescriptionDe: 'Wandeln Sie JPG-Fotos in das transparente, verlustfreie PNG-Format um.',
-    titleDe: 'JPG in PNG umwandeln – kostenlos online konvertieren | CoolWave',
+    titleDe: 'JPG in PNG umwandeln – kostenlos online konvertieren | Datei Tools',
     metaDescriptionDe: 'JPG-Dateien kostenlos online in PNG umwandeln. Verlustfreie Konvertierung direkt im Browser ohne Server-Upload.',
     h1De: 'JPG in PNG umwandeln – schnell & verlustfrei',
     introDe: 'Konvertieren Sie JPG-Bilder in das PNG-Format, um transparente Hintergründe nutzen zu können oder weitere Qualitätsverluste bei wiederholter Bearbeitung zu verhindern.',
@@ -1460,7 +1461,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'PNG in JPG umwandeln',
     shortDescriptionDe: 'Reduzieren Sie die Dateigröße großer PNG-Grafiken durch Umwandlung in das universelle JPG-Format.',
-    titleDe: 'PNG in JPG umwandeln – PNG kostenlos verkleinern | CoolWave',
+    titleDe: 'PNG in JPG umwandeln – PNG kostenlos verkleinern | Datei Tools',
     metaDescriptionDe: 'PNG-Bilder online kostenlos in JPG umwandeln. Deutliche Speicherplatzersparnis, schnelle Ladezeiten direkt im Browser.',
     h1De: 'PNG in JPG umwandeln – Speicherplatz sparen',
     introDe: 'PNG-Dateien können bei großen Fotos schnell mehrere Megabyte groß sein. Wandeln Sie diese in JPG um, um die Dateigröße um bis zu 80% zu reduzieren – ideal für E-Mail-Anhänge oder Web-Uploads.',
@@ -1498,7 +1499,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png', '.webp'],
     nameDe: 'Bild komprimieren',
     shortDescriptionDe: 'Verkleinern Sie JPG-, PNG- und WebP-Bilder interaktiv mit Schieberegler für Qualität und direkter Vorher/Nachher-Größenberechnung.',
-    titleDe: 'Bild komprimieren – Fotos kostenlos online verkleinern | CoolWave',
+    titleDe: 'Bild komprimieren – Fotos kostenlos online verkleinern | Datei Tools',
     metaDescriptionDe: 'Bilder online komprimieren: JPG, PNG und WebP ohne Qualitätsverlust verkleinern. Interaktiver Schieberegler mit Live-Vorschau.',
     h1De: 'Bild komprimieren – Dateigröße online verkleinern',
     introDe: 'Optimieren Sie Fotos für Webseiten, Online-Shops oder E-Mail-Anhänge. Mit dem interaktiven Qualitäts-Schieberegler bestimmen Sie die exakte Balance zwischen Dateigröße und Bildschärfe. Die Ersparnis in Megabyte und Prozent wird in Echtzeit berechnet.',
@@ -1537,7 +1538,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png', '.webp'],
     nameDe: 'Bildgröße ändern',
     shortDescriptionDe: 'Skalieren Sie Fotos und Grafiken auf exakte Pixelmaße (Breite × Höhe) oder reduzieren Sie die Maße prozentual mit festem Seitenverhältnis.',
-    titleDe: 'Bildgröße ändern – Fotos kostenlos online skalieren | CoolWave',
+    titleDe: 'Bildgröße ändern – Fotos kostenlos online skalieren | Datei Tools',
     metaDescriptionDe: 'Bildgröße online ändern: Exakte Pixelmaße eingeben oder Fotos prozentual verkleinern. Seitenverhältnis sperren und direkt herunterladen.',
     h1De: 'Bildgröße ändern – Fotos exakt skalieren',
     introDe: 'Passen Sie die Abmessungen Ihrer Fotos millimetergenau an. Geben Sie die gewünschte Breite oder Höhe in Pixeln ein – das Seitenverhältnis bleibt automatisch gesperrt, um Verzerrungen zu verhindern.',
@@ -1575,10 +1576,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'HEIC in JPG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie Apple iPhone-Fotos (HEIC, HEIF) in universell lesbare JPG-Bilder für Windows, Android und Webseiten.',
-    titleDe: 'HEIC in JPG umwandeln – iPhone Fotos kostenlos konvertieren | CoolWave',
+    titleDe: 'HEIC in JPG umwandeln – iPhone Fotos kostenlos konvertieren | Datei Tools',
     metaDescriptionDe: 'HEIC-Fotos vom Apple iPhone kostenlos online in JPG umwandeln. Öffnen Sie HEIC-Dateien problemlos auf Windows und Android.',
     h1De: 'HEIC in JPG umwandeln – iPhone Fotos universell lesbar machen',
-    introDe: 'Apples Standard-Fotoformat HEIC lässt sich auf vielen Windows-PCs, älteren Android-Smartphones oder Webportalen nicht öffnen. Mit CoolWave wandeln Sie HEIC- und HEIF-Bilder in Sekunden in standardisiertes JPG um – ohne Qualitätsverlust und mit allen Originalfarben.',
+    introDe: 'Apples Standard-Fotoformat HEIC lässt sich auf vielen Windows-PCs, älteren Android-Smartphones oder Webportalen nicht öffnen. Mit Datei Tools wandeln Sie HEIC- und HEIF-Bilder in Sekunden in standardisiertes JPG um – ohne Qualitätsverlust und mit allen Originalfarben.',
     howItWorksDe: [
       { step: 1, title: 'HEIC-Foto auswählen', text: 'Ziehen Sie Ihre iPhone-Aufnahmen (.heic) in das Tool.' },
       { step: 2, title: 'In JPG umwandeln', text: 'Starten Sie die Konvertierung.' },
@@ -1615,10 +1616,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'WebP in JPG umwandeln',
     shortDescriptionDe: 'Machen Sie aus WebP-Grafiken universell lesbare JPG-Bilder für Bildbetrachter und Bildbearbeitungsprogramme.',
-    titleDe: 'WebP in JPG umwandeln – modernes WebP kostenlos konvertieren | CoolWave',
+    titleDe: 'WebP in JPG umwandeln – modernes WebP kostenlos konvertieren | Datei Tools',
     metaDescriptionDe: 'WebP-Bilder kostenlos online in JPG umwandeln. Schnelle Konvertierung für Photoshop und Bildbetrachter ohne Server-Upload.',
     h1De: 'WebP in JPG umwandeln – Web-Grafiken universell öffnen',
-    introDe: 'Aus dem Internet heruntergeladene Grafiken liegen heute häufig im WebP-Format vor, das von älteren Grafikprogrammen oder Office-Suiten nicht unterstützt wird. Wandeln Sie WebP mit CoolWave in Sekunden in Standard-JPG um.',
+    introDe: 'Aus dem Internet heruntergeladene Grafiken liegen heute häufig im WebP-Format vor, das von älteren Grafikprogrammen oder Office-Suiten nicht unterstützt wird. Wandeln Sie WebP mit Datei Tools in Sekunden in Standard-JPG um.',
     howItWorksDe: [
       { step: 1, title: 'WebP wählen', text: 'Laden Sie Ihre WebP-Datei hoch.' },
       { step: 2, title: 'In JPG umwandeln', text: 'Klicken Sie auf den Button.' },
@@ -1653,7 +1654,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.webp'],
     nameDe: 'JPG in WebP umwandeln',
     shortDescriptionDe: 'Optimieren Sie Ihre Website-Ladezeiten mit dem modernen WebP-Format von Google.',
-    titleDe: 'JPG in WebP umwandeln – Ladezeiten für Websites optimieren | CoolWave',
+    titleDe: 'JPG in WebP umwandeln – Ladezeiten für Websites optimieren | Datei Tools',
     metaDescriptionDe: 'JPG kostenlos in WebP umwandeln. Bis zu 35% kleinere Dateigrößen bei gleicher Bildqualität für schnellere Webseiten.',
     h1De: 'JPG in WebP umwandeln – Google PageSpeed steigern',
     introDe: 'WebP ist Googles modernes Bildformat der Wahl für das Internet. Durch die Umwandlung Ihrer JPG-Fotos in WebP sparen Sie durchschnittlich 25% bis 35% an Dateigröße ein – bei exakt gleicher visueller Qualität. Dadurch lädt Ihre Website spürbar schneller.',
@@ -1692,10 +1693,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'Schwarz-Weiß Bildfilter',
     shortDescriptionDe: 'Konvertieren Sie Farbbilder mit einem Klick in stilvolle Schwarzweiß- und Graustufen-Grafiken.',
-    titleDe: 'Schwarz-Weiß Bildfilter online – Fotos in Graustufen umwandeln | CoolWave',
+    titleDe: 'Schwarz-Weiß Bildfilter online – Fotos in Graustufen umwandeln | Datei Tools',
     metaDescriptionDe: 'Fotos kostenlos online in Schwarzweiß und Graustufen umwandeln. Natürliche Luminanz-Berechnung direkt im Browser.',
     h1De: 'Schwarz-Weiß Bildfilter – Fotos in edle Graustufen verwandeln',
-    introDe: 'Verleihen Sie Ihren Fotos einen zeitlosen Schwarzweiß-Look. CoolWave nutzt die standardisierte Rec. 709 Luminanz-Formel, um Farbwerte in naturgetreue Helligkeitsstufen umzurechnen – ohne Farbverfälschungen.',
+    introDe: 'Verleihen Sie Ihren Fotos einen zeitlosen Schwarzweiß-Look. Datei Tools nutzt die standardisierte Rec. 709 Luminanz-Formel, um Farbwerte in naturgetreue Helligkeitsstufen umzurechnen – ohne Farbverfälschungen.',
     howItWorksDe: [
       { step: 1, title: 'Farbbild laden', text: 'Wählen Sie das umzuwandelnde Foto aus.' },
       { step: 2, title: 'In Schwarzweiß umwandeln', text: 'Klicken Sie auf den Filter-Button.' },
@@ -1730,7 +1731,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.webp'],
     nameDe: 'PNG in WebP umwandeln',
     shortDescriptionDe: 'Konvertieren Sie PNG-Bilder in WebP mit erhaltener Transparenz (Alpha-Kanal) und bis zu 30% geringerer Dateigröße.',
-    titleDe: 'PNG in WebP umwandeln – Transparenz erhalten & Ladezeit optimieren | CoolWave',
+    titleDe: 'PNG in WebP umwandeln – Transparenz erhalten & Ladezeit optimieren | Datei Tools',
     metaDescriptionDe: 'PNG kostenlos online in WebP umwandeln. Volle Alpha-Transparenz erhalten bei drastisch kleinerer Dateigröße für Webseiten.',
     h1De: 'PNG in WebP umwandeln – Transparente Grafiken fürs Web komprimieren',
     introDe: 'Das WebP-Format unterstützt wie PNG verlustfreie Kompression und Alpha-Transparenz, erzeugt jedoch bis zu 30% kleinere Dateien. Konvertieren Sie Logos, Grafiken und Illustrationen direkt im Browser in modernes WebP.',
@@ -1741,7 +1742,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     ],
     faqDe: [
       { question: 'Bleibt der transparente Hintergrund erhalten?', answer: 'Ja! WebP unterstützt volle Alpha-Transparenz exakt wie PNG.' },
-      { question: 'Wird die Bildqualität verringert?', answer: 'Nein, CoolWave nutzt qualitativ hochwertige Algorithmen für gestochen scharfe Kanten.' }
+      { question: 'Wird die Bildqualität verringert?', answer: 'Nein, Datei Tools nutzt qualitativ hochwertige Algorithmen für gestochen scharfe Kanten.' }
     ],
     troubleshootingDe: [
       { issue: 'Transparenz erscheint weiß in älteren Programmen.', solution: 'Manche alte Bildbearbeitungsprogramme zeigen WebP-Transparenz als weiß an. Im Browser und modernen Programmen ist der Hintergrund transparent.' }
@@ -1767,10 +1768,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'WebP in PNG umwandeln',
     shortDescriptionDe: 'Wandeln Sie WebP-Bilder in verlustfreies PNG mit vollem Erhalt aller transparenten Bereiche um.',
-    titleDe: 'WebP in PNG umwandeln – kostenlos mit Transparenz konvertieren | CoolWave',
+    titleDe: 'WebP in PNG umwandeln – kostenlos mit Transparenz konvertieren | Datei Tools',
     metaDescriptionDe: 'WebP online in PNG umwandeln. Volle Transparenz erhalten für Photoshop, InDesign und Office. Schnell, kostenlos und ohne Upload.',
     h1De: 'WebP in PNG umwandeln – kompatibles Bildformat mit Transparenz',
-    introDe: 'WebP-Bilder aus dem Internet lassen sich in vielen Grafikprogrammen oder Office-Dokumenten nicht direkt einfügen. Mit CoolWave wandeln Sie WebP in Sekunden in standardisiertes PNG um – mit transparentem Hintergrund.',
+    introDe: 'WebP-Bilder aus dem Internet lassen sich in vielen Grafikprogrammen oder Office-Dokumenten nicht direkt einfügen. Mit Datei Tools wandeln Sie WebP in Sekunden in standardisiertes PNG um – mit transparentem Hintergrund.',
     howItWorksDe: [
       { step: 1, title: 'WebP laden', text: 'Wählen Sie Ihre WebP-Datei aus.' },
       { step: 2, title: 'In PNG umwandeln', text: 'Klicken Sie auf den Konvertieren-Button.' },
@@ -1802,7 +1803,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'GIF in JPG umwandeln',
     shortDescriptionDe: 'Extrahieren Sie Standbilder aus GIF-Dateien und wandeln Sie diese in universell kompatibles JPG um.',
-    titleDe: 'GIF in JPG umwandeln – GIF-Grafiken in JPG konvertieren | CoolWave',
+    titleDe: 'GIF in JPG umwandeln – GIF-Grafiken in JPG konvertieren | Datei Tools',
     metaDescriptionDe: 'GIF kostenlos online in JPG umwandeln. Machen Sie GIF-Bilder kompatibel für alle Bildbetrachter und soziale Medien.',
     h1De: 'GIF in JPG umwandeln – Standbilder und Animationen konvertieren',
     introDe: 'GIF-Dateien sind oft farblich auf 256 Farben begrenzt und haben eine hohe Dateigröße. Wandeln Sie Standbilder aus GIFs in kompaktes, millionenfarbiges JPG um.',
@@ -1837,7 +1838,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'GIF in PNG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie GIF-Bilder in verlustfreies PNG mit sauberem transparentem Hintergrund.',
-    titleDe: 'GIF in PNG umwandeln – GIF kostenlos mit Transparenz konvertieren | CoolWave',
+    titleDe: 'GIF in PNG umwandeln – GIF kostenlos mit Transparenz konvertieren | Datei Tools',
     metaDescriptionDe: 'GIF online in PNG umwandeln. Volle Transparenz erhalten bei besserer Bildqualität und ohne Farbstufen-Artefakte.',
     h1De: 'GIF in PNG umwandeln – gestochen scharfe Grafiken mit Transparenz',
     introDe: 'Befreien Sie Ihre GIF-Grafiken von der 256-Farben-Begrenzung. Wandeln Sie GIFs in PNG um, um saubere Kanten und transparente Bereiche verlustfrei zu speichern.',
@@ -1872,10 +1873,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.gif'],
     nameDe: 'PNG in GIF umwandeln',
     shortDescriptionDe: 'Erstellen Sie aus Ihren PNG-Bildern standardkonforme GIF-Dateien für Foren, Webseiten und E-Mails.',
-    titleDe: 'PNG in GIF umwandeln – Grafiken online in GIF konvertieren | CoolWave',
+    titleDe: 'PNG in GIF umwandeln – Grafiken online in GIF konvertieren | Datei Tools',
     metaDescriptionDe: 'PNG kostenlos online in GIF umwandeln. Perfekt für Foren-Avatare, Newsletter und Retro-Webgrafiken.',
     h1De: 'PNG in GIF umwandeln – universelle GIF-Dateien erstellen',
-    introDe: 'Erstellen Sie aus PNG-Dateien standardkonforme GIF-Bilder. Der CoolWave Worker optimiert die Farbpalette für maximale Kompatibilität mit E-Mail-Clients und älteren Systemen.',
+    introDe: 'Erstellen Sie aus PNG-Dateien standardkonforme GIF-Bilder. Der Datei Tools Worker optimiert die Farbpalette für maximale Kompatibilität mit E-Mail-Clients und älteren Systemen.',
     howItWorksDe: [
       { step: 1, title: 'PNG auswählen', text: 'Laden Sie Ihre PNG-Datei hoch.' },
       { step: 2, title: 'In GIF umwandeln', text: 'Starten Sie die Konvertierung.' },
@@ -1895,6 +1896,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['gif-in-png-umwandeln', 'jpg-in-gif-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -1907,7 +1909,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.gif'],
     nameDe: 'JPG in GIF umwandeln',
     shortDescriptionDe: 'Wandeln Sie JPG-Fotos in standardisierte GIF-Dateien mit optimierter Farbpalette um.',
-    titleDe: 'JPG in GIF umwandeln – Fotos kostenlos in GIF konvertieren | CoolWave',
+    titleDe: 'JPG in GIF umwandeln – Fotos kostenlos in GIF konvertieren | Datei Tools',
     metaDescriptionDe: 'JPG online in GIF umwandeln. Optimierte Farbreduktion für universelle Kompatibilität in Foren und E-Mails.',
     h1De: 'JPG in GIF umwandeln – Fotos in kompakte GIF-Bilder konvertieren',
     introDe: 'Konvertieren Sie JPG-Aufnahmen in das bewährte GIF-Format. Unser Algorithmus berechnet eine hochwertige 256-Farben-Palette für natürliche Bildübergänge.',
@@ -1930,6 +1932,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['gif-in-jpg-umwandeln', 'png-in-gif-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -1942,7 +1945,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'SVG in PNG umwandeln',
     shortDescriptionDe: 'Rastern Sie Vektorgrafiken (SVG) in gestochen scharfe PNG-Bilder mit transparentem Hintergrund.',
-    titleDe: 'SVG in PNG umwandeln – Vektorgrafiken online in PNG rastern | CoolWave',
+    titleDe: 'SVG in PNG umwandeln – Vektorgrafiken online in PNG rastern | Datei Tools',
     metaDescriptionDe: 'SVG kostenlos online in PNG umwandeln. Transparenter Hintergrund und gestochen scharfe Kanten für Web und Print.',
     h1De: 'SVG in PNG umwandeln – Vektorgrafiken in Pixelbilder rastern',
     introDe: 'Wandeln Sie Vektorgrafiken (.svg) in hochauflösende PNG-Rasterbilder um. Transparenzen, Schriften und Farbverläufe werden pixelgenau gerendert – ideal für Social Media und Präsentationen.',
@@ -1978,7 +1981,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'SVG in JPG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie SVG-Vektoren in Standard-JPG-Bilder mit weißem oder gewähltem Hintergrund.',
-    titleDe: 'SVG in JPG umwandeln – Vektoren kostenlos in JPG konvertieren | CoolWave',
+    titleDe: 'SVG in JPG umwandeln – Vektoren kostenlos in JPG konvertieren | Datei Tools',
     metaDescriptionDe: 'SVG online in JPG umwandeln. Perfekt für Bildbetrachter, PowerPoint und Webseiten ohne SVG-Unterstützung.',
     h1De: 'SVG in JPG umwandeln – Vektorgrafiken als JPG speichern',
     introDe: 'Konvertieren Sie SVG-Vektorgrafiken in universell kompatible JPG-Bilder. Transparente Bereiche werden harmonisch mit weißem Hintergrund hinterlegt.',
@@ -2013,7 +2016,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.webp'],
     nameDe: 'SVG in WebP umwandeln',
     shortDescriptionDe: 'Rastern Sie SVG-Vektoren in modernes, hochkomprimiertes WebP mit voller Transparenz.',
-    titleDe: 'SVG in WebP umwandeln – Vektoren in modernes WebP rastern | CoolWave',
+    titleDe: 'SVG in WebP umwandeln – Vektoren in modernes WebP rastern | Datei Tools',
     metaDescriptionDe: 'SVG kostenlos in WebP umwandeln. Extrem kleine Dateigröße bei gestochen scharfen Details für Web-Entwickler.',
     h1De: 'SVG in WebP umwandeln – Vektoren für das Web optimieren',
     introDe: 'Erstellen Sie aus komplexen SVG-Dateien performante WebP-Grafiken. Reduziert die CPU-Last des Browsers beim Rendering von aufwendigen Vektor-Pfaden.',
@@ -2048,7 +2051,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.svg'],
     nameDe: 'PNG in SVG umwandeln (Vektorisieren)',
     shortDescriptionDe: 'Vektorisieren Sie Pixelbilder (PNG, JPG) in skalierbare SVG-Vektorpfade mit sauberen Kurven.',
-    titleDe: 'PNG in SVG umwandeln – Pixelbilder online vektorisieren | CoolWave',
+    titleDe: 'PNG in SVG umwandeln – Pixelbilder online vektorisieren | Datei Tools',
     metaDescriptionDe: 'PNG kostenlos online in SVG vektorisieren. Verwandeln Sie Logos und Grafiken in verlustfrei skalierbare Vektorgrafiken.',
     h1De: 'PNG in SVG umwandeln – Pixelbilder in Vektorgrafiken vektorisieren',
     introDe: 'Konvertieren Sie Rastergrafiken wie Logos, Icons, Skizzen und Strichzeichnungen in skalierbare Vektorgrafiken (.svg). Der integrierte Potrace-Vektorisierungs-Algorithmus erkennt Kanten und erzeugt saubere Bezier-Kurven.',
@@ -2072,6 +2075,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['svg-in-png-umwandeln', 'png-in-jpg-umwandeln'],
     icon: 'Vector',
     status: 'active',
@@ -2085,10 +2089,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'HEIC in PNG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie Apple iPhone HEIC-Fotos in verlustfreies PNG mit vollem Farbumfang.',
-    titleDe: 'HEIC in PNG umwandeln – iPhone Fotos verlustfrei in PNG | CoolWave',
+    titleDe: 'HEIC in PNG umwandeln – iPhone Fotos verlustfrei in PNG | Datei Tools',
     metaDescriptionDe: 'HEIC kostenlos in PNG umwandeln. Öffnen Sie Apple HEIC/HEIF-Fotos auf jedem PC in gestochen scharfer PNG-Qualität.',
     h1De: 'HEIC in PNG umwandeln – iPhone Fotos in verlustfreies PNG',
-    introDe: 'Öffnen und bearbeiten Sie Ihre iPhone-Fotos (.heic) ohne Kompressionsverluste. CoolWave dekodiert HEIC-Dateien und exportiert sie als universell kompatibles PNG.',
+    introDe: 'Öffnen und bearbeiten Sie Ihre iPhone-Fotos (.heic) ohne Kompressionsverluste. Datei Tools dekodiert HEIC-Dateien und exportiert sie als universell kompatibles PNG.',
     howItWorksDe: [
       { step: 1, title: 'HEIC-Datei wählen', text: 'Ziehen Sie Ihre iPhone-Aufnahme in das Tool.' },
       { step: 2, title: 'In PNG umwandeln', text: 'Starten Sie die Dekodierung.' },
@@ -2108,6 +2112,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['heic-in-jpg-umwandeln', 'heic-in-webp-umwandeln'],
     icon: 'Smartphone',
     status: 'active'
@@ -2120,7 +2125,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.webp'],
     nameDe: 'HEIC in WebP umwandeln',
     shortDescriptionDe: 'Konvertieren Sie iPhone-Fotos direkt in optimiertes WebP für Websites und Online-Galerien.',
-    titleDe: 'HEIC in WebP umwandeln – iPhone Fotos fürs Web optimieren | CoolWave',
+    titleDe: 'HEIC in WebP umwandeln – iPhone Fotos fürs Web optimieren | Datei Tools',
     metaDescriptionDe: 'HEIC online in WebP umwandeln. Kleinere Dateigrößen bei brillanten Farben für schnellen Web-Upload.',
     h1De: 'HEIC in WebP umwandeln – iPhone-Fotos für Webseiten optimieren',
     introDe: 'Möchten Sie iPhone-Fotos direkt auf Ihrer Website oder im Blog veröffentlichen? Wandeln Sie HEIC in das von Google empfohlene WebP-Format um.',
@@ -2133,7 +2138,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Spart WebP Speicherplatz?', answer: 'Ja, WebP komprimiert Fotos hocheffizient bei hervorragender visueller Qualität.' }
     ],
     troubleshootingDe: [
-      { issue: 'Farbverschiebung.', solution: 'CoolWave übernimmt das Farbprofil der Originalaufnahme automatisch.' }
+      { issue: 'Farbverschiebung.', solution: 'Datei Tools übernimmt das Farbprofil der Originalaufnahme automatisch.' }
     ],
     privacyExplanationDe: 'Verarbeitung im isolierten Server-Worker.',
     searchKeywordsDe: ['HEIC zu WebP', 'iPhone Foto WebP', 'HEIF in WebP'],
@@ -2143,6 +2148,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['heic-in-jpg-umwandeln', 'jpg-in-webp-umwandeln'],
     icon: 'Smartphone',
     status: 'active'
@@ -2155,10 +2161,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'AVIF in JPG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie moderne AVIF-Bilder in universell lesbares Standard-JPG für alle Geräte.',
-    titleDe: 'AVIF in JPG umwandeln – AVIF-Grafiken kostenlos in JPG | CoolWave',
+    titleDe: 'AVIF in JPG umwandeln – AVIF-Grafiken kostenlos in JPG | Datei Tools',
     metaDescriptionDe: 'AVIF online in JPG umwandeln. Öffnen Sie AVIF-Bilder auf älteren PCs, Photoshop und Bildbetrachtern.',
     h1De: 'AVIF in JPG umwandeln – modernes AVIF universell öffnen',
-    introDe: 'AVIF bietet herausragende Kompression, wird jedoch von vielen älteren Bildbetrachtern und Programmen noch nicht unterstützt. Mit CoolWave wandeln Sie AVIF in Sekunden in kompatibles JPG um.',
+    introDe: 'AVIF bietet herausragende Kompression, wird jedoch von vielen älteren Bildbetrachtern und Programmen noch nicht unterstützt. Mit Datei Tools wandeln Sie AVIF in Sekunden in kompatibles JPG um.',
     howItWorksDe: [
       { step: 1, title: 'AVIF hochladen', text: 'Wählen Sie Ihre AVIF-Datei aus.' },
       { step: 2, title: 'In JPG umwandeln', text: 'Starten Sie die Konvertierung.' },
@@ -2190,7 +2196,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'AVIF in PNG umwandeln',
     shortDescriptionDe: 'Wandeln Sie AVIF-Dateien in verlustfreies PNG mit transparenten Bereichen um.',
-    titleDe: 'AVIF in PNG umwandeln – AVIF mit Transparenz in PNG konvertieren | CoolWave',
+    titleDe: 'AVIF in PNG umwandeln – AVIF mit Transparenz in PNG konvertieren | Datei Tools',
     metaDescriptionDe: 'AVIF kostenlos in PNG umwandeln. Behalten Sie transparente Bildbereiche für Photoshop und Grafikdesign.',
     h1De: 'AVIF in PNG umwandeln – verlustfreies PNG mit Transparenz',
     introDe: 'Konvertieren Sie AVIF-Grafiken in kompatibles PNG. Transparente Ebenen bleiben exakt erhalten – ideal für Webdesigner und Illustratoren.',
@@ -2203,7 +2209,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Wird Transparenz unterstützt?', answer: 'Ja, AVIF-Transparenzen werden nahtlos in den PNG-Alpha-Kanal übertragen.' }
     ],
     troubleshootingDe: [
-      { issue: 'Kanten sind pixelig.', solution: 'CoolWave verwendet bikubische Interpolation für absolut glatte Konturen.' }
+      { issue: 'Kanten sind pixelig.', solution: 'Datei Tools verwendet bikubische Interpolation für absolut glatte Konturen.' }
     ],
     privacyExplanationDe: 'Sichere Konvertierung mit automatischer Bereinigung.',
     searchKeywordsDe: ['AVIF zu PNG', 'AVIF transparent', 'AVIF in PNG umwandeln'],
@@ -2225,7 +2231,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.webp'],
     nameDe: 'AVIF in WebP umwandeln',
     shortDescriptionDe: 'Konvertieren Sie AVIF-Bilder in universell von allen Browsern unterstütztes WebP.',
-    titleDe: 'AVIF in WebP umwandeln – universelle Web-Grafiken erstellen | CoolWave',
+    titleDe: 'AVIF in WebP umwandeln – universelle Web-Grafiken erstellen | Datei Tools',
     metaDescriptionDe: 'AVIF in WebP umwandeln. Maximale Browser-Kompatibilität bei minimaler Dateigröße für Webseiten.',
     h1De: 'AVIF in WebP umwandeln – Web-Kompatibilität maximieren',
     introDe: 'Während ältere Browser AVIF noch nicht immer darstellen, wird WebP von über 98% aller weltweiten Browser unterstützt. Wandeln Sie AVIF in WebP um.',
@@ -2260,10 +2266,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'TIFF in JPG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie schwere Scanner- und Druck-TIFFs in schlanke, universelle JPG-Fotos.',
-    titleDe: 'TIFF in JPG umwandeln – Scanner-TIFFs kostenlos in JPG | CoolWave',
+    titleDe: 'TIFF in JPG umwandeln – Scanner-TIFFs kostenlos in JPG | Datei Tools',
     metaDescriptionDe: 'TIFF online in JPG umwandeln. Verkleinern Sie große Scanner-Dateien drastisch für E-Mail und Web.',
     h1De: 'TIFF in JPG umwandeln – große Scanner-Dateien in kompaktes JPG',
-    introDe: 'Scanner und hochauflösende Kameras erzeugen oft riesige TIFF-Dateien von mehreren hundert Megabyte. Mit CoolWave komprimieren Sie TIFFs in Sekunden zu handlichen JPGs.',
+    introDe: 'Scanner und hochauflösende Kameras erzeugen oft riesige TIFF-Dateien von mehreren hundert Megabyte. Mit Datei Tools komprimieren Sie TIFFs in Sekunden zu handlichen JPGs.',
     howItWorksDe: [
       { step: 1, title: 'TIFF auswählen', text: 'Ziehen Sie Ihre TIFF-Datei (.tif, .tiff) in das Tool.' },
       { step: 2, title: 'In JPG umwandeln', text: 'Starten Sie die Umwandlung.' },
@@ -2273,7 +2279,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Werden CMYK-TIFFs unterstützt?', answer: 'Ja, CMYK-Farbprofile werden automatisch in sRGB für Bildschirme umgewandelt.' }
     ],
     troubleshootingDe: [
-      { issue: 'Die Datei ist sehr groß (>100 MB).', solution: 'CoolWave unterstützt Dateien bis 50 MB (kostenlos) und 500 MB (Pro).' }
+      { issue: 'Die Datei ist sehr groß (>100 MB).', solution: 'Datei Tools unterstützt Dateien bis 50 MB (kostenlos) und 500 MB (Pro).' }
     ],
     privacyExplanationDe: 'Sichere Verarbeitung auf isolierten Workern mit sofortiger Löschung.',
     searchKeywordsDe: ['TIFF zu JPG', 'TIF in JPG umwandeln', 'Scanner TIFF verkleinern'],
@@ -2283,6 +2289,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['tiff-in-png-umwandeln', 'jpg-in-tiff-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -2295,7 +2302,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'TIFF in PNG umwandeln',
     shortDescriptionDe: 'Wandeln Sie TIFF-Dateien in verlustfreies PNG mit transparenten Bereichen um.',
-    titleDe: 'TIFF in PNG umwandeln – TIFF verlustfrei in PNG konvertieren | CoolWave',
+    titleDe: 'TIFF in PNG umwandeln – TIFF verlustfrei in PNG konvertieren | Datei Tools',
     metaDescriptionDe: 'TIFF online in PNG umwandeln. Verlustfreie Konvertierung für Grafikprogramme und Webseiten.',
     h1De: 'TIFF in PNG umwandeln – verlustfreie Grafiken ohne Qualitätseinbußen',
     introDe: 'Konvertieren Sie TIFF-Dateien in standardisiertes PNG, ohne Bildinformationen zu verlieren. Perfekt für Druckgrafiken, Pläne und Transparenzen.',
@@ -2318,6 +2325,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['tiff-in-jpg-umwandeln', 'png-in-tiff-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -2330,7 +2338,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'BMP in JPG umwandeln',
     shortDescriptionDe: 'Konvertieren Sie unkomprimierte Windows-Bitmap-Dateien (BMP) in kompakte JPG-Fotos.',
-    titleDe: 'BMP in JPG umwandeln – Windows Bitmaps kostenlos in JPG | CoolWave',
+    titleDe: 'BMP in JPG umwandeln – Windows Bitmaps kostenlos in JPG | Datei Tools',
     metaDescriptionDe: 'BMP online in JPG umwandeln. Bis zu 90% Dateigröße sparen bei unkomprimierten Bitmaps.',
     h1De: 'BMP in JPG umwandeln – Windows Bitmaps drastisch verkleinern',
     introDe: 'Windows Bitmap (.bmp) speichert jeden Pixel unkomprimiert ab, was zu extrem großen Dateien führt. Konvertieren Sie BMPs in schlanke, internetfähige JPGs.',
@@ -2365,7 +2373,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'BMP in PNG umwandeln',
     shortDescriptionDe: 'Wandeln Sie unkomprimierte Bitmaps in verlustfrei komprimiertes PNG ohne jeden Qualitätsverlust um.',
-    titleDe: 'BMP in PNG umwandeln – Bitmaps verlustfrei in PNG konvertieren | CoolWave',
+    titleDe: 'BMP in PNG umwandeln – Bitmaps verlustfrei in PNG konvertieren | Datei Tools',
     metaDescriptionDe: 'BMP online in PNG umwandeln. 100% verlustfreie Kompression für Windows-Bitmaps direkt im Browser.',
     h1De: 'BMP in PNG umwandeln – verlustfreie Kompression für Bitmaps',
     introDe: 'Sparen Sie wertvollen Speicherplatz, ohne ein einziges Pixel an Bildqualität zu opfern. Die verlustfreie PNG-Kompression reduziert BMP-Dateien um bis zu 70%.',
@@ -2378,7 +2386,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Geht Bildqualität verloren?', answer: 'Nein! PNG ist ein mathematisch verlustfreies Format. Jeder Pixel bleibt exakt identisch.' }
     ],
     troubleshootingDe: [
-      { issue: 'Alte 16-Farben BMPs.', solution: 'CoolWave konvertiert alle Bitmap-Farbtiefen zuverlässig in modernes 32-Bit RGBA PNG.' }
+      { issue: 'Alte 16-Farben BMPs.', solution: 'Datei Tools konvertiert alle Bitmap-Farbtiefen zuverlässig in modernes 32-Bit RGBA PNG.' }
     ],
     privacyExplanationDe: '100% lokale Browser-Ausführung.',
     searchKeywordsDe: ['BMP zu PNG', 'Bitmap in PNG umwandeln', 'BMP verlustfrei komprimieren'],
@@ -2400,7 +2408,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'ICO in PNG umwandeln',
     shortDescriptionDe: 'Extrahieren Sie Favicons und Windows-Icons (.ico) in hochauflösende PNG-Bilder mit Transparenz.',
-    titleDe: 'ICO in PNG umwandeln – Windows Icons & Favicons in PNG | CoolWave',
+    titleDe: 'ICO in PNG umwandeln – Windows Icons & Favicons in PNG | Datei Tools',
     metaDescriptionDe: 'ICO kostenlos online in PNG umwandeln. Extrahieren Sie Icons und Favicons mit voller Transparenz.',
     h1De: 'ICO in PNG umwandeln – Favicons und Icons in PNG extrahieren',
     introDe: 'Extrahieren Sie aus Windows-Symboldateien (.ico) oder Website-Favicons gestochen scharfe PNG-Grafiken. Transparenzen und alle Farbinformationen bleiben erhalten.',
@@ -2435,7 +2443,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.ico'],
     nameDe: 'PNG in ICO umwandeln (Favicon Generator)',
     shortDescriptionDe: 'Erstellen Sie aus Ihren Logos und PNG-Grafiken standardkonforme Windows-Icons und Website-Favicons.',
-    titleDe: 'PNG in ICO umwandeln – Favicon online erstellen | CoolWave',
+    titleDe: 'PNG in ICO umwandeln – Favicon online erstellen | Datei Tools',
     metaDescriptionDe: 'PNG kostenlos online in ICO umwandeln. Erstellen Sie professionelle Favicons (favicon.ico) mit voller Transparenz.',
     h1De: 'PNG in ICO umwandeln – Favicon.ico und Windows-Icons erstellen',
     introDe: 'Erstellen Sie aus Ihren Grafiken und Logos offizielle Windows-Symboldateien (.ico) und Website-Favicons (`favicon.ico`). Unterstützt mehrere Standard-Größen und volle Alpha-Transparenz.',
@@ -2459,6 +2467,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['ico-in-png-umwandeln', 'jpg-in-ico-umwandeln', 'svg-in-ico-umwandeln'],
     icon: 'Sparkles',
     status: 'active',
@@ -2472,7 +2481,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.bmp'],
     nameDe: 'JPG in BMP umwandeln',
     shortDescriptionDe: 'Konvertieren Sie JPG-Bilder in das Standard-Bitmap-Format (BMP) für Spezialanwendungen und Industriegeräte.',
-    titleDe: 'JPG in BMP umwandeln – Fotos in Windows Bitmap konvertieren | CoolWave',
+    titleDe: 'JPG in BMP umwandeln – Fotos in Windows Bitmap konvertieren | Datei Tools',
     metaDescriptionDe: 'JPG online in BMP umwandeln. Standard Windows 24-Bit Bitmap für industrielle Bildverarbeitung und Altsysteme.',
     h1De: 'JPG in BMP umwandeln – Fotos in unkomprimierte Bitmaps konvertieren',
     introDe: 'Manche industrielle Maschinen, Steuerungssysteme oder ältere Windows-Programme erfordern strikt Bitmap-Dateien (.bmp). Konvertieren Sie JPGs in standardisiertes BMP.',
@@ -2495,6 +2504,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['bmp-in-jpg-umwandeln', 'png-in-bmp-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -2507,7 +2517,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.bmp'],
     nameDe: 'PNG in BMP umwandeln',
     shortDescriptionDe: 'Konvertieren Sie PNG-Dateien in standardkonforme Windows-Bitmaps (BMP).',
-    titleDe: 'PNG in BMP umwandeln – PNG kostenlos in Windows Bitmap | CoolWave',
+    titleDe: 'PNG in BMP umwandeln – PNG kostenlos in Windows Bitmap | Datei Tools',
     metaDescriptionDe: 'PNG online in BMP umwandeln. Schnelle Konvertierung für Windows-Spezialanwendungen.',
     h1De: 'PNG in BMP umwandeln – PNG in Windows-Bitmaps transformieren',
     introDe: 'Konvertieren Sie PNG-Bilder in das klassische Windows-Bitmap-Format (.bmp). Transparenzen werden auf Wunsch mit weißer Hintergrundfarbe hinterlegt.',
@@ -2530,6 +2540,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['bmp-in-png-umwandeln', 'jpg-in-bmp-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -2542,7 +2553,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.tiff'],
     nameDe: 'JPG in TIFF umwandeln',
     shortDescriptionDe: 'Wandeln Sie JPG-Bilder in hochwertige TIFF-Dateien für Druckvorstufe, OCR und Archivierung um.',
-    titleDe: 'JPG in TIFF umwandeln – Fotos in Druck-TIFF konvertieren | CoolWave',
+    titleDe: 'JPG in TIFF umwandeln – Fotos in Druck-TIFF konvertieren | Datei Tools',
     metaDescriptionDe: 'JPG online in TIFF umwandeln. Hochauflösendes TIFF-Format für Druckereien, Verlage und Archive.',
     h1De: 'JPG in TIFF umwandeln – Fotos in hochauflösende Druck-TIFFs konvertieren',
     introDe: 'Druckereien und Verlage fordern für Printprodukte häufig TIFF-Dateien. Wandeln Sie JPG-Fotos in standardisierte TIFF-Container um.',
@@ -2555,7 +2566,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Verbessert TIFF die Qualität des JPGs?', answer: 'TIFF verhindert weitere Kompressionsverluste bei der weiteren Bearbeitung, kann jedoch zuvor verloren gegangene Details nicht herbeizaubern.' }
     ],
     troubleshootingDe: [
-      { issue: 'Druckerei verlangt 300 DPI.', solution: 'CoolWave speichert das Bild mit vollständigen DPI-Metadaten.' }
+      { issue: 'Druckerei verlangt 300 DPI.', solution: 'Datei Tools speichert das Bild mit vollständigen DPI-Metadaten.' }
     ],
     privacyExplanationDe: 'Sichere Server-Worker Verarbeitung mit Sharp.',
     searchKeywordsDe: ['JPG zu TIFF', 'JPEG in TIF umwandeln', 'Druck TIFF erstellen'],
@@ -2565,6 +2576,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['tiff-in-jpg-umwandeln', 'png-in-tiff-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -2577,7 +2589,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.tiff'],
     nameDe: 'PNG in TIFF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie verlustfreie PNGs in druckfertige TIFF-Dateien mit vollem Farbumfang.',
-    titleDe: 'PNG in TIFF umwandeln – Grafiken verlustfrei in TIFF konvertieren | CoolWave',
+    titleDe: 'PNG in TIFF umwandeln – Grafiken verlustfrei in TIFF konvertieren | Datei Tools',
     metaDescriptionDe: 'PNG online in TIFF umwandeln. Ideal für Druckereien, Verlage und Archivierung ohne Qualitätsverlust.',
     h1De: 'PNG in TIFF umwandeln – verlustfreie Grafiken für den Druck vorbereiten',
     introDe: 'Wandeln Sie PNG-Grafiken und Illustrationen in das professionelle Druckformat TIFF (.tif) um. Volle Schärfe und Transparenzen bleiben erhalten.',
@@ -2600,6 +2612,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['tiff-in-png-umwandeln', 'jpg-in-tiff-umwandeln'],
     icon: 'Image',
     status: 'active'
@@ -2612,7 +2625,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.ico'],
     nameDe: 'JPG in ICO umwandeln',
     shortDescriptionDe: 'Erstellen Sie aus beliebigen JPG-Fotos Windows-Icons und Website-Favicons.',
-    titleDe: 'JPG in ICO umwandeln – Favicon online aus JPG erstellen | CoolWave',
+    titleDe: 'JPG in ICO umwandeln – Favicon online aus JPG erstellen | Datei Tools',
     metaDescriptionDe: 'JPG online in ICO umwandeln. Erstellen Sie favicon.ico für Ihre Homepage direkt im Browser.',
     h1De: 'JPG in ICO umwandeln – Favicons und Symboldateien erstellen',
     introDe: 'Konvertieren Sie JPG-Bilder in das Windows-Icon-Format (.ico). Perfekt als Website-Favicon für Ihren Webserver.',
@@ -2635,6 +2648,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['png-in-ico-umwandeln', 'ico-in-png-umwandeln'],
     icon: 'Sparkles',
     status: 'active'
@@ -2647,7 +2661,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.ico'],
     nameDe: 'SVG in ICO umwandeln',
     shortDescriptionDe: 'Erstellen Sie aus SVG-Vektorgrafiken gestochen scharfe Favicons mit transparentem Hintergrund.',
-    titleDe: 'SVG in ICO umwandeln – gestochen scharfe Favicons aus SVG | CoolWave',
+    titleDe: 'SVG in ICO umwandeln – gestochen scharfe Favicons aus SVG | Datei Tools',
     metaDescriptionDe: 'SVG online in ICO umwandeln. Verwandeln Sie Vektor-Logos in perfekte favicon.ico-Dateien.',
     h1De: 'SVG in ICO umwandeln – perfekte Favicons aus Vektorgrafiken',
     introDe: 'Die sauberste Art, ein Favicon zu erstellen: Rastern Sie Ihre Vektorgrafik (.svg) direkt in das Multi-Resolution-Icon-Format (.ico) mit voller Transparenz.',
@@ -2670,6 +2684,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     processingEngine: 'image-convert',
     browserCapable: false,
     serverRequired: true,
+    vercelAvailable: false,
     relatedTools: ['png-in-ico-umwandeln', 'svg-in-png-umwandeln'],
     icon: 'Sparkles',
     status: 'active'
@@ -2686,10 +2701,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf', '.docx', '.txt'],
     nameDe: 'OCR PDF Texterkennung',
     shortDescriptionDe: 'Extrahieren Sie Text aus gescannten PDFs und Bildern mit intelligenter Zeichenerkennung für 6 europäische Sprachen.',
-    titleDe: 'OCR PDF – gescannte Dokumente & Bilder in Text umwandeln | CoolWave',
+    titleDe: 'OCR PDF – gescannte Dokumente & Bilder in Text umwandeln | Datei Tools',
     metaDescriptionDe: 'Kostenlose Online-OCR für PDFs und Scans. Verwandeln Sie gescannte Seiten in durchsuchbare PDFs, Word-Dokumente oder Textdateien.',
     h1De: 'OCR PDF – Scans in durchsuchbare Dokumente verwandeln',
-    introDe: 'Konvertieren Sie gescannte PDF-Dokumente, Quittungen, Verträge oder Buchseiten in durchsuchbaren und editierbaren Text. Der isolierte CoolWave OCR-Worker verarbeitet mehrseitige Scans mit Kontrastoptimierung und unterstützt Deutsch, Englisch, Französisch, Spanisch, Italienisch und Niederländisch.',
+    introDe: 'Konvertieren Sie gescannte PDF-Dokumente, Quittungen, Verträge oder Buchseiten in durchsuchbaren und editierbaren Text. Der isolierte Datei Tools OCR-Worker verarbeitet mehrseitige Scans mit Kontrastoptimierung und unterstützt Deutsch, Englisch, Französisch, Spanisch, Italienisch und Niederländisch.',
     howItWorksDe: [
       { step: 1, title: 'Dokument auswählen', text: 'Laden Sie Ihre gescannte PDF-Datei oder Bilddatei hoch.' },
       { step: 2, title: 'Sprache & Format wählen', text: 'Wählen Sie die Dokumentsprache und das Zielformat (PDF, Word oder Text).' },
@@ -2703,7 +2718,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     troubleshootingDe: [
       {
         issue: 'Schlechte Erkennungsgenauigkeit bei schiefen Scans.',
-        solution: 'CoolWave führt eine automatische Kontrastspreizung durch. Bei sehr dunklen Fotos empfiehlt sich ein kontrastreicher neuer Scan mit guter Beleuchtung.'
+        solution: 'Datei Tools führt eine automatische Kontrastspreizung durch. Bei sehr dunklen Fotos empfiehlt sich ein kontrastreicher neuer Scan mit guter Beleuchtung.'
       }
     ],
     privacyExplanationDe: 'Isolierte temporäre Verarbeitung im Worker mit automatischer Löschung nach 15 Minuten.',
@@ -2733,10 +2748,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF durchsuchbar machen',
     shortDescriptionDe: 'Fügen Sie gescannten PDF-Seiten eine unsichtbare, markierbare Textebene hinzu, damit sie voll durchsuchbar werden.',
-    titleDe: 'PDF durchsuchbar machen – unsichtbare Textebene hinzufügen | CoolWave',
+    titleDe: 'PDF durchsuchbar machen – unsichtbare Textebene hinzufügen | Datei Tools',
     metaDescriptionDe: 'Gescannte PDFs kostenlos durchsuchbar machen. Fügen Sie eine durchsuchbare OCR-Textebene hinzu. Texte markieren, kopieren und mit Strg+F finden.',
     h1De: 'PDF durchsuchbar machen – Volltextsuche für gescannte PDFs',
-    introDe: 'Können Sie in Ihren gescannten PDFs nicht mit Strg+F suchen oder Textstellen markieren? Mit CoolWave machen Sie Ihre Scans volltextfähig. Unsere OCR-Engine legt eine unsichtbare, exakt ausgerichtete Textebene über die Original-Scanbilder, sodass das visuelle Layout perfekt erhalten bleibt.',
+    introDe: 'Können Sie in Ihren gescannten PDFs nicht mit Strg+F suchen oder Textstellen markieren? Mit Datei Tools machen Sie Ihre Scans volltextfähig. Unsere OCR-Engine legt eine unsichtbare, exakt ausgerichtete Textebene über die Original-Scanbilder, sodass das visuelle Layout perfekt erhalten bleibt.',
     howItWorksDe: [
       { step: 1, title: 'Scan hochladen', text: 'Ziehen Sie die undurchsuchbare PDF-Datei in den Arbeitsbereich.' },
       { step: 2, title: 'Sprache festlegen', text: 'Wählen Sie die Hauptsprache des Dokuments (z. B. Deutsch mit Umlauten).' },
@@ -2779,7 +2794,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.txt', '.docx'],
     nameDe: 'Bild zu Text',
     shortDescriptionDe: 'Extrahieren Sie gedruckten oder fotografierten Text aus JPG, PNG und WebP-Bildern in editierbaren Text.',
-    titleDe: 'Bild zu Text Konverter – Fotos & Grafiken online extrahieren | CoolWave',
+    titleDe: 'Bild zu Text Konverter – Fotos & Grafiken online extrahieren | Datei Tools',
     metaDescriptionDe: 'Bild in Text umwandeln kostenlos online. Extrahieren Sie Texte aus Fotos, Screenshots und Scans. Sofort kopieren oder als Datei speichern.',
     h1De: 'Bild zu Text – Fotos & Screenshots sofort extrahieren',
     introDe: 'Möchten Sie einen Text aus einem Screenshot, einem Foto von einem Schild oder einem abfotografierten Dokument nicht mühsam abtippen? Unser Bild-zu-Text Konverter analysiert Pixelstrukturen in Sekunden und liefert Ihnen sauberen Text zum Kopieren.',
@@ -2818,10 +2833,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'Scan zu PDF',
     shortDescriptionDe: 'Verwandeln Sie Papierscans und Smartphone-Fotos in saubere, standardisierte und durchsuchbare PDF-Dokumente.',
-    titleDe: 'Scan zu PDF – gescannte Dokumente in durchsuchbare PDFs umwandeln | CoolWave',
+    titleDe: 'Scan zu PDF – gescannte Dokumente in durchsuchbare PDFs umwandeln | Datei Tools',
     metaDescriptionDe: 'Scans und Fotos kostenlos in professionelle PDFs umwandeln. Mit automatischer Bildoptimierung und integrierter OCR-Texterkennung.',
     h1De: 'Scan zu PDF – professionelle Dokumente mit Texterkennung',
-    introDe: 'Verwandeln Sie lose Papierscans, Quittungen und mobile Kameraaufnahmen in einheitliche PDF-Dateien. CoolWave begradigt Kontraste, schärft Buchstaben und bettet auf Wunsch direkt eine durchsuchbare OCR-Textebene ein.',
+    introDe: 'Verwandeln Sie lose Papierscans, Quittungen und mobile Kameraaufnahmen in einheitliche PDF-Dateien. Datei Tools begradigt Kontraste, schärft Buchstaben und bettet auf Wunsch direkt eine durchsuchbare OCR-Textebene ein.',
     howItWorksDe: [
       { step: 1, title: 'Scan ablegen', text: 'Laden Sie Ihre Bilddatei oder den Scan hoch.' },
       { step: 2, title: 'Optimierung anwenden', text: 'Das Dokument wird automatisch kontrastoptimiert und per OCR verarbeitet.' },
@@ -2856,7 +2871,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.docx'],
     nameDe: 'Scan zu Word',
     shortDescriptionDe: 'Konvertieren Sie gescannte Papiere und PDFs direkt in bearbeitbare Microsoft Word-Dateien (.docx).',
-    titleDe: 'Scan zu Word – gescannte Dokumente in Word umwandeln | CoolWave',
+    titleDe: 'Scan zu Word – gescannte Dokumente in Word umwandeln | Datei Tools',
     metaDescriptionDe: 'Gescannte Dokumente und PDFs kostenlos in Word (.docx) umwandeln. Echte OCR-Texterkennung mit Absätzen und Formatierung.',
     h1De: 'Scan zu Word – gescannte Dokumente in Microsoft Word bearbeiten',
     introDe: 'Haben Sie ein gedrucktes Dokument oder einen Scan vorliegen und müssen diesen überarbeiten? Mit unserem Scan-zu-Word-Konverter wandeln Sie Bilddaten direkt in eine bearbeitbare .docx-Datei um. Die intelligente Texterkennung rekonstruiert Absätze, Überschriften und Fließtexte.',
@@ -2901,10 +2916,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf', '.docx', '.txt'],
     nameDe: 'PDF OCR',
     shortDescriptionDe: 'Hochpräzise optische Zeichenerkennung für gescannte PDF-Dokumente und Rechnungen.',
-    titleDe: 'PDF OCR online – Texterkennung für gescannte PDFs | CoolWave',
+    titleDe: 'PDF OCR online – Texterkennung für gescannte PDFs | Datei Tools',
     metaDescriptionDe: 'PDF OCR online kostenlos nutzen. Gescannte PDFs und Rechnungen sekundenschnell in Text, Word oder durchsuchbare PDFs umwandeln.',
     h1De: 'PDF OCR – intelligente Texterkennung für Ihre Dokumente',
-    introDe: 'Digitalisieren und archivieren Sie Ihre Belege, Rechnungen und Verträge mit modernster OCR-Technologie. CoolWave erkennt Schriftzeichen zuverlässig, filtert Scan-Rauschen heraus und liefert Ihnen durchsuchbare Ergebnisse in Sekunden.',
+    introDe: 'Digitalisieren und archivieren Sie Ihre Belege, Rechnungen und Verträge mit modernster OCR-Technologie. Datei Tools erkennt Schriftzeichen zuverlässig, filtert Scan-Rauschen heraus und liefert Ihnen durchsuchbare Ergebnisse in Sekunden.',
     howItWorksDe: [
       { step: 1, title: 'PDF laden', text: 'Ziehen Sie Ihre gescannte PDF-Datei in das Werkzeug.' },
       { step: 2, title: 'Sprache einstellen', text: 'Wählen Sie die Dokumentsprache.' },
@@ -2952,7 +2967,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild zuschneiden',
     shortDescriptionDe: 'Interaktiven Bildausschnitt per Drag-and-Drop festlegen – mit Seitenverhältnis-Presets und Drittel-Raster.',
-    titleDe: 'Bild zuschneiden – kostenlos online & präzise | CoolWave',
+    titleDe: 'Bild zuschneiden – kostenlos online & präzise | Datei Tools',
     metaDescriptionDe: 'Bild online kostenlos zuschneiden. Ausschnitt per Maus ziehen, Seitenverhältnis wählen (1:1, 16:9, 4:3). Keine Registrierung erforderlich.',
     h1De: 'Bild zuschneiden – Ausschnitt frei wählen',
     introDe: 'Ziehen Sie Ihren gewünschten Bildausschnitt direkt in der Vorschau auf – präzise auf den Pixel. Wählen Sie vordefinierte Seitenverhältnisse wie 1:1 (quadratisch), 16:9 (Widescreen) oder 4:3 (klassisch). Das Drittel-Raster hilft bei der Bildkomposition.',
@@ -2988,7 +3003,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild drehen',
     shortDescriptionDe: 'Bilder in 90-Grad-Schritten drehen oder präzise auf 0, 90, 180 und 270 Grad setzen – mit Live-Vorschau.',
-    titleDe: 'Bild drehen – kostenlos online in alle Richtungen | CoolWave',
+    titleDe: 'Bild drehen – kostenlos online in alle Richtungen | Datei Tools',
     metaDescriptionDe: 'Bild online kostenlos drehen. 90°, 180° oder 270° links/rechts, mit Echtzeit-Vorschau. Funktioniert auf PC, Tablet und Smartphone.',
     h1De: 'Bild drehen – in Sekunden online',
     introDe: 'Drehen Sie ein falsch ausgerichtetes Foto oder eine Grafik mit einem Klick in die richtige Position. Wählen Sie zwischen Links- und Rechtsdrehung in 90-Grad-Schritten oder setzen Sie einen genauen Zielwinkel. Die Vorschau aktualisiert sich sofort.',
@@ -3001,7 +3016,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Kann ich auch um 180 Grad drehen?', answer: 'Ja, klicken Sie einfach zweimal auf „90° rechts" oder wählen Sie direkt 180°.' }
     ],
     troubleshootingDe: [
-      { issue: 'Das Bild erscheint nach dem Drehen ausgeschnitten.', solution: 'Bei 90° und 270° werden Breite und Höhe getauscht. CoolWave berechnet die neue Leinwandgröße automatisch.' }
+      { issue: 'Das Bild erscheint nach dem Drehen ausgeschnitten.', solution: 'Bei 90° und 270° werden Breite und Höhe getauscht. Datei Tools berechnet die neue Leinwandgröße automatisch.' }
     ],
     privacyExplanationDe: '100% lokale Canvas-Verarbeitung.',
     searchKeywordsDe: ['Bild rotieren online', 'Foto drehen kostenlos', 'Bild seitwärts drehen'],
@@ -3023,7 +3038,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild spiegeln',
     shortDescriptionDe: 'Bilder horizontal oder vertikal spiegeln – für perfekte Spiegeleffekte und Selfie-Korrekturen.',
-    titleDe: 'Bild spiegeln – horizontal & vertikal kostenlos | CoolWave',
+    titleDe: 'Bild spiegeln – horizontal & vertikal kostenlos | Datei Tools',
     metaDescriptionDe: 'Bild online kostenlos spiegeln. Horizontal (links-rechts) oder vertikal (oben-unten) spiegeln. Mit Drehung kombinierbar. Kein Upload nötig.',
     h1De: 'Bild spiegeln – kostenlos online',
     introDe: 'Spiegeln Sie ein Bild in Echtzeit horizontal (links-rechts) oder vertikal (oben-unten) – ideal für Selfie-Korrekturen, Logodesigns oder kreative Spiegeleffekte. Die Transformationen können auch mit einer Drehung kombiniert werden.',
@@ -3033,7 +3048,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'Download', text: 'Gespiegeltes Bild sofort herunterladen.' }
     ],
     faqDe: [
-      { question: 'Kann ich gleichzeitig spiegeln und drehen?', answer: 'Ja! Das CoolWave-Tool erlaubt die Kombination von Drehung und Spiegelung in einem einzigen Schritt.' }
+      { question: 'Kann ich gleichzeitig spiegeln und drehen?', answer: 'Ja! Das Datei Tools-Tool erlaubt die Kombination von Drehung und Spiegelung in einem einzigen Schritt.' }
     ],
     troubleshootingDe: [],
     privacyExplanationDe: '100% clientseitige Bildverarbeitung.',
@@ -3056,7 +3071,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild schärfen',
     shortDescriptionDe: 'Unscharfe Fotos durch konvolutionsbasierten Schärfe-Filter verbessern – mit einstellbarer Stärke.',
-    titleDe: 'Bild schärfen – Fotos online schärfer machen | CoolWave',
+    titleDe: 'Bild schärfen – Fotos online schärfer machen | Datei Tools',
     metaDescriptionDe: 'Unscharf gewordene Fotos online kostenlos schärfen. Kantenschärfe mit präzisem Schärfe-Filter verbessern. Ergebnis in Echtzeit sehen.',
     h1De: 'Bild schärfen – Fotos online verbessern',
     introDe: 'Unscharfe Fotos durch einen konvolutionsbasierten Unschärfemaske-Algorithmus nachschärfen. Die Schärfestärke ist von 1 bis 10 frei einstellbar. Eine Echtzeit-Vorschau zeigt das Ergebnis sofort.',
@@ -3091,7 +3106,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild weichzeichnen',
     shortDescriptionDe: 'Gaussschen Weichzeichner auf Fotos anwenden – für Unschärfe-Effekte, Hintergrundunschärfe und Datenschutz.',
-    titleDe: 'Bild weichzeichnen – Gauß-Blur online kostenlos | CoolWave',
+    titleDe: 'Bild weichzeichnen – Gauß-Blur online kostenlos | Datei Tools',
     metaDescriptionDe: 'Bilder online kostenlos weichzeichnen. Gaussschen Blur-Radius einstellen. Ideal für Datenschutz, kreative Effekte und Hintergrundunschärfe.',
     h1De: 'Bild weichzeichnen – Gauß-Blur anwenden',
     introDe: 'Wenden Sie einen Gaussschen Weichzeichner auf Ihre Bilder an – für kreative Unschärfe-Effekte, Hintergrundverwischung oder zum Schützen sensibler Bereiche. Der Blur-Radius ist von 1 bis 30 Pixel einstellbar.',
@@ -3124,17 +3139,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild in Schwarzweiß umwandeln',
     shortDescriptionDe: 'Farbfotos in stimmungsvolle Schwarz-Weiß-Bilder umwandeln – mit Rec.709-Luminanz-Algorithmus für natürliche Graustufen.',
-    titleDe: 'Bild in Schwarzweiß umwandeln – kostenlos online | CoolWave',
+    titleDe: 'Bild in Schwarzweiß umwandeln – kostenlos online | Datei Tools',
     metaDescriptionDe: 'Farbbilder kostenlos in Schwarz-Weiß umwandeln. Professionelle Graustufen-Konvertierung mit Luminanz-Algorithmus. JPG, PNG, WebP – kein Upload nötig.',
     h1De: 'Bild in Schwarzweiß umwandeln',
-    introDe: 'Verleihen Sie Ihren Fotos einen zeitlosen Schwarz-Weiß-Look. CoolWave nutzt den Rec.709-Luminanz-Algorithmus (0.299R + 0.587G + 0.114B), der natürlichere Graustufen erzeugt als einfaches Averaging – besonders bei Hauttönen und Landschaften.',
+    introDe: 'Verleihen Sie Ihren Fotos einen zeitlosen Schwarz-Weiß-Look. Datei Tools nutzt den Rec.709-Luminanz-Algorithmus (0.299R + 0.587G + 0.114B), der natürlichere Graustufen erzeugt als einfaches Averaging – besonders bei Hauttönen und Landschaften.',
     howItWorksDe: [
       { step: 1, title: 'Farbbild laden', text: 'JPG, PNG oder WebP hochladen.' },
       { step: 2, title: 'Vorschau prüfen', text: 'Die Live-Vorschau zeigt das Schwarzweiß-Ergebnis.' },
       { step: 3, title: 'Speichern', text: 'Schwarzweiß-Bild herunterladen.' }
     ],
     faqDe: [
-      { question: 'Welcher Algorithmus wird verwendet?', answer: 'CoolWave nutzt die Rec.709-Luminanz-Formel, die an das menschliche Auge angepasst ist. Grün wird stärker gewichtet, da es die wahrgenommene Helligkeit am stärksten beeinflusst.' }
+      { question: 'Welcher Algorithmus wird verwendet?', answer: 'Datei Tools nutzt die Rec.709-Luminanz-Formel, die an das menschliche Auge angepasst ist. Grün wird stärker gewichtet, da es die wahrgenommene Helligkeit am stärksten beeinflusst.' }
     ],
     troubleshootingDe: [],
     privacyExplanationDe: '100% lokale Canvas-Verarbeitung.',
@@ -3157,10 +3172,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'Bild in Kreis zuschneiden',
     shortDescriptionDe: 'Fotos auf einen perfekten Kreis zuschneiden – ideal für Profilbilder, Avatare und runde Icons.',
-    titleDe: 'Bild in Kreis zuschneiden – Profilbild rund machen | CoolWave',
+    titleDe: 'Bild in Kreis zuschneiden – Profilbild rund machen | Datei Tools',
     metaDescriptionDe: 'Bild kostenlos in einen Kreis zuschneiden. Perfekte runde Profilbilder für LinkedIn, Instagram, WhatsApp und Co. Transparenter Hintergrund als PNG.',
     h1De: 'Bild in Kreis zuschneiden – runde Profilbilder',
-    introDe: 'Erstellen Sie perfekte runde Profilbilder für LinkedIn, Instagram, GitHub und alle anderen Plattformen. CoolWave schneidet Ihr Bild auf einen exakten Kreis zu und gibt das Ergebnis als PNG mit transparentem Hintergrund aus.',
+    introDe: 'Erstellen Sie perfekte runde Profilbilder für LinkedIn, Instagram, GitHub und alle anderen Plattformen. Datei Tools schneidet Ihr Bild auf einen exakten Kreis zu und gibt das Ergebnis als PNG mit transparentem Hintergrund aus.',
     howItWorksDe: [
       { step: 1, title: 'Foto laden', text: 'Beliebiges Foto oder Bild hochladen.' },
       { step: 2, title: 'Kreis positionieren', text: 'Der Kreis wird automatisch auf die kürzere Seite zentriert.' },
@@ -3191,7 +3206,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'DPI ändern',
     shortDescriptionDe: 'DPI-Wert (Punkte pro Inch) von JPEG- und PNG-Dateien für Druck und Veröffentlichung anpassen.',
-    titleDe: 'DPI ändern – Bildauflösung für Druck anpassen | CoolWave',
+    titleDe: 'DPI ändern – Bildauflösung für Druck anpassen | Datei Tools',
     metaDescriptionDe: 'DPI-Wert von Bildern kostenlos online ändern. 72 DPI für Web, 300 DPI für Profidruck. JPEG und PNG unterstützt. Metadaten direkt im Browser anpassen.',
     h1De: 'DPI ändern – Bildauflösung für Druck anpassen',
     introDe: 'Ändern Sie die Druckauflösung (DPI) Ihrer Bilder für unterschiedliche Ausgabemedien. 72 DPI für Web und Bildschirm, 150 DPI für Qualitätsdruck, 300 DPI für Profidruck und 600 DPI für Hochauflösungs-Druck. Die Pixelanzahl des Bildes bleibt unverändert – nur die Metadaten werden angepasst.',
@@ -3227,10 +3242,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild Metadaten entfernen',
     shortDescriptionDe: 'EXIF, IPTC, GPS-Daten und alle Metadaten aus JPEG und PNG löschen – für maximalen Datenschutz.',
-    titleDe: 'Bild Metadaten entfernen – EXIF löschen kostenlos | CoolWave',
+    titleDe: 'Bild Metadaten entfernen – EXIF löschen kostenlos | Datei Tools',
     metaDescriptionDe: 'EXIF-Daten aus Fotos kostenlos entfernen. GPS-Standort, Kameramodell und Aufnahmedatum aus JPEG und PNG löschen. 100% datenschutzkonform im Browser.',
     h1De: 'Bild Metadaten entfernen – EXIF & GPS löschen',
-    introDe: 'Bevor Sie Fotos online teilen, sollten Sie die enthaltenen Metadaten entfernen. EXIF-Daten können Ihren GPS-Standort, das genaue Aufnahmedatum, Kameramodell und weitere persönliche Informationen preisgeben. CoolWave löscht alle Metadaten in Sekunden.',
+    introDe: 'Bevor Sie Fotos online teilen, sollten Sie die enthaltenen Metadaten entfernen. EXIF-Daten können Ihren GPS-Standort, das genaue Aufnahmedatum, Kameramodell und weitere persönliche Informationen preisgeben. Datei Tools löscht alle Metadaten in Sekunden.',
     howItWorksDe: [
       { step: 1, title: 'Foto laden', text: 'JPEG oder PNG mit Metadaten hochladen.' },
       { step: 2, title: 'Prüfen', text: 'Überblick über enthaltene Metadatentypen.' },
@@ -3241,7 +3256,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { question: 'Bleibt die Bildqualität erhalten?', answer: 'Ja. Die Bilddaten bleiben vollständig unverändert. Nur die Metadaten-Blöcke werden entfernt.' }
     ],
     troubleshootingDe: [
-      { issue: 'Manche Tools zeigen nach dem Bereinigen noch Metadaten.', solution: 'Einige Metadatenfelder sind tief in den Bildpixeln verankert (Steganographie). CoolWave bereinigt alle standardkonformen EXIF/IPTC/XMP-Blöcke.' }
+      { issue: 'Manche Tools zeigen nach dem Bereinigen noch Metadaten.', solution: 'Einige Metadatenfelder sind tief in den Bildpixeln verankert (Steganographie). Datei Tools bereinigt alle standardkonformen EXIF/IPTC/XMP-Blöcke.' }
     ],
     privacyExplanationDe: 'Canvas-Re-Encoding im Browser entfernt alle Metadaten-Anhänge.',
     searchKeywordsDe: ['EXIF entfernen', 'GPS aus Foto loeschen', 'Metadaten Bild entfernen', 'Foto anonym machen'],
@@ -3264,7 +3279,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bildqualität optimieren',
     shortDescriptionDe: 'Helligkeit, Kontrast und Bildqualität professionell anpassen – mit Echtzeit-Vorschau.',
-    titleDe: 'Bildqualität optimieren – Helligkeit & Kontrast online | CoolWave',
+    titleDe: 'Bildqualität optimieren – Helligkeit & Kontrast online | Datei Tools',
     metaDescriptionDe: 'Bildqualität kostenlos verbessern. Helligkeit und Kontrast anpassen, Farben aufwerten. Echtzeit-Vorschau ohne Upload auf externe Server.',
     h1De: 'Bildqualität optimieren – Helligkeit & Kontrast anpassen',
     introDe: 'Optimieren Sie die Bildqualität Ihrer Fotos direkt im Browser. Passen Sie Helligkeit und Kontrast mit präzisen Schiebereglern an und sehen Sie das Ergebnis in Echtzeit in der Vorschau.',
@@ -3297,7 +3312,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg', '.png'],
     nameDe: 'Bild skalieren',
     shortDescriptionDe: 'Bilder prozentual oder auf exakte Pixelmaße skalieren – schnell und verlustfrei im Browser.',
-    titleDe: 'Bild skalieren – prozentual oder in Pixel | CoolWave',
+    titleDe: 'Bild skalieren – prozentual oder in Pixel | Datei Tools',
     metaDescriptionDe: 'Bild skalieren kostenlos online. Prozentual auf 25%, 50%, 75% verkleinern oder exakte Pixelmaße eingeben. Seitenverhältnis bleibt erhalten.',
     h1De: 'Bild skalieren – kostenlos und schnell',
     introDe: 'Skalieren Sie Bilder auf beliebige Prozent-Stufen oder geben Sie exakte Pixelabmessungen ein. Ideal für E-Mail-Anhänge, Web-Uploads und Social-Media-Anforderungen.',
@@ -3330,7 +3345,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png', '.ico'],
     nameDe: 'Favicon erstellen',
     shortDescriptionDe: 'Favicon in allen Standardgrößen (16×16 bis 512×512) aus einem Logo oder Bild generieren – als PNG-Paket oder ICO-Datei.',
-    titleDe: 'Favicon erstellen – alle Größen kostenlos generieren | CoolWave',
+    titleDe: 'Favicon erstellen – alle Größen kostenlos generieren | Datei Tools',
     metaDescriptionDe: 'Favicon kostenlos erstellen. Logo hochladen, Größen wählen (16x16 bis 512x512) und als ZIP-Paket oder ICO herunterladen. Für Browser, PWA und Apple.',
     h1De: 'Favicon erstellen – Browser, PWA & Apple Icons',
     introDe: 'Generieren Sie ein vollständiges Favicon-Paket für Ihre Website: Browser-Favicons (16×16, 32×32), Apple Touch Icon (180×180), PWA-Icons (192×192, 512×512) und weitere Größen. Inklusive fertigem HTML-Snippet und manifest.json.',
@@ -3341,7 +3356,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     ],
     faqDe: [
       { question: 'Welche Favicon-Größen benötige ich?', answer: '16×16 und 32×32 für Browser-Tabs, 180×180 für Apple-Geräte und 192×192 sowie 512×512 für Progressive Web Apps (PWA).' },
-      { question: 'Was ist der Unterschied zwischen ICO und PNG-Favicons?', answer: 'ICO ist das klassische Browser-Format. PNG wird von allen modernen Browsern unterstützt und liefert bessere Qualität. CoolWave empfiehlt PNG für moderne Websites.' }
+      { question: 'Was ist der Unterschied zwischen ICO und PNG-Favicons?', answer: 'ICO ist das klassische Browser-Format. PNG wird von allen modernen Browsern unterstützt und liefert bessere Qualität. Datei Tools empfiehlt PNG für moderne Websites.' }
     ],
     troubleshootingDe: [
       { issue: 'Das Favicon erscheint auf Apple-Geräten nicht.', solution: 'Stellen Sie sicher, dass der 180×180 Apple Touch Icon generiert und als <link rel="apple-touch-icon"> im HTML verlinkt ist.' }
@@ -3366,7 +3381,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.ico'],
     nameDe: 'ICO erstellen',
     shortDescriptionDe: 'Windows ICO-Dateien aus PNG oder JPG erstellen – für Desktop-Anwendungen und klassische Browser-Favicons.',
-    titleDe: 'ICO erstellen – Windows Icon aus PNG/JPG | CoolWave',
+    titleDe: 'ICO erstellen – Windows Icon aus PNG/JPG | Datei Tools',
     metaDescriptionDe: 'ICO-Datei kostenlos erstellen. PNG oder JPG in Windows .ico Format konvertieren. Mehrere Größen in einer ICO-Datei bündeln.',
     h1De: 'ICO erstellen – Windows .ico Icon generieren',
     introDe: 'Erstellen Sie Windows-Icons im ICO-Format für Desktop-Anwendungen, Browser-Favicons und Systemicons. Wählen Sie die gewünschten Größen und erhalten Sie eine fertige .ico-Datei.',
@@ -3403,12 +3418,12 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png'],
     nameDe: 'PSD in PNG umwandeln',
     shortDescriptionDe: 'Photoshop PSD-Dateien in PNG konvertieren – liest das zusammengesetzte Vorschau-Bild der PSD-Datei.',
-    titleDe: 'PSD in PNG umwandeln – Photoshop-Datei online konvertieren | CoolWave',
+    titleDe: 'PSD in PNG umwandeln – Photoshop-Datei online konvertieren | Datei Tools',
     metaDescriptionDe: 'PSD in PNG umwandeln kostenlos online. Photoshop PSD-Dateien als PNG exportieren. Keine Photoshop-Installation noetig.',
     h1De: 'PSD in PNG umwandeln – Photoshop-Datei exportieren',
-    introDe: 'Konvertieren Sie Adobe Photoshop PSD-Dateien in das universelle PNG-Format ohne Photoshop-Installation. CoolWave liest das zusammengesetzte Vorschau-Bild der PSD-Datei. Einzelne Ebenen oder Smartobjekte werden nicht separat exportiert.',
-    howItWorksDe: [{step:1,title:'PSD hochladen',text:'Laden Sie Ihre .psd-Datei hoch.'},{step:2,title:'Konvertieren',text:'CoolWave liest das zusammengesetzte Bild.'},{step:3,title:'PNG herunterladen',text:'Die fertige PNG-Datei herunterladen.'}],
-    faqDe: [{question:'Werden Ebenen exportiert?',answer:'Nein. CoolWave exportiert das flach zusammengesetzte Bild.'},{question:'Geht die Transparenz verloren?',answer:'Nein. PNG unterstuetzt Transparenz (Alphakanal).'}],
+    introDe: 'Konvertieren Sie Adobe Photoshop PSD-Dateien in das universelle PNG-Format ohne Photoshop-Installation. Datei Tools liest das zusammengesetzte Vorschau-Bild der PSD-Datei. Einzelne Ebenen oder Smartobjekte werden nicht separat exportiert.',
+    howItWorksDe: [{step:1,title:'PSD hochladen',text:'Laden Sie Ihre .psd-Datei hoch.'},{step:2,title:'Konvertieren',text:'Datei Tools liest das zusammengesetzte Bild.'},{step:3,title:'PNG herunterladen',text:'Die fertige PNG-Datei herunterladen.'}],
+    faqDe: [{question:'Werden Ebenen exportiert?',answer:'Nein. Datei Tools exportiert das flach zusammengesetzte Bild.'},{question:'Geht die Transparenz verloren?',answer:'Nein. PNG unterstuetzt Transparenz (Alphakanal).'}],
     troubleshootingDe: [{issue:'PSD-Datei kann nicht geoeffnet werden.',solution:'Stellen Sie sicher, dass die PSD-Datei nicht beschaedigt und kleiner als 50 MB ist.'}],
     privacyExplanationDe: 'Dateien werden serverseitig verarbeitet und automatisch geloescht.',
     searchKeywordsDe: ['PSD zu PNG','Photoshop in PNG','PSD exportieren'],
@@ -3429,7 +3444,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.jpg'],
     nameDe: 'PSD in JPG umwandeln',
     shortDescriptionDe: 'Photoshop PSD-Dateien ohne Photoshop in JPG konvertieren.',
-    titleDe: 'PSD in JPG umwandeln – Photoshop PSD exportieren | CoolWave',
+    titleDe: 'PSD in JPG umwandeln – Photoshop PSD exportieren | Datei Tools',
     metaDescriptionDe: 'PSD-Datei kostenlos in JPG umwandeln. Photoshop-Dokument als JPEG exportieren ohne Software-Installation.',
     h1De: 'PSD in JPG umwandeln',
     introDe: 'Exportieren Sie das zusammengesetzte Bild einer Photoshop PSD-Datei als JPEG. Transparente Bereiche werden automatisch auf weissem Hintergrund ausgefuellt.',
@@ -3455,7 +3470,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.webp'],
     nameDe: 'PSD in WebP umwandeln',
     shortDescriptionDe: 'Photoshop PSD-Dateien in das moderne WebP-Format konvertieren.',
-    titleDe: 'PSD in WebP umwandeln – Photoshop fuer Web optimieren | CoolWave',
+    titleDe: 'PSD in WebP umwandeln – Photoshop fuer Web optimieren | Datei Tools',
     metaDescriptionDe: 'PSD in WebP konvertieren kostenlos. Photoshop-Dateien als WebP exportieren fuer moderne Websites.',
     h1De: 'PSD in WebP umwandeln',
     introDe: 'Konvertieren Sie Photoshop PSD-Dateien in das moderne WebP-Format. WebP bietet bis zu 30% kleinere Dateien als PNG bei gleicher Qualitaet.',
@@ -3481,12 +3496,12 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.psd'],
     nameDe: 'PNG in PSD umwandeln',
     shortDescriptionDe: 'PNG-Bild als PSD-Datei exportieren – erzeugt eine flache PSD ohne editierbare Photoshop-Ebenen.',
-    titleDe: 'PNG in PSD umwandeln – Bild als Photoshop-Datei speichern | CoolWave',
+    titleDe: 'PNG in PSD umwandeln – Bild als Photoshop-Datei speichern | Datei Tools',
     metaDescriptionDe: 'PNG kostenlos in PSD umwandeln. Erzeugt eine PSD-Datei mit dem Bild als flache Ebene. Keine editierbaren Photoshop-Ebenen.',
     h1De: 'PNG in PSD umwandeln – flache PSD erstellen',
     introDe: 'Exportieren Sie ein PNG-Bild als Adobe Photoshop PSD-Datei. Wichtiger Hinweis: Die erzeugte PSD enthaelt das Bild als einzelne flache Ebene (Flat PSD). Es werden KEINE editierbaren Photoshop-Ebenen oder Masken erstellt.',
     howItWorksDe: [{step:1,title:'PNG hochladen',text:'PNG-Datei auswaehlen.'},{step:2,title:'PSD erstellen',text:'Bild wird in eine flache PSD-Datei geschrieben.'},{step:3,title:'PSD herunterladen',text:'PSD-Datei in Photoshop oeffnen.'}],
-    faqDe: [{question:'Kann ich die PSD in Photoshop bearbeiten?',answer:'Ja! Die PSD-Datei kann in Photoshop geoeffnet werden. Da sie nur eine flache Ebene enthaelt, koennen Sie in Photoshop neue Ebenen hinzufuegen.'},{question:'Werden separate Ebenen erstellt?',answer:'Nein. CoolWave erstellt eine einzige zusammengefasste Ebene.'}],
+    faqDe: [{question:'Kann ich die PSD in Photoshop bearbeiten?',answer:'Ja! Die PSD-Datei kann in Photoshop geoeffnet werden. Da sie nur eine flache Ebene enthaelt, koennen Sie in Photoshop neue Ebenen hinzufuegen.'},{question:'Werden separate Ebenen erstellt?',answer:'Nein. Datei Tools erstellt eine einzige zusammengefasste Ebene.'}],
     troubleshootingDe: [{issue:'PSD oeffnet sich nicht in Photoshop.',solution:'Stellen Sie sicher, dass Sie eine aktuelle Version von Photoshop oder GIMP verwenden.'}],
     privacyExplanationDe: 'Serverseitige Verarbeitung mit automatischer Loeschung.',
     searchKeywordsDe: ['PNG zu PSD','PNG Photoshop Export'],
@@ -3507,7 +3522,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.psd'],
     nameDe: 'JPG in PSD umwandeln',
     shortDescriptionDe: 'JPEG-Foto als PSD-Datei exportieren – flache PSD fuer Photoshop, ohne Ebenentrennung.',
-    titleDe: 'JPG in PSD umwandeln – JPEG als Photoshop-Datei speichern | CoolWave',
+    titleDe: 'JPG in PSD umwandeln – JPEG als Photoshop-Datei speichern | Datei Tools',
     metaDescriptionDe: 'JPG kostenlos in PSD umwandeln. JPEG-Foto als Adobe Photoshop PSD exportieren. Flache PSD ohne Layer-Stack.',
     h1De: 'JPG in PSD umwandeln',
     introDe: 'Konvertieren Sie ein JPEG-Foto in eine Adobe Photoshop PSD-Datei. Die Datei kann in Photoshop geoeffnet werden. Hinweis: Die erzeugte PSD enthaelt das Bild als einzelne flache Ebene.',
@@ -3533,12 +3548,12 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'SVG in PDF umwandeln',
     shortDescriptionDe: 'SVG-Vektorgrafiken in PDF-Dateien umwandeln – fuer Druck und professionelle Weitergabe.',
-    titleDe: 'SVG in PDF umwandeln – Vektorgrafik als PDF exportieren | CoolWave',
+    titleDe: 'SVG in PDF umwandeln – Vektorgrafik als PDF exportieren | Datei Tools',
     metaDescriptionDe: 'SVG kostenlos in PDF umwandeln. SVG wird auf 150 DPI gerendert und in PDF eingebettet.',
     h1De: 'SVG in PDF umwandeln',
     introDe: 'Konvertieren Sie SVG-Vektorgrafiken in PDF-Dateien. Hinweis: Die SVG-Vektorpfade bleiben im PDF nicht als skalierbare Vektoren erhalten – der Prozess erfordert Rasterung.',
     howItWorksDe: [{step:1,title:'SVG hochladen',text:'SVG-Datei auswaehlen.'},{step:2,title:'Rendern',text:'SVG wird auf 150 DPI gerendert und in PDF eingebettet.'},{step:3,title:'PDF herunterladen',text:'Fertige PDF-Datei speichern.'}],
-    faqDe: [{question:'Bleiben SVG-Vektoren im PDF erhalten?',answer:'Nein. CoolWave rastert die SVG-Grafik fuer die PDF-Ausgabe.'}],
+    faqDe: [{question:'Bleiben SVG-Vektoren im PDF erhalten?',answer:'Nein. Datei Tools rastert die SVG-Grafik fuer die PDF-Ausgabe.'}],
     troubleshootingDe: [{issue:'SVG erscheint verzerrt.',solution:'Stellen Sie sicher, dass die SVG-Datei absolute Maesse hat.'}],
     privacyExplanationDe: 'Serverseitige Verarbeitung mit automatischer Loeschung.',
     searchKeywordsDe: ['SVG in PDF','Vektorgrafik als PDF','SVG PDF Export'],
@@ -3559,7 +3574,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.svg'],
     nameDe: 'PDF in SVG umwandeln',
     shortDescriptionDe: 'PDF-Seiten als SVG exportieren – Ergebnis enthaelt Rasterbild, keine extrahierten Vektordaten.',
-    titleDe: 'PDF in SVG umwandeln – PDF als SVG exportieren | CoolWave',
+    titleDe: 'PDF in SVG umwandeln – PDF als SVG exportieren | Datei Tools',
     metaDescriptionDe: 'PDF in SVG umwandeln kostenlos. Erste PDF-Seite als SVG-Datei exportieren. Hinweis: Keine echten Vektordaten werden extrahiert.',
     h1De: 'PDF in SVG umwandeln',
     introDe: 'Exportieren Sie die erste Seite eines PDFs als SVG-Datei. Wichtiger Hinweis: Echte PDF-Vektordaten koennen nicht in editierbare SVG-Elemente extrahiert werden. Fuer echte Vektorextraktion ist Inkscape oder Adobe Acrobat Pro erforderlich.',
@@ -3585,12 +3600,12 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.svg'],
     nameDe: 'EPS in SVG umwandeln',
     shortDescriptionDe: 'EPS-Vektorgrafiken in SVG umwandeln – erfordert Ghostscript auf dem Server.',
-    titleDe: 'EPS in SVG umwandeln – Encapsulated PostScript konvertieren | CoolWave',
+    titleDe: 'EPS in SVG umwandeln – Encapsulated PostScript konvertieren | Datei Tools',
     metaDescriptionDe: 'EPS in SVG umwandeln kostenlos. Encapsulated PostScript Dateien in SVG konvertieren. Serverbasiert ueber Ghostscript.',
     h1De: 'EPS in SVG umwandeln',
     introDe: 'Konvertieren Sie EPS-Dateien (Encapsulated PostScript) in SVG. Die Konvertierung erfolgt serverseitig ueber Ghostscript. Hinweis: Falls Ghostscript nicht verfuegbar ist, wird eine klare Fehlermeldung mit Alternativen angezeigt.',
     howItWorksDe: [{step:1,title:'EPS hochladen',text:'EPS-Datei hochladen.'},{step:2,title:'Konvertieren',text:'Ghostscript rendert die EPS-Datei.'},{step:3,title:'SVG herunterladen',text:'Konvertierte SVG-Datei speichern.'}],
-    faqDe: [{question:'Was ist eine EPS-Datei?',answer:'EPS (Encapsulated PostScript) ist ein Vektordateiformat, haeufig fuer Logos verwendet.'},{question:'Was passiert wenn Ghostscript nicht verfuegbar ist?',answer:'CoolWave zeigt eine klare Fehlermeldung an.'}],
+    faqDe: [{question:'Was ist eine EPS-Datei?',answer:'EPS (Encapsulated PostScript) ist ein Vektordateiformat, haeufig fuer Logos verwendet.'},{question:'Was passiert wenn Ghostscript nicht verfuegbar ist?',answer:'Datei Tools zeigt eine klare Fehlermeldung an.'}],
     troubleshootingDe: [{issue:'Fehler: EPS konnte nicht verarbeitet werden.',solution:'Konvertieren Sie die EPS-Datei mit Inkscape oder Illustrator in PDF oder PNG und laden Sie das dann hoch.'}],
     privacyExplanationDe: 'Dateien werden nach der Verarbeitung automatisch geloescht.',
     searchKeywordsDe: ['EPS zu SVG','EPS konvertieren online','PostScript SVG'],
@@ -3611,7 +3626,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'EPS in PDF umwandeln',
     shortDescriptionDe: 'EPS-Vektordateien in PDF umwandeln – serverbasiert fuer druckfertige PDF-Ausgabe.',
-    titleDe: 'EPS in PDF umwandeln – Encapsulated PostScript als PDF | CoolWave',
+    titleDe: 'EPS in PDF umwandeln – Encapsulated PostScript als PDF | Datei Tools',
     metaDescriptionDe: 'EPS kostenlos in PDF umwandeln. EPS-Dateien ueber Ghostscript in druckfertige PDF konvertieren.',
     h1De: 'EPS in PDF umwandeln – druckfertige PDF aus EPS',
     introDe: 'Wandeln Sie EPS-Vektordateien in universelle PDF-Dokumente um. Ideal fuer Druckereien und Designworkflows, die PDF als Austauschformat erfordern.',
@@ -3638,10 +3653,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.docx'],
     nameDe: 'DOC in DOCX umwandeln',
     shortDescriptionDe: 'Alte Word 97-2003 Dokumente (.doc) in das moderne Microsoft Word DOCX-Format umwandeln.',
-    titleDe: 'DOC in DOCX umwandeln – Altes Word in modernes DOCX konvertieren | CoolWave',
+    titleDe: 'DOC in DOCX umwandeln – Altes Word in modernes DOCX konvertieren | Datei Tools',
     metaDescriptionDe: 'Alte .doc Word-Dateien kostenlos und sicher in modernes .docx umwandeln. Volle Kompatibilität mit aktuellem Microsoft Word, LibreOffice und Google Docs.',
     h1De: 'DOC in DOCX umwandeln – Word-Dokumente modernisieren',
-    introDe: 'Alte Word-Dateien im binären DOC-Format (Word 97-2003) lassen sich in modernen Programmen oder mobilen Apps oft nur eingeschränkt bearbeiten. CoolWave konvertiert Ihre DOC-Dateien blitzschnell und verlustfrei in das aktuelle OpenXML-Format DOCX.',
+    introDe: 'Alte Word-Dateien im binären DOC-Format (Word 97-2003) lassen sich in modernen Programmen oder mobilen Apps oft nur eingeschränkt bearbeiten. Datei Tools konvertiert Ihre DOC-Dateien blitzschnell und verlustfrei in das aktuelle OpenXML-Format DOCX.',
     howItWorksDe: [
       { step: 1, title: 'DOC-Datei hochladen', text: 'Ziehen Sie Ihre .doc-Datei in den Konverter oder wählen Sie sie aus.' },
       { step: 2, title: 'Konvertierung durchführen', text: 'Klicken Sie auf „DOC in DOCX umwandeln“ zur Konvertierung in das OpenXML-Format.' },
@@ -3674,10 +3689,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.doc'],
     nameDe: 'DOCX in DOC umwandeln',
     shortDescriptionDe: 'Moderne DOCX-Dateien in das klassische Word 97-2003 DOC-Format abwärtskompatibel umwandeln.',
-    titleDe: 'DOCX in DOC umwandeln – Word-Dateien abwärtskompatibel speichern | CoolWave',
+    titleDe: 'DOCX in DOC umwandeln – Word-Dateien abwärtskompatibel speichern | Datei Tools',
     metaDescriptionDe: 'DOCX-Dokumente kostenlos online in klassisches DOC (Word 97-2003) konvertieren. Maximale Kompatibilität für ältere Office-Systeme.',
     h1De: 'DOCX in DOC umwandeln – Für ältere Word-Versionen',
-    introDe: 'Sie müssen ein Word-Dokument für ältere Computer, Behörden-Schnittstellen oder archivierte Software im klassischen .doc-Format bereitstellen? CoolWave exportiert moderne DOCX-Dateien in das abwärtskompatible Format.',
+    introDe: 'Sie müssen ein Word-Dokument für ältere Computer, Behörden-Schnittstellen oder archivierte Software im klassischen .doc-Format bereitstellen? Datei Tools exportiert moderne DOCX-Dateien in das abwärtskompatible Format.',
     howItWorksDe: [
       { step: 1, title: 'DOCX-Datei auswählen', text: 'Laden Sie Ihre .docx-Datei hoch.' },
       { step: 2, title: 'In DOC konvertieren', text: 'Starten Sie die Konvertierung mit einem Klick.' },
@@ -3710,7 +3725,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.docx'],
     nameDe: 'ODT in DOCX umwandeln',
     shortDescriptionDe: 'OpenOffice- und LibreOffice-Writer-Dokumente (.odt) in Microsoft-Word-Dateien (.docx) umwandeln.',
-    titleDe: 'ODT in DOCX umwandeln – OpenDocument in Word konvertieren | CoolWave',
+    titleDe: 'ODT in DOCX umwandeln – OpenDocument in Word konvertieren | Datei Tools',
     metaDescriptionDe: 'ODT kostenlos online in DOCX umwandeln. OpenDocument-Dateien aus LibreOffice und OpenOffice direkt in Microsoft-Word-Dokumente konvertieren.',
     h1De: 'ODT in DOCX umwandeln – OpenDocument zu Word',
     introDe: 'Haben Sie ein Textdokument aus LibreOffice oder OpenOffice erhalten und möchten es in Microsoft Word bearbeiten? Wandeln Sie ODT-Dokumente sauber und verlustfrei in das standardmäßige DOCX-Format um.',
@@ -3743,7 +3758,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.odt'],
     nameDe: 'DOCX in ODT umwandeln',
     shortDescriptionDe: 'Microsoft-Word-Dokumente (.docx) in das freie OpenDocument-Format (.odt) konvertieren.',
-    titleDe: 'DOCX in ODT umwandeln – Word in OpenDocument Writer konvertieren | CoolWave',
+    titleDe: 'DOCX in ODT umwandeln – Word in OpenDocument Writer konvertieren | Datei Tools',
     metaDescriptionDe: 'DOCX-Dateien kostenlos in ODT umwandeln. Perfekt für OpenOffice- und LibreOffice-Writer-Nutzer. Sicher und ohne Software-Installation.',
     h1De: 'DOCX in ODT umwandeln – Für OpenOffice & LibreOffice',
     introDe: 'Konvertieren Sie Word-Dokumente (.docx) in das herstellerunabhängige OpenDocument-Format (.odt), um sie nahtlos in LibreOffice Writer, OpenOffice oder Behörden-Standards zu nutzen.',
@@ -3776,10 +3791,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.docx'],
     nameDe: 'RTF in DOCX umwandeln',
     shortDescriptionDe: 'Rich-Text-Format (.rtf) in modernes Microsoft-Word-Dokument (.docx) umwandeln.',
-    titleDe: 'RTF in DOCX umwandeln – Rich Text in Word-Dokument konvertieren | CoolWave',
+    titleDe: 'RTF in DOCX umwandeln – Rich Text in Word-Dokument konvertieren | Datei Tools',
     metaDescriptionDe: 'RTF-Dateien kostenlos und schnell in DOCX umwandeln. Textformatierung und Absätze sauber in Microsoft Word übernehmen.',
     h1De: 'RTF in DOCX umwandeln – Rich Text formatieren',
-    introDe: 'Rich-Text-Dateien (.rtf) werden von vielen Editoren wie WordPad oder macOS TextEdit genutzt. Konvertieren Sie RTF-Dateien mit CoolWave in vollwertige Microsoft-Word-DOCX-Dateien.',
+    introDe: 'Rich-Text-Dateien (.rtf) werden von vielen Editoren wie WordPad oder macOS TextEdit genutzt. Konvertieren Sie RTF-Dateien mit Datei Tools in vollwertige Microsoft-Word-DOCX-Dateien.',
     howItWorksDe: [
       { step: 1, title: 'RTF hochladen', text: 'Wählen Sie Ihre RTF-Datei aus.' },
       { step: 2, title: 'In DOCX konvertieren', text: 'Starten Sie die Konvertierung.' },
@@ -3809,17 +3824,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.docx'],
     nameDe: 'TXT in DOCX umwandeln',
     shortDescriptionDe: 'Reine Textdateien (.txt) in professionell formatierte Word-Dokumente (.docx) umwandeln.',
-    titleDe: 'TXT in DOCX umwandeln – Textdatei in Word-Dokument umwandeln | CoolWave',
+    titleDe: 'TXT in DOCX umwandeln – Textdatei in Word-Dokument umwandeln | Datei Tools',
     metaDescriptionDe: 'TXT kostenlos in Word DOCX umwandeln. Automatische Erkennung von Überschriften und Absätzen für saubere Textdokumente.',
     h1De: 'TXT in DOCX umwandeln – Text in Word layouten',
-    introDe: 'Wandeln Sie einfache Notizen, Quelltexte oder TXT-Dateien in saubere Microsoft-Word-Dokumente um. CoolWave erkennt automatisch Titel, Absätze und Strukturmerkmale.',
+    introDe: 'Wandeln Sie einfache Notizen, Quelltexte oder TXT-Dateien in saubere Microsoft-Word-Dokumente um. Datei Tools erkennt automatisch Titel, Absätze und Strukturmerkmale.',
     howItWorksDe: [
       { step: 1, title: 'TXT hochladen', text: 'Laden Sie Ihre .txt-Datei hoch.' },
       { step: 2, title: 'Formatieren', text: 'Klicken Sie auf „TXT in Word umwandeln“.' },
       { step: 3, title: 'Word-Dokument herunterladen', text: 'Laden Sie Ihre fertige DOCX-Datei herunter.' }
     ],
     faqDe: [
-      { question: 'Werden Sonderzeichen und Umlaute unterstützt?', answer: 'Ja, CoolWave unterstützt UTF-8 codierte Textdateien inklusive aller deutschen Umlaute (ä, ö, ü, ß) und internationaler Zeichen.' }
+      { question: 'Werden Sonderzeichen und Umlaute unterstützt?', answer: 'Ja, Datei Tools unterstützt UTF-8 codierte Textdateien inklusive aller deutschen Umlaute (ä, ö, ü, ß) und internationaler Zeichen.' }
     ],
     troubleshootingDe: [],
     privacyExplanationDe: '100% datenschutzkonform mit automatischer Löschung nach 15 Minuten.',
@@ -3842,10 +3857,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.xlsx'],
     nameDe: 'XLS in XLSX umwandeln',
     shortDescriptionDe: 'Klassische Excel 97-2003 Tabellen (.xls) in das moderne XLSX-Format umwandeln.',
-    titleDe: 'XLS in XLSX umwandeln – Altes Excel in modernes XLSX konvertieren | CoolWave',
+    titleDe: 'XLS in XLSX umwandeln – Altes Excel in modernes XLSX konvertieren | Datei Tools',
     metaDescriptionDe: 'XLS-Tabellen kostenlos und sicher in XLSX umwandeln. Tabellen, Formeln und Zahlen für modernes Excel, Google Sheets und Apple Numbers optimieren.',
     h1De: 'XLS in XLSX umwandeln – Excel-Tabellen modernisieren',
-    introDe: 'Ältere Excel-Dateien mit der Endung .xls sind oft auf 65.536 Zeilen begrenzt und werden von modernen Cloud-Anwendungen nur eingeschränkt unterstützt. Konvertieren Sie XLS mit CoolWave in das moderne XLSX-Format.',
+    introDe: 'Ältere Excel-Dateien mit der Endung .xls sind oft auf 65.536 Zeilen begrenzt und werden von modernen Cloud-Anwendungen nur eingeschränkt unterstützt. Konvertieren Sie XLS mit Datei Tools in das moderne XLSX-Format.',
     howItWorksDe: [
       { step: 1, title: 'XLS-Tabelle hochladen', text: 'Wählen Sie Ihre .xls-Datei aus.' },
       { step: 2, title: 'In XLSX umwandeln', text: 'Klicken Sie auf „XLS in XLSX umwandeln“.' },
@@ -3876,7 +3891,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.xls'],
     nameDe: 'XLSX in XLS umwandeln',
     shortDescriptionDe: 'Moderne XLSX-Tabellen in das klassische Excel 97-2003 XLS-Format abwärtskompatibel speichern.',
-    titleDe: 'XLSX in XLS umwandeln – Excel-Datei abwärtskompatibel speichern | CoolWave',
+    titleDe: 'XLSX in XLS umwandeln – Excel-Datei abwärtskompatibel speichern | Datei Tools',
     metaDescriptionDe: 'XLSX-Dateien kostenlos online in XLS (Excel 97-2003) umwandeln. Für ältere Tabellenkalkulationen und Schnittstellen.',
     h1De: 'XLSX in XLS umwandeln – Für ältere Excel-Versionen',
     introDe: 'Exportieren Sie moderne Excel-Tabellen (.xlsx) in das klassische binäre BIFF8-Format (.xls), um sie auf älteren Rechnern oder Legacy-Schnittstellen ohne Fehler zu öffnen.',
@@ -3909,7 +3924,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.xlsx'],
     nameDe: 'CSV in XLSX umwandeln',
     shortDescriptionDe: 'CSV-Dateien (komma- oder semikolongetrennt) in formatierte Excel-Arbeitsmappen (.xlsx) umwandeln.',
-    titleDe: 'CSV in XLSX umwandeln – CSV-Tabelle in echtes Excel konvertieren | CoolWave',
+    titleDe: 'CSV in XLSX umwandeln – CSV-Tabelle in echtes Excel konvertieren | Datei Tools',
     metaDescriptionDe: 'CSV kostenlos in XLSX umwandeln. Automatische Trennzeichen-Erkennung, Spaltenformatierung und Kopfzeilen-Hervorhebung.',
     h1De: 'CSV in XLSX umwandeln – CSV in formatiertes Excel',
     introDe: 'Konvertieren Sie unformatierte CSV-Exportdateien aus Onlineshops, Banken oder CRM-Systemen in übersichtlich formatierte Excel-Arbeitsmappen mit optimierten Spaltenbreiten.',
@@ -3919,7 +3934,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'XLSX herunterladen', text: 'Speichern Sie die fertige Excel-Tabelle.' }
     ],
     faqDe: [
-      { question: 'Erkennt das Tool Semikolon und Komma?', answer: 'Ja, CoolWave erkennt automatisch, ob Ihre CSV-Datei durch Semikolons (deutsche Standards) oder Kommas (internationale Standards) getrennt ist.' },
+      { question: 'Erkennt das Tool Semikolon und Komma?', answer: 'Ja, Datei Tools erkennt automatisch, ob Ihre CSV-Datei durch Semikolons (deutsche Standards) oder Kommas (internationale Standards) getrennt ist.' },
       { question: 'Werden Zahlen als Zahlen formatiert?', answer: 'Ja, numerische Werte werden automatisch als Zahlen erkannt, sodass Sie sofort mit Summen und Formeln rechnen können.' }
     ],
     troubleshootingDe: [],
@@ -3943,7 +3958,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.csv'],
     nameDe: 'XLSX in CSV umwandeln',
     shortDescriptionDe: 'Excel-Arbeitsmappen (.xlsx) in standardisierte CSV-Textdateien für Datenbanken und Auswertungen exportieren.',
-    titleDe: 'XLSX in CSV umwandeln – Excel als CSV-Datei exportieren | CoolWave',
+    titleDe: 'XLSX in CSV umwandeln – Excel als CSV-Datei exportieren | Datei Tools',
     metaDescriptionDe: 'Excel-Dateien kostenlos online in CSV konvertieren. Saubere Zeichencodierung (UTF-8) für fehlerfreie Weiterverarbeitung in Datenbanken.',
     h1De: 'XLSX in CSV umwandeln – Excel-Tabellen als CSV exportieren',
     introDe: 'Exportieren Sie Excel-Tabellen in das universelle CSV-Format (Comma Separated Values), um sie in MySQL, PostgreSQL, Python-Skripten oder Buchhaltungssoftware einzulesen.',
@@ -3976,10 +3991,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'CSV in PDF umwandeln',
     shortDescriptionDe: 'CSV-Tabellendaten in ein übersichtliches, druckbares PDF-Dokument im Querformat verwandeln.',
-    titleDe: 'CSV in PDF umwandeln – CSV-Daten als druckbare PDF-Tabelle speichern | CoolWave',
+    titleDe: 'CSV in PDF umwandeln – CSV-Daten als druckbare PDF-Tabelle speichern | Datei Tools',
     metaDescriptionDe: 'CSV kostenlos online in PDF umwandeln. Professionelle Tabellenformatierung im Querformat für übersichtliche Berichte und Ausdrucke.',
     h1De: 'CSV in PDF umwandeln – Tabellen druckreif formatieren',
-    introDe: 'Möchten Sie Rohdaten aus einer CSV-Datei an Kunden oder Vorgesetzte weitergeben? Wandeln Sie CSV-Dateien mit CoolWave direkt in ansprechende PDF-Tabellen mit automatischer Paginierung um.',
+    introDe: 'Möchten Sie Rohdaten aus einer CSV-Datei an Kunden oder Vorgesetzte weitergeben? Wandeln Sie CSV-Dateien mit Datei Tools direkt in ansprechende PDF-Tabellen mit automatischer Paginierung um.',
     howItWorksDe: [
       { step: 1, title: 'CSV auswählen', text: 'Wählen Sie Ihre .csv-Datei aus.' },
       { step: 2, title: 'In PDF layouten', text: 'Starten Sie die Konvertierung.' },
@@ -4009,10 +4024,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pptx'],
     nameDe: 'PPT in PPTX umwandeln',
     shortDescriptionDe: 'Alte PowerPoint 97-2003 Präsentationen (.ppt) in das moderne PPTX-Format konvertieren.',
-    titleDe: 'PPT in PPTX umwandeln – Altes PowerPoint in modernes PPTX konvertieren | CoolWave',
+    titleDe: 'PPT in PPTX umwandeln – Altes PowerPoint in modernes PPTX konvertieren | Datei Tools',
     metaDescriptionDe: 'PPT kostenlos in PPTX umwandeln. Alte Präsentationen modernisieren und für Microsoft PowerPoint 365, Keynote und Google Präsentationen fit machen.',
     h1De: 'PPT in PPTX umwandeln – Präsentationen modernisieren',
-    introDe: 'Alte Folien im binären PPT-Format lassen sich auf Tablets, Smartphones oder in modernen Präsentationsprogrammen oft nicht öffnen. Konvertieren Sie Ihre PPT-Dateien mit CoolWave in standardmäßiges PPTX.',
+    introDe: 'Alte Folien im binären PPT-Format lassen sich auf Tablets, Smartphones oder in modernen Präsentationsprogrammen oft nicht öffnen. Konvertieren Sie Ihre PPT-Dateien mit Datei Tools in standardmäßiges PPTX.',
     howItWorksDe: [
       { step: 1, title: 'PPT hochladen', text: 'Laden Sie Ihre alte .ppt-Datei hoch.' },
       { step: 2, title: 'In PPTX modernisieren', text: 'Klicken Sie auf „In PPTX umwandeln“.' },
@@ -4042,7 +4057,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.ppt'],
     nameDe: 'PPTX in PPT umwandeln',
     shortDescriptionDe: 'PowerPoint PPTX-Präsentationen in das klassische PPT-Format für ältere Systeme speichern.',
-    titleDe: 'PPTX in PPT umwandeln – PowerPoint-Präsentation kompatibel speichern | CoolWave',
+    titleDe: 'PPTX in PPT umwandeln – PowerPoint-Präsentation kompatibel speichern | Datei Tools',
     metaDescriptionDe: 'PPTX kostenlos online in PPT (PowerPoint 97-2003) umwandeln. Hohe Kompatibilität für ältere Rechner und Schulungsräume.',
     h1De: 'PPTX in PPT umwandeln – Für ältere PowerPoint-Systeme',
     introDe: 'Exportieren Sie moderne PowerPoint-Folien (.pptx) in das klassische PPT-Format, um Präsentationen auf Schulungsrechnern, älteren Beamer-PCs oder Konferenzsystemen abzuspielen.',
@@ -4075,7 +4090,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pptx'],
     nameDe: 'ODP in PPTX umwandeln',
     shortDescriptionDe: 'OpenOffice und LibreOffice Impress Präsentationen (.odp) in Microsoft PowerPoint (.pptx) umwandeln.',
-    titleDe: 'ODP in PPTX umwandeln – OpenDocument-Präsentation in PowerPoint konvertieren | CoolWave',
+    titleDe: 'ODP in PPTX umwandeln – OpenDocument-Präsentation in PowerPoint konvertieren | Datei Tools',
     metaDescriptionDe: 'ODP kostenlos in PPTX umwandeln. LibreOffice Impress Präsentationen direkt in Microsoft PowerPoint Folien konvertieren.',
     h1De: 'ODP in PPTX umwandeln – OpenDocument zu PowerPoint',
     introDe: 'Wandeln Sie Folienpräsentationen aus LibreOffice Impress oder OpenOffice (.odp) in das weltweit verbreitete Microsoft PowerPoint Format (.pptx) um.',
@@ -4085,7 +4100,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'PowerPoint-Datei sichern', text: 'Laden Sie Ihre fertige PPTX-Präsentation herunter.' }
     ],
     faqDe: [
-      { question: 'Werden Folientexte und Stichpunkte übernommen?', answer: 'Ja, CoolWave extrahiert alle Folienseiten, Folientitel und Aufzählungspunkte strukturiert in neue PowerPoint-Folien.' }
+      { question: 'Werden Folientexte und Stichpunkte übernommen?', answer: 'Ja, Datei Tools extrahiert alle Folienseiten, Folientitel und Aufzählungspunkte strukturiert in neue PowerPoint-Folien.' }
     ],
     troubleshootingDe: [],
     privacyExplanationDe: 'Sichere Datenverarbeitung mit automatischer Löschung nach 15 Minuten.',
@@ -4108,7 +4123,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'EPUB in PDF umwandeln',
     shortDescriptionDe: 'EPUB-E-Books in druckbare, universell lesbare PDF-Dokumente auf DIN A4 umwandeln.',
-    titleDe: 'EPUB in PDF umwandeln – E-Book als druckbares PDF speichern | CoolWave',
+    titleDe: 'EPUB in PDF umwandeln – E-Book als druckbares PDF speichern | Datei Tools',
     metaDescriptionDe: 'EPUB-E-Books kostenlos online in PDF konvertieren. Saubere Kapitelüberschriften, automatischer Seitenumbruch und Lesbarkeit auf jedem Gerät.',
     h1De: 'EPUB in PDF umwandeln – E-Books als PDF lesen und drucken',
     introDe: 'Konvertieren Sie EPUB-E-Books in feste, druckbare PDF-Dokumente. Perfekt zum Lesen auf dem Computer, zum Markieren von Textstellen oder für den Ausdruck auf DIN A4.',
@@ -4118,7 +4133,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
       { step: 3, title: 'PDF-Buch herunterladen', text: 'Laden Sie das fertige PDF-Dokument herunter.' }
     ],
     faqDe: [
-      { question: 'Werden Kapitel und Überschriften berücksichtigt?', answer: 'Ja, CoolWave liest die Buchstruktur (Spine) aus und formatiert Kapitelüberschriften und Absätze sauber auf A4-Seiten.' },
+      { question: 'Werden Kapitel und Überschriften berücksichtigt?', answer: 'Ja, Datei Tools liest die Buchstruktur (Spine) aus und formatiert Kapitelüberschriften und Absätze sauber auf A4-Seiten.' },
       { question: 'Funktioniert das mit DRM-geschützten Büchern?', answer: 'Es können nur DRM-freie EPUB-Dateien konvertiert werden. Kopiergeschützte Dateien (Adobe DRM) müssen zuvor unverschlüsselt sein.' }
     ],
     troubleshootingDe: [],
@@ -4142,7 +4157,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.txt'],
     nameDe: 'EPUB in TXT umwandeln',
     shortDescriptionDe: 'Den reinen Text aus EPUB-E-Books extrahieren und als universelle TXT-Textdatei speichern.',
-    titleDe: 'EPUB in TXT umwandeln – Text aus E-Book extrahieren | CoolWave',
+    titleDe: 'EPUB in TXT umwandeln – Text aus E-Book extrahieren | Datei Tools',
     metaDescriptionDe: 'EPUB kostenlos in TXT umwandeln. Extrahiert den gesamten Buchtext ohne HTML-Tags und Formatierungsreste für Sprachausgabe und Notizen.',
     h1De: 'EPUB in TXT umwandeln – Buchtext extrahieren',
     introDe: 'Extrahieren Sie den gesamten Text eines E-Books als schlanke, universelle TXT-Datei. Ideal für Textanalyse, Barrierefreiheit (Screenreader), Vorlese-Apps oder Notizen.',
@@ -4175,7 +4190,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Seiten nummerieren',
     shortDescriptionDe: 'Fügen Sie flexible Seitenzahlen („Seite X von Y“) mit individueller Positionierung in PDF-Dokumente ein.',
-    titleDe: 'PDF Seiten nummerieren – Seitenzahlen kostenlos online einfügen | CoolWave',
+    titleDe: 'PDF Seiten nummerieren – Seitenzahlen kostenlos online einfügen | Datei Tools',
     metaDescriptionDe: 'PDF-Seiten kostenlos und flexibel nummerieren. Wählen Sie Position, Format („Seite X von Y“) und Schriftdesign. Sicher im Browser verarbeitet.',
     h1De: 'PDF Seiten nummerieren – Seitenzahlen einfügen',
     introDe: 'Versehen Sie Ihre PDF-Dokumente mit professionellen Seitenzahlen. Wählen Sie individuelle Formate wie „Seite X von Y“, flexible Platzierungen und schließen Sie das Deckblatt bei Bedarf automatisch aus.',
@@ -4209,7 +4224,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Kopfzeile hinzufügen',
     shortDescriptionDe: 'Fügen Sie einheitliche Kopfzeilen mit Dokumententitel, Datum oder Autorenangaben in PDF-Seiten ein.',
-    titleDe: 'PDF Kopfzeile hinzufügen – Titel & Datum in PDF einfügen | CoolWave',
+    titleDe: 'PDF Kopfzeile hinzufügen – Titel & Datum in PDF einfügen | Datei Tools',
     metaDescriptionDe: 'Individuelle Kopfzeilen in PDF-Dokumente einfügen. Titel, Datum oder Autorenangaben links, mittig oder rechts platzieren.',
     h1De: 'PDF Kopfzeile hinzufügen – Einheitliche Dokumententitel',
     introDe: 'Ergänzen Sie Ihre PDF-Seiten um einheitliche Kopfzeilen mit Dokumententiteln, Firmennamen oder Datumsangaben. Mit flexiblem 3-Zonen-Layout und optionaler Trennlinie.',
@@ -4242,7 +4257,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Fußzeile hinzufügen',
     shortDescriptionDe: 'Fügen Sie rechtliche Hinweise, Vertraulichkeitsvermerke oder Copyright in die Fußzeile Ihrer PDF ein.',
-    titleDe: 'PDF Fußzeile hinzufügen – Fußnoten & Hinweistexte einbinden | CoolWave',
+    titleDe: 'PDF Fußzeile hinzufügen – Fußnoten & Hinweistexte einbinden | Datei Tools',
     metaDescriptionDe: 'Fußzeilen mit Vertraulichkeitshinweisen, Copyright oder Seitenzahlen in PDF-Dokumente einfügen. Schnell und sicher online.',
     h1De: 'PDF Fußzeile hinzufügen – Rechtliche Hinweise & Fußtexte',
     introDe: 'Bringen Sie rechtliche Hinweise, Vertraulichkeitsvermerke oder Seitenzahlen am unteren Rand Ihrer PDF-Seiten an. Übersichtliche Aufteilung in Links, Mitte und Rechts.',
@@ -4275,17 +4290,17 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF vergleichen',
     shortDescriptionDe: 'Zwei PDF-Dokumente seitenweise vergleichen und textliche Unterschiede farblich visualisieren.',
-    titleDe: 'PDF vergleichen – Zwei PDF-Dokumente auf Unterschiede prüfen | CoolWave',
+    titleDe: 'PDF vergleichen – Zwei PDF-Dokumente auf Unterschiede prüfen | Datei Tools',
     metaDescriptionDe: 'Zwei PDF-Dateien online vergleichen. Textliche und visuelle Änderungen seitenweise erkennen, farblich hervorheben und als Bericht exportieren.',
     h1De: 'PDF vergleichen – Unterschiede präzise erkennen',
-    introDe: 'Vergleichen Sie zwei Versionen eines Vertrags, Berichts oder Manuskripts. CoolWave analysiert alle Seiten semantisch und markiert hinzugefügte und gelöschte Passagen auf einen Blick.',
+    introDe: 'Vergleichen Sie zwei Versionen eines Vertrags, Berichts oder Manuskripts. Datei Tools analysiert alle Seiten semantisch und markiert hinzugefügte und gelöschte Passagen auf einen Blick.',
     howItWorksDe: [
       { step: 1, title: 'Beide PDFs hochladen', text: 'Laden Sie Dokument A (Original) und Dokument B (Vergleich) hoch.' },
       { step: 2, title: 'Vergleich starten', text: 'Klicken Sie auf „Dokumente jetzt vergleichen“ zur Textanalyse.' },
       { step: 3, title: 'Unterschiede prüfen', text: 'Sehen Sie farblich hervorgehobene Änderungen und exportieren Sie den Prüfbericht.' }
     ],
     faqDe: [
-      { question: 'Vergleicht das Tool nur Dateihashes oder echten Inhalt?', answer: 'CoolWave vergleicht den tatsächlichen seitenweisen Textinhalt auf Wort- und Zeichenebene und berechnet einen echten semantischen Übereinstimmungsgrad.' },
+      { question: 'Vergleicht das Tool nur Dateihashes oder echten Inhalt?', answer: 'Datei Tools vergleicht den tatsächlichen seitenweisen Textinhalt auf Wort- und Zeichenebene und berechnet einen echten semantischen Übereinstimmungsgrad.' },
       { question: 'Können die Unterschiede exportiert werden?', answer: 'Ja, Sie können einen detaillierten Textbericht mit allen Wortabweichungen herunterladen.' }
     ],
     troubleshootingDe: [],
@@ -4309,10 +4324,10 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF reparieren',
     shortDescriptionDe: 'Stellen Sie beschädigte oder nicht mehr lesbare PDF-Dateien wieder her.',
-    titleDe: 'PDF reparieren – Beschädigte & defekte PDF-Dateien retten | CoolWave',
+    titleDe: 'PDF reparieren – Beschädigte & defekte PDF-Dateien retten | Datei Tools',
     metaDescriptionDe: 'Beschädigte PDF-Dateien online reparieren. Stellt fehlerhafte Querverweistabellen (Xref) und unvollständige Seitenstrukturen zuverlässig wieder her.',
     h1De: 'PDF reparieren – Defekte Dokumente wiederherstellen',
-    introDe: 'Lässt sich Ihre PDF-Datei nicht mehr öffnen oder meldet der Reader einen Formatfehler? CoolWave rekonstruiert beschädigte Xref-Tabellen und holt unbeschädigte Seiteninhalte zurück.',
+    introDe: 'Lässt sich Ihre PDF-Datei nicht mehr öffnen oder meldet der Reader einen Formatfehler? Datei Tools rekonstruiert beschädigte Xref-Tabellen und holt unbeschädigte Seiteninhalte zurück.',
     howItWorksDe: [
       { step: 1, title: 'Defekte PDF hochladen', text: 'Wählen Sie die beschädigte PDF-Datei aus.' },
       { step: 2, title: 'Reparatur durchführen', text: 'Klicken Sie auf „Beschädigte PDF reparieren“.' },
@@ -4342,7 +4357,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF optimieren',
     shortDescriptionDe: 'Reduzieren Sie Dateigrößen und beschleunigen Sie Web-Ladezeiten durch Stream-Kompression.',
-    titleDe: 'PDF optimieren – Dateigröße reduzieren & Web-Ladezeit beschleunigen | CoolWave',
+    titleDe: 'PDF optimieren – Dateigröße reduzieren & Web-Ladezeit beschleunigen | Datei Tools',
     metaDescriptionDe: 'PDF-Dokumente optimieren: Unnötige Metadaten und doppelte Objekte entfernen, Datenströme komprimieren für blitzschnelles Laden.',
     h1De: 'PDF optimieren – Schlanke & schnelle Dokumente',
     introDe: 'Befreien Sie PDF-Dokumente von überflüssigen internen Objekten und komprimieren Sie Datenströme ohne sichtbaren Qualitätsverlust für schnelles Versenden per E-Mail.',
@@ -4375,7 +4390,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF in PDF/A umwandeln',
     shortDescriptionDe: 'Konvertieren Sie Dokumente in das revisionssichere ISO 19005-1 PDF/A-Format für Langzeitarchivierung.',
-    titleDe: 'PDF in PDF/A umwandeln – Langzeitarchivierung nach ISO 19005-1 | CoolWave',
+    titleDe: 'PDF in PDF/A umwandeln – Langzeitarchivierung nach ISO 19005-1 | Datei Tools',
     metaDescriptionDe: 'PDF-Dateien in revisionssicheres PDF/A-1b für die Langzeitarchivierung konvertieren. sRGB OutputIntent und XMP-Konformität inklusive.',
     h1De: 'PDF in PDF/A umwandeln – Revisionssichere Archivierung',
     introDe: 'Konvertieren Sie Geschäftsberichte, Rechnungen und Verträge in das standardisierte PDF/A-1b Format nach ISO 19005-1 für lückenlose behördliche Revisionssicherheit.',
@@ -4408,7 +4423,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF abflachen',
     shortDescriptionDe: 'Brennen Sie Formulareingaben, Häkchen und Anmerkungen dauerhaft in die Seitengrafik ein.',
-    titleDe: 'PDF abflachen – Interaktive Formulare & Ebenen sperren | CoolWave',
+    titleDe: 'PDF abflachen – Interaktive Formulare & Ebenen sperren | Datei Tools',
     metaDescriptionDe: 'Formularfelder, Kontrollkästchen und Anmerkungen in PDF fest einbrennen. Verhindert nachträgliche Bearbeitung vor dem Versand.',
     h1De: 'PDF abflachen – Formulareingaben unveränderbar sichern',
     introDe: 'Wandeln Sie ausgefüllte Formulare und Kommentare dauerhaft in die Seitengrafik um, sodass Empfänger die Eingaben nicht mehr verändern können.',
@@ -4441,7 +4456,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.pdf'],
     nameDe: 'PDF Anmerkungen entfernen',
     shortDescriptionDe: 'Löschen Sie Kommentare, Haftnotizen, Textmarkierungen und Korrekturskizzen restlos.',
-    titleDe: 'PDF Anmerkungen entfernen – Kommentare & Markierungen löschen | CoolWave',
+    titleDe: 'PDF Anmerkungen entfernen – Kommentare & Markierungen löschen | Datei Tools',
     metaDescriptionDe: 'Alle Anmerkungen, Haftnotizen, Markierungen und Zeichnungen mit einem Klick aus der PDF löschen. Der Grundtext bleibt unberührt.',
     h1De: 'PDF Anmerkungen entfernen – Saubere Dokumente ohne Notizen',
     introDe: 'Entfernen Sie interne Korrekturhinweise, Leuchtmarker-Hervorhebungen und Notizen aus PDF-Dokumenten, bevor Sie diese an externe Partner versenden.',
@@ -4474,13 +4489,13 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.png', '.jpg', '.zip'],
     nameDe: 'PDF Bilder extrahieren',
     shortDescriptionDe: 'Extrahieren Sie alle in einer PDF eingebetteten Fotos und Abbildungen in Originalauflösung.',
-    titleDe: 'PDF Bilder extrahieren – Eingebettete Fotos & Grafiken speichern | CoolWave',
+    titleDe: 'PDF Bilder extrahieren – Eingebettete Fotos & Grafiken speichern | Datei Tools',
     metaDescriptionDe: 'Alle Bilder aus einer PDF-Datei in voller Auflösung extrahieren. Einzeln herunterladen oder gebündelt als ZIP-Archiv.',
     h1De: 'PDF Bilder extrahieren – Fotos & Grafiken exportieren',
     introDe: 'Extrahieren Sie alle in einer PDF eingebetteten Fotos und Abbildungen in Originalqualität als PNG-Dateien – inklusive praktischem ZIP-Download.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Laden Sie Ihre PDF-Datei mit Bildern hoch.' },
-      { step: 2, title: 'Bilder lokalisieren', text: 'CoolWave scannt alle Seiten nach Bildobjekten.' },
+      { step: 2, title: 'Bilder lokalisieren', text: 'Datei Tools scannt alle Seiten nach Bildobjekten.' },
       { step: 3, title: 'Bilder herunterladen', text: 'Laden Sie einzelne Fotos oder alle Bilder als ZIP herunter.' }
     ],
     faqDe: [
@@ -4507,13 +4522,13 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.txt'],
     nameDe: 'PDF Text extrahieren',
     shortDescriptionDe: 'Extrahieren Sie den gesamten Text aus einer PDF-Datei seitenweise zur Weiterverarbeitung.',
-    titleDe: 'PDF Text extrahieren – Text aus PDF-Seiten kopieren & speichern | CoolWave',
+    titleDe: 'PDF Text extrahieren – Text aus PDF-Seiten kopieren & speichern | Datei Tools',
     metaDescriptionDe: 'Den gesamten Text aus PDF-Dokumenten seitenweise extrahieren. Mit einem Klick kopieren oder als saubere TXT-Datei herunterladen.',
     h1De: 'PDF Text extrahieren – Dokumententext weiterverwenden',
     introDe: 'Kopieren Sie den gesamten Text Ihrer PDF-Dateien ohne störende Sonderzeichen oder Formatierungsfehler heraus und speichern Sie ihn als Textdatei.',
     howItWorksDe: [
       { step: 1, title: 'PDF hochladen', text: 'Wählen Sie das Dokument mit Text aus.' },
-      { step: 2, title: 'Text auslesen', text: 'CoolWave extrahiert alle Textblöcke seitenweise.' },
+      { step: 2, title: 'Text auslesen', text: 'Datei Tools extrahiert alle Textblöcke seitenweise.' },
       { step: 3, title: 'Kopieren oder Speichern', text: 'Kopieren Sie den Text in die Zwischenablage oder laden Sie eine TXT-Datei herunter.' }
     ],
     faqDe: [
@@ -4540,13 +4555,13 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.zip'],
     nameDe: 'PDF Anhänge extrahieren',
     shortDescriptionDe: 'Laden Sie eingebettete Dateianhänge und ZUGFeRD / Factur-X Rechnungs-XMLs herunter.',
-    titleDe: 'PDF Anhänge extrahieren – Eingebettete Dateien & ZUGFeRD-Daten | CoolWave',
+    titleDe: 'PDF Anhänge extrahieren – Eingebettete Dateien & ZUGFeRD-Daten | Datei Tools',
     metaDescriptionDe: 'Eingebettete Dateianhänge und ZUGFeRD / Factur-X Rechnungs-XMLs aus PDF-Dateien extrahieren und herunterladen.',
     h1De: 'PDF Anhänge extrahieren – Verborgene Dateien sichern',
     introDe: 'Laden Sie in PDF-Dokumenten eingebettete Begleitdateien oder Rechnungsdaten (wie ZUGFeRD-XML) schnell und unkompliziert herunter.',
     howItWorksDe: [
       { step: 1, title: 'PDF auswählen', text: 'Laden Sie die PDF mit Anhängen hoch.' },
-      { step: 2, title: 'Dateibaum scannen', text: 'CoolWave durchsucht das Dokument nach eingebetteten Dateien.' },
+      { step: 2, title: 'Dateibaum scannen', text: 'Datei Tools durchsucht das Dokument nach eingebetteten Dateien.' },
       { step: 3, title: 'Dateien herunterladen', text: 'Speichern Sie gefundene Anhänge einzeln oder als ZIP-Archiv.' }
     ],
     faqDe: [
@@ -4573,7 +4588,7 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
     targetFormats: ['.json', '.txt'],
     nameDe: 'PDF Eigenschaften anzeigen',
     shortDescriptionDe: 'Analysieren Sie technische PDF-Eigenschaften: Maße (mm/pt), PDF-Version, Formularfelder und PDF/A-Status.',
-    titleDe: 'PDF Eigenschaften anzeigen – Version, Maße & Metadaten prüfen | CoolWave',
+    titleDe: 'PDF Eigenschaften anzeigen – Version, Maße & Metadaten prüfen | Datei Tools',
     metaDescriptionDe: 'Detaillierte PDF-Eigenschaften analysieren: Seitenmaße (mm/pt), PDF-Version, Erstellungsdatum, Formularfelder und PDF/A-Konformität.',
     h1De: 'PDF Eigenschaften anzeigen – Vollständige Dokumentenanalyse',
     introDe: 'Erhalten Sie detaillierten Einblick in die technischen Eigenschaften Ihrer PDF-Datei: Seitenabmessungen, PDF-Version, Sicherheitseinstellungen und Formularfelder.',
@@ -4608,7 +4623,19 @@ export const TOOLS_CONFIG: ToolDefinition[] = [
 // ==========================================
 
 export function getActiveTools(): ToolDefinition[] {
-  return [...new Map(TOOLS_CONFIG.filter(t => t.status === 'active' || t.status === 'beta').map(t => [t.slug, t])).values()].map(applyGermanEditorial);
+  return [...new Map(
+    TOOLS_CONFIG
+      .filter(t => {
+        // Status gate: only active/beta tools
+        if (t.status !== 'active' && t.status !== 'beta') return false;
+        // Deployment gate: check per-tool override first, then engine-level
+        if (typeof t.vercelAvailable === 'boolean') {
+          return t.vercelAvailable;
+        }
+        return isEngineAvailable(t.processingEngine);
+      })
+      .map(t => [t.slug, t])
+  ).values()].map(applyGermanEditorial);
 }
 
 export function getToolBySlug(slug: string): ToolDefinition | undefined {

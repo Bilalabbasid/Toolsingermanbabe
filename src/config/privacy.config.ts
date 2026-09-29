@@ -1,5 +1,5 @@
 /**
- * CoolWave Technical Privacy Architecture Configuration
+ * Datei Tools Technical Privacy Architecture Configuration
  * Adheres to German (DDG, TDDDG) and European (DSGVO / GDPR) privacy standards.
  */
 

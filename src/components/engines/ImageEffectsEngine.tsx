@@ -153,7 +153,7 @@ export function ImageEffectsEngine({ mode = 'sharpen' }: ImageEffectsEngineProps
         grayscale: 'sw',
         optimize: 'optimiert',
       };
-      setOutputFilename('coolwave_' + (suffixMap[mode] || mode) + '_' + base + ext);
+      setOutputFilename('datei_tools_' + (suffixMap[mode] || mode) + '_' + base + ext);
       setProgress(100); setIsProcessing(false);
     } catch { setIsProcessing(false); alert('Fehler bei der Verarbeitung.'); }
   };

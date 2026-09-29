@@ -140,7 +140,7 @@ export function PdfWatermarkEngine() {
       const bytes = await pdf.save();
       const blob = new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' });
       setResultBlob(blob);
-      setOutputFilename(`coolwave_wasserzeichen_${file.name}`);
+      setOutputFilename(`datei_tools_wasserzeichen_${file.name}`);
 
       setProgress(100);
       setIsProcessing(false);

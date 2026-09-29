@@ -79,10 +79,10 @@ export function FaviconEngine() {
       icons: results.map((r) => ({ src: '/' + r.filename, sizes: r.size + 'x' + r.size, type: 'image/png' }))
     };
     zip.file('manifest_icons.json', JSON.stringify(manifest, null, 2));
-    zip.file('README.txt', 'Favicon-Paket erstellt mit CoolWave\n\nDateien:\n' + results.map((r) => r.filename).join('\n') + '\n\nFuer Ihre HTML-Datei:\n<link rel="icon" type="image/png" sizes="32x32" href="/favicon_32x32.png">\n<link rel="apple-touch-icon" href="/favicon_180x180.png">');
+    zip.file('README.txt', 'Favicon-Paket erstellt mit Datei Tools\n\nDateien:\n' + results.map((r) => r.filename).join('\n') + '\n\nFuer Ihre HTML-Datei:\n<link rel="icon" type="image/png" sizes="32x32" href="/favicon_32x32.png">\n<link rel="apple-touch-icon" href="/favicon_180x180.png">');
     const content = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(content);
-    const a = document.createElement('a'); a.href = url; a.download = 'coolwave_favicons.zip'; a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'datei_tools_favicons.zip'; a.click();
   };
 
   const downloadSingle = (r: SizedBlob) => {
@@ -144,7 +144,7 @@ export function FaviconEngine() {
     <div className="w-full">
       {!imgEl ? (
         <FileUploader acceptedExtensions={['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif']} maxFileSizeMB={10} onFilesSelected={handleFileSelected}
-          title="Favicon erstellen" subtitle="Logo oder Bild hochladen – CoolWave generiert alle Favicon-Groessen fuer Browser, PWA und Apple-Geraete" />
+          title="Favicon erstellen" subtitle="Logo oder Bild hochladen – Datei Tools generiert alle Favicon-Groessen fuer Browser, PWA und Apple-Geraete" />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-5">
           <div className="flex items-center gap-4 pb-4 border-b border-slate-100">

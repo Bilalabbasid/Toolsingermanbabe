@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Impressum – Gesetzliche Anbieterkennzeichnung | CoolWave',
-  description: 'Gesetzliche Anbieterkennzeichnung nach § 5 DDG für CoolWave (coolwave.cool). Betreiberinformationen, Kontaktdaten und rechtliche Hinweise.',
+  title: 'Impressum – Gesetzliche Anbieterkennzeichnung | Datei Tools',
+  description: 'Gesetzliche Anbieterkennzeichnung nach § 5 DDG für Datei Tools (datei-tools.de). Betreiberinformationen, Kontaktdaten und rechtliche Hinweise.',
   path: '/impressum',
   locale: 'de',
 });
@@ -64,10 +64,10 @@ export default function ImpressumPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Kontakt</h2>
           <p className="text-xs text-slate-600">
-            E-Mail: <a href="mailto:support@coolwave.cool" className="text-sky-600 underline font-medium">support@coolwave.cool</a><br />
+            E-Mail: <a href="mailto:support@datei-tools.de" className="text-sky-600 underline font-medium">support@datei-tools.de</a><br />
             Support & Kontaktformular:{' '}
             <Link href="/de/kontakt" className="text-sky-600 underline font-medium">
-              coolwave.cool/de/kontakt
+              datei-tools.de/de/kontakt
             </Link>
           </p>
         </section>

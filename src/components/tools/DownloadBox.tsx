@@ -261,7 +261,7 @@ export function DownloadBox({
         <div className="max-w-md mx-auto mb-6 p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center gap-2 text-[11px] text-slate-500">
           <Bookmark className="w-3.5 h-3.5 text-amber-500 shrink-0" />
           <span>
-            <strong>Tipp:</strong> Drücken Sie <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-200 font-mono text-[10px]">Strg + D</kbd>, um CoolWave als Lesezeichen zu speichern.
+            <strong>Tipp:</strong> Drücken Sie <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-200 font-mono text-[10px]">Strg + D</kbd>, um Datei Tools als Lesezeichen zu speichern.
           </span>
         </div>
 
@@ -277,7 +277,7 @@ export function DownloadBox({
                 Noch mehr Dateien gleichzeitig verarbeiten?
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
-                Mit CoolWave Pro erhalten Sie erweiterte Stapelverarbeitung, 500 MB Dateigröße und werbefreies Arbeiten.
+                Mit Datei Tools Pro erhalten Sie erweiterte Stapelverarbeitung, 500 MB Dateigröße und werbefreies Arbeiten.
               </div>
             </div>
           </div>

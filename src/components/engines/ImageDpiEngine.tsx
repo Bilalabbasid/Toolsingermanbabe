@@ -118,7 +118,7 @@ export function ImageDpiEngine({ stripMetadata = false }: ImageDpiEngineProps) {
         // Canvas re-draw already strips Exif. Done.
         setResultBlob(blob);
         const ext = isPng ? '.png' : '.jpg';
-        setOutputFilename('coolwave_no_meta_' + file.name.replace(/\.[^.]+$/, '') + ext);
+        setOutputFilename('datei_tools_no_meta_' + file.name.replace(/\.[^.]+$/, '') + ext);
         setProgress(100);
       } else {
         // Patch DPI into the raw bytes
@@ -130,7 +130,7 @@ export function ImageDpiEngine({ stripMetadata = false }: ImageDpiEngineProps) {
         const finalBlob = new Blob([cleanBuf], { type: mime });
         setResultBlob(finalBlob);
         const ext = isPng ? '.png' : '.jpg';
-        setOutputFilename('coolwave_' + dpi + 'dpi_' + file.name.replace(/\.[^.]+$/, '') + ext);
+        setOutputFilename('datei_tools_' + dpi + 'dpi_' + file.name.replace(/\.[^.]+$/, '') + ext);
         setProgress(100);
       }
     } catch {

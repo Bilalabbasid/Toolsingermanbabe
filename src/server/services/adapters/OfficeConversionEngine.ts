@@ -301,7 +301,7 @@ export class OfficeConversionEngine {
     const numPages = pdf.numPages;
 
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = 'CoolWave Engine';
+    workbook.creator = 'Datei Tools Engine';
     workbook.created = new Date();
 
     let totalExtractedCharacters = 0;
@@ -584,7 +584,7 @@ export class OfficeConversionEngine {
 
     const pptx = new PptxGenJS();
     pptx.layout = 'LAYOUT_16x9';
-    pptx.author = 'CoolWave Presentation Engine';
+    pptx.author = 'Datei Tools Presentation Engine';
     pptx.title = baseName;
 
     const canvasGlobals = globalThis as unknown as Record<string, unknown>;
@@ -1424,7 +1424,7 @@ export class OfficeConversionEngine {
     const parsed = parseCsv(csvText);
 
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = "CoolWave Engine";
+    workbook.creator = "Datei Tools Engine";
     const worksheet = workbook.addWorksheet(baseName.substring(0, 31) || "Sheet1");
 
     onProgress(50);

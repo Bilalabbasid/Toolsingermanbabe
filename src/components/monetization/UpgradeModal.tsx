@@ -118,11 +118,11 @@ export function UpgradeModal({
 
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[11px] sm:text-xs font-bold mb-2 sm:mb-3">
             <Sparkles className="w-3.5 h-3.5 fill-amber-400" aria-hidden="true" />
-            <span>{billingEnabled ? 'CoolWave Pro Upgrade' : 'CoolWave Pro · Demnächst'}</span>
+            <span>{billingEnabled ? 'Datei Tools Pro Upgrade' : 'Datei Tools Pro · Demnächst'}</span>
           </div>
 
           <h2 id="upgrade-modal-heading" className="text-lg sm:text-2xl font-black tracking-tight pr-8">
-            {billingEnabled ? 'Arbeiten Sie schneller & ohne Grenzen' : 'CoolWave Pro kommt bald'}
+            {billingEnabled ? 'Arbeiten Sie schneller & ohne Grenzen' : 'Datei Tools Pro kommt bald'}
           </h2>
           <p id="upgrade-modal-description" className="text-[11px] sm:text-xs text-indigo-200 mt-1 max-w-md line-clamp-2 sm:line-clamp-none">
             {triggerReason}

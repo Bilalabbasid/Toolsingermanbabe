@@ -14,7 +14,7 @@ export interface CookieConsentPreferences {
 export function getCookieConsent(): CookieConsentPreferences | null {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = localStorage.getItem('coolwave_cookie_consent');
+    const raw = localStorage.getItem('datei_tools_cookie_consent') || localStorage.getItem('coolwave_cookie_consent');
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -23,7 +23,7 @@ export function getCookieConsent(): CookieConsentPreferences | null {
 
 export function openCookiePreferencesModal() {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('coolwave_open_cookie_preferences'));
+    window.dispatchEvent(new CustomEvent('datei_tools_open_cookie_preferences'));
   }
 }
 
@@ -35,7 +35,7 @@ export function CookieBanner() {
 
   useEffect(() => {
     try {
-      const consent = localStorage.getItem('coolwave_cookie_consent');
+      const consent = localStorage.getItem('datei_tools_cookie_consent') || localStorage.getItem('coolwave_cookie_consent');
       if (!consent) {
         queueMicrotask(() => {
           setShowBanner(true);
@@ -60,9 +60,9 @@ export function CookieBanner() {
       setShowPreferences(true);
     };
 
-    window.addEventListener('coolwave_open_cookie_preferences', handleOpen);
+    window.addEventListener('datei_tools_open_cookie_preferences', handleOpen);
     return () => {
-      window.removeEventListener('coolwave_open_cookie_preferences', handleOpen);
+      window.removeEventListener('datei_tools_open_cookie_preferences', handleOpen);
     };
   }, []);
 
@@ -74,8 +74,8 @@ export function CookieBanner() {
       timestamp: new Date().toISOString(),
     };
     try {
-      localStorage.setItem('coolwave_cookie_consent', JSON.stringify(preferences));
-      window.dispatchEvent(new CustomEvent('coolwave_consent_updated', { detail: preferences }));
+      localStorage.setItem('datei_tools_cookie_consent', JSON.stringify(preferences));
+      window.dispatchEvent(new CustomEvent('datei_tools_consent_updated', { detail: preferences }));
     } catch {}
     setShowBanner(false);
     setShowPreferences(false);
@@ -99,7 +99,7 @@ export function CookieBanner() {
               </div>
               <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 <span className="font-semibold text-white block mb-0.5 sm:mb-1 text-xs sm:text-sm">
-                  Datenschutz & Privatsphäre bei CoolWave
+                  Datenschutz & Privatsphäre bei Datei Tools
                 </span>
                 Wir verwenden technisch notwendige Cookies und mit Ihrer Einwilligung anonyme Analysen zur Produktverbesserung. Client-Tools verarbeiten Dateien direkt im Browser; Server-Konvertierungen erfolgen verschlüsselt mit automatischer Löschung nach 15 Minuten. Details in der{' '}
                 <Link href="/de/datenschutz" className="underline text-sky-400 hover:text-sky-300">

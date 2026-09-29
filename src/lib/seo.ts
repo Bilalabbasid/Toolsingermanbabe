@@ -3,8 +3,8 @@ import { ToolDefinition } from '@/types/tool';
 import { CategoryInfo } from '@/config/categories.config';
 import { DEFAULT_LOCALE, getAlternateUrls } from '@/config/i18n.config';
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://coolwave.cool').replace(/\/+$/, '');
-export const SITE_NAME = 'CoolWave';
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://datei-tools.de').replace(/\/+$/, '');
+export const SITE_NAME = 'Datei Tools';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const DEFAULT_ORG_LOGO = `${SITE_URL}/icon-512.png`;
 
@@ -36,7 +36,7 @@ export function generateToolMetadata(tool: ToolDefinition, locale: string = DEFA
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: `${tool.nameDe} – CoolWave Online Tools`,
+          alt: `${tool.nameDe} – Datei Tools Online`,
         },
       ],
     },
@@ -86,7 +86,7 @@ export function generateCategoryMetadata(catInfo: CategoryInfo, locale: string =
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: `${catInfo.name} – CoolWave Online Tools`,
+          alt: `${catInfo.name} – Datei Tools Online`,
         },
       ],
     },
@@ -149,7 +149,7 @@ export function generatePageMetadata({
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: `${title} | CoolWave`,
+          alt: `${title} | Datei Tools`,
         },
       ],
     },
@@ -325,13 +325,13 @@ export function generateArticleMetadata({
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: updatedAt || publishedAt,
-      authors: ['CoolWave Redaktion'],
+      authors: ['Datei Tools Redaktion'],
       images: [
         {
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: `${title} | CoolWave Ratgeber`,
+          alt: `${title} | Datei Tools Ratgeber`,
         },
       ],
     },
@@ -364,7 +364,7 @@ export function generateArticleSchema({
   description,
   publishedAt,
   updatedAt,
-  author = 'CoolWave Redaktion',
+  author = 'Datei Tools Redaktion',
   locale = DEFAULT_LOCALE,
 }: {
   slug: string;

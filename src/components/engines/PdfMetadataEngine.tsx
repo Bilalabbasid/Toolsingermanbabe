@@ -160,8 +160,8 @@ export function PdfMetadataEngine({ mode }: PdfMetadataEngineProps) {
       pdf.setAuthor('');
       pdf.setSubject('');
       pdf.setKeywords([]);
-      pdf.setCreator('CoolWave Privacy Engine');
-      pdf.setProducer('CoolWave Privacy Engine');
+      pdf.setCreator('Datei Tools Privacy Engine');
+      pdf.setProducer('Datei Tools Privacy Engine');
 
       setProgress(75);
       setStatusText('Dokument wird anonymisiert gespeichert...');
@@ -171,7 +171,7 @@ export function PdfMetadataEngine({ mode }: PdfMetadataEngineProps) {
       setResultBlob(blob);
 
       const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-      setOutputFilename(`coolwave_${base}_anonymisiert.pdf`);
+      setOutputFilename(`datei_tools_${base}_anonymisiert.pdf`);
 
       setProgress(100);
       setIsProcessing(false);

@@ -185,7 +185,7 @@ export function ImageCropEngine({ circleMode = false }: ImageCropEngineProps) {
       setResultBlob(blob);
       const ext = mime === 'image/png' ? '.png' : '.jpg';
       const base = file.name.replace(/\.[^.]+$/, '');
-      setOutputFilename('coolwave_' + (circleMode ? 'kreis_' : 'zugeschnitten_') + base + ext);
+      setOutputFilename('datei_tools_' + (circleMode ? 'kreis_' : 'zugeschnitten_') + base + ext);
       setProgress(100);
     } catch {
       alert('Fehler beim Zuschneiden.');

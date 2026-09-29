@@ -89,8 +89,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/de/pdf-in-word-umwandeln" className="py-1 block hover:text-white transition-colors">
-                  PDF in Word umwandeln
+                <Link href="/de/pdf-drehen" className="py-1 block hover:text-white transition-colors">
+                  PDF drehen
                 </Link>
               </li>
             </ul>
@@ -136,11 +136,11 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Sicherheit & OCR */}
+          {/* Col 3: Sicherheit & PDF-Tools */}
           <div>
             <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-              Sicherheit &amp; OCR
+              Sicherheit &amp; Organisation
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
@@ -159,58 +159,58 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/de/ocr-pdf" className="py-1 block hover:text-white transition-colors">
-                  PDF-OCR-Texterkennung
+                <Link href="/de/pdf-seiten-neu-anordnen" className="py-1 block hover:text-white transition-colors">
+                  Seiten neu anordnen
                 </Link>
               </li>
               <li>
-                <Link href="/de/scan-zu-word" className="py-1 block hover:text-white transition-colors">
-                  Gescannte PDF in Word (OCR)
+                <Link href="/de/pdf-seiten-loeschen" className="py-1 block hover:text-white transition-colors">
+                  PDF-Seiten löschen
                 </Link>
               </li>
               <li>
-                <Link href="/de/bild-zu-text" className="py-1 block hover:text-white transition-colors">
-                  Bild in Text (OCR)
+                <Link href="/de/pdf-vergleichen" className="py-1 block hover:text-white transition-colors">
+                  PDF vergleichen
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Dokumente & Audio/Video */}
+          {/* Col 4: Werkzeuge & Utilities */}
           <div>
             <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-1.5">
-              <FileSpreadsheet className="w-3.5 h-3.5 text-blue-400" />
-              Office &amp; Medien
+              <Wrench className="w-3.5 h-3.5 text-blue-400" />
+              Nützliche Werkzeuge
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 text-xs">
               <li>
-                <Link href="/de/word-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
-                  Word in PDF umwandeln
+                <Link href="/de/zip-erstellen" className="py-1 block hover:text-white transition-colors">
+                  ZIP-Archiv erstellen
                 </Link>
               </li>
               <li>
-                <Link href="/de/excel-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
-                  Excel in PDF umwandeln
+                <Link href="/de/json-formatieren" className="py-1 block hover:text-white transition-colors">
+                  JSON formatieren
                 </Link>
               </li>
               <li>
-                <Link href="/de/powerpoint-in-pdf-umwandeln" className="py-1 block hover:text-white transition-colors">
-                  PowerPoint in PDF umwandeln
+                <Link href="/de/base64-kodieren" className="py-1 block hover:text-white transition-colors">
+                  Base64 kodieren
                 </Link>
               </li>
               <li>
-                <Link href="/de/audio-konvertieren" className="py-1 block hover:text-white transition-colors">
-                  Audio konvertieren
+                <Link href="/de/qr-code-erstellen" className="py-1 block hover:text-white transition-colors">
+                  QR-Code erstellen
                 </Link>
               </li>
               <li>
-                <Link href="/de/video-in-mp3-umwandeln" className="py-1 block hover:text-white transition-colors">
-                  Video zu MP3
+                <Link href="/de/passwort-generator" className="py-1 block hover:text-white transition-colors">
+                  Passwort-Generator
                 </Link>
               </li>
               <li>
-                <Link href="/de/zip-entpacken" className="py-1 block hover:text-white transition-colors">
-                  ZIP entpacken
+                <Link href="/de/wortzaehler" className="py-1 block hover:text-white transition-colors">
+                  Wort- &amp; Zeichenzähler
                 </Link>
               </li>
             </ul>
@@ -258,7 +258,7 @@ export function Footer() {
               </li>
               {featureFlags.enableStripeCheckout && <li>
                 <Link href="/de/preise" className="py-1 block hover:text-white transition-colors text-amber-400 font-semibold">
-                  CoolWave Pro
+                  Datei Tools Pro
                 </Link>
               </li>}
             </ul>
@@ -268,7 +268,7 @@ export function Footer() {
         {/* Bottom Bar: Copyright & Language Selector */}
         <div className="pt-6 sm:pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-slate-500 text-center sm:text-left">
           <div>
-            <span>© {currentYear} CoolWave (coolwave.cool). Alle Rechte vorbehalten.</span>
+            <span>© {currentYear} Datei Tools (datei-tools.de). Alle Rechte vorbehalten.</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
@@ -277,7 +277,7 @@ export function Footer() {
               <span>Deutsch (DE)</span>
             </span>
             <span className="text-slate-700">•</span>
-            <span className="text-slate-400">Hostinger & European Cloud Ready</span>
+            <span className="text-slate-400">100% Datenschutz &amp; DSGVO-konform</span>
           </div>
         </div>
       </div>

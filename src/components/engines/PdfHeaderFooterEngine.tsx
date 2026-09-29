@@ -185,7 +185,7 @@ export function PdfHeaderFooterEngine({
       setResultBlob(blob);
 
       const prefix = mode === 'numbering' ? 'nummeriert' : mode === 'header' ? 'kopfzeile' : 'fusszeile';
-      setOutputFilename(`coolwave_${prefix}_${file.name}`);
+      setOutputFilename(`datei_tools_${prefix}_${file.name}`);
 
       setProgress(100);
       setIsProcessing(false);

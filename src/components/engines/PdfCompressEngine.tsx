@@ -106,7 +106,7 @@ export function PdfCompressEngine() {
             onProgress?.(100, 'Fertig');
             return {
               blob,
-              fileName: `coolwave_komprimiert_${file.name}`,
+              fileName: `datei_tools_komprimiert_${file.name}`,
               estimatedSize: blob.size,
             };
           }
@@ -129,8 +129,8 @@ export function PdfCompressEngine() {
       pdf.setAuthor('');
       pdf.setSubject('');
       pdf.setKeywords([]);
-      pdf.setProducer('CoolWave PDF Optimizer');
-      pdf.setCreator('CoolWave');
+      pdf.setProducer('Datei Tools PDF Optimizer');
+      pdf.setCreator('Datei Tools');
       try {
         const { PDFName } = await import('pdf-lib');
         pdf.catalog.delete(PDFName.of('PieceInfo'));
@@ -139,7 +139,7 @@ export function PdfCompressEngine() {
       useObjectStreams = true;
     } else if (compLevel === 'medium') {
       // Medium: balanced object streams
-      pdf.setProducer('CoolWave PDF Optimizer');
+      pdf.setProducer('Datei Tools PDF Optimizer');
       useObjectStreams = true;
     } else {
       // Low: mild compression preserving all document metadata
@@ -158,7 +158,7 @@ export function PdfCompressEngine() {
 
     return {
       blob: finalBlob,
-      fileName: `coolwave_komprimiert_${file.name}`,
+      fileName: `datei_tools_komprimiert_${file.name}`,
       estimatedSize: calculatedTarget,
     };
   };
@@ -280,7 +280,7 @@ export function PdfCompressEngine() {
       });
 
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(zipBlob, `coolwave_pdf_stapel_${Date.now()}.zip`);
+      downloadBlob(zipBlob, `datei_tools_pdf_stapel_${Date.now()}.zip`);
     } catch (err) {
       console.error('[Zip Error]:', err);
       alert('Fehler beim Erstellen des ZIP-Archivs.');

@@ -11,7 +11,7 @@ function publicApiOrigin(): string {
 }
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
   compress: true,
   images: {
     formats: ['image/avif', 'image/webp'],

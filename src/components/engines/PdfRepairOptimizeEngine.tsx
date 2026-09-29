@@ -127,8 +127,8 @@ export function PdfRepairOptimizeEngine({
     } else if (mode === 'optimize') {
       onProgress?.(50, 'Datenströme bereinigen & komprimieren...');
       suffix = '_optimiert.pdf';
-      pdf.setProducer('CoolWave High-Efficiency Engine');
-      pdf.setCreator('CoolWave');
+      pdf.setProducer('Datei Tools High-Efficiency Engine');
+      pdf.setCreator('Datei Tools');
       audit = `Objektströme komprimiert und ungenutzte Strukturdaten bereinigt.`;
     } else if (mode === 'pdfa') {
       onProgress?.(30, 'Dokument an PDF/A-Archivierungsservice übermitteln...');
@@ -342,7 +342,7 @@ export function PdfRepairOptimizeEngine({
       });
 
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(zipBlob, `coolwave_${mode}_stapel_${Date.now()}.zip`);
+      downloadBlob(zipBlob, `datei_tools_${mode}_stapel_${Date.now()}.zip`);
     } catch (err) {
       console.error('[Zip Error]:', err);
       alert('Fehler beim Erstellen des ZIP-Archivs.');

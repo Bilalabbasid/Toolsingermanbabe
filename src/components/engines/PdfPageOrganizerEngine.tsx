@@ -172,7 +172,7 @@ export function PdfPageOrganizerEngine({ mode }: PdfPageOrganizerEngineProps) {
 
       const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
       const suffix = mode === 'extract' ? 'extrahiert' : mode === 'delete' ? 'bereinigt' : 'sortiert';
-      setOutputFilename(`coolwave_${base}_${suffix}.pdf`);
+      setOutputFilename(`datei_tools_${base}_${suffix}.pdf`);
 
       setProgress(100);
       setIsProcessing(false);

@@ -98,7 +98,7 @@ const post = async (req: NextRequest) => {
         }
 
         resultBuffer = await pdfSecurityService.protectPdf(buffer, userPassword, ownerPassword, perms);
-        outputFilename = `coolwave_geschuetzt_${safeFilename}`;
+        outputFilename = `datei_tools_geschuetzt_${safeFilename}`;
         break;
       }
 
@@ -107,7 +107,7 @@ const post = async (req: NextRequest) => {
       case 'remove_password': {
         const password = (formData.get('password') as string) || (formData.get('userPassword') as string) || undefined;
         resultBuffer = await pdfSecurityService.unlockPdf(buffer, password);
-        outputFilename = `coolwave_entsperrt_${safeFilename}`;
+        outputFilename = `datei_tools_entsperrt_${safeFilename}`;
         break;
       }
 
@@ -126,7 +126,7 @@ const post = async (req: NextRequest) => {
         }
 
         resultBuffer = await pdfSecurityService.changePermissions(buffer, password, perms, newOwnerPassword);
-        outputFilename = `coolwave_berechtigungen_${safeFilename}`;
+        outputFilename = `datei_tools_berechtigungen_${safeFilename}`;
         break;
       }
 
@@ -159,19 +159,19 @@ const post = async (req: NextRequest) => {
         }
 
         resultBuffer = await pdfSecurityService.trueRedact(buffer, terms, zones);
-        outputFilename = `coolwave_geschwaerzt_${safeFilename}`;
+        outputFilename = `datei_tools_geschwaerzt_${safeFilename}`;
         break;
       }
 
       case 'metadata_remove': {
         resultBuffer = await pdfSecurityService.stripMetadata(buffer);
-        outputFilename = `coolwave_bereinigt_${safeFilename}`;
+        outputFilename = `datei_tools_bereinigt_${safeFilename}`;
         break;
       }
 
       case 'sign': {
         const signaturePngBase64 = (formData.get('signature') as string) || undefined;
-        const signerName = (formData.get('signerName') as string) || 'CoolWave Benutzer';
+        const signerName = (formData.get('signerName') as string) || 'Datei Tools Benutzer';
         const reason = (formData.get('reason') as string) || 'Dokumentenfreigabe & Integrität';
         const location = (formData.get('location') as string) || 'Deutschland';
 
@@ -186,7 +186,7 @@ const post = async (req: NextRequest) => {
           location,
           pageIndex,
         });
-        outputFilename = `coolwave_signiert_${safeFilename}`;
+        outputFilename = `datei_tools_signiert_${safeFilename}`;
         break;
       }
 

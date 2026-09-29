@@ -8,7 +8,7 @@ import { generatePageMetadata, SITE_URL } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Ratgeber, Anleitungen & Datei-Tipps | CoolWave',
+  title: 'Ratgeber, Anleitungen & Datei-Tipps | Datei Tools',
   description: 'Praktische Schritt-für-Schritt-Anleitungen rund um PDF-Bearbeitung, Word-Konvertierung, Bildkomprimierung, OCR und Datenschutz im Webbrowser.',
   path: '/blog',
   locale: 'de',
@@ -20,12 +20,12 @@ export default function BlogPage() {
   const collectionSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'CoolWave Ratgeber & Anleitungen',
+    name: 'Datei Tools Ratgeber & Anleitungen',
     description: 'Praktische Schritt-für-Schritt-Anleitungen rund um PDF-Bearbeitung, Word-Konvertierung, Bildkomprimierung und OCR.',
     url: `${SITE_URL}/de/blog`,
     isPartOf: {
       '@type': 'WebSite',
-      name: 'CoolWave',
+      name: 'Datei Tools',
       url: `${SITE_URL}/de`,
     },
   };
@@ -48,7 +48,7 @@ export default function BlogPage() {
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-            CoolWave Ratgeber &amp; Datei-Tipps
+            Datei Tools Ratgeber &amp; Datei-Tipps
           </h1>
 
           <p className="mt-3.5 text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">

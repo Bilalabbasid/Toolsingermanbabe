@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!tool) {
     return {
-      title: 'Tool nicht gefunden | CoolWave',
+      title: 'Tool nicht gefunden | Datei Tools',
       robots: { index: false, follow: false },
     };
   }

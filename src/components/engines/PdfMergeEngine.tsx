@@ -23,7 +23,7 @@ export function PdfMergeEngine() {
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState('');
   const [mergedBlob, setMergedBlob] = useState<Blob | null>(null);
-  const [outputFilename, setOutputFilename] = useState('coolwave_zusammengefuegt.pdf');
+  const [outputFilename, setOutputFilename] = useState('datei_tools_zusammengefuegt.pdf');
 
   const handleFilesSelected = (newFiles: File[]) => {
     const mapped = newFiles.map((f) => ({
@@ -90,7 +90,7 @@ export function PdfMergeEngine() {
       const blob = new Blob([mergedPdfBytes as unknown as BlobPart], { type: 'application/pdf' });
 
       setMergedBlob(blob);
-      setOutputFilename(`coolwave_zusammengefuegt_${Date.now()}.pdf`);
+      setOutputFilename(`datei_tools_zusammengefuegt_${Date.now()}.pdf`);
       setProgress(100);
       setIsProcessing(false);
       trackEvent('conversion_completed', { toolSlug: 'pdf-zusammenfuegen' });

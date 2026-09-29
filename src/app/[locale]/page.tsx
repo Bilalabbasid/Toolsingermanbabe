@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const { locale } = await params;
 
   return generatePageMetadata({
-    title: 'CoolWave – Kostenlose Online-PDF- und Datei-Tools im Browser',
+    title: 'Datei Tools – Kostenlose Online-PDF- und Datei-Tools im Browser',
     description: 'PDF zusammenfügen, teilen und bearbeiten, Bilder umwandeln und Dokumente konvertieren. Finden Sie das passende Online-Tool mit Anleitung und Dateilimits.',
     path: '/',
     locale,

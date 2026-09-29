@@ -319,7 +319,7 @@ export function getRelatedTools(slug: string): ToolDefinition[] {
 // RECENT TOOLS TRACKING (localStorage)
 // =========================================================================
 
-const RECENT_TOOLS_KEY = 'coolwave_recent_tools';
+const RECENT_TOOLS_KEY = 'datei_tools_recent_tools';
 const MAX_RECENT_COUNT = 6;
 
 /**
@@ -328,7 +328,7 @@ const MAX_RECENT_COUNT = 6;
 export function recordRecentTool(slug: string): void {
   if (typeof window === 'undefined' || !slug) return;
   try {
-    const raw = localStorage.getItem(RECENT_TOOLS_KEY);
+    const raw = localStorage.getItem(RECENT_TOOLS_KEY) || localStorage.getItem('coolwave_recent_tools');
     let recents: string[] = raw ? JSON.parse(raw) : [];
     // Remove if already present, then unshift to front
     recents = recents.filter((s) => s !== slug);

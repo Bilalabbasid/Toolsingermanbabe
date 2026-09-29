@@ -8,15 +8,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://coolwave.cool'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://datei-tools.de'),
   title: {
-    default: 'CoolWave – Alle wichtigen Datei- und PDF-Tools an einem Ort',
+    default: 'Datei Tools – Alle wichtigen Datei- und PDF-Tools an einem Ort',
     template: '%s',
   },
   description:
     'PDFs bearbeiten, Dateien konvertieren, Bilder komprimieren und Dokumente zusammenführen – online mit Anleitungen zu Formaten und Dateilimits.',
-  authors: [{ name: 'CoolWave' }],
-  creator: 'CoolWave',
+  authors: [{ name: 'Datei Tools' }],
+  creator: 'Datei Tools',
   icons: {
     icon: '/favicon.ico',
     apple: '/icon-512.png',

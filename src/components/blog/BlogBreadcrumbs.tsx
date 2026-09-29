@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
 import { serializeJsonLd } from '@/lib/json-ld';
 
+import { SITE_URL } from '@/lib/seo';
+
 export interface BreadcrumbItem {
   name: string;
   url: string;
@@ -26,7 +28,7 @@ export function BlogBreadcrumbs({ items, className = '' }: BlogBreadcrumbsProps)
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: `https://coolwave.cool${item.url}`,
+      item: `${SITE_URL}${item.url}`,
     })),
   };
 

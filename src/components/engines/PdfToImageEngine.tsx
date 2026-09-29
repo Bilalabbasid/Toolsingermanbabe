@@ -108,7 +108,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
         canvas.toBlob((blob) => {
           if (!blob) throw new Error('Bild-Generierung fehlgeschlagen');
           setResultBlob(blob);
-          setOutputFilename(`coolwave_${base}.${extension}`);
+          setOutputFilename(`datei_tools_${base}.${extension}`);
           setProgress(100);
           setIsProcessing(false);
           trackEvent('conversion_completed', { targetFormat, pages: 1 });
@@ -148,7 +148,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
 
         const zipBlob = await zip.generateAsync({ type: 'blob' });
         setResultBlob(zipBlob);
-        setOutputFilename(`coolwave_${base}_${targetFormat.toLowerCase()}.zip`);
+        setOutputFilename(`datei_tools_${base}_${targetFormat.toLowerCase()}.zip`);
         setProgress(100);
         setIsProcessing(false);
         trackEvent('conversion_completed', { targetFormat, pages: count });

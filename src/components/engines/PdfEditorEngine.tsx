@@ -998,7 +998,7 @@ export function PdfEditorEngine() {
 
       const exportedBytes = await outDoc.save();
       const blob = new Blob([exportedBytes as unknown as BlobPart], { type: 'application/pdf' });
-      downloadBlob(blob, `coolwave_bearbeitet_${file.name}`);
+      downloadBlob(blob, `datei_tools_bearbeitet_${file.name}`);
       trackEvent('conversion_completed', { toolSlug: 'pdf-bearbeiten', count: objects.length });
     } catch (err) {
       console.error('Export error:', err);

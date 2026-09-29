@@ -85,7 +85,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
   // Restore unfinished or completed job if window was reloaded/reopened
   useEffect(() => {
     try {
-      const saved = sessionStorage.getItem(`coolwave_media_${toolId}`);
+      const saved = sessionStorage.getItem(`datei_tools_media_${toolId}`);
       if (!saved) return;
       const { jobId, filename } = JSON.parse(saved);
       if (!jobId) return;
@@ -104,7 +104,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
           try {
             const pollRes = await apiFetch(`/api/v1/jobs/${jobId}`);
             if (!pollRes.ok) {
-              sessionStorage.removeItem(`coolwave_media_${toolId}`);
+              sessionStorage.removeItem(`datei_tools_media_${toolId}`);
               setIsProcessing(false);
               return;
             }
@@ -119,12 +119,12 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
                 const blob = await dlRes.blob();
                 setResultBlob(blob);
                 setOutputFilename(currentJob.output?.fileName || `${filename}.converted`);
-                sessionStorage.removeItem(`coolwave_media_${toolId}`);
+                sessionStorage.removeItem(`datei_tools_media_${toolId}`);
               }
               setIsProcessing(false);
               return;
             } else if (currentJob.status === 'failed' || currentJob.status === 'expired') {
-              sessionStorage.removeItem(`coolwave_media_${toolId}`);
+              sessionStorage.removeItem(`datei_tools_media_${toolId}`);
               setIsProcessing(false);
               return;
             }
@@ -204,7 +204,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
 
       const { jobId } = await res.json();
       try {
-        sessionStorage.setItem(`coolwave_media_${toolId}`, JSON.stringify({ jobId, filename: file.name }));
+        sessionStorage.setItem(`datei_tools_media_${toolId}`, JSON.stringify({ jobId, filename: file.name }));
       } catch {}
       setStatusText('In Verarbeitungswarteschlange...');
       setProgress(30);
@@ -251,7 +251,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
       const blob = await downloadRes.blob();
       const url = URL.createObjectURL(blob);
       try {
-        sessionStorage.removeItem(`coolwave_media_${toolId}`);
+        sessionStorage.removeItem(`datei_tools_media_${toolId}`);
       } catch {}
       setResultBlob(blob);
       setResultUrl(url);

@@ -145,7 +145,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
             {tool.features && tool.features.length > 0 && (
               <div className="mt-8 pt-6 border-t border-slate-100">
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
-                  Ihre Vorteile mit CoolWave:
+                  Ihre Vorteile mit Datei Tools:
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {tool.features.map((feature, idx) => (
@@ -197,7 +197,7 @@ export function ToolPage({ tool, locale }: ToolPageProps) {
                   <div className="flex items-center justify-between">
                     <div className="text-xs font-bold text-sky-700 uppercase tracking-wider mb-1 flex items-center gap-1">
                       <Sparkles className="w-3.5 h-3.5" />
-                      CoolWave Pro
+                      Datei Tools Pro
                     </div>
                     <Link
                       href={`/${locale}/preise`}

@@ -341,8 +341,8 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
     const blob = await downloadRes.blob();
     const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
     const outName = mode === 'pdf-to-word' && completedJob.output.fileName?.endsWith('_ocr.docx')
-      ? `coolwave_${baseName}_editierbar.docx`
-      : `coolwave_${baseName}.${getTargetExtension()}`;
+      ? `datei_tools_${baseName}_editierbar.docx`
+      : `datei_tools_${baseName}.${getTargetExtension()}`;
 
     onProgress?.(100, 'Fertig');
     return { blob, fileName: outName, size: blob.size };
@@ -480,7 +480,7 @@ export function DocConvertEngine({ mode }: DocConvertEngineProps) {
       });
 
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(zipBlob, `coolwave_dokumente_stapel_${Date.now()}.zip`);
+      downloadBlob(zipBlob, `datei_tools_dokumente_stapel_${Date.now()}.zip`);
     } catch (err) {
       console.error('[Zip Error]:', err);
       alert('Fehler beim Erstellen des ZIP-Archivs.');

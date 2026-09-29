@@ -7,8 +7,8 @@ import { Cookie, ShieldCheck, BarChart3, Megaphone } from 'lucide-react';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Cookie-Richtlinie – Privatsphäre & Einstellungen | CoolWave',
-  description: 'Transparente Übersicht über den Einsatz von Cookies, Web-Speichern und Ihre Widerrufsmöglichkeiten bei CoolWave. Einstellungen jederzeit anpassbar.',
+  title: 'Cookie-Richtlinie – Privatsphäre & Einstellungen | Datei Tools',
+  description: 'Transparente Übersicht über den Einsatz von Cookies, Web-Speichern und Ihre Widerrufsmöglichkeiten bei Datei Tools. Einstellungen jederzeit anpassbar.',
   path: '/cookie-richtlinie',
   locale: 'de',
 });
@@ -67,7 +67,7 @@ export default function CookieRichtliniePage() {
                 Diese Cookies bzw. Storage-Einträge sind zwingend erforderlich, damit Sie sich auf der Website bewegen und grundlegende Funktionen (z. B. Beibehaltung des Cookie-Consent-Status oder Session-Tokens) nutzen können. Sie bedürfen keiner vorherigen Einwilligung und können nicht abgewählt werden.
               </p>
               <div className="mt-2 text-xs text-slate-500 font-mono">
-                Typische Einträge: <code>coolwave_cookie_consent</code>, Sitzungszustand.
+                Typische Einträge: <code>datei_tools_cookie_consent</code>, Sitzungszustand.
               </div>
             </div>
 
@@ -92,7 +92,7 @@ export default function CookieRichtliniePage() {
                 Werden im kostenfreien Tarif genutzt, um relevante Werbeanzeigen bereitzustellen und den kostenfreien Betrieb der Konvertierungsserver zu finanzieren. Werbepartner wie Google Ireland Limited verarbeiten Daten nur, wenn Sie dieser Kategorie ausdrücklich zugestimmt haben.
               </p>
               <p className="text-xs text-emerald-700 font-medium mt-1">
-                Abonnenten von CoolWave Pro erhalten eine 100% werbefreie Nutzung: Hier werden generell keine Werbeskripte geladen.
+                Abonnenten von Datei Tools Pro erhalten eine 100% werbefreie Nutzung: Hier werden generell keine Werbeskripte geladen.
               </p>
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function CookieRichtliniePage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">4. Weitere Auskünfte & Verantwortlicher</h2>
           <p className="text-xs text-slate-600">
-            Ausführliche Erläuterungen zu Ihren Rechten und der Datenverarbeitung bei CoolWave finden Sie in unserer{' '}
+            Ausführliche Erläuterungen zu Ihren Rechten und der Datenverarbeitung bei Datei Tools finden Sie in unserer{' '}
             <Link href="/de/datenschutz" className="text-sky-600 underline font-medium">
               Datenschutzerklärung
             </Link>.
@@ -118,7 +118,7 @@ export default function CookieRichtliniePage() {
           <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-0.5 mt-3">
             <p className="font-semibold text-slate-900">[Name des Diensteanbieters / Betreibergesellschaft]</p>
             <p>[Straße und Hausnummer], [PLZ und Ort, Deutschland / EU]</p>
-            <p>E-Mail: datenschutz@coolwave.cool</p>
+            <p>E-Mail: datenschutz@datei-tools.de</p>
           </div>
         </section>
 

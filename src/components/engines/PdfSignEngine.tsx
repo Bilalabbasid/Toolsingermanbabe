@@ -57,7 +57,7 @@ export function PdfSignEngine() {
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#0284c7'; // CoolWave Blue signature ink
+    ctx.strokeStyle = '#0284c7'; // Signature Blue signature ink
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
@@ -154,7 +154,7 @@ export function PdfSignEngine() {
       if (signaturePngBase64) {
         formData.append('signature', signaturePngBase64);
       }
-      formData.append('signerName', signerName.trim() || 'CoolWave Benutzer');
+      formData.append('signerName', signerName.trim() || 'Datei Tools Benutzer');
       formData.append('reason', reason.trim() || 'Dokumentenfreigabe');
 
       setProgress(55);
@@ -412,7 +412,7 @@ export function PdfSignEngine() {
             <div className="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-1.5 text-xs text-emerald-950">
               <div className="flex items-center gap-1.5 font-bold text-emerald-900">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Visuelle CoolWave Prüfmarke</span>
+                <span>Visuelle Datei Tools Prüfmarke</span>
               </div>
               <p className="text-emerald-900/80 leading-relaxed text-[11px]">
                 Das Dokument erhält auf der letzten Seite einen sichtbaren Prüfstempel inklusive

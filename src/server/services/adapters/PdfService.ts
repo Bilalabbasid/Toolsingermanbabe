@@ -98,13 +98,13 @@ export class PdfService implements IConversionService {
       pdf.setAuthor('');
       pdf.setSubject('');
       pdf.setKeywords([]);
-      pdf.setProducer('CoolWave Privacy Engine');
-      pdf.setCreator('CoolWave');
+      pdf.setProducer('Datei Tools Privacy Engine');
+      pdf.setCreator('Datei Tools');
       onProgress(70);
     } else {
       // pdf_compress or pdf_optimize fallback
       outputSuffix = '_optimiert.pdf';
-      pdf.setProducer('CoolWave High-Efficiency Engine');
+      pdf.setProducer('Datei Tools High-Efficiency Engine');
       onProgress(70);
     }
 

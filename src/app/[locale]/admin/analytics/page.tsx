@@ -140,7 +140,7 @@ export default function AdminAnalyticsDashboard() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                  CoolWave Product Analytics
+                  Datei Tools Product Analytics
                 </h1>
                 <p className="text-sm text-slate-500">
                   Datenschutzkonforme Produktmetriken, Funnels und Infrastruktur-Kostenanalyse
@@ -286,7 +286,7 @@ export default function AdminAnalyticsDashboard() {
               <span className="text-[11px] text-slate-400">Monetarisierung</span>
             </div>
             <p className="text-xs text-slate-500 mb-4">
-              Welche Tools lösen die meisten Upgrades zu CoolWave Pro aus?
+              Welche Tools lösen die meisten Upgrades zu Datei Tools Pro aus?
             </p>
 
             {/* Funnel Steps */}

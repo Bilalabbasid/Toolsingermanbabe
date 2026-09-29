@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error: 'BILLING_UNAVAILABLE',
-          message: 'CoolWave Pro ist noch nicht verfügbar. Die kostenlosen Werkzeuge können weiterhin vollständig genutzt werden.',
+          message: 'Datei Tools Pro ist noch nicht verfügbar. Die kostenlosen Werkzeuge können weiterhin vollständig genutzt werden.',
         },
         { status: 503 }
       );

@@ -167,11 +167,11 @@ export default function AdminControlPanel() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
-              CW
+              DT
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                CoolWave Administrator-Panel
+                Datei Tools Administrator-Panel
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-sky-100 text-sky-800">
                   Live DB
                 </span>

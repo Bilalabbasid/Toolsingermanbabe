@@ -51,7 +51,7 @@ export async function generateMetadata({
 
   if (!article) {
     return {
-      title: 'Artikel nicht gefunden | CoolWave',
+      title: 'Artikel nicht gefunden | Datei Tools',
       robots: { index: false, follow: false },
     };
   }
@@ -282,7 +282,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
           <div>
             <h3 className="font-bold text-sm sm:text-base text-white mb-1">
-              Datenschutz &amp; Vertraulichkeit bei CoolWave
+              Datenschutz &amp; Vertraulichkeit bei Datei Tools
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               Ihre Dateien und Dokumente werden nach europäischen Datenschutzstandards (DSGVO) verarbeitet. Werkzeuge mit clientseitiger Technologie verarbeiten Ihre Daten vollständig auf Ihrem eigenen Gerät, ohne Server-Upload.
@@ -327,7 +327,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <div className="flex items-center gap-2 mb-4">
               <Wrench className="w-4 h-4 text-sky-600" />
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                Passende CoolWave Werkzeuge für diese Aufgabe
+                Passende Datei Tools Werkzeuge für diese Aufgabe
               </h3>
             </div>
             <p className="text-xs text-slate-500 mb-6">

@@ -95,7 +95,7 @@ export function PdfSplitEngine() {
         const pdfBytes = await newPdf.save();
         const blob = new Blob([pdfBytes as unknown as BlobPart], { type: 'application/pdf' });
         setResultBlob(blob);
-        setOutputFilename(`coolwave_extrahiert_${Date.now()}.pdf`);
+        setOutputFilename(`datei_tools_extrahiert_${Date.now()}.pdf`);
       } else {
         // Extract all pages into a zip
         setStatusText('Seiten werden einzeln getrennt & komprimiert...');
@@ -113,7 +113,7 @@ export function PdfSplitEngine() {
         setStatusText('ZIP-Archiv wird erstellt...');
         const zipBlob = await zip.generateAsync({ type: 'blob' });
         setResultBlob(zipBlob);
-        setOutputFilename(`coolwave_seiten_einzeln_${Date.now()}.zip`);
+        setOutputFilename(`datei_tools_seiten_einzeln_${Date.now()}.zip`);
       }
 
       setProgress(100);

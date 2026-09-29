@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { getArticleBySlug, BLOG_CATEGORIES } from '@/config/blog.config';
 
 export const runtime = 'nodejs';
-export const alt = 'CoolWave Ratgeber';
+export const alt = 'Datei Tools Ratgeber';
 export const size = {
   width: 1200,
   height: 630,
@@ -26,7 +26,7 @@ export default async function Image({
   const { slug } = await params;
   const article = getArticleBySlug(slug);
 
-  const title = article?.title || 'CoolWave Ratgeber & Anleitungen';
+  const title = article?.title || 'Datei Tools Ratgeber & Anleitungen';
   const excerpt = article?.excerpt || 'Praktische Schritt-für-Schritt-Anleitungen rund um PDF, Word und Bildbearbeitung.';
   const categoryKey = article?.category || 'pdf';
   const categoryName = (BLOG_CATEGORIES[categoryKey]?.name) || 'Ratgeber';
@@ -88,7 +88,7 @@ export default async function Image({
                   display: 'flex',
                 }}
               >
-                C
+                D
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -100,7 +100,7 @@ export default async function Image({
                   color: '#ffffff',
                 }}
               >
-                CoolWave
+                Datei Tools
               </span>
               <span
                 style={{
@@ -232,7 +232,7 @@ export default async function Image({
               letterSpacing: '0.02em',
             }}
           >
-            coolwave.cool/de/blog
+            datei-tools.de/de/blog
           </div>
         </div>
       </div>

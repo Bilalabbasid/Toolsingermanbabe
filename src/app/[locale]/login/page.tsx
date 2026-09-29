@@ -56,7 +56,7 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center mx-auto mb-4 shadow-md shadow-sky-600/20">
             <LogIn className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Bei CoolWave anmelden</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Bei Datei Tools anmelden</h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Greifen Sie auf Ihre Konvertierungen, Einstellungen und Pro-Vorteile zu
           </p>

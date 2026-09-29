@@ -3,7 +3,7 @@ import type { ToolDefinition } from '@/types/tool';
 // Intent-led editorial copy. Keywords support navigation, not meta-keyword stuffing.
 const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
   'pdf-zusammenfuegen': {
-    titleDe: 'PDF zusammenfügen – mehrere PDFs verbinden | CoolWave',
+    titleDe: 'PDF zusammenfügen – mehrere PDFs verbinden | Datei Tools',
     h1De: 'PDF zusammenfügen',
     shortDescriptionDe: 'Verbinden Sie mehrere PDF-Dateien in der gewünschten Reihenfolge zu einem Dokument. Die Bearbeitung erfolgt im Browser.',
     metaDescriptionDe: 'Mehrere PDF-Dateien zu einem Dokument verbinden: Dateien auswählen, Reihenfolge festlegen und das Ergebnis herunterladen. Verarbeitung im Browser.',
@@ -17,7 +17,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     ],
   },
   'pdf-komprimieren': {
-    titleDe: 'PDF komprimieren – Dateigröße verkleinern | CoolWave',
+    titleDe: 'PDF komprimieren – Dateigröße verkleinern | Datei Tools',
     h1De: 'PDF komprimieren',
     shortDescriptionDe: 'Optimieren Sie die PDF-Struktur und prüfen Sie die Dateigröße des Ergebnisses. Bereits komprimierte Dateien werden nicht immer kleiner.',
     metaDescriptionDe: 'PDF-Dateien im Browser optimieren und die Ergebnisgröße prüfen. Wie stark sich eine PDF verkleinern lässt, hängt vom Inhalt und der bisherigen Kompression ab.',
@@ -30,7 +30,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     ],
   },
   'pdf-in-word-umwandeln': {
-    titleDe: 'PDF in Word umwandeln – PDF zu DOCX | CoolWave',
+    titleDe: 'PDF in Word umwandeln – PDF zu DOCX | Datei Tools',
     h1De: 'PDF in Word umwandeln',
     shortDescriptionDe: 'Konvertieren Sie eine PDF in ein bearbeitbares DOCX-Dokument. Layout, Tabellen und Seitenumbrüche können sich dabei verändern.',
     metaDescriptionDe: 'PDF in ein bearbeitbares Word-Dokument umwandeln. Hinweise zu DOCX, eingescannten Seiten und möglichen Änderungen an Tabellen und Seitenumbrüchen.',
@@ -43,7 +43,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     ],
   },
   'word-in-pdf-umwandeln': {
-    titleDe: 'Word in PDF umwandeln – DOCX zu PDF | CoolWave',
+    titleDe: 'Word in PDF umwandeln – DOCX zu PDF | Datei Tools',
     h1De: 'Word in PDF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie ein Word-Dokument in PDF. Prüfen Sie anschließend Schriften, Tabellen und Seitenumbrüche im Ergebnis.',
     howItWorksDe: [
@@ -61,7 +61,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     ],
   },
   'png-in-jpg-umwandeln': {
-    titleDe: 'PNG in JPG umwandeln – Bilder konvertieren | CoolWave',
+    titleDe: 'PNG in JPG umwandeln – Bilder konvertieren | Datei Tools',
     h1De: 'PNG in JPG umwandeln',
     shortDescriptionDe: 'Wandeln Sie PNG-Bilder in JPG um und wählen Sie die Qualität. Transparente Flächen benötigen im JPG eine Hintergrundfarbe.',
     metaDescriptionDe: 'PNG-Bilder in JPG umwandeln und die Bildqualität wählen. Beachten Sie: JPG unterstützt keine Transparenz und verwendet verlustbehaftete Kompression.',
@@ -70,7 +70,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     faqDe: [{ question: 'Bleibt der transparente Hintergrund erhalten?', answer: 'Nein. JPG kann keine Transparenz speichern. Verwenden Sie PNG, wenn Sie einen transparenten Hintergrund benötigen.' }],
   },
   'jpg-in-png-umwandeln': {
-    titleDe: 'JPG in PNG umwandeln – JPEG konvertieren | CoolWave',
+    titleDe: 'JPG in PNG umwandeln – JPEG konvertieren | Datei Tools',
     h1De: 'JPG in PNG umwandeln',
     shortDescriptionDe: 'Speichern Sie JPG- und JPEG-Bilder als PNG. Die Umwandlung entfernt keinen Hintergrund und stellt verlorene Details nicht wieder her.',
     metaDescriptionDe: 'JPG- und JPEG-Bilder in PNG umwandeln. Das PNG bewahrt die vorhandenen Bilddaten, stellt aber keine Details wieder her, die im JPG bereits verloren gingen.',

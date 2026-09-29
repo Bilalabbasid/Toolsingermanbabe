@@ -1,5 +1,5 @@
 /**
- * CoolWave Infrastructure Economics Configuration
+ * Datei Tools Infrastructure Economics Configuration
  * Defines environment-specific profiles to minimize cost per conversion
  * and protect host hardware from CPU/RAM starvation.
  */

@@ -146,7 +146,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
   ): Promise<{ blob: Blob; fileName: string; size: number }> => {
     const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
     const ext = targetFormat.toLowerCase();
-    const outName = `coolwave_${baseName}.${ext}`;
+    const outName = `datei_tools_${baseName}.${ext}`;
 
     if (canProcessInBrowser(file, targetFormat)) {
       onProgress?.(30, 'Bild wird im Browser transformiert...');
@@ -288,7 +288,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
         setResultBlob(blob);
 
         const base = files[0].name.substring(0, files[0].name.lastIndexOf('.')) || 'bilder';
-        setOutputFilename(files.length === 1 ? `coolwave_${base}.pdf` : `coolwave_${base}_kombiniert.pdf`);
+        setOutputFilename(files.length === 1 ? `datei_tools_${base}.pdf` : `datei_tools_${base}_kombiniert.pdf`);
         setProgress(100);
         setIsProcessing(false);
         trackEvent('conversion_completed', { targetFormat });
@@ -405,7 +405,7 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
       });
 
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(zipBlob, `coolwave_${targetFormat.toLowerCase()}_stapel_${Date.now()}.zip`);
+      downloadBlob(zipBlob, `datei_tools_${targetFormat.toLowerCase()}_stapel_${Date.now()}.zip`);
     } catch (err) {
       console.error('[Zip Error]:', err);
       alert('Fehler beim Erstellen des ZIP-Archivs.');

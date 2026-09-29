@@ -51,7 +51,7 @@ export function PdfRotateEngine() {
       const rotatedBytes = await pdf.save();
       const blob = new Blob([rotatedBytes as unknown as BlobPart], { type: 'application/pdf' });
       setRotatedBlob(blob);
-      setOutputFilename(`coolwave_gedreht_${file.name}`);
+      setOutputFilename(`datei_tools_gedreht_${file.name}`);
 
       setProgress(100);
       setIsProcessing(false);

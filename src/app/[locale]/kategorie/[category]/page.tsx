@@ -22,19 +22,22 @@ interface CategoryPageProps {
 }
 
 export async function generateStaticParams() {
-  return Object.keys(CATEGORIES).map((cat) => ({
-    locale: 'de',
-    category: cat,
-  }));
+  return Object.keys(CATEGORIES)
+    .filter((cat) => getToolsByCategory(cat).length > 0)
+    .map((cat) => ({
+      locale: 'de',
+      category: cat,
+    }));
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { locale, category } = await params;
   const catInfo = CATEGORIES[category as ToolCategory];
+  const tools = getToolsByCategory(category);
 
-  if (!catInfo) {
+  if (!catInfo || tools.length === 0) {
     return {
-      title: 'Kategorie nicht gefunden | CoolWave',
+      title: 'Kategorie nicht gefunden | Datei Tools',
       robots: { index: false, follow: false },
     };
   }
@@ -45,12 +48,11 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { locale, category } = await params;
   const catInfo = CATEGORIES[category as ToolCategory];
+  const tools = getToolsByCategory(category);
 
-  if (!catInfo) {
+  if (!catInfo || tools.length === 0) {
     notFound();
   }
-
-  const tools = getToolsByCategory(category);
 
   const breadcrumbs = [
     { name: catInfo.name, url: `/${locale}/kategorie/${category}` },

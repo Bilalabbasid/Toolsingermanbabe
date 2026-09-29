@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: PricingPageProps): Promise<Me
   const { locale } = await params;
 
   return generatePageMetadata({
-    title: 'Preise & Tarife – Faire, transparente Angebote | CoolWave',
-    description: 'Alle Standard-Tools dauerhaft kostenlos nutzen. CoolWave Pro für Vielnutzer & Teams: Bis zu 500 MB Dateigröße, 50 Dateien im Batch & 100% werbefrei.',
+    title: 'Preise & Tarife – Faire, transparente Angebote | Datei Tools',
+    description: 'Alle Standard-Tools dauerhaft kostenlos nutzen. Datei Tools Pro für Vielnutzer & Teams: Bis zu 500 MB Dateigröße, 50 Dateien im Batch & 100% werbefrei.',
     path: '/preise',
     locale,
   });

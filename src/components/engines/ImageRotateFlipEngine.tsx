@@ -90,7 +90,7 @@ export function ImageRotateFlipEngine({ mode = 'rotate' }: ImageRotateFlipEngine
       const ext = mime === 'image/png' ? '.png' : '.jpg';
       const base = file.name.replace(/\.[^.]+$/, '');
       const suffix = mode === 'flip' ? 'gespiegelt' : 'gedreht';
-      setOutputFilename('coolwave_' + suffix + '_' + base + ext);
+      setOutputFilename('datei_tools_' + suffix + '_' + base + ext);
       setProgress(100);
     } catch {
       alert('Fehler bei der Verarbeitung.');

@@ -25,11 +25,13 @@ import { UpgradeModal } from '@/components/monetization/UpgradeModal';
 import { ConversionHistoryDrawer } from '@/components/monetization/ConversionHistoryDrawer';
 import { getClientSubscription, hydrateClientSubscription, SubscriptionTier } from '@/lib/monetization/subscription';
 import { featureFlags } from '@/config/featureFlags.config';
+import { getToolsByCategory } from '@/config/tools.config';
 
 export function Header() {
   const accountsEnabled = featureFlags.enableAccounts;
   const billingEnabled = featureFlags.enableStripeCheckout;
   const historyEnabled = featureFlags.enableConversionHistory;
+  const hasDocTools = getToolsByCategory('documents').length > 0;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
@@ -109,10 +111,10 @@ export function Header() {
             </div>
             <div className="flex flex-col">
               <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 leading-tight">
-                Cool<span className="text-sky-600">Wave</span>
+                Datei<span className="text-sky-600"> Tools</span>
               </span>
               <span className="hidden sm:block text-[10px] font-medium text-slate-400 -mt-1 tracking-wider uppercase">
-                Datei- &amp; PDF-Tools
+                Kostenlose Online-Tools
               </span>
             </div>
           </Link>
@@ -133,13 +135,15 @@ export function Header() {
               <ImageIcon className="w-3.5 h-3.5 text-purple-500" />
               Bild-Tools
             </Link>
-            <Link
-              href="/de/kategorie/documents"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
-              Dokumente
-            </Link>
+            {hasDocTools && (
+              <Link
+                href="/de/kategorie/documents"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
+                Dokumente
+              </Link>
+            )}
             <Link
               href="/de/kategorie/utilities"
               className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
@@ -238,7 +242,7 @@ export function Header() {
               <button
                 onClick={() => setIsUpgradeOpen(true)}
                 type="button"
-                aria-label="Zu CoolWave Pro wechseln"
+                aria-label="Zu Datei Tools Pro wechseln"
                 aria-haspopup="dialog"
                 className="hidden sm:inline-flex items-center justify-center gap-1 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
               >
@@ -313,17 +317,19 @@ export function Header() {
                   <span className="flex-1">Bild-Tools</span>
                   <ChevronRight className="w-4 h-4 text-slate-300" />
                 </Link>
-                <Link
-                  href="/de/kategorie/documents"
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                    <FileSpreadsheet className="w-4 h-4" />
-                  </span>
-                  <span className="flex-1">Dokumente &amp; Office</span>
-                  <ChevronRight className="w-4 h-4 text-slate-300" />
-                </Link>
+                {hasDocTools && (
+                  <Link
+                    href="/de/kategorie/documents"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
+                  >
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                      <FileSpreadsheet className="w-4 h-4" />
+                    </span>
+                    <span className="flex-1">Dokumente &amp; Office</span>
+                    <ChevronRight className="w-4 h-4 text-slate-300" />
+                  </Link>
+                )}
                 <Link
                   href="/de/kategorie/utilities"
                   onClick={closeMobileMenu}
@@ -403,7 +409,7 @@ export function Header() {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <Sparkles className="w-4 h-4 fill-white" />
-                      CoolWave Pro ansehen
+                      Datei Tools Pro ansehen
                     </span>
                   </button>
                 )}

@@ -84,7 +84,7 @@ export const PRICING_PLANS: PricingPlan[] = [
   },
   {
     id: 'pro',
-    name: 'CoolWave Pro',
+    name: 'Datei Tools Pro',
     badge: 'Empfohlen',
     priceMonthlyEUR: 6.99,
     priceYearlyEUR: 59.0, // ~4.92 / mo (over 29% savings)

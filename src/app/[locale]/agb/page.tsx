@@ -7,8 +7,8 @@ import { featureFlags } from '@/config/featureFlags.config';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Allgemeine Geschäftsbedingungen (AGB) | CoolWave',
-  description: 'Nutzungsbedingungen und AGB für die Nutzung der Datei- und PDF-Werkzeuge auf CoolWave (coolwave.cool). Regelungen zu kostenlosen und Pro-Diensten.',
+  title: 'Allgemeine Geschäftsbedingungen (AGB) | Datei Tools',
+  description: 'Nutzungsbedingungen und AGB für die Nutzung der Datei- und PDF-Werkzeuge auf Datei Tools (datei-tools.de). Regelungen zu kostenlosen und Pro-Diensten.',
   path: '/agb',
   locale: 'de',
 });
@@ -27,7 +27,7 @@ export default function AgbPage() {
           Allgemeine Geschäftsbedingungen (AGB)
         </h1>
         <p className="text-slate-500 text-sm sm:text-base mt-2">
-          Stand: September 2026 | Nutzungsbedingungen für die Online-Plattform CoolWave
+          Stand: September 2026 | Nutzungsbedingungen für die Online-Plattform Datei Tools
         </p>
       </div>
 
@@ -37,12 +37,12 @@ export default function AgbPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">1. Geltungsbereich und Vertragspartner</h2>
           <p>
-            Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung aller auf der Plattform <strong>CoolWave</strong> (coolwave.cool) bereitgestellten Online-Tools, Konvertierungsdienste und Abonnements. Vertragspartner ist:
+            Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung aller auf der Plattform <strong>Datei Tools</strong> (datei-tools.de) bereitgestellten Online-Tools, Konvertierungsdienste und Abonnements. Vertragspartner ist:
           </p>
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-1 my-3">
             <p className="font-bold text-slate-900">[Name des Diensteanbieters / Betreibergesellschaft]</p>
             <p>[Straße und Hausnummer], [PLZ und Ort, Deutschland / EU]</p>
-            <p>E-Mail: support@coolwave.cool</p>
+            <p>E-Mail: support@datei-tools.de</p>
           </div>
           <p className="text-xs text-slate-600">
             Abweichende Geschäftsbedingungen des Nutzers finden keine Anwendung, es sei denn, ihrer Geltung wurde ausdrücklich schriftlich zugestimmt.
@@ -53,11 +53,11 @@ export default function AgbPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">2. Leistungsbeschreibung & Tarife</h2>
           <p>
-            CoolWave stellt browser- und serverbasierte Werkzeuge zur Verarbeitung, Konvertierung, Komprimierung und Optimierung von Dokumenten und Bilddateien zur Verfügung.
+            Datei Tools stellt browser- und serverbasierte Werkzeuge zur Verarbeitung, Konvertierung, Komprimierung und Optimierung von Dokumenten und Bilddateien zur Verfügung.
           </p>
           <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600 mt-2">
             <li><strong>Kostenloser Basis-Tarif:</strong> Ermöglicht die freie Nutzung der Kernwerkzeuge mit definierten Dateigrößen- und Stapelverarbeitungslimits. Die Finanzierung erfolgt unter anderem über nicht-personalisierte bzw. zustimmungsbasierte Online-Werbung.</li>
-            <li><strong>CoolWave Pro-Abonnement:</strong> Bietet erweiterte Dateigrößenlimits, beschleunigte Prioritätsverarbeitung, unbegrenzte Stapelverarbeitung, OCR-Texterkennung und eine 100% werbefreie Nutzungsumgebung ohne Werbeskripte.</li>
+            <li><strong>Datei Tools Pro-Abonnement:</strong> Bietet erweiterte Dateigrößenlimits, beschleunigte Prioritätsverarbeitung, unbegrenzte Stapelverarbeitung, OCR-Texterkennung und eine 100% werbefreie Nutzungsumgebung ohne Werbeskripte.</li>
           </ul>
         </section>
 

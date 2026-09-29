@@ -4,7 +4,7 @@ import { CATEGORIES } from '@/config/categories.config';
 import { ToolCategory } from '@/types/tool';
 
 export const runtime = 'nodejs';
-export const alt = 'CoolWave Online Tool';
+export const alt = 'Datei Tools Online Tool';
 export const size = {
   width: 1200,
   height: 630,
@@ -106,7 +106,7 @@ export default async function Image({
                   display: 'flex',
                 }}
               >
-                C
+                D
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -118,7 +118,7 @@ export default async function Image({
                   color: '#ffffff',
                 }}
               >
-                CoolWave
+                Datei Tools
               </span>
               <span
                 style={{
@@ -289,7 +289,7 @@ export default async function Image({
               letterSpacing: '0.02em',
             }}
           >
-            coolwave.cool
+            datei-tools.de
           </div>
         </div>
       </div>

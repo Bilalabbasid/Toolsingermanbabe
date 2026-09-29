@@ -7,8 +7,8 @@ import { ShieldCheck, Lock, Trash2, Cpu, Server, Key } from 'lucide-react';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Datenschutzerklärung – 100% DSGVO-konform | CoolWave',
-  description: 'Transparente Informationen zur Verarbeitung personenbezogener Daten, Dateilebenszyklus und Privatsphäre bei CoolWave. Keine permanente Speicherung.',
+  title: 'Datenschutzerklärung – 100% DSGVO-konform | Datei Tools',
+  description: 'Transparente Informationen zur Verarbeitung personenbezogener Daten, Dateilebenszyklus und Privatsphäre bei Datei Tools. Keine permanente Speicherung.',
   path: '/datenschutz',
   locale: 'de',
 });
@@ -65,7 +65,7 @@ export default function DatenschutzPage() {
           </h2>
           <p>
             Wir nehmen den Schutz Ihrer persönlichen Daten und den verantwortungsvollen Umgang mit Ihren Dokumenten sehr ernst. 
-            Bei CoolWave gilt das Prinzip der Datenminimierung und Transparenz nach Art. 5 Abs. 1 lit. c DSGVO.
+            Bei Datei Tools gilt das Prinzip der Datenminimierung und Transparenz nach Art. 5 Abs. 1 lit. c DSGVO.
           </p>
           
           <div className="mt-4 space-y-4">
@@ -141,8 +141,8 @@ export default function DatenschutzPage() {
             <p>[Vertretungsberechtigte Person / Geschäftsführer]</p>
             <p>[Straße und Hausnummer]</p>
             <p>[Postleitzahl und Ort, Deutschland / EU]</p>
-            <p className="text-sky-700">E-Mail für Datenschutzanfragen: datenschutz@coolwave.cool</p>
-            <p>Allgemeiner Support: support@coolwave.cool</p>
+            <p className="text-sky-700">E-Mail für Datenschutzanfragen: datenschutz@datei-tools.de</p>
+            <p>Allgemeiner Support: support@datei-tools.de</p>
           </div>
         </section>
 
@@ -187,7 +187,7 @@ export default function DatenschutzPage() {
               <strong>Google AdSense:</strong> Im kostenfreien Tarif binden wir Werbeanzeigen über Google AdSense (Google Ireland Limited, Dublin, Irland) ein. Diese Skripte werden ausschließlich geladen, wenn Sie der Kategorie „Marketing“ im Cookie-Banner zugestimmt haben.
             </p>
             <p>
-              <strong>Werbefreiheit für Pro-Nutzer:</strong> Abonnenten von CoolWave Pro erhalten eine werbefreie Nutzungsumgebung, in der keinerlei Werbe- oder Marketing-Tracker ausgeführt werden.
+              <strong>Werbefreiheit für Pro-Nutzer:</strong> Abonnenten von Datei Tools Pro erhalten eine werbefreie Nutzungsumgebung, in der keinerlei Werbe- oder Marketing-Tracker ausgeführt werden.
             </p>
             <p>
               Sie können Ihre Cookie-Präferenzen jederzeit in unserer{' '}

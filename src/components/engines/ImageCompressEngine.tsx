@@ -135,7 +135,7 @@ export function ImageCompressEngine() {
       onProgress?.(100, 'Fertig');
       return {
         blob,
-        fileName: `coolwave_komprimiert_${base}${ext}`,
+        fileName: `datei_tools_komprimiert_${base}${ext}`,
       };
     } finally {
       URL.revokeObjectURL(objectUrl);
@@ -258,7 +258,7 @@ export function ImageCompressEngine() {
       });
 
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(zipBlob, `coolwave_bilder_komprimiert_${Date.now()}.zip`);
+      downloadBlob(zipBlob, `datei_tools_bilder_komprimiert_${Date.now()}.zip`);
     } catch (err) {
       console.error('[Zip Error]:', err);
       alert('Fehler beim Erstellen des ZIP-Archivs.');

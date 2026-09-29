@@ -237,7 +237,7 @@ export function PdfCompareEngine() {
     if (!result) return;
     const lines = [
       '====================================================',
-      '        COOLWAVE PDF-VERGLEICHSBERICHT',
+      '        DATEI TOOLS PDF-VERGLEICHSBERICHT',
       '====================================================',
       `Erstellt am: ${new Date().toLocaleString('de-DE')}`,
       '',
@@ -284,7 +284,7 @@ export function PdfCompareEngine() {
           <div className="text-center max-w-xl mx-auto mb-8">
             <h2 className="text-xl font-bold text-slate-900 mb-2">PDF Text-Vergleich & Differenz-Analyse</h2>
             <p className="text-sm text-slate-600">
-              Laden Sie das Original und die überarbeitete Fassung hoch. CoolWave analysiert Texte, Wörter und Absätze seitenweise und hebt Textabweichungen farblich hervor. (Hinweis: Semantischer Text- und Wortvergleich, kein visueller Pixel-Diff).
+              Laden Sie das Original und die überarbeitete Fassung hoch. Datei Tools analysiert Texte, Wörter und Absätze seitenweise und hebt Textabweichungen farblich hervor. (Hinweis: Semantischer Text- und Wortvergleich, kein visueller Pixel-Diff).
             </p>
           </div>
 

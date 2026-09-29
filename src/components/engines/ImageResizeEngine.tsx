@@ -134,7 +134,7 @@ export function ImageResizeEngine({ isGrayscaleMode = false }: ImageResizeEngine
       setResultBlob(blob);
       const prefix = isGrayscaleMode ? 'graustufen_' : 'skaliert_';
       const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-      setOutputFilename(`coolwave_${prefix}${base}${ext}`);
+      setOutputFilename(`datei_tools_${prefix}${base}${ext}`);
       setProgress(100);
       setIsProcessing(false);
     } catch (err) {

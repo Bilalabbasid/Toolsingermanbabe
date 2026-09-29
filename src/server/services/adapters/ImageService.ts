@@ -205,7 +205,7 @@ export class ImageService implements IConversionService {
         const base64Png = pngBuffer.toString("base64");
         const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${ptWidth}pt" height="${ptHeight}pt" viewBox="0 0 ${ptWidth} ${ptHeight}">
-  <title>${escapeXml(baseName)} – CoolWave SVG</title>
+  <title>${escapeXml(baseName)} – Datei Tools SVG</title>
   <image width="${ptWidth}" height="${ptHeight}" xlink:href="data:image/png;base64,${base64Png}" preserveAspectRatio="none"/>
   <!-- Selectable vector text layer -->
   <g class="pdf-text-layer" aria-hidden="true">

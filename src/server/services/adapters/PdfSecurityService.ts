@@ -314,7 +314,7 @@ export class PdfSecurityService implements IConversionService {
       second: '2-digit',
     });
 
-    const signer = options.signerName || 'CoolWave Benutzer';
+    const signer = options.signerName || 'Datei Tools Benutzer';
     const reason = options.reason || 'Dokumentenfreigabe & Sichtvermerk';
 
     const stampWidth = options.width || 230;
@@ -356,7 +356,7 @@ export class PdfSecurityService implements IConversionService {
     }
 
     // 3. Draw verification text (accurately labeled as visual signature / stamp)
-    targetPage.drawText('CoolWave Visuelle Signatur / Dokumentenstempel', {
+    targetPage.drawText('Datei Tools Visuelle Signatur / Dokumentenstempel', {
       x: posX,
       y: posY + stampHeight - 8,
       size: 7.5,
@@ -397,8 +397,8 @@ export class PdfSecurityService implements IConversionService {
     });
 
     // 4. Set PDF metadata audit record
-    doc.setCreator('CoolWave Sign Engine');
-    doc.setProducer('CoolWave Visual Signature Service');
+    doc.setCreator('Datei Tools Sign Engine');
+    doc.setProducer('Datei Tools Visual Signature Service');
     doc.setSubject(`Visuell signiert durch ${signer} am ${formattedDate} (${reason})`);
 
     const outputBytes = await doc.save({ useObjectStreams: true });

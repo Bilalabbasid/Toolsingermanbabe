@@ -68,7 +68,7 @@ const post = async (req: NextRequest) => {
       compressionOptions: { level: 6 },
     });
 
-    const zipFilename = `coolwave_stapel_${Date.now()}.zip`;
+    const zipFilename = `datei_tools_stapel_${Date.now()}.zip`;
 
     return new NextResponse(new Uint8Array(zipBuffer), {
       status: 200,
