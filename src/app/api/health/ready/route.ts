@@ -3,6 +3,8 @@ import { checkDatabaseHealth, isDatabaseConfigured } from '@/server/db/prisma';
 import type { NextRequest } from 'next/server';
 import { apiCorsPreflight, withApiCors } from '@/server/security/apiCors';
 
+export const dynamic = 'force-dynamic';
+
 const get = async () => {
   // If database is explicitly configured, check that it can respond to query
   if (isDatabaseConfigured()) {

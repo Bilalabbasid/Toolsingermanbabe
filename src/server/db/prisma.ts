@@ -24,11 +24,31 @@ function createPrismaClient(): PrismaClient {
   return client;
 }
 
-export const prisma: PrismaClient = globalThis.prismaGlobal ?? createPrismaClient();
+let _prismaInstance: PrismaClient | null = null;
 
-if (!IS_PRODUCTION) {
-  globalThis.prismaGlobal = prisma;
+function getPrismaClient(): PrismaClient {
+  if (globalThis.prismaGlobal) {
+    return globalThis.prismaGlobal;
+  }
+  if (!_prismaInstance) {
+    _prismaInstance = createPrismaClient();
+    if (!IS_PRODUCTION) {
+      globalThis.prismaGlobal = _prismaInstance;
+    }
+  }
+  return _prismaInstance;
 }
+
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getPrismaClient();
+    const value = (client as unknown as Record<string | symbol, unknown>)[prop];
+    if (typeof value === 'function') {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
 
 /**
  * Health check helper for database connectivity

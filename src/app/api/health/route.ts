@@ -3,6 +3,8 @@ import { checkDatabaseHealth, isDatabaseConfigured } from '@/server/db/prisma';
 import { isStripeConfigured } from '@/server/stripe/client';
 import { isAdminRequest } from '@/server/security/request';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req?: NextRequest) {
   const dbHealth = await checkDatabaseHealth();
   const status = dbHealth.status === 'ok' || !isDatabaseConfigured() ? 'ok' : 'degraded';
