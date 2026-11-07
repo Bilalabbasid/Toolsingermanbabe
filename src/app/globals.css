@@ -1,24 +1,260 @@
 @import "tailwindcss";
 
+/* =====================================================================
+   Datei Tools – Design System
+   ---------------------------------------------------------------------
+   1. Brand palette: the Tailwind `sky` ramp is re-tuned so that every
+      existing `bg-sky-600 text-white` button and `text-sky-600` link in
+      the code base meets WCAG AA (≥ 4.5:1) without touching components.
+   2. Semantic tokens (canvas, surface, ink, line, brand, ok …) are what
+      new UI should use. They are exposed to Tailwind via `@theme inline`
+      (e.g. `bg-surface`, `text-ink-muted`, `border-line`).
+   3. Dark mode: semantic tokens have dark values behind
+      `<html data-theme="dark">` / `.dark`. It is opt-in (not driven by
+      prefers-color-scheme yet) because many legacy views still hard-code
+      `slate-*` / `white` classes that would become unreadable.
+   ===================================================================== */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
+@theme {
+  /* Re-tuned brand ramp (sky). 600 = primary action colour, 5.1:1 on white. */
+  --color-sky-50: #f0f8ff;
+  --color-sky-100: #e0f0fe;
+  --color-sky-200: #bae2fd;
+  --color-sky-300: #7dcbfb;
+  --color-sky-400: #38b0f5;
+  --color-sky-500: #0c95e0;
+  --color-sky-600: #0273b4;
+  --color-sky-700: #035d92;
+  --color-sky-800: #074e78;
+  --color-sky-900: #0c4264;
+  --color-sky-950: #082a43;
+
+  /* Slightly darker slate-400 so hint text/icons reach ≥ 3:1. */
+  --color-slate-400: #8693a8;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Elevation scale */
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 3px rgb(15 23 42 / 0.06);
+  --shadow-raised: 0 2px 4px rgb(15 23 42 / 0.04), 0 8px 24px -6px rgb(15 23 42 / 0.12);
+  --shadow-pop: 0 12px 32px -8px rgb(15 23 42 / 0.22), 0 4px 8px -4px rgb(15 23 42 / 0.08);
+  --shadow-brand: 0 6px 18px -6px rgb(2 115 180 / 0.55);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-indeterminate: indeterminate 1.4s ease-in-out infinite;
+  --animate-shake: shake 0.35s ease-in-out 1;
+  --animate-pop-in: popIn 0.35s var(--ease-out-soft) both;
+
+  @keyframes indeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(300%); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+}
+
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  color-scheme: light;
+
+  /* Semantic tokens – light */
+  --canvas: #f7f9fc;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --surface-sunken: #eef2f7;
+  --line: #e3e8ef;
+  --line-strong: #cbd5e1;
+  --ink: #0b1324;
+  --ink-muted: #475569;
+  --ink-subtle: #64748b;
+  --brand: #0273b4;
+  --brand-hover: #035d92;
+  --brand-soft: #e0f0fe;
+  --brand-ink: #035d92;
+  --ok: #047857;
+  --ok-soft: #e7f8f0;
+  --warn: #b45309;
+  --warn-soft: #fff7e6;
+  --danger: #be123c;
+  --danger-soft: #fff1f3;
+  --inverse: #0b1324;
+  --inverse-ink: #e2e8f0;
+  --ring: #0c95e0;
+
+  /* Legacy aliases */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
 }
 
+:root[data-theme="dark"],
+.dark {
+  color-scheme: dark;
+  --canvas: #0a0f1a;
+  --surface: #111827;
+  --surface-muted: #172033;
+  --surface-sunken: #0d1422;
+  --line: #243045;
+  --line-strong: #33415a;
+  --ink: #e8edf5;
+  --ink-muted: #a7b3c6;
+  --ink-subtle: #8a97ab;
+  --brand: #38b0f5;
+  --brand-hover: #7dcbfb;
+  --brand-soft: rgb(56 176 245 / 0.14);
+  --brand-ink: #7dcbfb;
+  --ok: #34d399;
+  --ok-soft: rgb(52 211 153 / 0.12);
+  --warn: #fbbf24;
+  --warn-soft: rgb(251 191 36 / 0.12);
+  --danger: #fb7185;
+  --danger-soft: rgb(251 113 133 / 0.12);
+  --inverse: #020617;
+  --inverse-ink: #cbd5e1;
+  --ring: #38b0f5;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-inverse: var(--inverse);
+  --color-inverse-ink: var(--inverse-ink);
 }
 
-body {
-  background-color: #f8fafc;
-  color: #0f172a;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ===== BASE ===== */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-feature-settings: "cv11", "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: #bae2fd;
+    color: #0b1324;
+  }
+}
+
+/* ===== COMPONENT PRIMITIVES ===== */
+@layer components {
+  /* Page width container with a 16px gutter on phones */
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-page { padding-inline: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .container-page { padding-inline: 2rem; }
+  }
+
+  /* Section eyebrow label */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-ink);
+  }
+
+  /* Typography scale for marketing sections */
+  .text-display {
+    font-size: clamp(2rem, 1.35rem + 3.2vw, 3.75rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .text-title {
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+  .text-heading {
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  /* Card surface */
+  .card {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Long-form copy inside tool pages */
+  .prose-tool p + p { margin-top: 1rem; }
+
+  /* Native <details> FAQ accordion (no JS needed) */
+  .faq-item > summary { list-style: none; cursor: pointer; }
+  .faq-item > summary::-webkit-details-marker { display: none; }
+  .faq-item[open] .faq-chevron { transform: rotate(180deg); color: var(--brand); }
+
+  /* Subtle dotted backdrop used in hero areas */
+  .bg-grid {
+    background-image: radial-gradient(rgb(15 23 42 / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
 }
 
 /* ===== MOBILE UX UTILITIES ===== */
@@ -58,17 +294,15 @@ body {
 @keyframes slideDown {
   from {
     opacity: 0;
-    max-height: 0;
     transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    max-height: 500px;
     transform: translateY(0);
   }
 }
 .animate-slide-down {
-  animation: slideDown 0.25s ease-out forwards;
+  animation: slideDown 0.22s var(--ease-out-soft) forwards;
 }
 
 /* Mobile slide-up animation for sticky bars */
@@ -107,19 +341,12 @@ body {
 }
 
 /* Hide scrollbar but keep scroll functionality */
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar — alias used in SearchModal */
+.scrollbar-none,
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+.scrollbar-none::-webkit-scrollbar,
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -145,7 +372,7 @@ body {
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 .animate-scale-up {
-  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: scaleUp 0.2s var(--ease-out-soft) forwards;
 }
 
 /* Search modal panel — responsive height container */
@@ -166,7 +393,7 @@ body {
 
 /* Global focus-visible indicator: crisp, visible, WCAG AA compliant */
 :focus-visible {
-  outline: 2px solid #0284c7;
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 
@@ -194,6 +421,9 @@ input[type="search"]::-webkit-search-results-decoration {
 
 /* Respect user's reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
@@ -203,4 +433,3 @@ input[type="search"]::-webkit-search-results-decoration {
     scroll-behavior: auto !important;
   }
 }
-

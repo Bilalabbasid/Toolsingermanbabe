@@ -1,44 +1,89 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { 
-  Search, 
-  Menu, 
-  X, 
-  Sparkles, 
-  Globe, 
-  History, 
-  Zap, 
+import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
+import {
+  Search,
+  Menu,
+  X,
+  Sparkles,
+  History,
+  Zap,
   Crown,
   User,
-  FileText,
-  Image as ImageIcon,
-  FileSpreadsheet,
-  Wrench,
+  ChevronDown,
+  ArrowRight,
+  BookOpen,
   ShieldCheck,
-  ScanText,
-  ChevronRight,
+  LayoutGrid,
 } from 'lucide-react';
-import { SearchModal } from './SearchModal';
-import { UpgradeModal } from '@/components/monetization/UpgradeModal';
-import { ConversionHistoryDrawer } from '@/components/monetization/ConversionHistoryDrawer';
+import { CategoryIcon } from '@/components/common/CategoryIcon';
+import { BrandLogo } from '@/components/common/BrandLogo';
+import { OPEN_SEARCH_EVENT, openGlobalSearch, type OpenSearchDetail } from '@/components/common/searchEvents';
+import { CATEGORY_ACCENTS, type NavCategory } from '@/components/common/navMeta';
 import { getClientSubscription, hydrateClientSubscription, SubscriptionTier } from '@/lib/monetization/subscription';
 import { featureFlags } from '@/config/featureFlags.config';
-import { getToolsByCategory } from '@/config/tools.config';
 
-export function Header() {
+// Heavy, rarely-needed UI is code-split and only fetched on demand.
+const loadSearchModal = () => import('./SearchModal');
+const SearchModal = dynamic(() => loadSearchModal().then((m) => m.SearchModal), { ssr: false });
+const UpgradeModal = dynamic(
+  () => import('@/components/monetization/UpgradeModal').then((m) => m.UpgradeModal),
+  { ssr: false }
+);
+const ConversionHistoryDrawer = dynamic(
+  () => import('@/components/monetization/ConversionHistoryDrawer').then((m) => m.ConversionHistoryDrawer),
+  { ssr: false }
+);
+
+/** Fallback when the layout does not pass navigation data. */
+const FALLBACK_CATEGORIES: NavCategory[] = [
+  { slug: 'pdf', label: 'PDF', name: 'PDF-Tools', description: 'PDFs bearbeiten, zusammenfügen und konvertieren.', count: 0, tools: [] },
+  { slug: 'images', label: 'Bilder', name: 'Bild-Tools', description: 'Bilder umwandeln, verkleinern und anpassen.', count: 0, tools: [] },
+  { slug: 'documents', label: 'Dokumente', name: 'Dokumente', description: 'Office-Dokumente konvertieren.', count: 0, tools: [] },
+  { slug: 'utilities', label: 'Text, Medien & Mehr', name: 'Text-Tools & Hilfsmittel', description: 'Nützliche Helfer.', count: 0, tools: [] },
+];
+
+interface HeaderUser {
+  name?: string | null;
+  email?: string;
+  role?: string;
+  plan?: SubscriptionTier;
+}
+
+interface HeaderProps {
+  /** Navigation data computed on the server (see navData.ts). Optional for backwards compatibility. */
+  categories?: NavCategory[];
+}
+
+export function Header({ categories }: HeaderProps = {}) {
   const accountsEnabled = featureFlags.enableAccounts;
   const billingEnabled = featureFlags.enableStripeCheckout;
   const historyEnabled = featureFlags.enableConversionHistory;
-  const hasDocTools = getToolsByCategory('documents').length > 0;
+  const navCategories = categories && categories.length > 0 ? categories : FALLBACK_CATEGORIES;
+  const totalTools = navCategories.reduce((sum, c) => sum + c.count, 0);
+  const primaryLinks = navCategories.filter((c) => ['pdf', 'images', 'documents'].includes(c.slug));
+
+  const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchMounted, setSearchMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMegaOpen, setIsMegaOpen] = useState(false);
   const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>('free');
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<HeaderUser | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const megaRef = useRef<HTMLDivElement>(null);
+  const megaButtonRef = useRef<HTMLButtonElement>(null);
 
+  // All "open search" requests go through the event bridge so there is a single code path.
+  const openSearch = (query?: string) => openGlobalSearch(query);
+
+  // Account hydration (dormant unless accounts are enabled)
   useEffect(() => {
     if (!accountsEnabled) {
       hydrateClientSubscription(null);
@@ -60,373 +105,417 @@ export function Header() {
   }, [accountsEnabled]);
 
   useEffect(() => {
-    const updateSubscription = () => {
-      const sub = getClientSubscription();
-      setTier(sub.tier);
-    };
-
+    const updateSubscription = () => setTier(getClientSubscription().tier);
     updateSubscription();
     window.addEventListener('coolwave_subscription_changed', updateSubscription);
     return () => window.removeEventListener('coolwave_subscription_changed', updateSubscription);
   }, []);
 
-  // Global shortcuts (Ctrl+K for search, Escape for mobile menu)
+  // Close menus on navigation (state adjustment during render, no effect needed)
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
+    setIsMobileMenuOpen(false);
+    setIsMegaOpen(false);
+  }
+
+  // Elevation once the page is scrolled
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Global shortcuts (Ctrl/⌘+K for search, Escape closes menus) + search event bridge
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setIsSearchOpen((prev) => !prev);
-      } else if (e.key === 'Escape' && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
+        if (isSearchOpen) setIsSearchOpen(false);
+        else openGlobalSearch();
+      } else if (e.key === 'Escape') {
+        if (isMegaOpen) {
+          setIsMegaOpen(false);
+          megaButtonRef.current?.focus();
+        }
+        if (isMobileMenuOpen) setIsMobileMenuOpen(false);
       }
     };
+    const handleOpenEvent = (e: Event) => {
+      const detail = (e as CustomEvent<OpenSearchDetail>).detail;
+      setSearchQuery(detail?.query);
+      setSearchMounted(true);
+      setIsSearchOpen(true);
+      setIsMobileMenuOpen(false);
+      setIsMegaOpen(false);
+    };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobileMenuOpen]);
+    window.addEventListener(OPEN_SEARCH_EVENT, handleOpenEvent);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener(OPEN_SEARCH_EVENT, handleOpenEvent);
+    };
+  }, [isMobileMenuOpen, isMegaOpen, isSearchOpen]);
 
-  // Lock body scroll when mobile menu is open
+  // Close mega menu on outside click
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    if (!isMegaOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (megaRef.current?.contains(target) || megaButtonRef.current?.contains(target)) return;
+      setIsMegaOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [isMegaOpen]);
+
+  // Lock body scroll when the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => {
       document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
+    };
   }, [isMobileMenuOpen]);
 
   const isPro = tier === 'pro' || tier === 'business';
-
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const prefetchSearch = () => {
+    void loadSearchModal();
+  };
+
+  const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`);
+  const navLinkClass = (active: boolean) =>
+    `relative inline-flex items-center gap-1.5 h-9 px-3 rounded-lg text-sm font-medium transition-colors ${
+      active ? 'text-ink bg-surface-muted' : 'text-ink-muted hover:text-ink hover:bg-surface-muted'
+    }`;
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 safe-area-top">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
-          {/* Brand Logo */}
-          <Link href="/de" className="flex items-center gap-2 shrink-0 group" onClick={closeMobileMenu}>
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-sky-600 text-white flex items-center justify-center font-black text-lg shadow-sm shadow-sky-600/20 group-hover:bg-sky-700 transition-colors">
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 leading-tight">
-                Datei<span className="text-sky-600"> Tools</span>
-              </span>
-              <span className="hidden sm:block text-[10px] font-medium text-slate-400 -mt-1 tracking-wider uppercase">
-                Kostenlose Online-Tools
-              </span>
-            </div>
+      <header
+        className={`sticky top-0 z-40 w-full safe-area-top border-b transition-[background-color,box-shadow,border-color] duration-200 ${
+          isScrolled || isMobileMenuOpen || isMegaOpen
+            ? 'bg-white/90 backdrop-blur-md border-line shadow-[0_1px_0_rgb(15_23_42/0.02),0_6px_16px_-12px_rgb(15_23_42/0.18)]'
+            : 'bg-white/80 backdrop-blur-md border-transparent'
+        }`}
+      >
+        <div className="container-page h-14 sm:h-16 flex items-center justify-between gap-3">
+          {/* Brand */}
+          <Link href="/de" aria-label="Datei Tools – Startseite" className="shrink-0 rounded-lg" onClick={closeMobileMenu}>
+            <BrandLogo showTagline />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav aria-label="Hauptnavigation" className="hidden md:flex items-center gap-0.5 lg:gap-1">
-            <Link
-              href="/de/kategorie/pdf"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
+          {/* Desktop navigation */}
+          <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-0.5">
+            <button
+              ref={megaButtonRef}
+              type="button"
+              onClick={() => setIsMegaOpen((v) => !v)}
+              aria-expanded={isMegaOpen}
+              aria-controls="mega-menu"
+              className={`${navLinkClass(isMegaOpen)} cursor-pointer`}
             >
-              <FileText className="w-3.5 h-3.5 text-rose-500" />
-              PDF-Tools
+              <LayoutGrid className="w-4 h-4 text-sky-600" aria-hidden="true" />
+              Alle Tools
+              <ChevronDown className={`w-3.5 h-3.5 text-ink-subtle transition-transform ${isMegaOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </button>
+            {primaryLinks.map((cat) => {
+              const href = `/de/kategorie/${cat.slug}`;
+              return (
+                <Link key={cat.slug} href={href} className={navLinkClass(isActive(href))} aria-current={isActive(href) ? 'page' : undefined}>
+                  {cat.name}
+                </Link>
+              );
+            })}
+            <Link href="/de/blog" className={navLinkClass(isActive('/de/blog'))} aria-current={isActive('/de/blog') ? 'page' : undefined}>
+              Ratgeber
             </Link>
-            <Link
-              href="/de/kategorie/images"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
-            >
-              <ImageIcon className="w-3.5 h-3.5 text-purple-500" />
-              Bild-Tools
-            </Link>
-            {hasDocTools && (
-              <Link
-                href="/de/kategorie/documents"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
-              >
-                <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
-                Dokumente
+            {billingEnabled && (
+              <Link href="/de/preise" className={navLinkClass(isActive('/de/preise'))}>
+                <Sparkles className="w-4 h-4 text-amber-500" aria-hidden="true" />
+                Preise
               </Link>
             )}
-            <Link
-              href="/de/kategorie/utilities"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
-            >
-              <Wrench className="w-3.5 h-3.5 text-slate-500" />
-              Werkzeuge
-            </Link>
-            {billingEnabled && <Link
-              href="/de/preise"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-semibold text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors"
-            >
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Preise &amp; Tarife</span>
-            </Link>}
           </nav>
 
-          {/* Right Actions: Search, History, User Tier, Upgrade */}
-          <div className="flex items-center gap-1.5 sm:gap-3">
-            {/* Search Trigger */}
+          {/* Right actions */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
-              onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-500 hover:text-slate-800 hover:border-slate-300 hover:bg-white text-xs sm:text-sm font-normal transition-all touch-target-44 cursor-pointer"
-              aria-label="Werkzeuge durchsuchen (Strg+K)"
+              type="button"
+              onClick={() => openSearch()}
+              onPointerEnter={prefetchSearch}
+              onFocus={prefetchSearch}
+              className="group inline-flex items-center gap-2 h-10 sm:h-9 min-w-10 justify-center sm:justify-start px-2.5 sm:pl-3 sm:pr-2 rounded-xl border border-line bg-surface-muted/70 text-ink-subtle hover:text-ink hover:border-line-strong hover:bg-white text-sm transition-colors cursor-pointer sm:w-56 xl:w-64"
+              aria-label="Tools durchsuchen (Strg+K)"
               aria-haspopup="dialog"
             >
-              <Search className="w-4 h-4 text-slate-400" />
-              <span className="hidden sm:inline">Werkzeuge suchen...</span>
-              <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-white border border-slate-200 rounded">
-                Strg+K
+              <Search className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span className="hidden sm:inline flex-1 text-left truncate">Tool suchen …</span>
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold text-ink-subtle bg-white border border-line rounded-md font-sans">
+                Strg K
               </kbd>
             </button>
 
-            {/* Conversion History Button */}
-            {historyEnabled && <button
-              onClick={() => setIsHistoryOpen(true)}
-              type="button"
-              className="p-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-white transition cursor-pointer touch-target-44"
-              aria-label="Konvertierungsverlauf anzeigen"
-              aria-haspopup="dialog"
-              title="Konvertierungsverlauf anzeigen"
-            >
-              <History className="w-4 h-4" />
-            </button>}
-
-            {/* User Tier Badge — Desktop only */}
-            {billingEnabled && <button
-              onClick={() => setIsUpgradeOpen(true)}
-              type="button"
-              aria-label={isPro ? "Pro-Abonnement aktiv – Details anzeigen" : "Kostenlose Version – Zu Pro wechseln"}
-              aria-haspopup="dialog"
-              className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border cursor-pointer ${
-                isPro
-                  ? 'bg-amber-500/10 text-amber-700 border-amber-300/50 hover:bg-amber-500/20'
-                  : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
-              }`}
-            >
-              {isPro ? (
-                <>
-                  <Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-                  <span>Pro aktiv</span>
-                </>
-              ) : (
-                <>
-                  <Zap className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Kostenlos</span>
-                </>
-              )}
-            </button>}
-
-            {/* User Account / Login Button */}
-            {accountsEnabled && (currentUser ? (
-              <Link
-                href="/de/konto"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition"
-                title={currentUser.email}
-              >
-                <User className="w-3.5 h-3.5 text-sky-600" />
-                <span className="hidden sm:inline max-w-[80px] truncate">{currentUser.name || 'Konto'}</span>
-                {currentUser.role === 'ADMIN' && (
-                  <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-bold rounded">
-                    Admin
-                  </span>
-                )}
-              </Link>
-            ) : (
-              <Link
-                href="/de/login"
-                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition"
-              >
-                <span>Anmelden</span>
-              </Link>
-            ))}
-
-            {/* Pro Upgrade CTA — Desktop only */}
-            {billingEnabled && !isPro && (
+            {historyEnabled && (
               <button
-                onClick={() => setIsUpgradeOpen(true)}
+                onClick={() => setIsHistoryOpen(true)}
                 type="button"
-                aria-label="Zu Datei Tools Pro wechseln"
+                className="inline-flex items-center justify-center w-10 h-10 sm:w-9 sm:h-9 rounded-xl border border-line bg-white text-ink-muted hover:text-ink hover:bg-surface-muted transition cursor-pointer"
+                aria-label="Konvertierungsverlauf anzeigen"
                 aria-haspopup="dialog"
-                className="hidden sm:inline-flex items-center justify-center gap-1 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+                title="Konvertierungsverlauf anzeigen"
               >
-                <Sparkles className="w-3.5 h-3.5 fill-white" />
-                <span>Zu Pro</span>
+                <History className="w-4 h-4" aria-hidden="true" />
               </button>
             )}
 
-            {/* Mobile Hamburger Toggle */}
+            {billingEnabled && (
+              <button
+                onClick={() => setIsUpgradeOpen(true)}
+                type="button"
+                aria-label={isPro ? 'Pro-Abonnement aktiv – Details anzeigen' : 'Kostenlose Version – Zu Pro wechseln'}
+                aria-haspopup="dialog"
+                className={`hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-bold transition border cursor-pointer ${
+                  isPro
+                    ? 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
+                    : 'bg-sky-600 text-white border-sky-600 hover:bg-sky-700'
+                }`}
+              >
+                {isPro ? (
+                  <>
+                    <Crown className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
+                    <span>Pro aktiv</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Zu Pro</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {accountsEnabled &&
+              (currentUser ? (
+                <Link
+                  href="/de/konto"
+                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-line bg-white hover:bg-surface-muted text-ink-muted text-xs font-semibold transition"
+                  title={currentUser.email}
+                >
+                  <User className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+                  <span className="max-w-[80px] truncate">{currentUser.name || 'Konto'}</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/de/login"
+                  className="hidden sm:inline-flex items-center h-9 px-3 rounded-xl border border-line bg-white hover:bg-surface-muted text-ink-muted text-xs font-semibold transition"
+                >
+                  Anmelden
+                </Link>
+              ))}
+
+            {/* Mobile menu toggle */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors touch-target-44"
-              aria-label={isMobileMenuOpen ? 'Hauptmenü schließen' : 'Hauptmenü öffnen'}
+              type="button"
+              onClick={() => setIsMobileMenuOpen((v) => !v)}
+              className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl text-ink-muted hover:bg-surface-muted transition-colors cursor-pointer"
+              aria-label={isMobileMenuOpen ? 'Menü schließen' : 'Menü öffnen'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation-menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu — Full-width with backdrop, animation, and safe-area padding */}
+        {/* Desktop mega menu */}
+        {isMegaOpen && (
+          <div
+            ref={megaRef}
+            id="mega-menu"
+            className="hidden lg:block absolute inset-x-0 top-full border-b border-line bg-white shadow-pop animate-slide-down"
+          >
+            <div className="container-page py-6">
+              <div className="grid grid-cols-3 gap-x-8 gap-y-6">
+                {navCategories.map((cat) => {
+                  const accent = CATEGORY_ACCENTS[cat.slug];
+                  return (
+                    <div key={cat.slug} className="min-w-0">
+                      <Link
+                        href={`/de/kategorie/${cat.slug}`}
+                        className="group flex items-center gap-3 rounded-xl p-2 -m-2 hover:bg-surface-muted transition-colors"
+                      >
+                        <span className={`w-9 h-9 rounded-lg ring-1 flex items-center justify-center shrink-0 ${accent.tile}`}>
+                          <CategoryIcon category={cat.slug} className="w-4.5 h-4.5" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="flex items-center gap-1.5 text-sm font-bold text-ink group-hover:text-sky-700">
+                            {cat.name}
+                            {cat.count > 0 && (
+                              <span className="text-[11px] font-semibold text-ink-subtle">{cat.count}</span>
+                            )}
+                          </span>
+                          <span className="block text-xs text-ink-subtle truncate">{cat.description}</span>
+                        </span>
+                      </Link>
+                      {cat.tools.length > 0 && (
+                        <ul className="mt-3 grid grid-cols-1 gap-0.5 pl-12">
+                          {cat.tools.slice(0, 5).map((tool) => (
+                            <li key={tool.slug}>
+                              <Link
+                                href={`/de/${tool.slug}`}
+                                className="block truncate rounded-md py-1 text-[13px] text-ink-muted hover:text-sky-700 transition-colors"
+                              >
+                                {tool.name}
+                              </Link>
+                            </li>
+                          ))}
+                          <li>
+                            <Link
+                              href={`/de/kategorie/${cat.slug}`}
+                              className="inline-flex items-center gap-1 py-1 text-[13px] font-semibold text-sky-700 hover:text-sky-800"
+                            >
+                              Alle anzeigen <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                            </Link>
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-6 pt-4 border-t border-line flex items-center justify-between gap-4 text-xs text-ink-subtle">
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+                  {totalTools > 0 ? `${totalTools} Tools – ` : ''}alle laufen lokal in Ihrem Browser. Keine Uploads, keine Anmeldung.
+                </span>
+                <Link href="/de/blog" className="inline-flex items-center gap-1 font-semibold text-sky-700 hover:text-sky-800">
+                  <BookOpen className="w-3.5 h-3.5" aria-hidden="true" /> Ratgeber &amp; Anleitungen
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile menu */}
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop overlay */}
             <div
-              className="fixed inset-0 top-14 z-30 bg-slate-900/30 backdrop-blur-xs md:hidden"
+              className="lg:hidden fixed inset-0 top-14 sm:top-16 z-30 bg-slate-900/30 backdrop-blur-[2px]"
               onClick={closeMobileMenu}
               aria-hidden="true"
             />
-
-            <div 
-              id="mobile-navigation-menu" 
-              role="region" 
+            <div
+              id="mobile-navigation-menu"
+              role="region"
               aria-label="Mobiles Navigationsmenü"
-              className="md:hidden fixed inset-x-0 top-14 z-40 bg-white border-b border-slate-200 shadow-xl animate-slide-down safe-area-x"
+              className="lg:hidden fixed inset-x-0 top-14 sm:top-16 z-40 bg-white border-b border-line shadow-pop animate-slide-down safe-area-x"
             >
-              <div className="px-4 pt-3 pb-5 space-y-1.5 max-h-[calc(100dvh-3.5rem)] overflow-y-auto">
-                {/* Mobile Search Shortcut */}
+              <div className="container-page pt-3 pb-6 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain">
                 <button
-                  onClick={() => {
-                    closeMobileMenu();
-                    setIsSearchOpen(true);
-                  }}
-                  aria-label="Werkzeugsuche öffnen"
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-sm font-medium touch-target-48 mb-2 cursor-pointer"
+                  type="button"
+                  onClick={() => openSearch()}
+                  className="w-full flex items-center gap-3 h-12 px-4 rounded-xl bg-surface-muted border border-line text-ink-subtle text-sm cursor-pointer"
                 >
-                  <Search className="w-4 h-4 text-slate-400" />
-                  <span>Tool suchen...</span>
+                  <Search className="w-4 h-4" aria-hidden="true" />
+                  <span>Tool oder Format suchen …</span>
                 </button>
 
-                {/* Navigation Links */}
-                <Link
-                  href="/de/kategorie/pdf"
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4" />
-                  </span>
-                  <span className="flex-1">PDF-Tools</span>
-                  <ChevronRight className="w-4 h-4 text-slate-300" />
-                </Link>
-                <Link
-                  href="/de/kategorie/images"
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                    <ImageIcon className="w-4 h-4" />
-                  </span>
-                  <span className="flex-1">Bild-Tools</span>
-                  <ChevronRight className="w-4 h-4 text-slate-300" />
-                </Link>
-                {hasDocTools && (
+                <ul className="mt-3 divide-y divide-line">
+                  {navCategories.map((cat) => {
+                    const accent = CATEGORY_ACCENTS[cat.slug];
+                    return (
+                      <li key={cat.slug}>
+                        <details className="group">
+                          <summary className="flex items-center gap-3 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                            <span className={`w-9 h-9 rounded-lg ring-1 flex items-center justify-center shrink-0 ${accent.tile}`}>
+                              <CategoryIcon category={cat.slug} className="w-4 h-4" />
+                            </span>
+                            <span className="flex-1 text-[15px] font-semibold text-ink">{cat.name}</span>
+                            {cat.count > 0 && <span className="text-xs text-ink-subtle">{cat.count}</span>}
+                            <ChevronDown className="w-4 h-4 text-ink-subtle transition-transform group-open:rotate-180" aria-hidden="true" />
+                          </summary>
+                          <ul className="pb-3 pl-12 space-y-0.5">
+                            {cat.tools.map((tool) => (
+                              <li key={tool.slug}>
+                                <Link href={`/de/${tool.slug}`} onClick={closeMobileMenu} className="block py-2 text-sm text-ink-muted hover:text-sky-700">
+                                  {tool.name}
+                                </Link>
+                              </li>
+                            ))}
+                            <li>
+                              <Link
+                                href={`/de/kategorie/${cat.slug}`}
+                                onClick={closeMobileMenu}
+                                className="inline-flex items-center gap-1 py-2 text-sm font-semibold text-sky-700"
+                              >
+                                Alle {cat.name} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                              </Link>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div className="mt-3 grid grid-cols-2 gap-2">
                   <Link
-                    href="/de/kategorie/documents"
+                    href="/de/blog"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
+                    className="flex items-center justify-center gap-2 h-11 rounded-xl border border-line text-sm font-semibold text-ink"
                   >
-                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                      <FileSpreadsheet className="w-4 h-4" />
-                    </span>
-                    <span className="flex-1">Dokumente &amp; Office</span>
-                    <ChevronRight className="w-4 h-4 text-slate-300" />
+                    <BookOpen className="w-4 h-4 text-sky-600" aria-hidden="true" /> Ratgeber
                   </Link>
-                )}
-                <Link
-                  href="/de/kategorie/utilities"
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-800 hover:bg-slate-50 active:bg-slate-100 transition-colors touch-target-48"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center shrink-0">
-                    <Wrench className="w-4 h-4" />
-                  </span>
-                  <span className="flex-1">Werkzeuge &amp; Hilfsmittel</span>
-                  <ChevronRight className="w-4 h-4 text-slate-300" />
-                </Link>
-                {billingEnabled && <Link
-                  href="/de/preise"
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-sky-700 hover:bg-sky-50 active:bg-sky-100 transition-colors touch-target-48"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                    <Sparkles className="w-4 h-4" />
-                  </span>
-                  <span className="flex-1">Preise &amp; Tarife</span>
-                  <ChevronRight className="w-4 h-4 text-slate-300" />
-                </Link>}
-
-                {accountsEnabled && (currentUser ? (
                   <Link
-                    href="/de/konto"
+                    href="/de/kontakt"
                     onClick={closeMobileMenu}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200"
+                    className="flex items-center justify-center gap-2 h-11 rounded-xl border border-line text-sm font-semibold text-ink"
                   >
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-sky-600" />
-                      <span>Mein Konto</span>
-                    </div>
-                    {currentUser.role === 'ADMIN' && (
-                      <span className="px-1.5 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-bold rounded">
-                        Admin
-                      </span>
-                    )}
+                    Kontakt
                   </Link>
-                ) : (
-                  <Link
-                    href="/de/login"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200"
-                  >
-                    <User className="w-4 h-4 text-slate-600" />
-                    <span>Anmelden / Registrieren</span>
-                  </Link>
-                ))}
+                  {billingEnabled && (
+                    <Link
+                      href="/de/preise"
+                      onClick={closeMobileMenu}
+                      className="col-span-2 flex items-center justify-center gap-2 h-11 rounded-xl bg-sky-600 text-white text-sm font-bold"
+                    >
+                      <Sparkles className="w-4 h-4" aria-hidden="true" /> Preise &amp; Pro
+                    </Link>
+                  )}
+                  {accountsEnabled && (
+                    <Link
+                      href={currentUser ? '/de/konto' : '/de/login'}
+                      onClick={closeMobileMenu}
+                      className="col-span-2 flex items-center justify-center gap-2 h-11 rounded-xl border border-line text-sm font-semibold text-ink"
+                    >
+                      <User className="w-4 h-4 text-sky-600" aria-hidden="true" />
+                      {currentUser ? 'Mein Konto' : 'Anmelden / Registrieren'}
+                    </Link>
+                  )}
+                </div>
 
-                {/* Divider */}
-                {(accountsEnabled || billingEnabled) && <div className="border-t border-slate-100 my-2" />}
-
-                {/* Tier Badge (mobile-visible) */}
-                {billingEnabled && <div className="flex items-center justify-between px-4 py-2">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border ${
-                    isPro
-                      ? 'bg-amber-500/10 text-amber-700 border-amber-300/50'
-                      : 'bg-slate-100 text-slate-700 border-slate-200'
-                  }`}>
-                    {isPro ? (
-                      <><Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" /> Pro aktiv</>
-                    ) : (
-                      <><Zap className="w-3.5 h-3.5 text-slate-500" /> Kostenlos</>
-                    )}
-                  </span>
-                </div>}
-
-                {/* Pro Upgrade CTA (mobile) */}
-                {billingEnabled && !isPro && (
-                  <button
-                    onClick={() => {
-                      closeMobileMenu();
-                      setIsUpgradeOpen(true);
-                    }}
-                    className="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-bold text-sm text-center transition-colors touch-target-48"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <Sparkles className="w-4 h-4 fill-white" />
-                      Datei Tools Pro ansehen
-                    </span>
-                  </button>
-                )}
+                <p className="mt-4 flex items-center gap-2 text-xs text-ink-subtle">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
+                  Alle Tools arbeiten lokal im Browser – Ihre Dateien verlassen nie Ihr Gerät.
+                </p>
               </div>
             </div>
           </>
         )}
       </header>
 
-      {/* Global Modals & Drawers */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      {billingEnabled && <UpgradeModal isOpen={isUpgradeOpen} onClose={() => setIsUpgradeOpen(false)} />}
-      {historyEnabled && <ConversionHistoryDrawer
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
-        onOpenUpgradeModal={() => setIsUpgradeOpen(true)}
-      />}
+      {searchMounted && (
+        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} initialQuery={searchQuery} />
+      )}
+      {billingEnabled && isUpgradeOpen && <UpgradeModal isOpen={isUpgradeOpen} onClose={() => setIsUpgradeOpen(false)} />}
+      {historyEnabled && isHistoryOpen && (
+        <ConversionHistoryDrawer
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          onOpenUpgradeModal={() => setIsUpgradeOpen(true)}
+        />
+      )}
     </>
   );
 }

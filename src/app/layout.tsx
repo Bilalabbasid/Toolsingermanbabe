@@ -5,16 +5,18 @@ import './globals.css';
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://datei-tools.de'),
+  metadataBase: new URL('https://datei-tools.de'),
   title: {
-    default: 'Datei Tools – Alle wichtigen Datei- und PDF-Tools an einem Ort',
+    default: 'Datei Tools – Dateien konvertieren, 100 % im Browser',
     template: '%s',
   },
   description:
-    'PDFs bearbeiten, Dateien konvertieren, Bilder komprimieren und Dokumente zusammenführen – online mit Anleitungen zu Formaten und Dateilimits.',
+    'PDFs bearbeiten, Bilder komprimieren und Dokumente umwandeln – kostenlos und vollständig in Ihrem Browser. Keine Uploads, keine Anmeldung, DSGVO-freundlich.',
+  applicationName: 'Datei Tools',
   authors: [{ name: 'Datei Tools' }],
   creator: 'Datei Tools',
   icons: {
@@ -38,6 +40,8 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#ffffff',
+  colorScheme: 'light',
 };
 
 export default function RootLayout({
@@ -46,8 +50,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de" className={inter.className}>
-      <body className="min-h-screen antialiased bg-white text-slate-900">
+    <html lang="de" className={`${inter.variable} ${inter.className}`}>
+      <body className="min-h-screen antialiased bg-canvas text-ink font-sans">
         {children}
       </body>
     </html>

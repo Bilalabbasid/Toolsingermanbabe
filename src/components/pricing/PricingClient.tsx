@@ -8,6 +8,9 @@ import { featureFlags } from '@/config/featureFlags.config';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { trackProViewed, trackProClicked, trackSignupStarted, trackSignupCompleted } from '@/lib/analytics';
 
+/** Plan copy from the server-processing era that no longer applies to the 100 % local tools. */
+const OUTDATED_FEATURE = /cloud|worker|warteschlange|priorit|rest-api/i;
+
 export function PricingClient() {
   const billingEnabled = featureFlags.enableStripeCheckout;
   const [isAnnual, setIsAnnual] = useState(true);
@@ -75,20 +78,20 @@ export function PricingClient() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="container-page py-6 sm:py-10">
       <Breadcrumbs items={breadcrumbs} />
 
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto my-8">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-xs font-semibold mb-3">
           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          <span>Faire, transparente Preise</span>
+          <span>Alle Tools dauerhaft kostenlos</span>
         </span>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-display text-ink">
           Finden Sie den passenden Tarif für Ihre Anforderungen
         </h1>
         <p className="mt-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-          Nutzen Sie alle Standard-Werkzeuge dauerhaft kostenlos. Für Vielnutzer und Unternehmen bieten wir erweiterte Dateilimits, Stapelverarbeitung und werbefreies Arbeiten.
+          Alle Werkzeuge laufen lokal in Ihrem Browser und sind dauerhaft kostenlos. Für Vielnutzer und Teams planen wir erweiterte Dateilimits, größere Stapel und werbefreies Arbeiten.
         </p>
 
         {/* Monthly / Annual Toggle */}
@@ -130,7 +133,7 @@ export function PricingClient() {
       <h2 className="sr-only">Tarifauswahl und Leistungsumfang</h2>
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-12 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 my-12 items-stretch">
         {PRICING_PLANS.map((plan) => {
           const isUnavailablePro = plan.id === 'pro' && !billingEnabled;
           const price = isAnnual
@@ -140,10 +143,10 @@ export function PricingClient() {
           return (
             <div
               key={plan.id}
-              className={`rounded-3xl p-8 flex flex-col justify-between transition-all relative ${
+              className={`rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all relative ${
                 plan.isPopular
                   ? 'bg-slate-900 text-white shadow-xl ring-2 ring-sky-500'
-                  : 'bg-white text-slate-900 border border-slate-200 shadow-sm hover:border-slate-300'
+                  : 'bg-white text-slate-900 border border-line shadow-card hover:shadow-raised'
               }`}
             >
               {(isUnavailablePro || plan.badge) && (
@@ -172,7 +175,7 @@ export function PricingClient() {
                 </p>
 
                 {/* Price block */}
-                <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+                <div className={`mb-6 pb-6 border-b ${plan.isPopular ? 'border-white/10' : 'border-slate-100'}`}>
                   {isUnavailablePro ? (
                     <div>
                       <span className="text-2xl font-black tracking-tight">Demnächst verfügbar</span>
@@ -211,7 +214,7 @@ export function PricingClient() {
 
                 {/* Features List */}
                 <ul className="space-y-3 mb-8 text-xs sm:text-sm">
-                  {plan.features.map((feat, idx) => (
+                  {plan.features.filter((feat) => !OUTDATED_FEATURE.test(feat.text)).map((feat, idx) => (
                     <li key={idx} className="flex items-start gap-2.5">
                       <div
                         className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
@@ -269,13 +272,13 @@ export function PricingClient() {
         <div>
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/20 text-sky-400 text-xs font-semibold mb-2 border border-sky-400/30">
             <Building2 className="w-3.5 h-3.5" />
-            <span>Business, Kanzleien & Entwickler</span>
+            <span>Teams, Kanzleien & Unternehmen</span>
           </span>
           <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
-            Individuelle Team-Lizenzen & REST-API
+            Datei Tools im Team einsetzen
           </h3>
           <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl leading-relaxed">
-            Integrieren Sie unsere DSGVO-konforme Konvertierungs-Engine direkt in Ihre Unternehmensabläufe. Dedizierte Serverkapazitäten, AVV nach Art. 28 DSGVO und persönlicher Ansprechpartner.
+            Werbefrei für Ihr ganzes Team, zentrale Abrechnung und ein persönlicher Ansprechpartner. Da alle Dateien lokal im Browser verarbeitet werden, verlassen vertrauliche Unterlagen nie Ihre Geräte.
           </p>
         </div>
 

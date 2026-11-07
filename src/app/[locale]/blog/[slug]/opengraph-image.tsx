@@ -16,6 +16,10 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
   ocr: { bg: 'rgba(99, 102, 241, 0.15)', text: '#818cf8', border: 'rgba(99, 102, 241, 0.3)', glow: 'rgba(99, 102, 241, 0.2)' },
   formats: { bg: 'rgba(20, 184, 166, 0.15)', text: '#2dd4bf', border: 'rgba(20, 184, 166, 0.3)', glow: 'rgba(20, 184, 166, 0.2)' },
   productivity: { bg: 'rgba(245, 158, 11, 0.15)', text: '#fbbf24', border: 'rgba(245, 158, 11, 0.3)', glow: 'rgba(245, 158, 11, 0.2)' },
+  security: { bg: 'rgba(16, 185, 129, 0.15)', text: '#34d399', border: 'rgba(16, 185, 129, 0.3)', glow: 'rgba(16, 185, 129, 0.2)' },
+  media: { bg: 'rgba(236, 72, 153, 0.15)', text: '#f472b6', border: 'rgba(236, 72, 153, 0.3)', glow: 'rgba(236, 72, 153, 0.2)' },
+  archives: { bg: 'rgba(14, 165, 233, 0.15)', text: '#38bdf8', border: 'rgba(14, 165, 233, 0.3)', glow: 'rgba(14, 165, 233, 0.2)' },
+  developer: { bg: 'rgba(132, 204, 22, 0.15)', text: '#a3e635', border: 'rgba(132, 204, 22, 0.3)', glow: 'rgba(132, 204, 22, 0.2)' },
 };
 
 export default async function Image({
@@ -208,7 +212,7 @@ export default async function Image({
                 fontWeight: 600,
               }}
             >
-              <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span> Direkt im Browser
+              <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span> Lokal im Browser, ohne Upload
             </div>
             <div
               style={{

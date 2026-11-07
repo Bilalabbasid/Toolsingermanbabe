@@ -1,74 +1,70 @@
 import React from 'react';
 import Link from 'next/link';
-import { FileQuestion, ArrowRight, Home, Compass } from 'lucide-react';
-import { getPopularTools } from '@/config/tools.config';
+import { Home, ArrowRight, BookOpen } from 'lucide-react';
+import { getPopularActiveTools, getNavCategories, CATEGORY_ACCENTS } from '@/components/common/navData';
+import { CategoryIcon } from '@/components/common/CategoryIcon';
+import { ToolGrid } from '@/components/tools/ToolGrid';
 
 export default function NotFound() {
-  const popularTools = getPopularTools().slice(0, 4);
+  const popularTools = getPopularActiveTools(4);
+  const categories = getNavCategories(0);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16 sm:py-24 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mx-auto mb-6 border border-sky-100 shadow-xs">
-        <FileQuestion className="w-8 h-8" />
-      </div>
+    <div className="container-page py-14 sm:py-20">
+      <div className="max-w-2xl mx-auto text-center">
+        <p className="eyebrow justify-center">Fehler 404</p>
+        <h1 className="mt-3 text-title text-ink">Diese Seite gibt es nicht (mehr)</h1>
+        <p className="mt-4 text-ink-muted leading-relaxed">
+          Das gesuchte Tool oder die Seite wurde verschoben oder existiert nicht. Vielleicht hilft Ihnen einer dieser Wege weiter.
+        </p>
 
-      <span className="text-xs font-bold uppercase tracking-widest text-sky-600">
-        Fehler 404
-      </span>
-
-      <h1 className="mt-2 text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-        Seite nicht gefunden
-      </h1>
-
-      <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-lg mx-auto leading-relaxed">
-        Das gesuchte Werkzeug oder die aufgerufene Seite existiert leider nicht oder wurde an einen neuen Ort verschoben.
-      </p>
-
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Link
-          href="/de"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm shadow-xs transition-colors"
-        >
-          <Home className="w-4 h-4" />
-          <span>Zur Startseite</span>
-        </Link>
-        <Link
-          href="/de/kategorie/pdf"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-colors"
-        >
-          <Compass className="w-4 h-4" />
-          <span>Alle PDF-Tools entdecken</span>
-        </Link>
-      </div>
-
-      {/* Popular Fallback Tools */}
-      <div className="mt-16 pt-12 border-t border-slate-200 text-left">
-        <h2 className="text-base font-bold text-slate-900 mb-4 text-center">
-          Vielleicht suchten Sie nach einem dieser beliebten Tools:
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {popularTools.map((tool) => (
-            <Link
-              key={tool.id}
-              href={`/de/${tool.slug}`}
-              className="p-4 rounded-xl bg-white border border-slate-200 hover:border-sky-300 hover:shadow-xs transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <h3 className="font-semibold text-slate-900 text-sm group-hover:text-sky-700 transition-colors">
-                  {tool.nameDe}
-                </h3>
-                <p className="text-xs text-slate-500 line-clamp-2 mt-1">
-                  {tool.shortDescriptionDe}
-                </p>
-              </div>
-              <div className="mt-4 pt-2 border-t border-slate-50 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-600 font-medium">
-                <span>Jetzt nutzen</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </Link>
-          ))}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/de"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm shadow-brand transition-colors"
+          >
+            <Home className="w-4 h-4" aria-hidden="true" /> Zur Startseite
+          </Link>
+          <Link
+            href="/de/blog"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-white ring-1 ring-line-strong hover:bg-surface-muted text-ink font-semibold text-sm transition-colors"
+          >
+            <BookOpen className="w-4 h-4 text-sky-600" aria-hidden="true" /> Ratgeber ansehen
+          </Link>
         </div>
       </div>
+
+      <nav aria-label="Kategorien" className="mt-12 max-w-4xl mx-auto">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          {categories.map((cat) => (
+            <li key={cat.slug}>
+              <Link
+                href={`/de/kategorie/${cat.slug}`}
+                className="flex items-center gap-2.5 rounded-xl bg-white ring-1 ring-line p-3 hover:ring-sky-300 transition-colors"
+              >
+                <span className={`w-8 h-8 rounded-lg ring-1 flex items-center justify-center shrink-0 ${CATEGORY_ACCENTS[cat.slug].tile}`}>
+                  <CategoryIcon category={cat.slug} className="w-4 h-4" />
+                </span>
+                <span className="min-w-0 text-sm font-semibold text-ink truncate">{cat.name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {popularTools.length > 0 && (
+        <section className="mt-14 max-w-6xl mx-auto" aria-labelledby="nf-popular">
+          <div className="flex items-end justify-between gap-3 mb-5">
+            <h2 id="nf-popular" className="text-heading text-ink">
+              Beliebte Tools
+            </h2>
+            <Link href="/de" className="inline-flex items-center gap-1 text-sm font-semibold text-sky-700 hover:text-sky-800">
+              Alle Tools <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </div>
+          <ToolGrid tools={popularTools} />
+        </section>
+      )}
     </div>
   );
 }

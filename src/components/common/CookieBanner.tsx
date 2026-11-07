@@ -85,58 +85,57 @@ export function CookieBanner() {
 
   return (
     <>
-      {/* Cookie Banner Bar */}
+      {/* Cookie Banner – compact floating card */}
       {showBanner && (
-        <div 
+        <div
           role="region"
           aria-label="Cookie-Einwilligung"
-          className="fixed bottom-0 inset-x-0 z-50 p-3.5 sm:p-6 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 shadow-2xl animate-fade-in safe-area-bottom"
+          className="fixed z-50 inset-x-0 bottom-0 sm:inset-x-auto sm:left-4 sm:bottom-4 sm:max-w-md p-3 sm:p-0 safe-area-bottom animate-slide-up"
         >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4">
-            <div className="flex items-start gap-2.5 sm:gap-3 max-w-3xl">
-              <div className="p-1.5 sm:p-2 rounded-lg bg-sky-600/20 text-sky-400 shrink-0 border border-sky-500/30 mt-0.5" aria-hidden="true">
-                <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                <span className="font-semibold text-white block mb-0.5 sm:mb-1 text-xs sm:text-sm">
-                  Datenschutz & Privatsphäre bei Datei Tools
-                </span>
-                Wir verwenden technisch notwendige Cookies und mit Ihrer Einwilligung anonyme Analysen zur Produktverbesserung. Client-Tools verarbeiten Dateien direkt im Browser; Server-Konvertierungen erfolgen verschlüsselt mit automatischer Löschung nach 15 Minuten. Details in der{' '}
-                <Link href="/de/datenschutz" className="underline text-sky-400 hover:text-sky-300">
-                  Datenschutzerklärung
-                </Link>{' '}
-                und{' '}
-                <Link href="/de/cookie-richtlinie" className="underline text-sky-400 hover:text-sky-300">
+          <div className="rounded-2xl bg-white border border-line shadow-pop p-4 sm:p-5">
+            <div className="flex items-start gap-3">
+              <span className="w-9 h-9 rounded-xl bg-sky-50 text-sky-700 ring-1 ring-sky-100 flex items-center justify-center shrink-0" aria-hidden="true">
+                <Shield className="w-4.5 h-4.5" />
+              </span>
+              <div className="text-[13px] text-ink-muted leading-relaxed">
+                <p className="font-semibold text-ink text-sm mb-1">Ihre Privatsphäre zuerst</p>
+                Technisch notwendige Cookies setzen wir immer, Analyse und Werbung nur mit Ihrer Einwilligung. Ihre
+                Dateien sind davon nicht betroffen: Sie werden ausschließlich lokal in Ihrem Browser verarbeitet.{' '}
+                <Link href="/de/datenschutz" className="font-medium text-sky-700 underline underline-offset-2 hover:text-sky-800">
+                  Datenschutz
+                </Link>
+                {' · '}
+                <Link href="/de/cookie-richtlinie" className="font-medium text-sky-700 underline underline-offset-2 hover:text-sky-800">
                   Cookie-Richtlinie
-                </Link>.
+                </Link>
               </div>
             </div>
 
-            {/* Responsive Actions: stacked layout on mobile for easy thumb tapping */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full md:w-auto">
+            {/* Equal-weight choices (DSGVO / TTDSG best practice) */}
+            <div className="mt-4 grid grid-cols-2 gap-2">
               <button
+                type="button"
+                onClick={() => saveConsent(false)}
+                className="min-h-[44px] px-3 rounded-xl border border-line-strong bg-white hover:bg-surface-muted text-ink text-[13px] font-semibold transition-colors cursor-pointer"
+              >
+                Nur notwendige
+              </button>
+              <button
+                type="button"
                 onClick={() => saveConsent(true)}
-                className="order-1 sm:order-3 min-h-[44px] px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white text-xs font-bold transition-colors shadow-sm touch-manipulation text-center cursor-pointer"
+                className="min-h-[44px] px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-[13px] font-semibold transition-colors cursor-pointer"
               >
                 Alle akzeptieren
               </button>
-
-              <div className="order-2 flex items-center gap-2">
-                <button
-                  onClick={() => saveConsent(false)}
-                  className="flex-1 sm:flex-none min-h-[44px] px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors touch-manipulation text-center cursor-pointer"
-                >
-                  Nur notwendige
-                </button>
-                <button
-                  onClick={() => setShowPreferences(true)}
-                  className="flex-1 sm:flex-none min-h-[44px] px-3 py-2.5 rounded-xl border border-slate-700 bg-transparent hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 touch-manipulation cursor-pointer"
-                >
-                  <Settings className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Anpassen</span>
-                </button>
-              </div>
             </div>
+            <button
+              type="button"
+              onClick={() => setShowPreferences(true)}
+              className="mt-2 w-full min-h-[36px] inline-flex items-center justify-center gap-1.5 rounded-lg text-[13px] font-medium text-ink-subtle hover:text-ink transition-colors cursor-pointer"
+            >
+              <Settings className="w-3.5 h-3.5" aria-hidden="true" />
+              Einstellungen anpassen
+            </button>
           </div>
         </div>
       )}
@@ -147,9 +146,9 @@ export function CookieBanner() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="cookie-preferences-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-xs overflow-y-auto animate-fade-in"
+          className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-[2px] overflow-y-auto animate-fade-in"
         >
-          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 sm:p-6 text-slate-900 my-auto max-h-[90vh] flex flex-col">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-pop border border-line p-4 sm:p-6 text-ink my-auto max-h-[90vh] flex flex-col animate-scale-up">
             <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100 shrink-0">
               <h3 id="cookie-preferences-title" className="text-sm sm:text-base font-bold text-slate-900">Cookie-Einstellungen</h3>
               <button

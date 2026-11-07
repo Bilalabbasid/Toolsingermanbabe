@@ -177,7 +177,7 @@ export function ImageEffectsEngine({ mode = 'sharpen' }: ImageEffectsEngineProps
 
   if (resultBlob && file) {
     return (
-      <DownloadBox filename={outputFilename} originalSizeBytes={file.size} resultSizeBytes={resultBlob.size}
+      <DownloadBox filename={outputFilename} resultSizeBytes={resultBlob.size}
         onDownload={() => { const url = URL.createObjectURL(resultBlob); const a = document.createElement('a'); a.href = url; a.download = outputFilename; a.click(); }}
         onReset={handleReset} downloadLabel="Bearbeitetes Bild herunterladen" />
     );

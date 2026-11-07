@@ -1,12 +1,12 @@
 import { serializeJsonLd } from '@/lib/json-ld';
 import React from 'react';
 import type { Metadata } from 'next';
-import { getActiveTools } from '@/config/tools.config';
-import { HomePageClient } from '@/components/home/HomePageClient';
-import { 
-  generatePageMetadata, 
-  generateWebsiteSchema, 
-  generateOrganizationSchema 
+import { HomePage } from '@/components/home/HomePage';
+import { HOME_FAQS } from '@/components/home/homeContent';
+import {
+  generatePageMetadata,
+  generateWebsiteSchema,
+  generateOrganizationSchema,
 } from '@/lib/seo';
 
 interface HomePageProps {
@@ -19,31 +19,35 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const { locale } = await params;
 
   return generatePageMetadata({
-    title: 'Datei Tools – Kostenlose Online-PDF- und Datei-Tools im Browser',
-    description: 'PDF zusammenfügen, teilen und bearbeiten, Bilder umwandeln und Dokumente konvertieren. Finden Sie das passende Online-Tool mit Anleitung und Dateilimits.',
+    title: 'Dateien konvertieren – 100 % im Browser | Datei Tools',
+    description:
+      'PDF zusammenfügen, komprimieren und bearbeiten, Bilder umwandeln und Dokumente konvertieren – kostenlos und vollständig in Ihrem Browser. Keine Uploads, keine Anmeldung.',
     path: '/',
     locale,
   });
 }
 
-export default async function HomePage() {
-  const activeTools = getActiveTools();
+export default async function LocalizedHomePage() {
   const websiteSchema = generateWebsiteSchema('de');
   const orgSchema = generateOrganizationSchema();
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: HOME_FAQS.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
 
   return (
     <>
-      {/* Schema.org Structured Data for WebSite & Organization */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(orgSchema) }}
-      />
+      {/* Schema.org structured data: WebSite, Organization, FAQPage */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(orgSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }} />
 
-      <HomePageClient initialTools={activeTools} />
+      <HomePage />
     </>
   );
 }

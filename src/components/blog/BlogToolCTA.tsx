@@ -35,8 +35,8 @@ export function BlogToolCTA({
             <ToolIcon name={tool.icon} category={tool.category} className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="font-bold text-slate-900 text-sm">{title}</h4>
-            <p className="text-xs text-slate-500">Direkt im Browser • Ohne Installation • Kostenlos</p>
+            <p className="font-bold text-slate-900 text-sm">{title}</p>
+            <p className="text-xs text-slate-500">Lokal im Browser • Ohne Upload • Kostenlos</p>
           </div>
         </div>
         <Link
@@ -64,7 +64,7 @@ export function BlogToolCTA({
           </span>
           <span className="text-slate-400 text-xs">•</span>
           <span className="text-slate-300 text-xs font-medium">
-            {tool.serverRequired ? 'Verschlüsselt & DSGVO-konform' : '100% Client-Side & DSGVO-konform'}
+            100 % lokal im Browser · DSGVO-freundlich
           </span>
         </div>
 
@@ -74,9 +74,9 @@ export function BlogToolCTA({
               <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-sky-400 flex items-center justify-center shrink-0">
                 <ToolIcon name={tool.icon} category={tool.category} className="w-5 h-5" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+              <p className="text-xl sm:text-2xl font-black tracking-tight text-white">
                 {title}
-              </h3>
+              </p>
             </div>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mt-1">
               {tool.shortDescriptionDe}
@@ -90,7 +90,7 @@ export function BlogToolCTA({
               </span>
               <span className="flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                Dateien verlassen Ihren PC nicht
+                Dateien verlassen Ihr Gerät nicht
               </span>
             </div>
           </div>

@@ -12,7 +12,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     features: ['Dateien vor dem Zusammenfügen sortieren', 'PDF-Seiten zu einem Dokument verbinden', 'Dokumentverarbeitung im Browser'],
     faqDe: [
       { question: 'Kann ich PDFs mit unterschiedlichen Seitenformaten zusammenfügen?', answer: 'Ja. Die ursprünglichen Seitenmaße bleiben erhalten. Eine A4-Seite und eine kleinere Seite werden beim Verbinden nicht automatisch auf dieselbe Größe skaliert.' },
-      { question: 'Werden die PDF-Dateien hochgeladen?', answer: 'Das Zusammenfügen erfolgt im Browser. Für diesen Bearbeitungsschritt werden Ihre Dokumente nicht an den Konvertierungsserver gesendet.' },
+      { question: 'Werden die PDF-Dateien hochgeladen?', answer: 'Nein. Das Zusammenfügen läuft vollständig lokal in Ihrem Browser. Ihre PDF-Dateien verlassen Ihr Gerät nicht.' },
       { question: 'Warum lässt sich eine Datei nicht öffnen?', answer: 'Prüfen Sie, ob sie beschädigt oder verschlüsselt ist. Öffnen Sie geschützte Dokumente nur mit dem erforderlichen Passwort und speichern Sie eine freigegebene Kopie.' },
     ],
   },
@@ -36,7 +36,7 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     metaDescriptionDe: 'PDF in ein bearbeitbares Word-Dokument umwandeln. Hinweise zu DOCX, eingescannten Seiten und möglichen Änderungen an Tabellen und Seitenumbrüchen.',
     introDe: 'Wenn Sie Text aus einer PDF weiterbearbeiten möchten, ist DOCX ein geeignetes Zielformat. Eine PDF beschreibt jedoch das fertige Seitenbild, nicht die ursprüngliche Word-Struktur. Tabellen, Spalten und Seitenumbrüche können deshalb anders aussehen. Für eingescannte Seiten ohne auswählbaren Text benötigen Sie Texterkennung. Prüfen Sie das Word-Dokument vor der Weitergabe.',
     searchKeywordsDe: ['PDF zu Word', 'PDF in DOCX umwandeln', 'PDF bearbeitbar machen', 'PDF Word Konverter'],
-    features: ['Ausgabe als bearbeitbares DOCX', 'Konvertierung mit Server-Verarbeitung'],
+    features: ['Ausgabe als bearbeitbares DOCX', 'Konvertierung lokal im Browser – ohne Upload'],
     faqDe: [
       { question: 'Bleibt das Layout exakt erhalten?', answer: 'Eine identische Darstellung wird nicht garantiert. Besonders mehrspaltige Texte, Tabellen und eingebettete Schriften sollten Sie im Ergebnis kontrollieren.' },
       { question: 'Was mache ich mit einer eingescannten PDF?', answer: 'Wenn sich in der PDF kein Text markieren lässt, verwenden Sie ein OCR-Werkzeug. Kontrollieren Sie erkannte Namen, Zahlen und Sonderzeichen anschließend am Original.' },
@@ -47,16 +47,16 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
     h1De: 'Word in PDF umwandeln',
     shortDescriptionDe: 'Konvertieren Sie ein Word-Dokument in PDF. Prüfen Sie anschließend Schriften, Tabellen und Seitenumbrüche im Ergebnis.',
     howItWorksDe: [
-      { step: 1, title: 'Word-Datei auswählen', text: 'Wählen Sie ein Dokument im unterstützten Word-Format aus. Die Datei wird zur Server-Konvertierung übertragen.' },
+      { step: 1, title: 'Word-Datei auswählen', text: 'Wählen Sie ein Dokument im unterstützten Word-Format aus. Die Datei wird nur in Ihrem Browser geöffnet und nicht hochgeladen.' },
       { step: 2, title: 'Konvertierung starten', text: 'Klicken Sie auf „In PDF umwandeln“ und warten Sie auf das Ergebnis.' },
       { step: 3, title: 'PDF herunterladen und prüfen', text: 'Speichern Sie das Ergebnis und vergleichen Sie Seitenzahl, Schriften und Tabellen mit dem Original.' },
     ],
-    metaDescriptionDe: 'Word-Dokumente online in PDF umwandeln. Datei auswählen, konvertieren und herunterladen. Prüfen Sie Schriften, Tabellen und Seitenumbrüche im Ergebnis.',
-    introDe: 'Wandeln Sie ein Word-Dokument in PDF um, wenn Sie eine Fassung zum Lesen oder Weitergeben benötigen. Die Konvertierung verarbeitet das Dokument auf dem Server. Fehlende Schriften oder komplexe Tabellen können das Ergebnis verändern. Vergleichen Sie deshalb Seitenzahl, Umbrüche und Abbildungen mit dem Original.',
+    metaDescriptionDe: 'Word-Dokumente kostenlos in PDF umwandeln – lokal im Browser, ohne Upload. Datei auswählen, konvertieren, herunterladen und Seitenumbrüche prüfen.',
+    introDe: 'Wandeln Sie ein Word-Dokument in PDF um, wenn Sie eine Fassung zum Lesen oder Weitergeben benötigen. Die Konvertierung läuft lokal in Ihrem Browser – das Dokument verlässt Ihr Gerät nicht. Fehlende Schriften oder komplexe Tabellen können das Ergebnis verändern. Vergleichen Sie deshalb Seitenzahl, Umbrüche und Abbildungen mit dem Original.',
     searchKeywordsDe: ['Word als PDF speichern', 'DOCX in PDF', 'Word zu PDF', 'Word Datei in PDF umwandeln'],
     features: ['Word-Dokument als PDF herunterladen', 'Hinweise zur Prüfung von Layout und Schriften'],
     faqDe: [
-      { question: 'Verlassen die Dokumente meinen Browser?', answer: 'Ja. Dieses Werkzeug überträgt die Datei zur Konvertierung an den Server und speichert sie vorübergehend. Weitere Informationen finden Sie in der Datenschutzerklärung.' },
+      { question: 'Verlassen die Dokumente meinen Browser?', answer: 'Nein. Die Umwandlung erfolgt vollständig in Ihrem Browser. Ihr Word-Dokument wird nicht hochgeladen und nicht gespeichert.' },
       { question: 'Warum sehen die Seitenumbrüche anders aus?', answer: 'Schriften und komplexe Formatierungen können in der Konvertierung abweichen. Kontrollieren Sie das Ergebnis oder exportieren Sie die PDF direkt aus dem Programm, in dem das Dokument erstellt wurde.' },
     ],
   },
@@ -80,12 +80,39 @@ const EDITORIAL: Record<string, Partial<ToolDefinition>> = {
   },
 };
 
+const LOCAL_PRIVACY_DE =
+  'Die Verarbeitung läuft vollständig lokal in Ihrem Browser. Ihre Datei verlässt Ihr Gerät zu keinem Zeitpunkt und wird an niemanden übermittelt.';
+
+/** Legacy copy that still describes the retired server pipeline. */
+const SERVER_COPY = /server|hochgelad|übertr(ä|a)gt|temporär|lösch/i;
+
+/**
+ * Rewrites legacy "upload" wording from the server era ("PDF hochladen",
+ * "Laden Sie … hoch") to describe local file selection.
+ */
+export function localizeUploadCopy(text: string): string {
+  return text
+    .replace(/\bLaden Sie ([^.!?]{1,80}?) hoch\b/g, 'Wählen Sie $1 aus')
+    .replace(/\bladen Sie ([^.!?]{1,80}?) hoch\b/g, 'wählen Sie $1 aus')
+    .replace(/\bHochladen\b/g, 'Auswählen')
+    .replace(/\bhochladen\b/g, 'auswählen');
+}
+
 export function applyGermanEditorial(tool: ToolDefinition): ToolDefinition {
   const result = { ...tool, ...EDITORIAL[tool.slug] };
-  if (result.processingEngine === 'doc-convert') {
-    result.browserCapable = false;
-    result.serverRequired = true;
-    result.privacyExplanationDe = 'Dieses Werkzeug überträgt Ihre Datei zur Konvertierung an den Server. Die Verarbeitung nutzt temporäre Dateien; Hinweise zur Speicherung und Löschung finden Sie in der Datenschutzerklärung.';
+  result.howItWorksDe = result.howItWorksDe.map((s) => ({
+    ...s,
+    title: localizeUploadCopy(s.title),
+    text: localizeUploadCopy(s.text),
+  }));
+  result.metaDescriptionDe = localizeUploadCopy(result.metaDescriptionDe);
+  result.introDe = localizeUploadCopy(result.introDe);
+  result.shortDescriptionDe = localizeUploadCopy(result.shortDescriptionDe);
+  // All engines now run client-side (JavaScript/WebAssembly) – nothing is uploaded.
+  result.browserCapable = true;
+  result.serverRequired = false;
+  if (!result.privacyExplanationDe || SERVER_COPY.test(result.privacyExplanationDe)) {
+    result.privacyExplanationDe = LOCAL_PRIVACY_DE;
   }
   return result;
 }

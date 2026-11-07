@@ -120,7 +120,6 @@ export function PdfMergeEngine() {
     return (
       <DownloadBox
         filename={outputFilename}
-        originalSizeBytes={totalOriginalSize}
         resultSizeBytes={mergedBlob.size}
         onDownload={handleDownload}
         onReset={handleReset}

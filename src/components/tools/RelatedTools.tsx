@@ -1,46 +1,51 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { getRelatedTools } from '@/config/tools.config';
+import { CATEGORIES } from '@/config/categories.config';
 import { ToolCard } from '@/components/tools/ToolCard';
+import type { ToolCategory } from '@/types/tool';
 
 interface RelatedToolsProps {
   relatedSlugs: string[];
   currentToolName: string;
+  /** Category of the current tool – used for the "all tools" link. */
+  category?: ToolCategory;
+  className?: string;
 }
 
-export function RelatedTools({ relatedSlugs, currentToolName }: RelatedToolsProps) {
+export function RelatedTools({ relatedSlugs, currentToolName, category, className = '' }: RelatedToolsProps) {
   const tools = getRelatedTools(relatedSlugs);
 
   if (!tools || tools.length === 0) return null;
 
+  const cat = category ? CATEGORIES[category] : undefined;
+
   return (
-    <section className="my-14 sm:my-20 pt-10 border-t border-slate-200/90">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+    <section aria-labelledby="related-tools-title" className={`my-12 sm:my-16 ${className}`}>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <span>Passende Werkzeuge zu {currentToolName}</span>
+          <p className="eyebrow">Weiterarbeiten</p>
+          <h2 id="related-tools-title" className="mt-2 text-heading text-ink">
+            Passende Tools zu {currentToolName}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Optimieren Sie Ihren Workflow mit weiteren nützlichen Konvertern und Werkzeugen.
-          </p>
         </div>
         <Link
-          href="/de/kategorie/pdf"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800 transition self-start sm:self-center"
+          href={cat ? `/de/kategorie/${cat.slug}` : '/de'}
+          className="inline-flex items-center gap-1 text-sm font-semibold text-sky-700 hover:text-sky-800 transition self-start sm:self-auto"
         >
-          <span>Alle Werkzeuge durchsuchen</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          {cat ? `Alle ${cat.name}` : 'Alle Tools'}
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4.5">
-        {tools.map((tool) => (
-          <ToolCard key={tool.id} tool={tool} />
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" role="list">
+        {tools.slice(0, 8).map((tool) => (
+          <li key={tool.id} className="min-w-0">
+            <ToolCard tool={tool} />
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

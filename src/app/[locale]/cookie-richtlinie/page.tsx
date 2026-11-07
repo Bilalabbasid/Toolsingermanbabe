@@ -89,7 +89,7 @@ export default function CookieRichtliniePage() {
                 <h3 className="font-bold text-slate-900 text-sm">Marketing & Google AdSense (Opt-in: Art. 6 Abs. 1 lit. a DSGVO)</h3>
               </div>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Werden im kostenfreien Tarif genutzt, um relevante Werbeanzeigen bereitzustellen und den kostenfreien Betrieb der Konvertierungsserver zu finanzieren. Werbepartner wie Google Ireland Limited verarbeiten Daten nur, wenn Sie dieser Kategorie ausdrücklich zugestimmt haben.
+                Werden im kostenfreien Tarif genutzt, um relevante Werbeanzeigen bereitzustellen und den kostenfreien Betrieb der Plattform zu finanzieren. Werbepartner wie Google Ireland Limited verarbeiten Daten nur, wenn Sie dieser Kategorie ausdrücklich zugestimmt haben.
               </p>
               <p className="text-xs text-emerald-700 font-medium mt-1">
                 Abonnenten von Datei Tools Pro erhalten eine 100% werbefreie Nutzung: Hier werden generell keine Werbeskripte geladen.
@@ -116,9 +116,9 @@ export default function CookieRichtliniePage() {
             </Link>.
           </p>
           <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-0.5 mt-3">
-            <p className="font-semibold text-slate-900">[Name des Diensteanbieters / Betreibergesellschaft]</p>
-            <p>[Straße und Hausnummer], [PLZ und Ort, Deutschland / EU]</p>
-            <p>E-Mail: datenschutz@datei-tools.de</p>
+            <p className="font-semibold text-slate-900">Bil Al</p>
+            <p>20095 Hamburg, Deutschland</p>
+            <p>E-Mail: info@datei-tools.de</p>
           </div>
         </section>
 

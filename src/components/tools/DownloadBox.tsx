@@ -2,22 +2,10 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  CheckCircle2, 
-  Download, 
-  RotateCcw, 
-  ArrowRight, 
-  Sparkles, 
-  Bookmark, 
-  Layers,
-  Shield,
-  FileText,
-  Image as ImageIcon
-} from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { CheckCircle2, Download, RotateCcw, ArrowRight, Sparkles, ShieldCheck, Layers } from 'lucide-react';
 import { formatBytes } from '@/lib/utils';
 import { AdSlot } from '@/components/common/AdSlot';
-import { TOOLS_CONFIG } from '@/config/tools.config';
+import { getToolBySlug } from '@/config/tools.config';
 import { ToolCard } from '@/components/tools/ToolCard';
 import { featureFlags } from '@/config/featureFlags.config';
 
@@ -116,203 +104,163 @@ export function DownloadBox({
   onReset,
   downloadLabel = 'Datei herunterladen',
 }: DownloadBoxProps) {
+  // Small celebration – loaded lazily and skipped for users who prefer reduced motion.
   useEffect(() => {
-    try {
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.6 },
-        colors: ['#0284c7', '#38bdf8', '#10b981', '#6366f1'],
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    let cancelled = false;
+    import('canvas-confetti')
+      .then(({ default: confetti }) => {
+        if (cancelled) return;
+        confetti({
+          particleCount: 45,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#0273b4', '#38b0f5', '#10b981', '#a78bfa'],
+          disableForReducedMotion: true,
+        });
+      })
+      .catch(() => {
+        /* decorative only */
       });
-    } catch {
-      // safe fallback
-    }
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const savingsPercent =
-    originalSizeBytes && resultSizeBytes && originalSizeBytes > resultSizeBytes
-      ? Math.round(((originalSizeBytes - resultSizeBytes) / originalSizeBytes) * 100)
-      : null;
+  const hasSavings = Boolean(originalSizeBytes && resultSizeBytes && originalSizeBytes > resultSizeBytes);
+  const savingsPercent = hasSavings
+    ? Math.round(((originalSizeBytes! - resultSizeBytes!) / originalSizeBytes!) * 100)
+    : null;
+  const savingsBytes = hasSavings ? originalSizeBytes! - resultSizeBytes! : null;
 
-  const savingsBytes =
-    originalSizeBytes && resultSizeBytes && originalSizeBytes > resultSizeBytes
-      ? originalSizeBytes - resultSizeBytes
-      : null;
-
-  const nextWorkflows = getNextWorkflowSuggestions(filename);
-
-  const getWorkflowIcon = (type: WorkflowSuggestion['icon']) => {
-    switch (type) {
-      case 'shield':
-        return <Shield className="w-4 h-4 text-emerald-600" />;
-      case 'image':
-        return <ImageIcon className="w-4 h-4 text-sky-600" />;
-      case 'pdf':
-      case 'file':
-      default:
-        return <FileText className="w-4 h-4 text-sky-600" />;
-    }
-  };
+  const nextTools = getNextWorkflowSuggestions(filename)
+    .map((step) => getToolBySlug(step.slug))
+    .filter((t): t is NonNullable<typeof t> => Boolean(t));
 
   return (
     <>
-      <div 
-        aria-live="polite"
-        className="w-full bg-white rounded-2xl border border-slate-200 p-4 sm:p-8 md:p-10 shadow-sm animate-fade-in text-center"
-      >
-        {/* Success Badge */}
-        <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3 sm:mb-4 border border-emerald-100"
-          aria-hidden="true"
-        >
-          <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8" />
-        </div>
-
-        <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-1">
-          Erfolgreich verarbeitet!
-        </h3>
-        <p className="text-xs sm:text-sm text-slate-500 mb-5 max-w-md mx-auto break-all sm:break-normal sm:truncate px-2">
-          Ihre fertige Datei steht zum Download bereit:{' '}
-          <span className="font-semibold text-slate-700">{filename}</span>
-        </p>
-
-        {/* Metrics Banner if compression occurred */}
-        {savingsPercent !== null && savingsPercent > 0 && originalSizeBytes && resultSizeBytes && (
-          <div className="max-w-md mx-auto mb-6 sm:mb-8 p-3 sm:p-4 rounded-xl bg-sky-50/60 border border-sky-100 flex flex-wrap items-center justify-around gap-2 text-center">
-            <div className="min-w-[70px]">
-              <div className="text-[11px] sm:text-xs text-slate-500">Original</div>
-              <div className="text-xs sm:text-sm font-semibold text-slate-700">{formatBytes(originalSizeBytes)}</div>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" aria-hidden="true" />
-            <div className="min-w-[70px]">
-              <div className="text-[11px] sm:text-xs text-slate-500">Neu</div>
-              <div className="text-xs sm:text-sm font-bold text-sky-700">{formatBytes(resultSizeBytes)}</div>
-            </div>
-            <div className="w-full sm:w-auto px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] sm:text-xs font-bold">
-              {savingsPercent}% kleiner (-{formatBytes(savingsBytes!)})
-            </div>
-          </div>
-        )}
-
-        {/* Primary Action Buttons (Desktop & in-page) */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5 mb-6 sm:mb-8">
-          <button
-            onClick={onDownload}
-            aria-label={downloadLabel}
-            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-bold text-sm sm:text-base shadow-sm transition-colors touch-manipulation active:scale-[0.98] cursor-pointer"
+      <div aria-live="polite" className="w-full card overflow-hidden animate-fade-in">
+        {/* Success header */}
+        <div className="px-4 pt-8 pb-6 sm:px-10 sm:pt-10 text-center bg-gradient-to-b from-emerald-50/80 to-transparent">
+          <span
+            className="mx-auto mb-4 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-[0_8px_24px_-8px_rgb(16_185_129/0.7)] animate-pop-in"
+            aria-hidden="true"
           >
-            <Download className="w-5 h-5" aria-hidden="true" />
-            <span>{downloadLabel}</span>
-          </button>
-
-          <button
-            onClick={onReset}
-            aria-label="Weitere Datei bearbeiten"
-            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 active:bg-slate-100 text-slate-700 font-semibold text-xs sm:text-sm transition-colors touch-manipulation cursor-pointer"
-          >
-            <RotateCcw className="w-4 h-4 text-slate-500" aria-hidden="true" />
-            <span>Weitere Datei bearbeiten</span>
-          </button>
-        </div>
-
-        {/* Workflow Chaining: Nächste empfohlene Schritte */}
-        <div className="max-w-2xl mx-auto my-8 pt-6 border-t border-slate-100 text-left">
-          <div className="flex items-center justify-between mb-3 px-1">
-            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-sky-600" />
-              <span>Nächster empfohlener Schritt:</span>
-            </h4>
-            <span className="text-[11px] text-slate-400">Direkt weiterbearbeiten</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            {nextWorkflows.map((step) => {
-              const tool = TOOLS_CONFIG.find((t) => t.slug === step.slug);
-              if (tool) {
-                return <ToolCard key={tool.id} tool={tool} compact={true} />;
-              }
-              return (
-                <Link
-                  key={step.slug}
-                  href={`/de/${step.slug}`}
-                  className="p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-sky-50/50 hover:border-sky-300 transition-all group flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="p-1 rounded-md bg-white border border-slate-100 shadow-2xs">
-                        {getWorkflowIcon(step.icon)}
-                      </span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                    <div className="text-xs font-bold text-slate-900 group-hover:text-sky-700 transition-colors">
-                      {step.name}
-                    </div>
-                    <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
-                      {step.hint}
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Subtle Retention / Bookmark Pill */}
-        <div className="max-w-md mx-auto mb-6 p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center gap-2 text-[11px] text-slate-500">
-          <Bookmark className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span>
-            <strong>Tipp:</strong> Drücken Sie <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-200 font-mono text-[10px]">Strg + D</kbd>, um Datei Tools als Lesezeichen zu speichern.
+            <CheckCircle2 className="w-8 h-8" />
           </span>
+
+          <h3 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">Fertig! Ihre Datei ist bereit.</h3>
+          <p className="mt-1.5 text-[13px] sm:text-sm text-ink-subtle max-w-md mx-auto">
+            <span className="font-semibold text-ink-muted break-all">{filename}</span>
+            {resultSizeBytes ? <span className="tabular-nums"> · {formatBytes(resultSizeBytes)}</span> : null}
+          </p>
+
+          {savingsPercent !== null && savingsPercent > 0 && originalSizeBytes && resultSizeBytes && (
+            <div className="mt-5 max-w-sm mx-auto rounded-xl bg-white ring-1 ring-line p-3 sm:p-4">
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <span className="text-ink-subtle text-left">
+                  Vorher <strong className="block text-sm text-ink-muted tabular-nums">{formatBytes(originalSizeBytes)}</strong>
+                </span>
+                <ArrowRight className="w-4 h-4 text-slate-300" aria-hidden="true" />
+                <span className="text-ink-subtle text-right">
+                  Nachher <strong className="block text-sm text-sky-700 tabular-nums">{formatBytes(resultSizeBytes)}</strong>
+                </span>
+              </div>
+              <div className="mt-3 h-2 rounded-full bg-surface-muted overflow-hidden" aria-hidden="true">
+                <div className="h-full rounded-full bg-emerald-500" style={{ width: `${100 - savingsPercent}%` }} />
+              </div>
+              <p className="mt-2 text-xs font-semibold text-emerald-700">
+                {savingsPercent} % kleiner (−{formatBytes(savingsBytes!)})
+              </p>
+            </div>
+          )}
+
+          {/* Primary actions */}
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
+            <button
+              type="button"
+              onClick={onDownload}
+              className="w-full sm:w-auto min-h-[52px] inline-flex items-center justify-center gap-2 px-7 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-bold text-base shadow-brand transition-colors cursor-pointer"
+            >
+              <Download className="w-5 h-5" aria-hidden="true" />
+              {downloadLabel}
+            </button>
+            <button
+              type="button"
+              onClick={onReset}
+              className="w-full sm:w-auto min-h-[52px] inline-flex items-center justify-center gap-2 px-5 rounded-xl ring-1 ring-line-strong bg-white hover:bg-surface-muted text-ink font-semibold text-sm transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4 text-ink-subtle" aria-hidden="true" />
+              Weitere Datei bearbeiten
+            </button>
+          </div>
+
+          <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-ink-subtle">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+            Auf Ihrem Gerät erstellt – nichts wurde hochgeladen.
+          </p>
         </div>
 
-        {/* Subtle Pro Upsell Banner (kept dormant until billing is enabled) */}
-        {featureFlags.enableStripeCheckout && (
-        <div className="max-w-xl mx-auto p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-slate-50 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-amber-100 text-amber-700 shrink-0 mt-0.5" aria-hidden="true">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-xs sm:text-sm font-bold text-slate-900">
-                Noch mehr Dateien gleichzeitig verarbeiten?
-              </div>
-              <div className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
-                Mit Datei Tools Pro erhalten Sie erweiterte Stapelverarbeitung, 500 MB Dateigröße und werbefreies Arbeiten.
+        {/* Workflow chaining */}
+        {nextTools.length > 0 && (
+          <div className="px-4 pb-6 sm:px-10 sm:pb-8">
+            <div className="max-w-2xl mx-auto pt-5 border-t border-line text-left">
+              <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ink-muted">
+                <Layers className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+                Direkt weiterbearbeiten
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {nextTools.map((tool) => (
+                  <ToolCard key={tool.id} tool={tool} compact headingLevel="h4" />
+                ))}
               </div>
             </div>
           </div>
-          <Link
-            href="/de/preise"
-            className="shrink-0 text-xs font-bold text-sky-700 hover:text-sky-800 self-end sm:self-center hover:underline whitespace-nowrap min-h-[36px] flex items-center"
-          >
-            Pro entdecken →
-          </Link>
-        </div>
         )}
 
-        {/* Policy-Compliant Post-Completion Ad Placement (Safely placed with ample margin below actions) */}
-        <div className="mt-8 pt-6 border-t border-slate-100">
+        {featureFlags.enableStripeCheckout && (
+          <div className="px-4 pb-6 sm:px-10">
+            <div className="max-w-2xl mx-auto p-3.5 sm:p-4 rounded-xl ring-1 ring-line bg-surface-muted text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <span className="p-2 rounded-lg bg-amber-100 text-amber-700 shrink-0" aria-hidden="true">
+                  <Sparkles className="w-4 h-4" />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-ink">Mehr Dateien gleichzeitig?</p>
+                  <p className="text-xs text-ink-subtle mt-0.5">Mit Datei Tools Pro: größere Stapel, 500 MB pro Datei, werbefrei.</p>
+                </div>
+              </div>
+              <Link href="/de/preise" className="shrink-0 text-xs font-bold text-sky-700 hover:text-sky-800 whitespace-nowrap">
+                Pro entdecken →
+              </Link>
+            </div>
+          </div>
+        )}
+
+        <div className="px-2 pb-2">
           <AdSlot slotKey="tool_content" format="horizontal" />
         </div>
       </div>
 
-      {/* Sticky Mobile Download Bar (safe-area aware, one-handed reachable) */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 shadow-lg safe-area-bottom">
+      {/* Sticky mobile download bar (thumb-reachable, safe-area aware) */}
+      <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-line px-4 pt-2.5 pb-2.5 shadow-pop safe-area-bottom animate-slide-up">
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={onDownload}
-            aria-label="Datei herunterladen"
-            className="flex-1 min-h-[48px] inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-bold text-sm shadow-sm transition-colors active:scale-[0.98] touch-manipulation cursor-pointer"
+            className="flex-1 min-h-[48px] inline-flex items-center justify-center gap-2 px-4 rounded-xl bg-sky-600 active:bg-sky-800 text-white font-bold text-sm shadow-brand cursor-pointer"
           >
             <Download className="w-4 h-4" aria-hidden="true" />
-            <span>Herunterladen</span>
+            Herunterladen
           </button>
           <button
+            type="button"
             onClick={onReset}
             aria-label="Weitere Datei bearbeiten"
-            className="w-12 min-h-[48px] inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 transition-colors touch-manipulation cursor-pointer"
+            className="w-12 min-h-[48px] inline-flex items-center justify-center rounded-xl ring-1 ring-line bg-white active:bg-surface-muted text-ink-muted cursor-pointer"
           >
-            <RotateCcw className="w-4 h-4 text-slate-600" aria-hidden="true" />
+            <RotateCcw className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>

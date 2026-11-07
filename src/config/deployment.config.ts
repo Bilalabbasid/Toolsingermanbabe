@@ -37,109 +37,66 @@ export interface EngineCapability {
  * Keep sorted alphabetically within each section for readability.
  */
 export const ENGINE_CAPABILITIES: Record<EngineType, EngineCapability> = {
-  // ─── BROWSER-ONLY (always Vercel-safe) ──────────────────────────────────────
-  'dev-utility':         { vercel: true,  azure: true },
-  'favicon-create':      { vercel: true,  azure: true },
-  'image-bw':            { vercel: true,  azure: true },
-  'image-compress':      { vercel: true,  azure: true },
-  'image-crop':          { vercel: true,  azure: true },
-  'image-crop-circle':   { vercel: true,  azure: true },
-  'image-dpi':           { vercel: true,  azure: true },
-  'image-effects':       { vercel: true,  azure: true },
-  'image-metadata-strip':{ vercel: true,  azure: true },
-  'image-resize':        { vercel: true,  azure: true },
-  'image-rotate-flip':   { vercel: true,  azure: true },
-  'pdf-annotations-remove': { vercel: true, azure: true },
-  'pdf-compress':        { vercel: true,  azure: true },
-  'pdf-editor':          { vercel: true,  azure: true },
-  'pdf-extract':         { vercel: true,  azure: true },
-  'pdf-flatten':         { vercel: true,  azure: true },
-  'pdf-header-footer':   { vercel: true,  azure: true },
-  'pdf-merge':           { vercel: true,  azure: true },
-  'pdf-metadata':        { vercel: true,  azure: true },
-  'pdf-organize':        { vercel: true,  azure: true },
-  'pdf-permissions':     { vercel: true,  azure: true },
-  'pdf-protect':         { vercel: true,  azure: true },
-  'pdf-redact':          { vercel: true,  azure: true },
-  'pdf-repair':          { vercel: true,  azure: true },
-  'pdf-rotate':          { vercel: true,  azure: true },
-  'pdf-sign':            { vercel: true,  azure: true },
-  'pdf-split':           { vercel: true,  azure: true },
-  'pdf-to-image':        { vercel: true,  azure: true },
-  'pdf-unlock':          { vercel: true,  azure: true },
-  'pdf-watermark':       { vercel: true,  azure: true },
-  'text-utility':        { vercel: true,  azure: true },
-  'pdf-numbering':       { vercel: true,  azure: true },
-
-  // ─── IMAGE CONVERSION ────────────────────────────────────────────────────────
-  'image-convert':       { vercel: true,  azure: true },
-
-  // ─── DOCUMENT CONVERSIONS — REQUIRE LIBREOFFICE / NATIVE NODE MODULES ───────
-  'doc-convert': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'Requires LibreOffice/native Node modules (muhammara, @napi-rs/canvas, pdfjs-dist server-side). ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
-
-  // ─── OCR — REQUIRES TESSERACT.JS (server-side native binding) ──────────────
-  'ocr': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'Current OCR implementation uses Tesseract.js server-side Node worker with traineddata ' +
-      'file loading from disk. Not compatible with Vercel ephemeral functions. ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
-
-  // ─── MEDIA CONVERSION — REQUIRES FFMPEG ─────────────────────────────────────
-  'media-convert': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'Requires FFmpeg binary (@ffmpeg-installer/ffmpeg). ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
-
-  // ─── ARCHIVE — REQUIRES 7-ZIP BINARY ────────────────────────────────────────
-  'archive': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'Requires 7-Zip native binary (7z-bin / node-7z). ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
-  'archive-tool': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'Requires 7-Zip native binary (7z-bin / node-7z). ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
-
-  // ─── PDF EXTENDED IN-BROWSER ENGINES ────────────────────────────────────────
-  'pdf-compare':         { vercel: true,  azure: true },
-  'pdf-optimize':        { vercel: true,  azure: true },
-
-  // ─── PDF/A & ADVANCED SERVER OPERATIONS ─────────────────────────────────────
-  'pdf-pdfa': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'Requires Ghostscript / veraPDF for PDF/A compliance conversion. ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
-
-  // ─── DESIGN CONVERSION ───────────────────────────────────────────────────────
-  'design-convert': {
-    vercel: false,
-    azure: true,
-    disabledReason:
-      'PSD/AI/SKETCH conversion requires ag-psd and @napi-rs/canvas native modules. ' +
-      'PRESERVE IMPLEMENTATION — restore when Azure workers are available.',
-  },
+  // Every engine now runs 100 % in the browser (pdf-lib, pdf.js, qpdf/7-Zip/FFmpeg/Tesseract
+  // WebAssembly served from /vendor). No native binaries or backend workers are needed.
+  'dev-utility':             { vercel: true, azure: true },
+  'favicon-create':          { vercel: true, azure: true },
+  'image-bw':                { vercel: true, azure: true },
+  'image-compress':          { vercel: true, azure: true },
+  'image-crop':              { vercel: true, azure: true },
+  'image-crop-circle':       { vercel: true, azure: true },
+  'image-dpi':               { vercel: true, azure: true },
+  'image-effects':           { vercel: true, azure: true },
+  'image-metadata-strip':    { vercel: true, azure: true },
+  'image-resize':            { vercel: true, azure: true },
+  'image-rotate-flip':       { vercel: true, azure: true },
+  'image-convert':           { vercel: true, azure: true },
+  'design-convert':          { vercel: true, azure: true },
+  'pdf-annotations-remove':  { vercel: true, azure: true },
+  'pdf-compare':             { vercel: true, azure: true },
+  'pdf-compress':            { vercel: true, azure: true },
+  'pdf-editor':              { vercel: true, azure: true },
+  'pdf-extract':             { vercel: true, azure: true },
+  'pdf-flatten':             { vercel: true, azure: true },
+  'pdf-header-footer':       { vercel: true, azure: true },
+  'pdf-merge':               { vercel: true, azure: true },
+  'pdf-metadata':            { vercel: true, azure: true },
+  'pdf-numbering':           { vercel: true, azure: true },
+  'pdf-optimize':            { vercel: true, azure: true },
+  'pdf-organize':            { vercel: true, azure: true },
+  'pdf-pdfa':                { vercel: true, azure: true },
+  'pdf-permissions':         { vercel: true, azure: true },
+  'pdf-protect':             { vercel: true, azure: true },
+  'pdf-redact':              { vercel: true, azure: true },
+  'pdf-repair':              { vercel: true, azure: true },
+  'pdf-rotate':              { vercel: true, azure: true },
+  'pdf-sign':                { vercel: true, azure: true },
+  'pdf-split':               { vercel: true, azure: true },
+  'pdf-to-image':            { vercel: true, azure: true },
+  'pdf-unlock':              { vercel: true, azure: true },
+  'pdf-watermark':           { vercel: true, azure: true },
+  'doc-convert':             { vercel: true, azure: true },
+  'ocr':                     { vercel: true, azure: true },
+  'media-convert':           { vercel: true, azure: true },
+  'archive':                 { vercel: true, azure: true },
+  'archive-tool':            { vercel: true, azure: true },
+  'text-utility':            { vercel: true, azure: true },
 };
+
+/**
+ * Individual tools that cannot be done faithfully in a browser (e.g. writing legacy
+ * binary formats or ISO-certified PDF/A). They stay hidden from every discovery
+ * surface and return 404 until a real implementation exists.
+ */
+export const CLIENT_UNSUPPORTED_SLUGS: ReadonlySet<string> = new Set<string>([
+  // EPS needs a PostScript interpreter; embedded previews are low-res rasters only
+  'eps-in-svg-umwandeln',
+  'eps-in-pdf-umwandeln',
+  // ISO 19005 PDF/A conformance can't be guaranteed without Ghostscript/veraPDF
+  'pdfa-umwandeln',
+  // Writing the legacy binary PowerPoint 97-2003 format isn't feasible client-side
+  'pptx-in-ppt-umwandeln',
+]);
 
 /**
  * Resolve the current deployment target from environment.
@@ -167,4 +124,32 @@ export function isEngineAvailable(engine: EngineType): boolean {
 export function getEngineDisabledReason(engine: EngineType): string | undefined {
   const cap = ENGINE_CAPABILITIES[engine];
   return cap?.disabledReason;
+}
+
+/**
+ * Per-file size limit (MB) enforced by each in-browser engine. Shown on tool pages so the
+ * advertised limit always matches what the engine actually accepts.
+ */
+const ENGINE_FILE_LIMIT_MB: Partial<Record<EngineType, number>> = {
+  'ocr': 50,
+  'pdf-to-image': 50,
+  'favicon-create': 10,
+  'pdf-compress': 100,
+  'pdf-protect': 100,
+  'pdf-unlock': 100,
+  'pdf-permissions': 100,
+  'pdf-redact': 100,
+  'pdf-sign': 100,
+  'pdf-repair': 100,
+  'pdf-optimize': 100,
+  'pdf-flatten': 100,
+  'pdf-annotations-remove': 100,
+  'image-convert': 300,
+  'design-convert': 300,
+  'doc-convert': 300,
+  'image-compress': 300,
+};
+
+export function getClientFileLimitMB(engine: EngineType): number {
+  return ENGINE_FILE_LIMIT_MB[engine] ?? 500;
 }

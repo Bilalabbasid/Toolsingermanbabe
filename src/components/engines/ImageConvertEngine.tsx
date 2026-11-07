@@ -1,31 +1,35 @@
 'use client';
 
-import { apiFetch } from '@/lib/apiClient';
-
-import React, { useState, useRef } from 'react';
-import { PDFDocument } from 'pdf-lib';
-import JSZip from 'jszip';
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Trash2, 
-  RefreshCw, 
-  Image as ImageIcon,
-  Sliders,
-  CheckCircle,
-  Download,
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
   AlertCircle,
-  Layers
+  ArrowLeft,
+  ArrowRight,
+  Image as ImageIcon,
+  Info,
+  Plus,
+  RefreshCw,
+  ShieldCheck,
+  Sliders,
+  Trash2,
 } from 'lucide-react';
 import { FileUploader } from '@/components/tools/FileUploader';
 import { ProcessingStatus } from '@/components/tools/ProcessingStatus';
 import { DownloadBox } from '@/components/tools/DownloadBox';
-import { BatchProcessingQueue, BatchItem } from '@/components/tools/BatchProcessingQueue';
+import { BatchProcessingQueue } from '@/components/tools/BatchProcessingQueue';
 import { downloadBlob, formatBytes } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
-import { runConcurrentBatch } from '@/lib/batch-queue';
 import { getBatchLimits, validateBatchFiles } from '@/config/batch.config';
-import { useClientSubscription } from '@/hooks/useClientSubscription';
+import {
+  checkTargetSupport,
+  convertImageFile,
+  TARGET_MIME,
+  type ImageConvertOptions,
+} from '@/lib/client/image/convert';
+import { ICO_SIZES, imagesToPdf, type PdfPageSize, type TracePreset } from '@/lib/client/image/encode';
+import { baseNameOf } from '@/lib/client/image/decode';
+import { useConversionQueue, type QueueResult } from '@/lib/client/image/useConversionQueue';
+import { FilePreview } from '@/lib/client/image/FilePreview';
 
 export type ImageTargetFormat =
   | 'PNG'
@@ -44,577 +48,476 @@ interface ImageConvertEngineProps {
   sourceExtensions: string[];
 }
 
+/** Images that can be combined into one PDF in a single run. */
+const PDF_MAX_IMAGES = 100;
+
+const DEFAULT_OPTIONS: ImageConvertOptions = {
+  quality: 90,
+  background: '#ffffff',
+  icoSizes: [...ICO_SIZES],
+  svgScale: 2,
+  tracePreset: 'logo',
+  pdfPageSize: 'image',
+};
+
+const LOCAL_NOTE = 'Die Umwandlung läuft vollständig in Ihrem Browser – Ihre Bilder werden nicht hochgeladen.';
+
+/* ------------------------------------------------------------------ */
+/* Options panel                                                       */
+/* ------------------------------------------------------------------ */
+
+interface OptionsPanelProps {
+  target: ImageTargetFormat;
+  svgSource: boolean;
+  options: ImageConvertOptions;
+  onChange: (update: Partial<ImageConvertOptions>) => void;
+  disabled?: boolean;
+}
+
+function choiceClass(active: boolean) {
+  return `px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center gap-1.5 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+    active ? 'border-sky-500 bg-sky-50 text-sky-700 font-bold' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-300'
+  }`;
+}
+
+function OptionsPanel({ target, svgSource, options, onChange, disabled }: OptionsPanelProps) {
+  const lossy = target === 'JPG' || target === 'WebP' || target === 'AVIF';
+  const needsBackground = target === 'JPG' || target === 'BMP';
+  const showSvgScale = svgSource && target !== 'SVG' && target !== 'PDF';
+
+  const toggleIcoSize = (size: number) => {
+    const has = options.icoSizes.includes(size);
+    const next = has ? options.icoSizes.filter((s) => s !== size) : [...options.icoSizes, size];
+    onChange({ icoSizes: next.sort((a, b) => a - b) });
+  };
+
+  const traceChoices: { value: TracePreset; label: string; hint: string }[] = [
+    { value: 'logo', label: 'Logo / Grafik', hint: 'bis zu 8 Farben, glatte Flächen' },
+    { value: 'detailed', label: 'Detailliert', hint: 'bis zu 32 Farben, mehr Pfade' },
+    { value: 'bw', label: 'Schwarz-Weiß', hint: 'ideal für Strichzeichnungen und Signaturen' },
+  ];
+
+  const pdfChoices: { value: PdfPageSize; label: string }[] = [
+    { value: 'image', label: 'Bildgröße (Originalformat)' },
+    { value: 'a4', label: 'DIN A4 (automatisch hoch/quer)' },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {lossy && (
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div className="flex justify-between items-center text-xs font-semibold text-slate-700">
+            <span className="flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-sky-600" />
+              Bildqualität / Kompression:
+            </span>
+            <span className="text-sky-600 font-bold">{options.quality}%</span>
+          </div>
+          <input
+            type="range"
+            min={40}
+            max={100}
+            value={options.quality}
+            disabled={disabled}
+            aria-label="Bildqualität in Prozent"
+            onChange={(e) => onChange({ quality: Number(e.target.value) })}
+            className="w-full accent-sky-600 cursor-pointer disabled:opacity-50"
+          />
+        </div>
+      )}
+
+      {needsBackground && (
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <span className="text-xs font-semibold text-slate-700 block">
+            Hintergrundfarbe für transparente Bereiche ({target} unterstützt keine Transparenz):
+          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" disabled={disabled} onClick={() => onChange({ background: '#ffffff' })} className={choiceClass(options.background === '#ffffff')}>
+              <span className="w-3 h-3 rounded-full bg-white border border-slate-300" />
+              Weiß
+            </button>
+            <button type="button" disabled={disabled} onClick={() => onChange({ background: '#000000' })} className={choiceClass(options.background === '#000000')}>
+              <span className="w-3 h-3 rounded-full bg-black border border-slate-700" />
+              Schwarz
+            </button>
+            <label className={choiceClass(options.background !== '#ffffff' && options.background !== '#000000')}>
+              <input
+                type="color"
+                value={options.background}
+                disabled={disabled}
+                onChange={(e) => onChange({ background: e.target.value })}
+                className="w-4 h-4 p-0 border-0 bg-transparent cursor-pointer"
+                aria-label="Eigene Hintergrundfarbe wählen"
+              />
+              Eigene Farbe
+            </label>
+          </div>
+        </div>
+      )}
+
+      {target === 'ICO' && (
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <span className="text-xs font-semibold text-slate-700 block">Enthaltene Icon-Größen (Pixel):</span>
+          <div className="flex flex-wrap gap-2">
+            {ICO_SIZES.map((size) => (
+              <label key={size} className={choiceClass(options.icoSizes.includes(size))}>
+                <input
+                  type="checkbox"
+                  className="accent-sky-600"
+                  checked={options.icoSizes.includes(size)}
+                  disabled={disabled}
+                  onChange={() => toggleIcoSize(size)}
+                />
+                {size}×{size}
+              </label>
+            ))}
+          </div>
+          <p className="text-[11px] text-slate-500">
+            Nicht quadratische Bilder werden mittig mit transparentem Rand eingepasst. Für Favicons genügen 16, 32 und 48 Pixel.
+          </p>
+        </div>
+      )}
+
+      {showSvgScale && (
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <span className="text-xs font-semibold text-slate-700 block">Auflösung der Rastergrafik (bezogen auf die SVG-Größe):</span>
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 4].map((s) => (
+              <button key={s} type="button" disabled={disabled} onClick={() => onChange({ svgScale: s })} className={choiceClass(options.svgScale === s)}>
+                {s}×{s === 1 ? ' (Originalgröße)' : s === 2 ? ' (Retina)' : ' (Druck)'}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {target === 'SVG' && (
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <span className="text-xs font-semibold text-slate-700 block">Vektorisierungs-Modus:</span>
+          <div className="flex flex-wrap gap-2">
+            {traceChoices.map((c) => (
+              <button key={c.value} type="button" disabled={disabled} onClick={() => onChange({ tracePreset: c.value })} className={choiceClass(options.tracePreset === c.value)} title={c.hint}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] text-slate-500 leading-relaxed">
+            Das Bild wird automatisch nachgezeichnet und in echte Vektorpfade umgewandelt. Am besten funktioniert das bei Logos, Icons und
+            Grafiken mit klaren Farbflächen – Fotos ergeben eine plakative, vereinfachte Darstellung. Große Bilder werden vor dem
+            Nachzeichnen auf max. 1.000–1.400 Pixel verkleinert, das SVG behält die Originalabmessungen.
+          </p>
+        </div>
+      )}
+
+      {target === 'PDF' && (
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <span className="text-xs font-semibold text-slate-700 block">Seitengröße im PDF:</span>
+          <div className="flex flex-wrap gap-2">
+            {pdfChoices.map((c) => (
+              <button key={c.value} type="button" disabled={disabled} onClick={() => onChange({ pdfPageSize: c.value })} className={choiceClass(options.pdfPageSize === c.value)}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {target === 'GIF' && (
+        <p className="text-[11px] text-slate-500 flex gap-1.5 leading-relaxed">
+          <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-sky-600" />
+          GIF speichert höchstens 256 Farben und nur volle Transparenz. Bei Fotos können daher sichtbare Farbabstufungen entstehen.
+        </p>
+      )}
+      {target === 'TIFF' && (
+        <p className="text-[11px] text-slate-500 flex gap-1.5 leading-relaxed">
+          <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-sky-600" />
+          Das TIFF wird unkomprimiert (verlustfrei, maximal kompatibel) gespeichert und ist daher deutlich größer als das Original.
+          Transparenz bleibt erhalten.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Engine                                                              */
+/* ------------------------------------------------------------------ */
+
 export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConvertEngineProps) {
-  const [files, setFiles] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [statusText, setStatusText] = useState('');
-  const [resultBlob, setResultBlob] = useState<Blob | null>(null);
-  const [resultDownloadUrl, setResultDownloadUrl] = useState<string | null>(null);
-  const [outputFilename, setOutputFilename] = useState('');
-  const [quality, setQuality] = useState<number>(90);
-  const [backgroundColor, setBackgroundColor] = useState<string>('#ffffff');
+  const limits = getBatchLimits(false);
+  const svgSource = sourceExtensions.some((e) => e.toLowerCase() === '.svg');
+  const isPdfTarget = targetFormat === 'PDF';
+
+  const [options, setOptions] = useState<ImageConvertOptions>(DEFAULT_OPTIONS);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [supportError, setSupportError] = useState<string | null>(null);
 
-  // Batch states
-  const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
-  const [isZipping, setIsZipping] = useState(false);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  // Combined-PDF state
+  const [pdfFiles, setPdfFiles] = useState<File[]>([]);
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
+  const [pdfName, setPdfName] = useState('');
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfProgress, setPdfProgress] = useState(0);
+  const [pdfStatus, setPdfStatus] = useState('');
+  const addInputRef = useRef<HTMLInputElement>(null);
 
-  const isPro = useClientSubscription().isPro;
-  const limits = getBatchLimits(isPro);
+  useEffect(() => {
+    let active = true;
+    checkTargetSupport(targetFormat).then((msg) => {
+      if (active) setSupportError(msg);
+    });
+    return () => {
+      active = false;
+    };
+  }, [targetFormat]);
+
+  const converter = useCallback(
+    async (file: File, onProgress: (p: number, m?: string) => void): Promise<QueueResult> => {
+      try {
+        const res = await convertImageFile(file, targetFormat, options, onProgress);
+        trackEvent('conversion_completed', { targetFormat, mode: 'browser' });
+        return res;
+      } catch (err) {
+        trackEvent('conversion_failed', { targetFormat, mode: 'browser', error: (err as Error)?.message });
+        throw err;
+      }
+    },
+    [targetFormat, options]
+  );
+
+  const queue = useConversionQueue(converter, limits.clientConcurrency);
+  const items = queue.items;
+  const single = items.length === 1 ? items[0] : null;
+  const optionsLocked = queue.isProcessing || items.some((i) => i.status === 'completed');
+
+  const updateOptions = (update: Partial<ImageConvertOptions>) => setOptions((prev) => ({ ...prev, ...update }));
+
+  const validateOptions = (): string | null => {
+    if (targetFormat === 'ICO' && options.icoSizes.length === 0) return 'Bitte mindestens eine Icon-Größe auswählen.';
+    return supportError;
+  };
+
+  /* ---------------------------- file intake ---------------------------- */
 
   const handleFilesSelected = (newFiles: File[]) => {
     if (newFiles.length === 0) return;
     setErrorMsg(null);
 
-    if (targetFormat === 'PDF') {
-      const combined = [...files, ...newFiles];
-      setFiles(combined);
-      const urls = combined.map((f) => URL.createObjectURL(f));
-      setPreviewUrls(urls);
+    if (isPdfTarget) {
+      const combined = [...pdfFiles, ...newFiles];
+      if (combined.length > PDF_MAX_IMAGES) {
+        setErrorMsg(`Es können maximal ${PDF_MAX_IMAGES} Bilder in ein PDF zusammengefügt werden.`);
+        return;
+      }
+      setPdfFiles(combined);
+      setPdfBlob(null);
       trackEvent('upload_completed', { targetFormat, count: newFiles.length });
       return;
     }
 
-    if (newFiles.length === 1 && files.length === 0 && batchItems.length === 0) {
-      // Single file workflow
-      setFiles([newFiles[0]]);
-      setPreviewUrls([URL.createObjectURL(newFiles[0])]);
-      setBatchItems([]);
-      trackEvent('upload_completed', { targetFormat, count: 1 });
-    } else {
-      // Batch workflow
-      const combined = [...files, ...newFiles];
-      const validation = validateBatchFiles(combined, isPro);
-      if (!validation.valid) {
-        alert(validation.error);
-        return;
-      }
-
-      setFiles(combined);
-      const newItems: BatchItem[] = combined.map((f, idx) => ({
-        id: `img_batch_${Date.now()}_${idx}_${Math.random().toString(36).substring(7)}`,
-        file: f,
-        status: 'queued',
-        progress: 0,
-      }));
-      setBatchItems(newItems);
-      trackEvent('batch_upload_completed', { targetFormat, count: combined.length });
+    const combined = [...items.map((i) => i.file), ...newFiles];
+    const validation = validateBatchFiles(combined, false);
+    if (!validation.valid) {
+      setErrorMsg(validation.error || 'Die Auswahl überschreitet die Limits.');
+      return;
     }
+    queue.addFiles(newFiles);
+    trackEvent(combined.length > 1 ? 'batch_upload_completed' : 'upload_completed', { targetFormat, count: newFiles.length });
   };
 
-  const moveFile = (index: number, direction: 'left' | 'right') => {
-    const targetIdx = direction === 'left' ? index - 1 : index + 1;
-    if (targetIdx < 0 || targetIdx >= files.length) return;
-    const updatedFiles = [...files];
-    const tempFile = updatedFiles[index];
-    updatedFiles[index] = updatedFiles[targetIdx];
-    updatedFiles[targetIdx] = tempFile;
-
-    const updatedUrls = [...previewUrls];
-    const tempUrl = updatedUrls[index];
-    updatedUrls[index] = updatedUrls[targetIdx];
-    updatedUrls[targetIdx] = tempUrl;
-
-    setFiles(updatedFiles);
-    setPreviewUrls(updatedUrls);
-  };
-
-  const removeFile = (index: number) => {
-    const updatedFiles = files.filter((_, i) => i !== index);
-    const updatedUrls = previewUrls.filter((_, i) => i !== index);
-    setFiles(updatedFiles);
-    setPreviewUrls(updatedUrls);
-  };
-
-  const canProcessInBrowser = (file: File, target: ImageTargetFormat): boolean => {
-    const ext = (file.name.split('.').pop() || '').toLowerCase();
-    if (ext === 'heic' || ext === 'heif' || ext === 'tiff' || ext === 'tif') return false;
-    if (target === 'SVG' || target === 'ICO' || target === 'BMP' || target === 'TIFF' || target === 'GIF') return false;
-    if (target === 'PDF') return true;
-    return target === 'PNG' || target === 'JPG' || target === 'WebP';
-  };
-
-  /**
-   * Universal single-file processor (Client Canvas OR Server Worker)
-   */
-  const convertSingleFile = async (
-    file: File,
-    onProgress?: (pct: number, msg?: string) => void
-  ): Promise<{ blob: Blob; fileName: string; size: number }> => {
-    const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-    const ext = targetFormat.toLowerCase();
-    const outName = `datei_tools_${baseName}.${ext}`;
-
-    if (canProcessInBrowser(file, targetFormat)) {
-      onProgress?.(30, 'Bild wird im Browser transformiert...');
-      const objectUrl = URL.createObjectURL(file);
-      try {
-        const img = new Image();
-        img.src = objectUrl;
-        await new Promise((res, rej) => {
-          img.onload = res;
-          img.onerror = rej;
-        });
-
-        const canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth || img.width;
-        canvas.height = img.naturalHeight || img.height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) throw new Error('Canvas 2D nicht verfügbar');
-
-        if (targetFormat === 'JPG') {
-          ctx.fillStyle = backgroundColor;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        ctx.drawImage(img, 0, 0);
-
-        const mimeMap: Record<string, string> = {
-          PNG: 'image/png',
-          JPG: 'image/jpeg',
-          WebP: 'image/webp',
-        };
-        const targetMime = mimeMap[targetFormat] || 'image/png';
-        const q = targetFormat === 'PNG' ? undefined : quality / 100;
-
-        onProgress?.(70, 'Blob wird erzeugt...');
-        const blob = await new Promise<Blob>((res, rej) => {
-          canvas.toBlob(
-            (b) => (b ? res(b) : rej(new Error('Konnte Bild nicht konvertieren'))),
-            targetMime,
-            q
-          );
-        });
-
-        onProgress?.(100, 'Fertig');
-        return { blob, fileName: outName, size: blob.size };
-      } finally {
-        URL.revokeObjectURL(objectUrl);
-      }
-    } else {
-      // Server-side worker processing
-      onProgress?.(20, 'Übertragung an Worker...');
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'image_convert');
-      formData.append('targetFormat', targetFormat.toLowerCase());
-      formData.append(
-        'options',
-        JSON.stringify({
-          targetFormat: targetFormat.toLowerCase(),
-          quality,
-          backgroundColor,
-        })
-      );
-
-      const res = await apiFetch('/api/v1/jobs', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Server-Fehler: ${res.statusText}`);
-      }
-
-      const jobData = await res.json();
-      const jobId = jobData.jobId;
-
-      let pollCount = 0;
-      while (pollCount < 60) {
-        await new Promise((r) => setTimeout(r, 1200));
-        pollCount++;
-
-        const checkRes = await apiFetch(`/api/v1/jobs/${jobId}`);
-        if (!checkRes.ok) continue;
-
-        const pollData = await checkRes.json();
-        if (pollData.progress) {
-          onProgress?.(Math.max(30, pollData.progress), 'Server verarbeitet...');
-        }
-
-        if (pollData.status === 'completed' && pollData.output?.downloadUrl) {
-          const downloadRes = await apiFetch(pollData.output.downloadUrl);
-          const blob = await downloadRes.blob();
-          onProgress?.(100, 'Fertig');
-          return { blob, fileName: pollData.output.fileName || outName, size: blob.size };
-        }
-
-        if (pollData.status === 'failed') {
-          throw new Error(pollData.error || 'Server-Konvertierung fehlgeschlagen');
-        }
-      }
-
-      throw new Error('Zeitüberschreitung bei der Serververarbeitung');
+  const startConversion = () => {
+    const problem = validateOptions();
+    if (problem) {
+      setErrorMsg(problem);
+      return;
     }
-  };
-
-  // Single-file execute
-  const executeSingleConversion = async () => {
-    if (files.length === 0) return;
-    setIsProcessing(true);
-    setProgress(15);
     setErrorMsg(null);
-    setStatusText('Initialisierung...');
+    queue.start();
+  };
 
-    try {
-      if (targetFormat === 'PDF') {
-        const pdf = await PDFDocument.create();
-        for (let i = 0; i < files.length; i++) {
-          const currentFile = files[i];
-          const pct = 15 + Math.round(((i + 1) / files.length) * 70);
-          setProgress(pct);
-          setStatusText(`Bild ${i + 1} von ${files.length} wird eingebettet...`);
-
-          const arrayBuffer = await currentFile.arrayBuffer();
-          let embeddedImage;
-          if (currentFile.type === 'image/png' || currentFile.name.toLowerCase().endsWith('.png')) {
-            embeddedImage = await pdf.embedPng(arrayBuffer);
-          } else {
-            embeddedImage = await pdf.embedJpg(arrayBuffer);
-          }
-
-          const { width, height } = embeddedImage.scale(1);
-          const page = pdf.addPage([width, height]);
-          page.drawImage(embeddedImage, { x: 0, y: 0, width, height });
-        }
-
-        setProgress(90);
-        setStatusText('PDF wird finalisiert...');
-        const pdfBytes = await pdf.save();
-        const blob = new Blob([pdfBytes as unknown as BlobPart], { type: 'application/pdf' });
-        setResultBlob(blob);
-
-        const base = files[0].name.substring(0, files[0].name.lastIndexOf('.')) || 'bilder';
-        setOutputFilename(files.length === 1 ? `datei_tools_${base}.pdf` : `datei_tools_${base}_kombiniert.pdf`);
-        setProgress(100);
-        setIsProcessing(false);
-        trackEvent('conversion_completed', { targetFormat });
-        return;
-      }
-
-      const result = await convertSingleFile(files[0], (p, msg) => {
-        setProgress(p);
-        if (msg) setStatusText(msg);
-      });
-
-      setResultBlob(result.blob);
-      setOutputFilename(result.fileName);
-      setProgress(100);
-      setIsProcessing(false);
-      trackEvent('conversion_completed', { targetFormat, mode: 'browser' });
-    } catch (err: any) {
-      console.error(err);
-      setIsProcessing(false);
-      setErrorMsg(err.message || 'Fehler bei der Konvertierung.');
-      trackEvent('conversion_failed', { targetFormat, error: err.message });
+  const retrySingle = (id: string) => {
+    const problem = validateOptions();
+    if (problem) {
+      setErrorMsg(problem);
+      return;
     }
+    setErrorMsg(null);
+    queue.retry(id);
   };
 
-  // Batch execute
-  const startBatch = async () => {
-    if (batchItems.length === 0) return;
-    setIsProcessing(true);
-    abortControllerRef.current = new AbortController();
-
-    const tasks = batchItems.map((item) => ({
-      id: item.id,
-      run: async (signal?: AbortSignal) => {
-        if (signal?.aborted) throw new Error('Abgebrochen');
-        return await convertSingleFile(item.file, (pct, statusText) => {
-          setBatchItems((prev) =>
-            prev.map((i) => (i.id === item.id ? { ...i, progress: pct, statusText } : i))
-          );
-        });
-      },
-    }));
-
-    await runConcurrentBatch(tasks, {
-      concurrency: limits.clientConcurrency,
-      signal: abortControllerRef.current.signal,
-      onItemStart: (id) => {
-        setBatchItems((prev) =>
-          prev.map((i) => (i.id === id ? { ...i, status: 'processing', progress: 10 } : i))
-        );
-      },
-      onItemComplete: (id, result) => {
-        setBatchItems((prev) =>
-          prev.map((i) =>
-            i.id === id
-              ? {
-                  ...i,
-                  status: 'completed',
-                  progress: 100,
-                  outputBlob: result.blob,
-                  outputFileName: result.fileName,
-                  outputSize: result.size,
-                }
-              : i
-          )
-        );
-      },
-      onItemError: (id, err) => {
-        setBatchItems((prev) =>
-          prev.map((i) =>
-            i.id === id ? { ...i, status: 'failed', error: err.message, progress: 0 } : i
-          )
-        );
-      },
-    });
-
-    setIsProcessing(false);
+  const resetAll = () => {
+    queue.clear();
+    setPdfFiles([]);
+    setPdfBlob(null);
+    setPdfBusy(false);
+    setPdfProgress(0);
+    setErrorMsg(null);
   };
 
-  const cancelBatch = () => {
-    abortControllerRef.current?.abort();
-    setIsProcessing(false);
-    setBatchItems((prev) =>
-      prev.map((i) => (i.status === 'processing' || i.status === 'queued' ? { ...i, status: 'cancelled' } : i))
-    );
+  /* ----------------------------- PDF mode ------------------------------ */
+
+  const movePdfFile = (index: number, dir: -1 | 1) => {
+    const target = index + dir;
+    if (target < 0 || target >= pdfFiles.length) return;
+    const next = [...pdfFiles];
+    [next[index], next[target]] = [next[target], next[index]];
+    setPdfFiles(next);
   };
 
-  const clearQueue = () => {
-    setFiles([]);
-    setPreviewUrls([]);
-    setBatchItems([]);
-  };
-
-  const removeItem = (id: string) => {
-    setBatchItems((prev) => prev.filter((i) => i.id !== id));
-  };
-
-  const downloadItem = (item: BatchItem) => {
-    if (item.outputBlob && item.outputFileName) {
-      downloadBlob(item.outputBlob, item.outputFileName);
-    }
-  };
-
-  const downloadAllZip = async () => {
-    const completedItems = batchItems.filter((i) => i.status === 'completed' && i.outputBlob);
-    if (completedItems.length === 0) return;
-
-    setIsZipping(true);
+  const createPdf = async () => {
+    if (pdfFiles.length === 0) return;
+    setPdfBusy(true);
+    setErrorMsg(null);
+    setPdfProgress(5);
+    setPdfStatus('PDF wird vorbereitet...');
     try {
-      const zip = new JSZip();
-      completedItems.forEach((item) => {
-        if (item.outputBlob && item.outputFileName) {
-          zip.file(item.outputFileName, item.outputBlob);
-        }
+      const bytes = await imagesToPdf(pdfFiles, {
+        pageSize: options.pdfPageSize,
+        jpegQuality: 0.92,
+        onProgress: (i, total) => {
+          setPdfProgress(5 + Math.round((i / total) * 85));
+          setPdfStatus(i < total ? `Bild ${i + 1} von ${total} wird eingebettet...` : 'PDF wird gespeichert...');
+        },
       });
-
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(zipBlob, `datei_tools_${targetFormat.toLowerCase()}_stapel_${Date.now()}.zip`);
+      const blob = new Blob([bytes as BlobPart], { type: TARGET_MIME.PDF });
+      const base = baseNameOf(pdfFiles[0].name);
+      setPdfName(pdfFiles.length === 1 ? `datei_tools_${base}.pdf` : `datei_tools_${base}_kombiniert.pdf`);
+      setPdfProgress(100);
+      setPdfBlob(blob);
+      trackEvent('conversion_completed', { targetFormat, mode: 'browser', count: pdfFiles.length });
     } catch (err) {
-      console.error('[Zip Error]:', err);
-      alert('Fehler beim Erstellen des ZIP-Archivs.');
+      console.error(err);
+      setErrorMsg((err as Error)?.message || 'Das PDF konnte nicht erstellt werden.');
+      trackEvent('conversion_failed', { targetFormat, mode: 'browser', error: (err as Error)?.message });
     } finally {
-      setIsZipping(false);
+      setPdfBusy(false);
     }
   };
 
-  const handleResetSingle = () => {
-    setFiles([]);
-    setPreviewUrls([]);
-    setResultBlob(null);
-    setResultDownloadUrl(null);
-    setProgress(0);
-    setIsProcessing(false);
-    setErrorMsg(null);
-  };
+  /* ------------------------------ render ------------------------------- */
 
-  const isBatchView = batchItems.length > 1 && targetFormat !== 'PDF';
+  const errorBanner = (errorMsg || supportError) && (
+    <div role="alert" className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-3">
+      <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+      <p className="text-sm font-medium">{errorMsg || supportError}</p>
+    </div>
+  );
 
-  return (
-    <div className="w-full space-y-6">
-      {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <p className="text-sm font-medium">{errorMsg}</p>
-        </div>
-      )}
+  const localNote = (
+    <p className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium">
+      <ShieldCheck className="w-3.5 h-3.5" />
+      {LOCAL_NOTE}
+    </p>
+  );
 
-      {/* Batch Mode View */}
-      {isBatchView ? (
-        <div className="space-y-6">
-          {/* Format Settings for Batch */}
-          {(targetFormat === 'JPG' || targetFormat === 'WebP' || targetFormat === 'AVIF') && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <div className="flex justify-between items-center text-xs font-semibold text-slate-700 mb-2">
-                <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider">
-                  <Sliders className="w-3.5 h-3.5 text-sky-600" />
-                  Qualitätsstufe für alle Bilder:
-                </span>
-                <span className="text-sky-600 font-bold bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
-                  {quality}%
-                </span>
-              </div>
-              <input
-                type="range"
-                min={40}
-                max={100}
-                value={quality}
-                disabled={isProcessing}
-                onChange={(e) => setQuality(Number(e.target.value))}
-                className="w-full accent-sky-600 cursor-pointer disabled:opacity-50"
-              />
-            </div>
-          )}
+  const uploader = (
+    <FileUploader
+      onFilesSelected={handleFilesSelected}
+      allowMultiple={true}
+      isLocal={true}
+      maxFileSizeMB={limits.maxFileSizeMB}
+      acceptedExtensions={sourceExtensions}
+      title={isPdfTarget ? 'Bilder hier ablegen (Mehrfachauswahl möglich)' : 'Bilder hier ablegen (Einzel- oder Stapelverarbeitung)'}
+      subtitle={
+        isPdfTarget
+          ? `Unterstützt: ${sourceExtensions.join(', ').toUpperCase()} • Bis zu ${PDF_MAX_IMAGES} Bilder pro PDF`
+          : `Unterstützt: ${sourceExtensions.join(', ').toUpperCase()} • Bis zu ${limits.maxBatchFiles} Dateien gleichzeitig`
+      }
+    />
+  );
 
-          <BatchProcessingQueue
-            items={batchItems}
-            isProcessing={isProcessing}
-            onStartBatch={startBatch}
-            onCancelBatch={cancelBatch}
-            onClearQueue={clearQueue}
-            onRemoveItem={removeItem}
-            onDownloadItem={downloadItem}
-            onDownloadAllZip={downloadAllZip}
-            isZipping={isZipping}
-            toolTitle={`Bilder nach ${targetFormat} umwandeln (Stapel)`}
-          />
-        </div>
-      ) : files.length === 0 ? (
-        /* Empty Uploader State */
-        <FileUploader
-          onFilesSelected={handleFilesSelected}
-          allowMultiple={true}
-          maxFileSizeMB={limits.maxFileSizeMB}
-          acceptedExtensions={sourceExtensions}
-          title={targetFormat === 'PDF' ? 'Bilder hier ablegen (Mehrfachauswahl möglich)' : 'Bilder hier ablegen (Einzel- oder Stapelverarbeitung)'}
-          subtitle={`Unterstützt: ${sourceExtensions.join(', ').toUpperCase()} • Bis zu ${limits.maxBatchFiles} Dateien (${isPro ? 'Pro' : 'Kostenlos'})`}
-        />
-      ) : resultBlob ? (
-        /* Single File Completed State */
+  /* ---- PDF target ---- */
+  if (isPdfTarget) {
+    if (pdfBlob) {
+      return (
         <DownloadBox
-          filename={outputFilename}
-          originalSizeBytes={files[0].size}
-          resultSizeBytes={resultBlob.size}
-          onDownload={() => downloadBlob(resultBlob, outputFilename)}
-          onReset={handleResetSingle}
-          downloadLabel={`Konvertiertes ${targetFormat} herunterladen`}
+          filename={pdfName}
+         
+          resultSizeBytes={pdfBlob.size}
+          onDownload={() => downloadBlob(pdfBlob, pdfName)}
+          onReset={resetAll}
+          downloadLabel="PDF herunterladen"
         />
-      ) : isProcessing ? (
-        /* Single File Processing State */
-        <ProcessingStatus progress={progress} statusText={statusText} />
-      ) : (
-        /* Single File Options & Preview State (Preserved) */
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100">
-                <ImageIcon className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm sm:text-base">
-                  {files.length === 1 ? files[0].name : `${files.length} Bilder ausgewählt`}
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Größe: {formatBytes(files.reduce((acc, f) => acc + f.size, 0))} • Zielformat: <span className="font-semibold text-sky-600">{targetFormat}</span>
-                </p>
-              </div>
-            </div>
+      );
+    }
+    if (pdfBusy) return <ProcessingStatus progress={pdfProgress} statusText={pdfStatus} />;
 
-            <button
-              onClick={handleResetSingle}
-              className="text-xs font-semibold text-slate-500 hover:text-slate-700 underline cursor-pointer"
-            >
-              Neu starten
-            </button>
-          </div>
-
-          {/* Single image preview & options */}
-          {files.length === 1 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-              <div className="md:col-span-1 bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-center">
-                <img
-                  src={previewUrls[0]}
-                  alt={`Vorschau von ${files[0].name}`}
-                  className="max-h-48 max-w-full object-contain rounded shadow-xs"
+    return (
+      <div className="w-full space-y-6">
+        {errorBanner}
+        {pdfFiles.length === 0 ? (
+          uploader
+        ) : (
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100">
+                  <ImageIcon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                    {pdfFiles.length === 1 ? pdfFiles[0].name : `${pdfFiles.length} Bilder ausgewählt`}
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Größe: {formatBytes(pdfFiles.reduce((acc, f) => acc + f.size, 0))} • Zielformat:{' '}
+                    <span className="font-semibold text-sky-600">PDF</span>
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => addInputRef.current?.click()}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800 cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" /> Weitere Bilder
+                </button>
+                <button onClick={resetAll} className="text-xs font-semibold text-slate-500 hover:text-slate-700 underline cursor-pointer">
+                  Neu starten
+                </button>
+                <input
+                  ref={addInputRef}
+                  type="file"
+                  multiple
+                  accept={sourceExtensions.join(',')}
+                  className="hidden"
+                  onChange={(e) => {
+                    const list = Array.from(e.target.files || []);
+                    e.target.value = '';
+                    const maxBytes = limits.maxFileSizeMB * 1024 * 1024;
+                    const tooBig = list.find((f) => f.size > maxBytes);
+                    if (tooBig) {
+                      setErrorMsg(`Die Datei „${tooBig.name}“ ist größer als ${limits.maxFileSizeMB} MB.`);
+                      return;
+                    }
+                    handleFilesSelected(list);
+                  }}
                 />
               </div>
-
-              <div className="md:col-span-2 space-y-4">
-                {(targetFormat === 'JPG' || targetFormat === 'WebP' || targetFormat === 'AVIF') && (
-                  <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div className="flex justify-between items-center text-xs font-semibold text-slate-700">
-                      <span className="flex items-center gap-1.5">
-                        <Sliders className="w-3.5 h-3.5 text-sky-600" />
-                        Bildqualität / Kompression:
-                      </span>
-                      <span className="text-sky-600 font-bold">{quality}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min={40}
-                      max={100}
-                      value={quality}
-                      onChange={(e) => setQuality(Number(e.target.value))}
-                      className="w-full accent-sky-600 cursor-pointer"
-                    />
-                  </div>
-                )}
-
-                {(targetFormat === 'JPG' || targetFormat === 'BMP') && (
-                  <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <span className="text-xs font-semibold text-slate-700 block">
-                      Hintergrundfarbe (für transparente Bereiche):
-                    </span>
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setBackgroundColor('#ffffff')}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center gap-1.5 cursor-pointer ${
-                          backgroundColor === '#ffffff'
-                            ? 'border-sky-500 bg-sky-50 text-sky-700 font-bold'
-                            : 'border-slate-200 bg-white text-slate-700'
-                        }`}
-                      >
-                        <span className="w-3 h-3 rounded-full bg-white border border-slate-300" />
-                        Weiß
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setBackgroundColor('#000000')}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center gap-1.5 cursor-pointer ${
-                          backgroundColor === '#000000'
-                            ? 'border-sky-500 bg-sky-50 text-sky-700 font-bold'
-                            : 'border-slate-200 bg-white text-slate-700'
-                        }`}
-                      >
-                        <span className="w-3 h-3 rounded-full bg-black border border-slate-700" />
-                        Schwarz
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
-          )}
 
-          {/* Multi-image to PDF preview gallery */}
-          {targetFormat === 'PDF' && files.length > 1 && (
             <div className="space-y-3">
               <span className="text-xs font-semibold text-slate-700 block">
-                Seitenreihenfolge im PDF (Bilder neu anordnen):
+                Seitenreihenfolge im PDF {pdfFiles.length > 1 && '(Bilder mit den Pfeilen neu anordnen)'}:
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                {files.map((file, idx) => (
-                  <div key={idx} className="relative group border border-slate-200 rounded-xl p-2 bg-slate-50 flex flex-col items-center">
+                {pdfFiles.map((file, idx) => (
+                  <div key={`${file.name}_${file.size}_${file.lastModified}_${idx}`} className="relative border border-slate-200 rounded-xl p-2 bg-slate-50 flex flex-col items-center">
                     <span className="absolute top-1 left-1 bg-slate-800 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold z-10">
                       {idx + 1}
                     </span>
-                    <img src={previewUrls[idx]} alt={`Miniaturansicht Seite ${idx + 1}: ${file.name}`} className="w-full h-20 object-contain rounded mb-2" />
+                    <div className="w-full h-20 flex items-center justify-center mb-2">
+                      <FilePreview file={file} alt={`Seite ${idx + 1}: ${file.name}`} className="w-full h-20 object-contain rounded" />
+                    </div>
                     <span className="text-[10px] text-slate-600 truncate w-full text-center">{file.name}</span>
                     <div className="flex items-center gap-1 mt-1">
-                      <button type="button" onClick={() => moveFile(idx, 'left')} disabled={idx === 0} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">
+                      <button type="button" aria-label="Nach links verschieben" onClick={() => movePdfFile(idx, -1)} disabled={idx === 0} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">
                         <ArrowLeft className="w-3 h-3" />
                       </button>
-                      <button type="button" onClick={() => moveFile(idx, 'right')} disabled={idx === files.length - 1} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">
+                      <button type="button" aria-label="Nach rechts verschieben" onClick={() => movePdfFile(idx, 1)} disabled={idx === pdfFiles.length - 1} className="p-1 rounded bg-white shadow-xs hover:bg-slate-100 disabled:opacity-30">
                         <ArrowRight className="w-3 h-3" />
                       </button>
-                      <button type="button" onClick={() => removeFile(idx)} className="p-1 rounded bg-white text-red-500 shadow-xs hover:bg-red-50">
+                      <button type="button" aria-label="Bild entfernen" onClick={() => setPdfFiles(pdfFiles.filter((_, i) => i !== idx))} className="p-1 rounded bg-white text-red-500 shadow-xs hover:bg-red-50">
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
@@ -622,19 +525,141 @@ export function ImageConvertEngine({ targetFormat, sourceExtensions }: ImageConv
                 ))}
               </div>
             </div>
-          )}
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
+            <OptionsPanel target={targetFormat} svgSource={svgSource} options={options} onChange={updateOptions} />
+
+            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              {localNote}
+              <button
+                onClick={createPdf}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>{pdfFiles.length > 1 ? 'PDF jetzt zusammenfügen' : 'PDF jetzt erstellen'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  /* ---- Single image ---- */
+  if (single) {
+    if (single.status === 'completed' && single.outputBlob && single.outputFileName) {
+      const blob = single.outputBlob;
+      const name = single.outputFileName;
+      return (
+        <DownloadBox
+          filename={name}
+         
+          resultSizeBytes={blob.size}
+          onDownload={() => downloadBlob(blob, name)}
+          onReset={resetAll}
+          downloadLabel={`Konvertiertes ${targetFormat} herunterladen`}
+        />
+      );
+    }
+    if (single.status === 'processing') {
+      return <ProcessingStatus progress={single.progress} statusText={single.statusText || 'Wird verarbeitet...'} />;
+    }
+
+    return (
+      <div className="w-full space-y-6">
+        {errorBanner}
+        {single.status === 'failed' && single.error && (
+          <div role="alert" className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-bold">Konvertierung fehlgeschlagen</p>
+              <p className="text-sm">{single.error}</p>
+            </div>
+          </div>
+        )}
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100 shrink-0">
+                <ImageIcon className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-bold text-slate-900 text-sm sm:text-base truncate">{single.file.name}</h3>
+                <p className="text-xs text-slate-500">
+                  Größe: {formatBytes(single.file.size)} • Zielformat: <span className="font-semibold text-sky-600">{targetFormat}</span>
+                </p>
+              </div>
+            </div>
+            <button onClick={resetAll} className="text-xs font-semibold text-slate-500 hover:text-slate-700 underline cursor-pointer">
+              Neu starten
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <div className="md:col-span-1 bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-center min-h-32">
+              <FilePreview file={single.file} alt={`Vorschau von ${single.file.name}`} />
+            </div>
+            <div className="md:col-span-2">
+              <OptionsPanel target={targetFormat} svgSource={svgSource} options={options} onChange={updateOptions} />
+              {targetFormat === 'PNG' && !svgSource && (
+                <p className="text-xs text-slate-500">Keine weiteren Einstellungen nötig – {targetFormat} wird verlustfrei mit Transparenz gespeichert.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            {localNote}
             <button
-              onClick={executeSingleConversion}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition"
+              onClick={() => (single.status === 'failed' ? retrySingle(single.id) : startConversion())}
+              disabled={!!supportError}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <RefreshCw className="w-4 h-4" />
-              <span>{targetFormat === 'PDF' ? 'PDF jetzt zusammenfügen' : 'Jetzt umwandeln'}</span>
+              <span>{single.status === 'failed' ? 'Erneut versuchen' : 'Jetzt umwandeln'}</span>
             </button>
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  /* ---- Batch ---- */
+  if (items.length > 1) {
+    return (
+      <div className="w-full space-y-6">
+        {errorBanner}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-3">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+            <Sliders className="w-3.5 h-3.5 text-sky-600" />
+            Einstellungen für alle Bilder
+          </h3>
+          <OptionsPanel target={targetFormat} svgSource={svgSource} options={options} onChange={updateOptions} disabled={optionsLocked} />
+          {optionsLocked && !queue.isProcessing && (
+            <p className="text-[11px] text-slate-500">Einstellungen gelten für bereits umgewandelte Bilder nicht mehr – für neue Einstellungen „Liste leeren“ und Bilder erneut hinzufügen.</p>
+          )}
+          {localNote}
+        </div>
+        <BatchProcessingQueue
+          items={items}
+          isProcessing={queue.isProcessing}
+          onStartBatch={startConversion}
+          onCancelBatch={queue.cancel}
+          onClearQueue={resetAll}
+          onRemoveItem={queue.remove}
+          onRetryItem={queue.retry}
+          onDownloadItem={queue.downloadItem}
+          onDownloadAllZip={() => queue.downloadZip(`datei_tools_${targetFormat.toLowerCase()}_stapel_${Date.now()}.zip`)}
+          isZipping={queue.isZipping}
+          toolTitle={`Bilder nach ${targetFormat} umwandeln (Stapel)`}
+        />
+      </div>
+    );
+  }
+
+  /* ---- Empty ---- */
+  return (
+    <div className="w-full space-y-6">
+      {errorBanner}
+      {uploader}
     </div>
   );
 }

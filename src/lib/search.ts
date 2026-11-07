@@ -1,5 +1,8 @@
 import { ToolDefinition } from '@/types/tool';
-import { TOOLS_CONFIG, getActiveTools } from '@/config/tools.config';
+import { getActiveTools } from '@/config/tools.config';
+
+// Only active (non-hidden) tools may surface in search, recents or recommendations.
+const findActiveTool = (slug: string) => getActiveTools().find((t) => t.slug === slug);
 
 /**
  * German Synonym & Stemming Map
@@ -266,7 +269,7 @@ export function getPopularTools(): ToolDefinition[] {
   ];
 
   return popularSlugs
-    .map((slug) => TOOLS_CONFIG.find((t) => t.slug === slug))
+    .map((slug) => findActiveTool(slug))
     .filter((t): t is ToolDefinition => !!t);
 }
 
@@ -288,7 +291,7 @@ export function getRecommendedTools(excludeSlug?: string): ToolDefinition[] {
 
   return recommendedSlugs
     .filter((s) => s !== excludeSlug)
-    .map((slug) => TOOLS_CONFIG.find((t) => t.slug === slug))
+    .map((slug) => findActiveTool(slug))
     .filter((t): t is ToolDefinition => !!t)
     .slice(0, 6);
 }
@@ -297,16 +300,16 @@ export function getRecommendedTools(excludeSlug?: string): ToolDefinition[] {
  * Related tools based on tool.relatedTools array
  */
 export function getRelatedTools(slug: string): ToolDefinition[] {
-  const current = TOOLS_CONFIG.find((t) => t.slug === slug);
+  const current = findActiveTool(slug);
   if (!current || !current.relatedTools) return [];
 
   const related = current.relatedTools
-    .map((relSlug) => TOOLS_CONFIG.find((t) => t.slug === relSlug))
+    .map((relSlug) => findActiveTool(relSlug))
     .filter((t): t is ToolDefinition => !!t && t.slug !== slug);
 
   // If less than 4, fill with same category
   if (related.length < 4) {
-    const categoryNeighbors = TOOLS_CONFIG.filter(
+    const categoryNeighbors = getActiveTools().filter(
       (t) => t.category === current.category && t.slug !== slug && !related.some((r) => r.slug === t.slug)
     ).slice(0, 4 - related.length);
     related.push(...categoryNeighbors);
@@ -352,7 +355,7 @@ export function getRecentTools(): ToolDefinition[] {
     if (!raw) return [];
     const slugs: string[] = JSON.parse(raw);
     return slugs
-      .map((slug) => TOOLS_CONFIG.find((t) => t.slug === slug))
+      .map((slug) => findActiveTool(slug))
       .filter((t): t is ToolDefinition => !!t);
   } catch {
     return [];

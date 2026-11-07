@@ -27,17 +27,21 @@ import { ToolDefinition, ToolCategory } from '@/types/tool';
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Optional query to prefill when the modal opens (e.g. from the home page hero). */
+  initialQuery?: string;
 }
 
-const CATEGORY_TABS: Array<{ id: string; label: string; emoji: string }> = [
-  { id: 'all',       label: 'Alle',       emoji: '🔍' },
-  { id: 'pdf',       label: 'PDF',        emoji: '📄' },
-  { id: 'images',    label: 'Bilder',     emoji: '🖼️' },
-  { id: 'documents', label: 'Dokumente',  emoji: '📝' },
-  { id: 'utilities', label: 'Werkzeuge',  emoji: '🔧' },
+const CATEGORY_TABS: Array<{ id: string; label: string }> = [
+  { id: 'all',       label: 'Alle' },
+  { id: 'pdf',       label: 'PDF' },
+  { id: 'images',    label: 'Bilder' },
+  { id: 'documents', label: 'Dokumente' },
+  { id: 'ocr',       label: 'OCR' },
+  { id: 'security',  label: 'Sicherheit' },
+  { id: 'utilities', label: 'Text & Medien' },
 ];
 
-export function SearchModal({ isOpen, onClose }: SearchModalProps) {
+export function SearchModal({ isOpen, onClose, initialQuery }: SearchModalProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -51,12 +55,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     if (isOpen) {
       setRecentTools(getRecentTools());
       setSelectedIndex(0);
+      if (initialQuery) setQuery(initialQuery);
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
       setQuery('');
       setCategoryFilter('all');
     }
-  }, [isOpen]);
+  }, [isOpen, initialQuery]);
 
   // Results calculation
   const searchResults: SearchResultItem[] = useMemo(() => {
@@ -117,12 +122,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const getCategoryColor = (cat: ToolCategory) => {
     switch (cat) {
-      case 'pdf':        return 'bg-rose-50 text-rose-600 border-rose-100';
-      case 'images':     return 'bg-purple-50 text-purple-600 border-purple-100';
+      case 'pdf':        return 'bg-rose-50 text-rose-700 border-rose-100';
+      case 'images':     return 'bg-violet-50 text-violet-700 border-violet-100';
       case 'documents':  return 'bg-blue-50 text-blue-600 border-blue-100';
       case 'security':   return 'bg-amber-50 text-amber-700 border-amber-100';
       case 'ocr':        return 'bg-emerald-50 text-emerald-600 border-emerald-100';
-      default:           return 'bg-sky-50 text-sky-600 border-sky-100';
+      default:           return 'bg-slate-100 text-slate-700 border-slate-200';
     }
   };
 
@@ -250,9 +255,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   cursor: 'pointer',
                   border: 'none',
                   transition: 'all 0.15s',
-                  backgroundColor: isActive ? '#0284c7' : 'transparent',
+                  backgroundColor: isActive ? '#0273b4' : 'transparent',
                   color: isActive ? '#fff' : '#475569',
-                  boxShadow: isActive ? '0 1px 3px rgba(2,132,199,0.35)' : 'none',
+                  boxShadow: isActive ? '0 1px 3px rgba(2,115,180,0.35)' : 'none',
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(203,213,225,0.5)';
@@ -266,7 +271,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   if (scrollRef.current) scrollRef.current.scrollTop = 0;
                 }}
               >
-                <span style={{ marginRight: 4 }}>{tab.emoji}</span>
                 {tab.label}
               </button>
             );
@@ -440,7 +444,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           <span style={{ fontSize: 11, color: '#64748b', fontWeight: 500 }}>
             {isFiltered
               ? `${searchResults.length} ${searchResults.length === 1 ? 'Werkzeug' : 'Werkzeuge'} verfügbar`
-              : '165+ Werkzeuge verfügbar'}
+              : 'Alle Tools laufen lokal im Browser'}
           </span>
         </div>
       </div>

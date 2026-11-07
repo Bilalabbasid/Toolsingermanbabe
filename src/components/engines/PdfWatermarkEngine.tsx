@@ -171,7 +171,6 @@ export function PdfWatermarkEngine() {
     return (
       <DownloadBox
         filename={outputFilename}
-        originalSizeBytes={file.size}
         resultSizeBytes={resultBlob.size}
         onDownload={handleDownload}
         onReset={handleReset}

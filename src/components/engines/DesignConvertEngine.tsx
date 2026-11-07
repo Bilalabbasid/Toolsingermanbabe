@@ -1,22 +1,26 @@
 "use client";
 
-import { apiFetch } from '@/lib/apiClient';
-
-import React, { useEffect, useState } from "react";
-import { AlertTriangle, Info, Download, RotateCcw, Layers } from "lucide-react";
+import React, { useCallback, useState } from "react";
+import Link from "next/link";
+import { AlertTriangle, Download, Info, Layers, RotateCcw, ShieldCheck, Sliders } from "lucide-react";
 import { FileUploader } from "@/components/tools/FileUploader";
 import { ProcessingStatus } from "@/components/tools/ProcessingStatus";
 import { DownloadBox } from "@/components/tools/DownloadBox";
-import { formatBytes } from "@/lib/utils";
+import { BatchProcessingQueue } from "@/components/tools/BatchProcessingQueue";
+import { downloadBlob, formatBytes } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { getBatchLimits, validateBatchFiles } from "@/config/batch.config";
+import { pdfToSvg, psdToRaster, rasterToPsd, svgToPdf, type DesignResult, type RasterTarget } from "@/lib/client/design/convert";
+import { useConversionQueue } from "@/lib/client/image/useConversionQueue";
+import { FilePreview } from "@/lib/client/image/FilePreview";
 
 export type DesignConvertMode =
   | "psd-to-raster"   // PSD -> PNG/JPG/WebP
-  | "raster-to-psd"   // PNG/JPG -> PSD (flat raster PSD)
-  | "svg-to-pdf"      // SVG -> PDF
-  | "pdf-to-svg"      // PDF -> SVG (raster-in-SVG, honest)
-  | "eps-to-svg"      // EPS -> SVG
-  | "eps-to-pdf";     // EPS -> PDF
+  | "raster-to-psd"   // PNG/JPG -> PSD (single pixel layer)
+  | "svg-to-pdf"      // SVG -> PDF (high-res raster)
+  | "pdf-to-svg"      // PDF -> SVG (raster page + selectable text)
+  | "eps-to-svg"      // EPS -> SVG (not possible in the browser)
+  | "eps-to-pdf";     // EPS -> PDF (not possible in the browser)
 
 interface DesignConvertEngineProps {
   mode: DesignConvertMode;
@@ -26,243 +30,309 @@ interface DesignConvertEngineProps {
 const DISCLAIMERS: Record<DesignConvertMode, { title: string; body: string; type: "warning" | "info" } | null> = {
   "psd-to-raster": {
     title: "Hinweis zur PSD-Konvertierung",
-    body: "Datei Tools liest das zusammengesetzte Vorschau-Bild der PSD-Datei. Einzelne Ebenen, Effekte, Smartobjekte und Einstellungsebenen werden nicht separat verarbeitet. Das Ergebnis entspricht der sichtbaren Gesamtansicht der PSD-Datei.",
+    body: "Datei Tools liest das zusammengesetzte Gesamtbild der PSD-Datei – so, wie Photoshop es zuletzt gespeichert hat. Einzelne Ebenen werden nicht separat exportiert. Fehlt das Gesamtbild (Datei ohne „Kompatibilität maximieren“ gespeichert), wird es vereinfacht aus den sichtbaren Pixelebenen zusammengesetzt.",
     type: "info",
   },
   "raster-to-psd": {
-    title: "Wichtig: Flache PSD ohne Ebenen",
-    body: "Die erzeugte PSD-Datei enthält das Bild als einzige, nicht aufgeteilte Ebene (Flat PSD). Es werden KEINE editierbaren Photoshop-Ebenen, Ebenenmasken oder Vektorgrafiken erstellt. Die Datei kann in Photoshop geöffnet werden, bietet jedoch keine Ebenenfunktionen.",
-    type: "warning",
+    title: "PSD mit einer Bildebene",
+    body: "Die erzeugte PSD-Datei enthält Ihr Bild als eine normale, bearbeitbare Pixelebene (Transparenz bleibt erhalten). Es werden keine zusätzlichen Ebenen, Masken oder Vektorformen erzeugt – Photoshop, GIMP und Photopea öffnen die Datei problemlos.",
+    type: "info",
   },
   "svg-to-pdf": {
-    title: "SVG wird als Rasterbild in PDF eingebettet",
-    body: "SVG-Vektorgrafiken werden für die PDF-Ausgabe auf 150 DPI gerendert und als Pixelbild eingebettet. Die Vektorpfade bleiben im PDF nicht als skalierbare Vektoren erhalten. Für vektorbasierte PDF-Ausgabe empfehlen wir professionelle Tools wie Inkscape oder Adobe Illustrator.",
+    title: "SVG wird hochaufgelöst als Bild ins PDF eingebettet",
+    body: "Die SVG-Grafik wird im Browser mit wählbarer Auflösung (150 oder 300 DPI) gerendert und als verlustfreies Bild in eine PDF-Seite in Originalgröße eingebettet. Die Vektorpfade bleiben im PDF nicht als skalierbare Vektoren erhalten. Für vektorbasierte PDFs empfehlen wir Inkscape oder Adobe Illustrator.",
     type: "info",
   },
   "pdf-to-svg": {
-    title: "PDF-Vektordaten können nicht extrahiert werden",
-    body: "Datei Tools kann aus einem PDF keine echten Vektordaten extrahieren. Das Ergebnis ist eine SVG-Datei, die das gerenderte Seitenbild als Rasterbild enthält, nicht als Vektorpfade. Für echte Vektorextraktion ist spezialisierte Software (z. B. Inkscape, Adobe Acrobat Pro) erforderlich.",
+    title: "So funktioniert PDF → SVG",
+    body: "Jede PDF-Seite wird als eigene SVG-Datei ausgegeben: Das Seitenbild ist als hochaufgelöste Rastergrafik eingebettet, der Text liegt zusätzlich als unsichtbare, auswählbare und durchsuchbare SVG-Textebene darüber. Echte Vektorpfade werden nicht extrahiert – dafür ist spezialisierte Software wie Inkscape oder Adobe Illustrator nötig.",
     type: "warning",
   },
-  "eps-to-svg": {
-    title: "EPS-Konvertierung erfordert Ghostscript",
-    body: "EPS-Dateien können auf dem Server nur konvertiert werden, wenn Ghostscript installiert ist. Falls die Konvertierung fehlschlägt, konvertieren Sie die EPS-Datei zunächst lokal in PDF oder PNG und laden Sie diese Datei dann hoch.",
-    type: "warning",
-  },
-  "eps-to-pdf": {
-    title: "EPS-Konvertierung erfordert Ghostscript",
-    body: "EPS-Dateien werden über den serverseitigen Ghostscript-Decoder verarbeitet. Falls keine Ghostscript-Installation verfügbar ist, wird ein hilfreicher Fehler angezeigt.",
-    type: "warning",
-  },
+  "eps-to-svg": null,
+  "eps-to-pdf": null,
 };
 
 const MODE_CONFIG: Record<DesignConvertMode, {
   accept: string[];
-  targetFmt: string;
-  jobTargetFormat: string;
   title: string;
   subtitle: string;
   btnLabel: string;
-  outputExt: string;
+  label: string;
 }> = {
   "psd-to-raster": {
     accept: [".psd"],
-    targetFmt: "PNG",
-    jobTargetFormat: "png",
-    title: "PSD-Datei zum Konvertieren ablegen",
-    subtitle: "Liest das zusammengesetzte Bild der PSD-Datei und exportiert als PNG, JPG oder WebP",
+    title: "PSD-Dateien zum Konvertieren ablegen",
+    subtitle: "Exportiert das Gesamtbild der PSD als PNG, JPG oder WebP – direkt im Browser",
     btnLabel: "PSD konvertieren",
-    outputExt: "png",
+    label: "PSD",
   },
   "raster-to-psd": {
     accept: [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"],
-    targetFmt: "PSD",
-    jobTargetFormat: "psd",
-    title: "Bild als PSD exportieren",
-    subtitle: "Erzeugt eine PSD-Datei mit dem Bild als einzelne flache Ebene",
+    title: "Bilder als PSD exportieren",
+    subtitle: "Erzeugt eine Photoshop-Datei mit dem Bild als bearbeitbare Ebene",
     btnLabel: "Als PSD exportieren",
-    outputExt: "psd",
+    label: "PSD",
   },
   "svg-to-pdf": {
     accept: [".svg"],
-    targetFmt: "PDF",
-    jobTargetFormat: "pdf",
-    title: "SVG-Datei in PDF umwandeln",
-    subtitle: "SVG wird auf 150 DPI gerendert und als PDF gespeichert",
+    title: "SVG-Dateien in PDF umwandeln",
+    subtitle: "Jede SVG wird hochaufgelöst als PDF-Seite gespeichert",
     btnLabel: "SVG in PDF umwandeln",
-    outputExt: "pdf",
+    label: "PDF",
   },
   "pdf-to-svg": {
     accept: [".pdf"],
-    targetFmt: "SVG",
-    jobTargetFormat: "svg",
-    title: "PDF-Seite als SVG exportieren",
-    subtitle: "Erste Seite des PDFs wird als SVG-Datei (Rasterbild) exportiert",
-    btnLabel: "PDF zu SVG exportieren",
-    outputExt: "svg",
+    title: "PDF-Datei als SVG exportieren",
+    subtitle: "Alle Seiten als SVG (Seitenbild + auswählbarer Text), mehrere Seiten als ZIP",
+    btnLabel: "PDF in SVG umwandeln",
+    label: "SVG",
   },
-  "eps-to-svg": {
-    accept: [".eps"],
-    targetFmt: "SVG",
-    jobTargetFormat: "svg",
-    title: "EPS-Datei in SVG konvertieren",
-    subtitle: "EPS-Vektorgrafik über Ghostscript in SVG umwandeln",
-    btnLabel: "EPS in SVG umwandeln",
-    outputExt: "svg",
-  },
-  "eps-to-pdf": {
-    accept: [".eps"],
-    targetFmt: "PDF",
-    jobTargetFormat: "pdf",
-    title: "EPS-Datei in PDF umwandeln",
-    subtitle: "EPS-Datei über Ghostscript in ein druckfähiges PDF konvertieren",
-    btnLabel: "EPS in PDF umwandeln",
-    outputExt: "pdf",
-  },
+  "eps-to-svg": { accept: [".eps"], title: "", subtitle: "", btnLabel: "", label: "SVG" },
+  "eps-to-pdf": { accept: [".eps"], title: "", subtitle: "", btnLabel: "", label: "PDF" },
 };
+
+function choiceClass(active: boolean) {
+  return `px-4 py-2 rounded-lg border text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+    active ? "border-sky-500 bg-sky-50 text-sky-700" : "border-slate-200 text-slate-600 hover:border-sky-400"
+  }`;
+}
+
+/* ------------------------------------------------------------------ */
+/* EPS notice                                                          */
+/* ------------------------------------------------------------------ */
+
+function EpsUnavailableNotice({ target }: { target: string }) {
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 space-y-3">
+      <div className="flex gap-3">
+        <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+        <div className="space-y-2">
+          <p className="text-sm font-bold text-amber-900">EPS in {target} ist im Browser derzeit nicht verfügbar</p>
+          <p className="text-xs text-amber-800 leading-relaxed">
+            EPS-Dateien bestehen aus PostScript-Programmcode. Für eine korrekte Umwandlung wird ein vollständiger
+            PostScript-Interpreter (z. B. Ghostscript) benötigt, der nicht im Browser läuft. Da Datei Tools Ihre Dateien
+            ausschließlich lokal auf Ihrem Gerät verarbeitet, bieten wir diese Umwandlung bewusst nicht an, statt Ihnen
+            nur ein unscharfes Vorschaubild auszugeben.
+          </p>
+          <p className="text-xs text-amber-800 leading-relaxed">
+            <strong>Alternative:</strong> Öffnen Sie die EPS-Datei in Inkscape (kostenlos), Adobe Illustrator oder
+            Affinity Designer und speichern Sie sie dort direkt als {target}.
+            {target === "SVG" && (
+              <>
+                {" "}Liegt Ihre Grafik bereits als PDF vor, hilft{" "}
+                <Link href="/de/pdf-in-svg-umwandeln" className="font-semibold underline">PDF in SVG umwandeln</Link>.
+              </>
+            )}
+            {target === "PDF" && (
+              <>
+                {" "}Liegt Ihre Grafik als SVG vor, nutzen Sie{" "}
+                <Link href="/de/svg-in-pdf-umwandeln" className="font-semibold underline">SVG in PDF umwandeln</Link>.
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Engine                                                              */
+/* ------------------------------------------------------------------ */
 
 export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineProps) {
   const cfg = MODE_CONFIG[mode];
   const disclaimer = DISCLAIMERS[mode];
+  const limits = getBatchLimits(false);
 
-  const configuredRasterTarget = ["png", "jpg", "webp"].includes((targetFormat || "").toLowerCase())
-    ? (targetFormat!.toLowerCase() as "png" | "jpg" | "webp")
+  const configuredRasterTarget: RasterTarget = (["png", "jpg", "webp"] as const).includes(
+    (targetFormat || "").toLowerCase() as RasterTarget
+  )
+    ? ((targetFormat || "").toLowerCase() as RasterTarget)
     : "png";
 
-  const [file, setFile] = useState<File | null>(null);
-  const [rasterTarget, setRasterTarget] = useState<"png" | "jpg" | "webp">(configuredRasterTarget);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [statusText, setStatusText] = useState("");
-  const [resultBlob, setResultBlob] = useState<Blob | null>(null);
-  const [outputFilename, setOutputFilename] = useState("");
+  const [rasterTarget, setRasterTarget] = useState<RasterTarget>(configuredRasterTarget);
+  const [quality, setQuality] = useState(92);
+  const [svgDpi, setSvgDpi] = useState(300);
+  const [pdfScale, setPdfScale] = useState(2);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(
-    disclaimer?.type === "info" // auto-accept info, require confirm for warning
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(disclaimer?.type !== "warning");
+
+  const effectiveTarget =
+    mode === "psd-to-raster" ? rasterTarget : mode === "raster-to-psd" ? "psd" : mode === "svg-to-pdf" ? "pdf" : "svg";
+
+  const converter = useCallback(
+    async (file: File, onProgress: (p: number, m?: string) => void): Promise<DesignResult> => {
+      try {
+        let res: DesignResult;
+        if (mode === "psd-to-raster") res = await psdToRaster(file, rasterTarget, quality, onProgress);
+        else if (mode === "raster-to-psd") res = await rasterToPsd(file, onProgress);
+        else if (mode === "svg-to-pdf") res = await svgToPdf(file, svgDpi, onProgress);
+        else if (mode === "pdf-to-svg") res = await pdfToSvg(file, pdfScale, onProgress);
+        else throw new Error("EPS-Dateien können im Browser nicht umgewandelt werden.");
+        trackEvent("conversion_completed", { toolSlug: mode, target: effectiveTarget, mode: "browser" });
+        return res;
+      } catch (err) {
+        trackEvent("conversion_failed", { toolSlug: mode, mode: "browser", error: (err as Error)?.message });
+        throw err;
+      }
+    },
+    [mode, rasterTarget, quality, svgDpi, pdfScale, effectiveTarget]
   );
 
-  useEffect(() => {
-    if (mode === "psd-to-raster") setRasterTarget(configuredRasterTarget);
-  }, [configuredRasterTarget, mode]);
+  const queue = useConversionQueue(converter, limits.clientConcurrency);
+  const items = queue.items;
+  const single = items.length === 1 ? items[0] : null;
+  const optionsLocked = queue.isProcessing || items.some((i) => i.status === "completed");
 
-  const handleFileSelected = (files: File[]) => {
+  if (mode === "eps-to-svg" || mode === "eps-to-pdf") {
+    return <EpsUnavailableNotice target={mode === "eps-to-svg" ? "SVG" : "PDF"} />;
+  }
+
+  const handleFilesSelected = (files: File[]) => {
     if (files.length === 0) return;
-    setFile(files[0]);
-    setResultBlob(null);
     setErrorMsg(null);
-    trackEvent("upload_completed", { toolSlug: mode, size: files[0].size });
-  };
-
-  const effectiveTarget = mode === "psd-to-raster" ? rasterTarget : cfg.jobTargetFormat;
-
-  const executeConversion = async () => {
-    if (!file) return;
-    setIsProcessing(true);
-    setProgress(10);
-    setStatusText("Datei wird hochgeladen...");
-    setErrorMsg(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "design_convert");
-      formData.append("targetFormat", effectiveTarget);
-      formData.append("options", JSON.stringify({
-        targetFormat: effectiveTarget,
-        quality: 92,
-        backgroundColor: "#ffffff",
-      }));
-
-      const res = await apiFetch("/api/v1/jobs", { method: "POST", body: formData });
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Server-Fehler: ${res.status} ${res.statusText}`);
-      }
-
-      const { jobId } = await res.json();
-      setStatusText("Datei wird verarbeitet...");
-      setProgress(30);
-
-      let pollCount = 0;
-      while (pollCount < 90) {
-        await new Promise((r) => setTimeout(r, 1500));
-        pollCount++;
-        const check = await apiFetch(`/api/v1/jobs/${jobId}`);
-        if (!check.ok) continue;
-        const poll = await check.json();
-        if (poll.progress) setProgress(Math.max(30, poll.progress));
-
-        if (poll.status === "completed" && poll.output?.downloadUrl) {
-          setStatusText("Download wird vorbereitet...");
-          setProgress(100);
-          const fileRes = await apiFetch(poll.output.downloadUrl);
-          const blob = await fileRes.blob();
-          setResultBlob(blob);
-          const base = file.name.replace(/\.[^.]+$/, "");
-          setOutputFilename(`datei_tools_${base}.${effectiveTarget}`);
-          setIsProcessing(false);
-          trackEvent("conversion_completed", { toolSlug: mode, target: effectiveTarget });
-          return;
-        }
-        if (poll.status === "failed") {
-          throw new Error(poll.error || "Konvertierung fehlgeschlagen.");
-        }
-      }
-      throw new Error("Zeitüberschreitung: Die Konvertierung dauert zu lange.");
-    } catch (err: any) {
-      setIsProcessing(false);
-      setErrorMsg(err.message || "Unbekannter Fehler.");
-      trackEvent("conversion_failed", { toolSlug: mode });
+    const combined = [...items.map((i) => i.file), ...files];
+    const validation = validateBatchFiles(combined, false);
+    if (!validation.valid) {
+      setErrorMsg(validation.error || "Die Auswahl überschreitet die Limits.");
+      return;
     }
+    queue.addFiles(files);
+    trackEvent("upload_completed", { toolSlug: mode, count: files.length });
   };
 
-  const handleReset = () => {
-    setFile(null);
-    setResultBlob(null);
+  const resetAll = () => {
+    queue.clear();
     setErrorMsg(null);
-    setIsProcessing(false);
-    setDisclaimerAccepted(disclaimer?.type === "info");
+    setDisclaimerAccepted(disclaimer?.type !== "warning");
   };
 
-  if (resultBlob && file) {
+  /* ---------------------------- options ---------------------------- */
+
+  const options = (
+    <div className="space-y-4">
+      {mode === "psd-to-raster" && (
+        <div>
+          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Ausgabeformat</label>
+          <div className="flex gap-2">
+            {(["png", "jpg", "webp"] as const).map((fmt) => (
+              <button key={fmt} type="button" disabled={optionsLocked} onClick={() => setRasterTarget(fmt)} className={choiceClass(rasterTarget === fmt)}>
+                .{fmt.toUpperCase()}
+              </button>
+            ))}
+          </div>
+          {rasterTarget !== "png" && (
+            <div className="mt-3 space-y-1">
+              <div className="flex justify-between text-xs font-semibold text-slate-700">
+                <span className="flex items-center gap-1.5">
+                  <Sliders className="w-3.5 h-3.5 text-sky-600" /> Bildqualität:
+                </span>
+                <span className="text-sky-600 font-bold">{quality}%</span>
+              </div>
+              <input
+                type="range"
+                min={40}
+                max={100}
+                value={quality}
+                disabled={optionsLocked}
+                aria-label="Bildqualität in Prozent"
+                onChange={(e) => setQuality(Number(e.target.value))}
+                className="w-full accent-sky-600 cursor-pointer disabled:opacity-50"
+              />
+              {rasterTarget === "jpg" && (
+                <p className="text-[11px] text-slate-500">Transparente Bereiche werden bei JPG weiß gefüllt.</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {mode === "svg-to-pdf" && (
+        <div>
+          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Auflösung</label>
+          <div className="flex gap-2">
+            {[150, 300].map((dpi) => (
+              <button key={dpi} type="button" disabled={optionsLocked} onClick={() => setSvgDpi(dpi)} className={choiceClass(svgDpi === dpi)}>
+                {dpi} DPI{dpi === 300 ? " (Druck)" : " (Bildschirm)"}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {mode === "pdf-to-svg" && (
+        <div>
+          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Auflösung des Seitenbilds</label>
+          <div className="flex gap-2">
+            {[
+              { v: 2, l: "144 DPI (kleinere Dateien)" },
+              { v: 3, l: "216 DPI (schärfer)" },
+            ].map((o) => (
+              <button key={o.v} type="button" disabled={optionsLocked} onClick={() => setPdfScale(o.v)} className={choiceClass(pdfScale === o.v)}>
+                {o.l}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const localNote = (
+    <p className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium">
+      <ShieldCheck className="w-3.5 h-3.5" />
+      Die Umwandlung läuft vollständig in Ihrem Browser – Ihre Dateien werden nicht hochgeladen.
+    </p>
+  );
+
+  const errorBanner = errorMsg && (
+    <div role="alert" className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3">
+      <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+      <p className="text-xs text-red-700 leading-relaxed">{errorMsg}</p>
+    </div>
+  );
+
+  /* ---------------------------- single ----------------------------- */
+
+  if (single?.status === "completed" && single.outputBlob && single.outputFileName) {
+    const blob = single.outputBlob;
+    const name = single.outputFileName;
     return (
-      <DownloadBox
-        filename={outputFilename}
-        originalSizeBytes={file.size}
-        resultSizeBytes={resultBlob.size}
-        onDownload={() => {
-          const url = URL.createObjectURL(resultBlob);
-          const a = document.createElement("a");
-          a.href = url; a.download = outputFilename; a.click();
-        }}
-        onReset={handleReset}
-        downloadLabel={`${effectiveTarget.toUpperCase()}-Datei herunterladen`}
-      />
+      <div className="w-full space-y-4">
+        {single.note && (
+          <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 flex gap-3">
+            <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+            <p className="text-xs text-blue-800 leading-relaxed">{single.note}</p>
+          </div>
+        )}
+        <DownloadBox
+          filename={name}
+          resultSizeBytes={blob.size}
+          onDownload={() => downloadBlob(blob, name)}
+          onReset={resetAll}
+          downloadLabel={name.endsWith(".zip") ? "ZIP mit SVG-Seiten herunterladen" : `${effectiveTarget.toUpperCase()}-Datei herunterladen`}
+        />
+      </div>
     );
   }
 
-  if (isProcessing) return <ProcessingStatus progress={progress} statusText={statusText} />;
+  if (single?.status === "processing") {
+    return <ProcessingStatus progress={single.progress} statusText={single.statusText || "Wird verarbeitet..."} />;
+  }
 
   return (
     <div className="w-full space-y-4">
-      {/* Disclaimer box */}
       {disclaimer && (
-        <div className={`rounded-xl border p-4 flex gap-3 ${
-          disclaimer.type === "warning"
-            ? "bg-amber-50 border-amber-200"
-            : "bg-blue-50 border-blue-200"
-        }`}>
-          {disclaimer.type === "warning"
-            ? <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            : <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-          }
+        <div className={`rounded-xl border p-4 flex gap-3 ${disclaimer.type === "warning" ? "bg-amber-50 border-amber-200" : "bg-blue-50 border-blue-200"}`}>
+          {disclaimer.type === "warning" ? (
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          ) : (
+            <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+          )}
           <div className="flex-1">
-            <p className={`text-sm font-bold mb-1 ${disclaimer.type === "warning" ? "text-amber-800" : "text-blue-800"}`}>
-              {disclaimer.title}
-            </p>
-            <p className={`text-xs leading-relaxed ${disclaimer.type === "warning" ? "text-amber-700" : "text-blue-700"}`}>
-              {disclaimer.body}
-            </p>
+            <p className={`text-sm font-bold mb-1 ${disclaimer.type === "warning" ? "text-amber-800" : "text-blue-800"}`}>{disclaimer.title}</p>
+            <p className={`text-xs leading-relaxed ${disclaimer.type === "warning" ? "text-amber-700" : "text-blue-700"}`}>{disclaimer.body}</p>
             {disclaimer.type === "warning" && !disclaimerAccepted && (
               <button
                 onClick={() => setDisclaimerAccepted(true)}
@@ -277,76 +347,82 @@ export function DesignConvertEngine({ mode, targetFormat }: DesignConvertEngineP
 
       {disclaimerAccepted && (
         <>
-          {!file ? (
+          {errorBanner}
+          {items.length === 0 ? (
             <FileUploader
               acceptedExtensions={cfg.accept}
-              maxFileSizeMB={50}
-              onFilesSelected={handleFileSelected}
+              maxFileSizeMB={limits.maxFileSizeMB}
+              allowMultiple={true}
+              isLocal={true}
+              onFilesSelected={handleFilesSelected}
               title={cfg.title}
               subtitle={cfg.subtitle}
             />
-          ) : (
+          ) : single ? (
             <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-5">
-              {/* File info */}
               <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
-                <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-                  <Layers className="w-6 h-6 text-slate-500" />
+                <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 overflow-hidden">
+                  {mode === "raster-to-psd" || mode === "svg-to-pdf" ? (
+                    <FilePreview file={single.file} alt={`Vorschau von ${single.file.name}`} className="max-w-full max-h-full object-contain" />
+                  ) : (
+                    <Layers className="w-6 h-6 text-slate-500" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-slate-900 text-sm truncate">{file.name}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{formatBytes(file.size)}</p>
+                  <p className="font-bold text-slate-900 text-sm truncate">{single.file.name}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {formatBytes(single.file.size)} • Ziel: <span className="font-semibold text-sky-600">{effectiveTarget.toUpperCase()}</span>
+                  </p>
                 </div>
               </div>
 
-              {/* PSD target selector */}
-              {mode === "psd-to-raster" && (
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
-                    Ausgabeformat
-                  </label>
-                  <div className="flex gap-2">
-                    {(["png", "jpg", "webp"] as const).map((fmt) => (
-                      <button
-                        key={fmt}
-                        type="button"
-                        onClick={() => setRasterTarget(fmt)}
-                        className={`px-4 py-2 rounded-lg border text-xs font-bold transition-colors ${
-                          rasterTarget === fmt
-                            ? "border-sky-500 bg-sky-50 text-sky-700"
-                            : "border-slate-200 text-slate-600 hover:border-sky-400"
-                        }`}
-                      >
-                        .{fmt.toUpperCase()}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+              {options}
 
-              {/* Error */}
-              {errorMsg && (
+              {single.status === "failed" && single.error && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3">
                   <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-bold text-red-800 mb-1">Konvertierung fehlgeschlagen</p>
-                    <p className="text-xs text-red-700 leading-relaxed">{errorMsg}</p>
+                    <p className="text-xs text-red-700 leading-relaxed">{single.error}</p>
                   </div>
                 </div>
               )}
 
-              {/* Actions */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-slate-100">
-                <button onClick={handleReset} className="text-xs text-slate-500 hover:text-slate-800 font-medium inline-flex items-center gap-1">
-                  <RotateCcw className="w-3.5 h-3.5" /> Andere Datei
-                </button>
+                <div className="space-y-2">
+                  <button onClick={resetAll} className="text-xs text-slate-500 hover:text-slate-800 font-medium inline-flex items-center gap-1">
+                    <RotateCcw className="w-3.5 h-3.5" /> Andere Datei
+                  </button>
+                  {localNote}
+                </div>
                 <button
-                  onClick={executeConversion}
+                  onClick={() => (single.status === "failed" ? queue.retry(single.id) : queue.start())}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition-colors"
                 >
                   <Download className="w-4 h-4" />
-                  {cfg.btnLabel}
+                  {single.status === "failed" ? "Erneut versuchen" : cfg.btnLabel}
                 </button>
               </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-3">
+                {options}
+                {localNote}
+              </div>
+              <BatchProcessingQueue
+                items={items}
+                isProcessing={queue.isProcessing}
+                onStartBatch={queue.start}
+                onCancelBatch={queue.cancel}
+                onClearQueue={resetAll}
+                onRemoveItem={queue.remove}
+                onRetryItem={queue.retry}
+                onDownloadItem={queue.downloadItem}
+                onDownloadAllZip={() => queue.downloadZip(`datei_tools_${effectiveTarget}_stapel_${Date.now()}.zip`)}
+                isZipping={queue.isZipping}
+                toolTitle={`${cfg.label}-Konvertierung (Stapel)`}
+              />
             </div>
           )}
         </>

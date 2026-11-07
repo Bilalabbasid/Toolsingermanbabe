@@ -67,10 +67,10 @@ export function ContactClient() {
               Für allgemeine Anfragen und Hilfe zu allen Funktionen:
             </p>
             <a
-              href="mailto:support@datei-tools.de"
+              href="mailto:info@datei-tools.de"
               className="text-sm font-semibold text-sky-600 hover:text-sky-700 underline"
             >
-              support@datei-tools.de
+              info@datei-tools.de
             </a>
           </div>
 

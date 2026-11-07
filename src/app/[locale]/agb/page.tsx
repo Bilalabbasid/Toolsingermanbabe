@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
-import { privacyConfig } from '@/config/privacy.config';
 import Link from 'next/link';
 import { featureFlags } from '@/config/featureFlags.config';
 import { generatePageMetadata } from '@/lib/seo';
@@ -40,9 +39,9 @@ export default function AgbPage() {
             Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung aller auf der Plattform <strong>Datei Tools</strong> (datei-tools.de) bereitgestellten Online-Tools, Konvertierungsdienste und Abonnements. Vertragspartner ist:
           </p>
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-1 my-3">
-            <p className="font-bold text-slate-900">[Name des Diensteanbieters / Betreibergesellschaft]</p>
-            <p>[Straße und Hausnummer], [PLZ und Ort, Deutschland / EU]</p>
-            <p>E-Mail: support@datei-tools.de</p>
+            <p className="font-bold text-slate-900">Bil Al</p>
+            <p>20095 Hamburg, Deutschland</p>
+            <p>E-Mail: info@datei-tools.de</p>
           </div>
           <p className="text-xs text-slate-600">
             Abweichende Geschäftsbedingungen des Nutzers finden keine Anwendung, es sei denn, ihrer Geltung wurde ausdrücklich schriftlich zugestimmt.
@@ -53,11 +52,11 @@ export default function AgbPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">2. Leistungsbeschreibung & Tarife</h2>
           <p>
-            Datei Tools stellt browser- und serverbasierte Werkzeuge zur Verarbeitung, Konvertierung, Komprimierung und Optimierung von Dokumenten und Bilddateien zur Verfügung.
+            Datei Tools stellt browserbasierte Werkzeuge zur lokalen Verarbeitung, Konvertierung, Komprimierung und Optimierung von Dokumenten und Bilddateien zur Verfügung.
           </p>
           <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600 mt-2">
             <li><strong>Kostenloser Basis-Tarif:</strong> Ermöglicht die freie Nutzung der Kernwerkzeuge mit definierten Dateigrößen- und Stapelverarbeitungslimits. Die Finanzierung erfolgt unter anderem über nicht-personalisierte bzw. zustimmungsbasierte Online-Werbung.</li>
-            <li><strong>Datei Tools Pro-Abonnement:</strong> Bietet erweiterte Dateigrößenlimits, beschleunigte Prioritätsverarbeitung, unbegrenzte Stapelverarbeitung, OCR-Texterkennung und eine 100% werbefreie Nutzungsumgebung ohne Werbeskripte.</li>
+            <li><strong>Datei Tools Pro-Abonnement:</strong> Bietet erweiterte Dateigrößenlimits, unbegrenzte Stapelverarbeitung, OCR-Texterkennung und eine 100% werbefreie Nutzungsumgebung ohne Werbeskripte.</li>
           </ul>
         </section>
 
@@ -68,9 +67,9 @@ export default function AgbPage() {
             Der Schutz Ihrer Dokumente hat oberste Priorität:
           </p>
           <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600 mt-2">
-            <li>Dateien werden – sofern technisch möglich – ausschließlich lokal in Ihrem Webbrowser verarbeitet.</li>
-            <li>Bei servergestützten Werkzeugen werden Dateien temporär über verschlüsselte HTTPS-Verbindungen übertragen und nach Ablauf der Aufbewahrungsfrist von <strong>{privacyConfig.retentionMinutes} Minuten</strong> automatisch und unwiderruflich gelöscht.</li>
-            <li>Quelldateien werden im Sinne der Datenminimierung unmittelbar nach erfolgreicher Konvertierung gelöscht.</li>
+            <li>Dateien werden ausschließlich lokal in Ihrem Webbrowser verarbeitet und nicht an unsere Server übertragen.</li>
+            <li>Ergebnisdateien werden direkt in Ihrem Browser erzeugt und über die Download-Funktion Ihres Browsers auf Ihrem Gerät gespeichert.</li>
+            <li>Die Verarbeitungsgeschwindigkeit und die maximal verarbeitbare Dateigröße hängen von der Leistungsfähigkeit Ihres Endgeräts und Browsers ab.</li>
             <li>Es findet keine dauerhafte Speicherung oder inhaltliche Verwertung Ihrer Dokumente statt. Details regelt unsere{' '}
               <Link href="/de/datenschutz" className="text-sky-600 underline font-medium">
                 Datenschutzerklärung

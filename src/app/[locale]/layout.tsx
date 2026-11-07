@@ -4,6 +4,7 @@ import React from 'react';
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { CookieBanner } from '@/components/common/CookieBanner';
+import { getNavCategories } from '@/components/common/navData';
 
 interface LocalizedLayoutProps {
   children: React.ReactNode;
@@ -19,20 +20,25 @@ export default async function LocalizedLayout({
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
 
+  // Small, serialisable nav model – keeps the tool registry out of the client bundle.
+  const navCategories = getNavCategories(6);
+
   return (
-    <div 
+    <div
       lang={locale}
       data-locale={locale}
-      className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white"
+      className="min-h-screen flex flex-col bg-canvas text-ink"
     >
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-sky-600 focus:text-white focus:rounded-xl focus:shadow-xl focus:font-bold focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 transition-all"
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-sky-600 focus:text-white focus:rounded-xl focus:shadow-pop focus:font-bold focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
       >
         Zum Hauptinhalt springen
       </a>
-      <Header />
-      <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">{children}</main>
+      <Header categories={navCategories} />
+      <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
+        {children}
+      </main>
       <Footer />
       <CookieBanner />
     </div>

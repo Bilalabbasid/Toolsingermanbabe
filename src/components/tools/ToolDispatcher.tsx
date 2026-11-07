@@ -10,7 +10,6 @@ import type { DocConvertMode } from '@/components/engines/DocConvertEngine';
 import type { HeaderFooterMode } from '@/components/engines/PdfHeaderFooterEngine';
 import type { RepairOptimizeMode } from '@/components/engines/PdfRepairOptimizeEngine';
 import type { ExtractMode } from '@/components/engines/PdfExtractEngine';
-import { BackendWakeup } from '@/components/common/BackendWakeup';
 
 // Zero-CLS Skeleton Loader for asynchronous engine chunk hydration
 function EngineSkeleton() {
@@ -154,7 +153,8 @@ interface ToolDispatcherProps {
 }
 
 export function ToolDispatcher({ tool }: ToolDispatcherProps) {
-  const backend = (engine: React.ReactNode) => <BackendWakeup>{engine}</BackendWakeup>;
+  // Every engine runs fully in the browser — no backend warm-up wrapper needed.
+  const backend = (engine: React.ReactNode) => engine;
 
   switch (tool.processingEngine) {
     case 'pdf-merge':

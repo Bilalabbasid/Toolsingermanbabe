@@ -80,7 +80,6 @@ export function PdfRotateEngine() {
     return (
       <DownloadBox
         filename={outputFilename}
-        originalSizeBytes={file.size}
         resultSizeBytes={rotatedBlob.size}
         onDownload={handleDownload}
         onReset={handleReset}

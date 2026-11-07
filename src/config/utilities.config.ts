@@ -56,7 +56,9 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
       { step: 2, title: 'Zeichen prüfen', text: 'Lesen Sie die exakte Zeichenanzahl und Byte-Größe in Echtzeit ab.' },
     ],
     faqDe: [
-      { question: 'Werden Emojis als ein Zeichen gezählt?', answer: 'In der Standardanzeige zählt jedes Unicode-Graphem als Zeichen, im Byte-Zähler wird die UTF-8-Codegröße (meist 4 Bytes pro Emoji) dargestellt.' },
+      { question: 'Wie werden Emojis gezählt?', answer: 'Die meisten Emojis zählen als 2 Zeichen, weil der Zähler JavaScript-Zeichen (UTF-16-Einheiten) zählt. Die Dateigröße zeigt die UTF-8-Bytes an, bei Emojis meist 4 Bytes.' },
+      { question: 'Wird zwischen Zeichen mit und ohne Leerzeichen unterschieden?', answer: 'Ja. Das Tool zeigt beide Werte gleichzeitig an; „ohne Leerzeichen“ lässt Leerzeichen, Tabs und Zeilenumbrüche weg.' },
+      { question: 'Wird mein Text gespeichert?', answer: 'Nein. Die Zählung läuft lokal im Browser, der Text wird weder hochgeladen noch gespeichert.' },
     ],
     privacyExplanationDe: '100% lokale Berechnung im Browser ohne Netzwerkübertragung.',
     searchKeywordsDe: ['Zeichenzähler online', 'Zeichen zählen ohne Leerzeichen', 'Twitter Zeichenzähler', 'Zeichenanzahl ermitteln'],
@@ -119,7 +121,7 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
       { step: 3, title: 'Kopieren', text: 'Kopieren Sie den gewandelten Text mit einem Klick in die Zwischenablage.' },
     ],
     faqDe: [
-      { question: 'Werden deutsche Umlaute korrekt umgewandelt?', answer: 'Ja, ä, ö, ü und ß werden nach den geltenden deutschen Rechtschreibregeln korrekt in Ä, Ö, Ü und SS/ẞ umgesetzt.' },
+      { question: 'Werden deutsche Umlaute korrekt umgewandelt?', answer: 'Ja, bei Groß-, Klein- und Title Case werden ä, ö und ü zu Ä, Ö und Ü; ß wird in Großbuchstaben zu „SS“. Bei snake_case und kebab-case werden Umlaute und Sonderzeichen dagegen entfernt.' },
     ],
     privacyExplanationDe: '100% lokale Umwandlung im Webbrowser.',
     searchKeywordsDe: ['Groß- und Kleinschreibung ändern', 'Case Converter', 'Text in Großbuchstaben', 'camelCase umwandeln'],
@@ -307,7 +309,7 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
     titleDe: 'JSON Validator online – JSON-Syntax auf Fehler prüfen | Datei Tools',
     metaDescriptionDe: 'JSON online validieren. Syntaxfehler, fehlende Klammern und unzulässige Anführungszeichen sofort erkennen und beheben.',
     h1De: 'JSON Validator – Syntax auf Fehler prüfen',
-    introDe: 'Validieren Sie Ihre JSON-Dateien und API-Paylods auf syntaktische Korrektheit. Das Tool lokalisiert fehlerhafte Stellen, überflüssige Kommas und ungültige Schlüssel.',
+    introDe: 'Mit diesem Tool prüfen Sie JSON-Daten direkt im Browser auf gültige Syntax – ohne Upload. Bei Fehlern zeigt es die Fehlermeldung des Browser-Parsers an, die in der Regel die Position angibt, etwa bei überflüssigen Kommas, fehlenden Klammern oder einfachen statt doppelten Anführungszeichen.',
     howItWorksDe: [
       { step: 1, title: 'JSON einfügen', text: 'Kopieren Sie das zu prüfende JSON in das Eingabefeld.' },
       { step: 2, title: 'Validierung starten', text: 'Klicken Sie auf „JSON Syntax prüfen“.' },
@@ -631,7 +633,7 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
       { question: 'Ist SHA-256 sicher?', answer: 'Ja, SHA-256 ist der weltweite Industriestandard für digitale Signaturen und Blockchain-Integrität.' },
     ],
     privacyExplanationDe: '100% lokale Hash-Berechnung über die Browser Web Crypto API.',
-    searchKeywordsDe: ['Hash Generator online', 'SHA256 Generator', 'SHA512 berechnen', 'MD5 SHA1 online'],
+    searchKeywordsDe: ['Hash Generator online', 'SHA256 Generator', 'SHA512 berechnen', 'SHA-1 Hash berechnen'],
     supportedFormats: 'Text',
     freeLimits: { maxFileSizeMB: 10, maxBatch: 1 },
     proLimits: { maxFileSizeMB: 50, maxBatch: 1 },
@@ -787,7 +789,8 @@ export const UTILITIES_TOOLS: ToolDefinition[] = [
       { step: 3, title: 'Kopieren', text: 'Kopieren Sie den formatierten Code.' },
     ],
     faqDe: [
-      { question: 'Wird der Code auf Syntaxfehler geprüft?', answer: 'Ja, grundlegende Formatierungs- und Syntaxstrukturen werden validiert.' },
+      { question: 'Wird der Code auf Syntaxfehler geprüft?', answer: 'Nein. Das Tool formatiert und minimiert mit einfachen Regeln und prüft keine Syntax. Strings und Template-Literale bleiben beim Minimieren erhalten, Kommentare werden entfernt.' },
+      { question: 'Kann Code ohne Semikolons beim Minimieren brechen?', answer: 'Ja. Zeilen werden beim Minimieren zusammengefügt, daher sollte jede Anweisung mit einem Semikolon enden. Für Produktions-Bundles eignen sich Build-Tools wie esbuild oder Terser besser.' },
     ],
     privacyExplanationDe: '100% In-Browser. Ihr Code verlässt Ihr Gerät nicht.',
     searchKeywordsDe: ['JavaScript Formatter', 'JS beautifier online', 'JavaScript minifier', 'JS einrücken'],

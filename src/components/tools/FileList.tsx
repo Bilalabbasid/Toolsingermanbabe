@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { FileCard, FileItem } from './FileCard';
-import { Button } from '@/components/common/Button';
+import { formatBytes } from '@/lib/utils';
 
 interface FileListProps {
   items: FileItem[];
@@ -28,39 +28,39 @@ export function FileList({
   title = 'Ausgewählte Dateien',
   allowMultiple = true,
 }: FileListProps) {
+  const addInputId = useId();
   if (items.length === 0) return null;
 
+  const totalBytes = items.reduce((sum, item) => sum + (item.size || 0), 0);
+
   return (
-    <div className="w-full bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
-        <div>
-          <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+    <div className="w-full card p-3.5 sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-line">
+        <div className="min-w-0">
+          <h3 className="text-sm sm:text-base font-bold text-ink flex items-center gap-2">
             <span>{title}</span>
-            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
-              {items.length}
-            </span>
+            <span className="px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-xs font-semibold tabular-nums">{items.length}</span>
           </h3>
-          {onMoveUp && onMoveDown && items.length > 1 && (
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              Reihenfolge mit den Pfeiltasten nach Wunsch anpassen.
-            </p>
-          )}
+          <p className="text-xs text-ink-subtle mt-0.5">
+            {formatBytes(totalBytes)} gesamt
+            {onMoveUp && onMoveDown && items.length > 1 ? ' · Reihenfolge mit den Pfeilen anpassen' : ''}
+          </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {onAddFiles && allowMultiple && (
             <label
-              htmlFor="file-list-add-more"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
+              htmlFor={addInputId}
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg ring-1 ring-line bg-white hover:bg-surface-muted text-ink text-xs font-semibold cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-sky-400"
             >
-              <Plus className="w-3.5 h-3.5 text-sky-600" />
+              <Plus className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
               <span>Weitere hinzufügen</span>
               <input
-                id="file-list-add-more"
+                id={addInputId}
                 type="file"
                 multiple
-                accept={acceptedExtensions.join(',')}
-                className="hidden"
+                accept={acceptedExtensions.length ? acceptedExtensions.join(',') : undefined}
+                className="sr-only"
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
                     onAddFiles(Array.from(e.target.files));
@@ -75,17 +75,17 @@ export function FileList({
             <button
               type="button"
               onClick={onClearAll}
-              className="p-1.5 text-xs text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-              title="Alle entfernen"
+              className="inline-flex items-center justify-center gap-1.5 h-9 px-2.5 text-xs font-semibold text-ink-subtle hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
               aria-label="Alle Dateien entfernen"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Alle entfernen</span>
             </button>
           )}
         </div>
       </div>
 
-      <div className="space-y-2 mt-3.5 max-h-[380px] overflow-y-auto pr-1">
+      <div className="space-y-2 mt-3.5 max-h-[400px] overflow-y-auto overscroll-contain -mx-1 px-1 py-0.5">
         {items.map((item, index) => (
           <FileCard
             key={item.id}

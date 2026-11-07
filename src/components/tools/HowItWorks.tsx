@@ -4,38 +4,40 @@ import { HowItWorksStep } from '@/types/tool';
 interface HowItWorksProps {
   steps: HowItWorksStep[];
   toolName: string;
+  /** Optional id for in-page anchors. */
+  id?: string;
+  className?: string;
 }
 
-export function HowItWorks({ steps, toolName }: HowItWorksProps) {
+export function HowItWorks({ steps, toolName, id = 'so-funktionierts', className = '' }: HowItWorksProps) {
+  if (!steps || steps.length === 0) return null;
+
   return (
-    <section className="my-16">
-      <div className="text-center max-w-2xl mx-auto mb-10">
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
+    <section id={id} aria-labelledby={`${id}-title`} className={`my-12 sm:my-16 ${className}`}>
+      <div className="max-w-2xl mb-6 sm:mb-8">
+        <p className="eyebrow">Anleitung</p>
+        <h2 id={`${id}-title`} className="mt-2 text-heading text-ink">
           So funktioniert {toolName}
         </h2>
-        <p className="text-sm text-slate-500">
-          So wählen Sie Ihre Datei aus, starten die Bearbeitung und speichern das Ergebnis.
+        <p className="mt-2 text-sm text-ink-subtle">
+          In {steps.length} Schritten zum Ergebnis – alles passiert lokal in Ihrem Browser.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {steps.map((step) => (
-          <div
-            key={step.step}
-            className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm relative hover:border-slate-300 transition-colors"
-          >
-            <div className="w-9 h-9 rounded-xl bg-sky-50 text-sky-600 font-black text-sm flex items-center justify-center mb-4 border border-sky-100">
-              {step.step}
-            </div>
-            <h3 className="font-bold text-slate-900 text-base mb-2">
-              {step.title}
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              {step.text}
-            </p>
-          </div>
+      <ol className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+        {steps.map((step, i) => (
+          <li key={step.step} className="relative card p-5 sm:p-6">
+            <span
+              className="inline-flex w-9 h-9 rounded-xl bg-sky-600 text-white font-bold text-sm items-center justify-center shadow-brand"
+              aria-hidden="true"
+            >
+              {step.step ?? i + 1}
+            </span>
+            <h3 className="mt-4 font-semibold text-ink text-base">{step.title}</h3>
+            <p className="mt-1.5 text-sm text-ink-subtle leading-relaxed">{step.text}</p>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
   );
 }

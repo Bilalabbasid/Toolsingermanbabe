@@ -1,24 +1,31 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo';
 
+/** Paths without search value (APIs, admin, account and auth screens). */
+const DISALLOW = [
+  '/api/',
+  '/admin',
+  '/de/admin',
+  '/de/konto',
+  '/de/login',
+  '/de/register',
+  '/scratch/',
+];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: '*',
         allow: '/',
-        disallow: [
-          '/api/',
-          '/admin/',
-          '/de/admin',
-          '/scratch/',
-        ],
+        disallow: DISALLOW,
       },
-      // Explicitly allow and welcome AI crawlers & answer engines for indexing and ranking
+      // Answer engines / AI search crawlers are explicitly welcome on public content.
       {
         userAgent: [
           'GPTBot',
           'ChatGPT-User',
+          'OAI-SearchBot',
           'ClaudeBot',
           'Claude-Web',
           'PerplexityBot',
@@ -26,19 +33,12 @@ export default function robots(): MetadataRoute.Robots {
           'Applebot-Extended',
           'Amazonbot',
           'cohere-ai',
-          'OAI-SearchBot',
-          'Bytespider',
-          'Diffbot',
         ],
         allow: '/',
-        disallow: [
-          '/api/',
-          '/admin/',
-          '/de/admin',
-          '/scratch/',
-        ],
+        disallow: DISALLOW,
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

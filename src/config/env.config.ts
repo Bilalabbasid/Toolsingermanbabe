@@ -10,7 +10,7 @@ export const IS_TEST = process.env.NODE_ENV === 'test';
 
 // Public Browser-Safe Configuration
 export const PUBLIC_CONFIG = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://datei-tools.de',
+  siteUrl: 'https://datei-tools.de',
   stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
   adsEnabled: process.env.NEXT_PUBLIC_ENABLE_ADS === 'true',
   adsenseClientId: process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || '',

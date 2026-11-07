@@ -17,9 +17,9 @@ export interface BatchSystemConfig {
 
 export const batchConfig: BatchSystemConfig = {
   free: {
-    maxBatchFiles: parseInt(process.env.MAX_BATCH_FREE || '5', 10),
-    maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE_FREE || '50', 10),
-    maxTotalBatchMB: parseInt(process.env.MAX_BATCH_SIZE_FREE || '150', 10),
+    maxBatchFiles: parseInt(process.env.MAX_BATCH_FREE || '30', 10),
+    maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE_FREE || '300', 10),
+    maxTotalBatchMB: parseInt(process.env.MAX_BATCH_SIZE_FREE || '1000', 10),
     clientConcurrency: parseInt(process.env.CLIENT_CONCURRENCY_FREE || '2', 10),
     serverConcurrency: parseInt(process.env.SERVER_CONCURRENCY_FREE || '2', 10),
   },

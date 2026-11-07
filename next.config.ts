@@ -23,6 +23,36 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '500mb',
     },
   },
+  // WASM loaders (qpdf, 7-Zip, …) reference fs/path only in Node branches.
+  // Some browser libraries (pptxgenjs) also import `node:` built-ins behind runtime checks.
+  webpack: (config, { isServer, webpack }) => {
+    if (!isServer) {
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(/^node:/, (resource: { request: string }) => {
+          resource.request = resource.request.replace(/^node:/, '');
+        }),
+      );
+      config.resolve = config.resolve || {};
+      config.resolve.fallback = {
+        ...(config.resolve.fallback || {}),
+        fs: false,
+        path: false,
+        https: false,
+        http: false,
+        os: false,
+        crypto: false,
+        stream: false,
+        module: false,
+      };
+    }
+    return config;
+  },
+  turbopack: {
+    resolveAlias: {
+      fs: { browser: './src/lib/empty-module.ts' },
+    },
+  },
   outputFileTracingIncludes: {
     '/api/*': ['./node_modules/pdfjs-dist/standard_fonts/**/*'],
   },
@@ -73,8 +103,15 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self'; script-src 'self' 'unsafe-inline' ${process.env.NODE_ENV !== 'production' ? "'unsafe-eval' " : ''}https://js.stripe.com https://pagead2.googlesyndication.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ${publicApiOrigin()} https://api.stripe.com https://m.stripe.network https://pagead2.googlesyndication.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://googleads.g.doubleclick.net; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';`,
+            value: `default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' ${process.env.NODE_ENV !== 'production' ? "'unsafe-eval' " : ''}https://js.stripe.com https://pagead2.googlesyndication.com; worker-src 'self' blob:; media-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' blob: data: ${publicApiOrigin()} https://api.stripe.com https://m.stripe.network https://pagead2.googlesyndication.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://googleads.g.doubleclick.net; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';`,
           },
+        ],
+      },
+      // Self-hosted WebAssembly runtimes for the in-browser tools (versioned by package pin)
+      {
+        source: '/vendor/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' },
         ],
       },
       // Cache public static assets (images, icons)

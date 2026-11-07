@@ -53,7 +53,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
       canvas.height = viewport.height;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        await page1.render({ canvasContext: ctx, viewport }).promise;
+        await page1.render({ canvasContext: ctx, viewport, intent: 'print' }).promise;
         setFirstPagePreview(canvas.toDataURL('image/jpeg', 0.8));
       }
 
@@ -103,7 +103,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        await page.render({ canvasContext: ctx, viewport }).promise;
+        await page.render({ canvasContext: ctx, viewport, intent: 'print' }).promise;
 
         canvas.toBlob((blob) => {
           if (!blob) throw new Error('Bild-Generierung fehlgeschlagen');
@@ -135,7 +135,7 @@ export function PdfToImageEngine({ targetFormat }: PdfToImageEngineProps) {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
 
-          await page.render({ canvasContext: ctx, viewport }).promise;
+          await page.render({ canvasContext: ctx, viewport, intent: 'print' }).promise;
 
           const dataUrl = canvas.toDataURL(mimeType, targetFormat === 'JPG' ? 0.92 : undefined);
           const base64Data = dataUrl.split(',')[1];

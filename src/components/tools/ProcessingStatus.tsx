@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Loader2, X, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
+import { Loader2, X, Cpu, ShieldCheck, Info } from 'lucide-react';
 
 interface ProcessingStatusProps {
   progress?: number;
@@ -9,128 +9,114 @@ interface ProcessingStatusProps {
   onCancel?: () => void;
   stage?: 'uploading' | 'processing' | 'optimizing' | 'completed';
   isLargeFile?: boolean;
+  /**
+   * @deprecated Processing runs in this browser tab, so it is never "background safe".
+   * Kept for backwards compatibility; has no effect.
+   */
   isBackgroundSafe?: boolean;
   autoDownload?: boolean;
   onAutoDownloadChange?: (auto: boolean) => void;
 }
 
+const STAGE_LABELS: Record<NonNullable<ProcessingStatusProps['stage']>, string> = {
+  uploading: 'Datei wird eingelesen …',
+  processing: 'Wird verarbeitet …',
+  optimizing: 'Wird optimiert …',
+  completed: 'Fast fertig …',
+};
+
 export function ProcessingStatus({
   progress,
   statusText,
   onCancel,
+  stage,
   isLargeFile,
-  isBackgroundSafe = true,
   autoDownload,
   onAutoDownloadChange,
 }: ProcessingStatusProps) {
-  const [showLargeNotice, setShowLargeNotice] = React.useState(Boolean(isLargeFile));
+  const [timerElapsed, setTimerElapsed] = React.useState(false);
 
   React.useEffect(() => {
-    if (isLargeFile) {
-      setShowLargeNotice(true);
-      return;
-    }
-    const timer = setTimeout(() => {
-      setShowLargeNotice(true);
-    }, 3500);
+    const timer = setTimeout(() => setTimerElapsed(true), 4000);
     return () => clearTimeout(timer);
-  }, [isLargeFile]);
+  }, []);
+  const showLongRunningHint = Boolean(isLargeFile) || timerElapsed;
+
   const isIndeterminate = progress === undefined || progress < 0;
   const clampedProgress = isIndeterminate ? 0 : Math.min(100, Math.max(0, progress));
   const roundedPercent = Math.round(clampedProgress);
+  const heading = stage ? STAGE_LABELS[stage] : 'Wird verarbeitet …';
 
   return (
     <div
       role="status"
       aria-live="polite"
-      className="w-full bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 md:p-12 text-center shadow-xs relative overflow-hidden"
+      className="w-full card px-5 py-8 sm:p-10 md:p-12 text-center relative overflow-hidden"
     >
-      {/* Top indicator line */}
-      <div
-        className={`absolute top-0 left-0 h-1 bg-gradient-to-r from-sky-500 to-indigo-600 transition-all duration-300 ease-out ${
-          isIndeterminate ? 'w-full animate-pulse' : ''
-        }`}
-        style={!isIndeterminate ? { width: `${clampedProgress}%` } : undefined}
-        aria-hidden="true"
-      />
-
       <div className="flex flex-col items-center justify-center max-w-md mx-auto">
-        <div
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-4 border border-sky-100 shadow-2xs"
-          aria-hidden="true"
-        >
-          <Loader2 className="w-6 h-6 animate-spin text-sky-600" />
-        </div>
+        <span className="relative w-14 h-14 sm:w-16 sm:h-16 mb-5" aria-hidden="true">
+          <span className="absolute inset-0 rounded-2xl bg-sky-100 motion-safe:animate-ping opacity-40" />
+          <span className="relative w-full h-full rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-brand">
+            <Loader2 className="w-7 h-7 animate-spin" />
+          </span>
+        </span>
 
-        <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-1">
-          Wird verarbeitet...
-        </h3>
-
-        <p className="text-xs sm:text-sm text-slate-500 mb-5 max-w-sm mx-auto leading-relaxed">
-          {statusText || 'Bitte warten Sie einen kurzen Augenblick...'}
+        <h3 className="text-lg sm:text-xl font-bold text-ink tracking-tight">{heading}</h3>
+        <p className="mt-1.5 text-[13px] sm:text-sm text-ink-subtle max-w-sm leading-relaxed">
+          {statusText || 'Einen Moment bitte …'}
         </p>
 
         {/* Progress bar */}
-        <div
-          role="progressbar"
-          aria-valuenow={!isIndeterminate ? roundedPercent : undefined}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label="Verarbeitungsfortschritt"
-          aria-valuetext={!isIndeterminate ? `${roundedPercent}%: ${statusText}` : statusText}
-          className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-2 relative"
-        >
-          {isIndeterminate ? (
-            <div className="bg-sky-500 h-full rounded-full w-1/3 animate-[indeterminate_1.5s_infinite_ease-in-out]" />
-          ) : (
-            <div
-              className="bg-gradient-to-r from-sky-500 to-sky-600 h-full rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${clampedProgress}%` }}
-            />
-          )}
+        <div className="w-full mt-6">
+          <div
+            role="progressbar"
+            aria-valuenow={!isIndeterminate ? roundedPercent : undefined}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Verarbeitungsfortschritt"
+            aria-valuetext={!isIndeterminate ? `${roundedPercent} %: ${statusText}` : statusText}
+            className="w-full h-2.5 rounded-full bg-surface-muted overflow-hidden ring-1 ring-inset ring-line"
+          >
+            {isIndeterminate ? (
+              <div className="h-full w-1/3 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 animate-indeterminate" />
+            ) : (
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-sky-500 to-sky-600 transition-[width] duration-300 ease-out"
+                style={{ width: `${clampedProgress}%` }}
+              />
+            )}
+          </div>
+          <div className="mt-2 flex items-center justify-between text-xs text-ink-subtle" aria-hidden="true">
+            <span className="inline-flex items-center gap-1">
+              <Cpu className="w-3.5 h-3.5" /> Auf Ihrem Gerät
+            </span>
+            {!isIndeterminate && <span className="font-semibold text-ink tabular-nums">{roundedPercent} %</span>}
+          </div>
         </div>
 
-        {!isIndeterminate && (
-          <div className="flex items-center justify-between w-full px-1 text-xs text-slate-500" aria-hidden="true">
-            <span className="text-[11px] sm:text-xs">Verarbeitung läuft</span>
-            <span className="font-semibold text-slate-700 font-mono text-xs sm:text-sm">
-              {roundedPercent}%
-            </span>
-          </div>
-        )}
-
-        {showLargeNotice && (
-          <div className="mt-5 p-3.5 sm:p-4 rounded-xl bg-amber-50/90 border border-amber-200/90 text-left flex items-start gap-3 shadow-2xs animate-in fade-in duration-300 w-full">
-            <Clock className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
-            <div className="space-y-1 text-xs text-amber-950 leading-relaxed">
-              <p className="font-semibold flex items-center gap-1.5">
-                <span>Größere Datei &amp; Rechenvorgang</span>
+        {showLongRunningHint && (
+          <div className="mt-6 w-full p-3.5 rounded-xl bg-surface-muted ring-1 ring-line text-left flex items-start gap-3 animate-fade-in">
+            <Info className="w-4.5 h-4.5 text-sky-600 mt-0.5 shrink-0" aria-hidden="true" />
+            <div className="text-xs text-ink-muted leading-relaxed space-y-1">
+              <p className="font-semibold text-ink">Das kann einen Moment dauern</p>
+              <p>
+                Die Berechnung läuft lokal mit der Leistung Ihres Geräts. Bitte lassen Sie diesen Tab geöffnet, bis das
+                Ergebnis bereitsteht – beim Schließen wird der Vorgang abgebrochen.
               </p>
-              <p className="text-amber-900/90">
-                Die Datei ist groß oder rechenintensiv, daher benötigt die Konvertierung einen kurzen Moment.
-              </p>
-              {isBackgroundSafe && (
-                <p className="text-amber-800 text-[11px] font-medium pt-0.5 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 inline" />
-                  <span>
-                    <strong>Hintergrund-Garantie:</strong> Sie können das Browserfenster schließen oder Tabs wechseln – die Verarbeitung auf dem Server wird dadurch nicht abgebrochen!
-                  </span>
-                </p>
-              )}
-              <p className="text-amber-800/80 text-[11px] font-medium pt-0.5">
-                ⚡ <strong>Tab-Wechsel sicher:</strong> Das Wechseln zu anderen Tabs pausiert die Konvertierung nicht.
+              <p className="inline-flex items-center gap-1 text-emerald-700 font-medium">
+                <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" /> Es werden keine Daten übertragen.
               </p>
             </div>
           </div>
         )}
 
         {onAutoDownloadChange && (
-          <label className="mt-4 inline-flex items-center gap-2 text-xs text-slate-700 bg-slate-50 hover:bg-slate-100 py-2 px-3.5 rounded-xl border border-slate-200 transition-colors cursor-pointer select-none">
+          <label className="mt-4 inline-flex items-center gap-2.5 text-xs text-ink-muted bg-white hover:bg-surface-muted py-2 px-3.5 rounded-xl ring-1 ring-line transition-colors cursor-pointer select-none">
             <input
               type="checkbox"
               checked={Boolean(autoDownload)}
               onChange={(e) => onAutoDownloadChange(e.target.checked)}
-              className="rounded border-slate-300 text-sky-600 focus:ring-sky-500 w-4 h-4 cursor-pointer"
+              className="w-4 h-4 rounded border-slate-300 accent-sky-600 cursor-pointer"
             />
             <span className="font-medium">Nach Fertigstellung automatisch herunterladen</span>
           </label>
@@ -140,11 +126,10 @@ export function ProcessingStatus({
           <button
             type="button"
             onClick={onCancel}
-            aria-label="Verarbeitung abbrechen"
-            className="mt-5 min-h-[40px] px-3.5 py-1.5 text-xs font-medium text-slate-500 hover:text-rose-600 active:bg-rose-50 rounded-lg transition inline-flex items-center gap-1.5 touch-manipulation cursor-pointer"
+            className="mt-5 min-h-[40px] px-3.5 py-1.5 text-xs font-semibold text-ink-subtle hover:text-rose-600 hover:bg-rose-50 rounded-lg transition inline-flex items-center gap-1.5 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Vorgang abbrechen</span>
+            Abbrechen
           </button>
         )}
       </div>

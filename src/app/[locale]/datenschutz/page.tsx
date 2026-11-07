@@ -1,14 +1,13 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
-import { privacyConfig } from '@/config/privacy.config';
 import Link from 'next/link';
-import { ShieldCheck, Lock, Trash2, Cpu, Server, Key } from 'lucide-react';
+import { Lock, Cpu, HardDrive } from 'lucide-react';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Datenschutzerklärung – 100% DSGVO-konform | Datei Tools',
-  description: 'Transparente Informationen zur Verarbeitung personenbezogener Daten, Dateilebenszyklus und Privatsphäre bei Datei Tools. Keine permanente Speicherung.',
+  title: 'Datenschutzerklärung | Datei Tools',
+  description: 'Datenschutzerklärung von Datei Tools: Ihre Dateien werden lokal im Browser verarbeitet und nicht hochgeladen. Infos zu Server-Logs, Cookies und Ihren Rechten.',
   path: '/datenschutz',
   locale: 'de',
 });
@@ -36,56 +35,56 @@ export default function DatenschutzPage() {
         <div className="p-4 rounded-xl bg-sky-50 border border-sky-100 flex items-start gap-3">
           <Cpu className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
           <div>
-            <div className="text-xs font-bold text-sky-950 uppercase tracking-wide">Client-Side First</div>
-            <p className="text-xs text-sky-800 mt-0.5">Viele Tools verarbeiten Daten zu 100% lokal im Browser ohne Upload.</p>
+            <div className="text-xs font-bold text-sky-950 uppercase tracking-wide">100 % lokal im Browser</div>
+            <p className="text-xs text-sky-800 mt-0.5">Alle Werkzeuge verarbeiten Ihre Dateien direkt auf Ihrem Gerät.</p>
           </div>
         </div>
         <div className="p-4 rounded-xl bg-amber-50 border border-amber-100 flex items-start gap-3">
-          <Trash2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <HardDrive className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div>
-            <div className="text-xs font-bold text-amber-950 uppercase tracking-wide">{privacyConfig.retentionMinutes} Min. Löschzyklus</div>
-            <p className="text-xs text-amber-800 mt-0.5">Server-Dateien werden nach {privacyConfig.retentionMinutes} Minuten automatisch gelöscht.</p>
+            <div className="text-xs font-bold text-amber-950 uppercase tracking-wide">Kein Datei-Upload</div>
+            <p className="text-xs text-amber-800 mt-0.5">Dateiinhalte werden nicht an unsere Server übertragen oder dort gespeichert.</p>
           </div>
         </div>
         <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-start gap-3">
           <Lock className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
           <div>
             <div className="text-xs font-bold text-emerald-950 uppercase tracking-wide">Minimale Logs</div>
-            <p className="text-xs text-emerald-800 mt-0.5">IP-Anonymisierung (/24) und strikter Verzicht auf Dateiinhalts-Logs.</p>
+            <p className="text-xs text-emerald-800 mt-0.5">IP-Anonymisierung und strikter Verzicht auf Dateiinhalts-Logs.</p>
           </div>
         </div>
       </div>
 
       <div className="prose prose-slate max-w-none text-sm text-slate-700 space-y-8 leading-relaxed bg-white p-6 sm:p-10 rounded-2xl border border-slate-200 shadow-sm">
-        
+
         {/* Section 1 */}
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
             <span>1. Grundsätze und technische Architektur</span>
           </h2>
           <p>
-            Wir nehmen den Schutz Ihrer persönlichen Daten und den verantwortungsvollen Umgang mit Ihren Dokumenten sehr ernst. 
+            Wir nehmen den Schutz Ihrer persönlichen Daten und den verantwortungsvollen Umgang mit Ihren Dokumenten sehr ernst.
             Bei Datei Tools gilt das Prinzip der Datenminimierung und Transparenz nach Art. 5 Abs. 1 lit. c DSGVO.
           </p>
-          
+
           <div className="mt-4 space-y-4">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-sky-600" />
-                A. Reine Client-seitige Browser-Werkzeuge (Zero-Upload)
+                Lokale Verarbeitung im Browser (kein Upload)
               </h3>
               <p className="text-xs text-slate-600 mt-1">
-                Zahlreiche Werkzeuge auf unserer Plattform (darunter Standard-PDF-Zusammenführung, PDF-Rotation, PDF-Seiten-Entfernung sowie Client-Bildkonvertierungen) werden mittels moderner WebAssembly- und HTML5-Technologien <strong>vollständig lokal in Ihrem Webbrowser</strong> ausgeführt. In diesen Fällen verlassen Ihre Dokumente Ihr Endgerät zu keinem Zeitpunkt und werden nicht an unsere Server übertragen.
+                Sämtliche Werkzeuge auf unserer Plattform – darunter PDF-, Bild-, Dokumenten-, OCR-, Video-, Audio- und Archiv-Werkzeuge – werden mittels JavaScript- und WebAssembly-Technologien <strong>vollständig lokal in Ihrem Webbrowser</strong> ausgeführt. Die von Ihnen ausgewählten Dateien werden ausschließlich im Arbeitsspeicher Ihres Endgeräts verarbeitet. Sie verlassen Ihr Endgerät zu keinem Zeitpunkt und werden nicht an unsere Server übertragen; wir erhalten daher keine Kenntnis von Dateiinhalten oder Dateinamen.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                <Server className="w-4 h-4 text-indigo-600" />
-                B. Server-gestützte Konvertierungs- und OCR-Werkzeuge
+                <HardDrive className="w-4 h-4 text-indigo-600" />
+                Programmbibliotheken und Sprachdaten
               </h3>
               <p className="text-xs text-slate-600 mt-1">
-                Für komplexe Aufgaben (insbesondere Dokumentenkonvertierungen wie DOCX/XLSX/PPTX, OCR-Texterkennung oder Stapelverarbeitungen) ist eine temporäre serverseitige Verarbeitung technisch erforderlich. In diesen Fällen wird Ihre Datei über eine TLS/HTTPS-verschlüsselte Verbindung an unsere abgesicherten Server übertragen.
+                Für einzelne Werkzeuge (z. B. Texterkennung, Video- oder Archivverarbeitung) lädt Ihr Browser beim ersten Aufruf benötigte Programmbestandteile wie WebAssembly-Module oder Sprachdaten von unserem Webserver herunter. Dabei werden lediglich die unter Ziffer 4 genannten technisch notwendigen Zugriffsdaten verarbeitet – Ihre Dateien werden hierbei nicht übertragen.
               </p>
             </div>
           </div>
@@ -94,37 +93,13 @@ export default function DatenschutzPage() {
         {/* Section 2 */}
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-            <span>2. Temporärer Dateilebenszyklus (File Lifecycle)</span>
+            <span>2. Umgang mit Ihren Dateien</span>
           </h2>
           <p>
-            Sofern eine serverseitige Verarbeitung stattfindet, unterliegen alle Dateien einem streng reglementierten, flüchtigen Lebenszyklus:
+            Da die Verarbeitung lokal erfolgt, findet keine Speicherung, inhaltliche Auswertung, Vervielfältigung oder Weitergabe Ihrer Dokumenteninhalte durch uns statt. Ergebnisdateien werden direkt in Ihrem Browser erzeugt und über die Download-Funktion Ihres Browsers auf Ihrem Gerät gespeichert.
           </p>
-
-          <div className="my-4 border border-slate-200 rounded-xl p-4 bg-slate-50 font-mono text-xs space-y-2 text-slate-700">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-semibold">1. Upload:</span>
-              <span>Empfang über HTTPS & Speicherung unter kryptografisch zufälliger UUID in isoliertem Arbeitsverzeichnis.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded font-semibold">2. Verarbeitung:</span>
-              <span>Ausführung des Konvertierungs- oder OCR-Auftrags in isolierter Prozessumgebung.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold">3. Sofortige Datenminimierung:</span>
-              <span>Die ursprüngliche Quelldatei wird unmittelbar nach Fertigstellung des Ergebnisses vom Server gelöscht.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-semibold">4. Bereitstellung:</span>
-              <span>Das Ergebnis steht ausschließlich über eine signierte, zeitlich begrenzte Download-URL bereit.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-semibold">5. Automatische Löschung:</span>
-              <span>Nach Ablauf der Aufbewahrungsfrist ({privacyConfig.retentionMinutes} Minuten) wird die Ergebnisdatei automatisiert und unwiderruflich vernichtet.</span>
-            </div>
-          </div>
-
-          <p className="text-xs text-slate-600">
-            Es findet zu keinem Zeitpunkt eine dauerhafte Speicherung, inhaltliche Auswertung, Vervielfältigung oder Weitergabe Ihrer Dokumenteninhalte an Dritte statt.
+          <p className="mt-2 text-xs text-slate-600">
+            Sobald Sie den Browser-Tab schließen oder neu laden, werden die verarbeiteten Daten aus dem Arbeitsspeicher entfernt. Bitte beachten Sie, dass installierte Browser-Erweiterungen grundsätzlich Zugriff auf Webseiteninhalte haben können; hierauf haben wir keinen Einfluss.
           </p>
         </section>
 
@@ -137,12 +112,10 @@ export default function DatenschutzPage() {
             Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) und anderer nationaler Datenschutzgesetze ist:
           </p>
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-1">
-            <p className="font-bold text-slate-900">[Name des Diensteanbieters / Betreibergesellschaft]</p>
-            <p>[Vertretungsberechtigte Person / Geschäftsführer]</p>
-            <p>[Straße und Hausnummer]</p>
-            <p>[Postleitzahl und Ort, Deutschland / EU]</p>
-            <p className="text-sky-700">E-Mail für Datenschutzanfragen: datenschutz@datei-tools.de</p>
-            <p>Allgemeiner Support: support@datei-tools.de</p>
+            <p className="font-bold text-slate-900">Bil Al</p>
+            <p>20095 Hamburg, Deutschland</p>
+            <p className="text-sky-700">E-Mail für Datenschutzanfragen: info@datei-tools.de</p>
+            <p>Allgemeiner Support: info@datei-tools.de</p>
           </div>
         </section>
 
@@ -162,16 +135,11 @@ export default function DatenschutzPage() {
         {/* Section 5 */}
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-            <span>5. Signierte Download-URLs & Speicherzugriff</span>
+            <span>5. Keine serverseitige Dateispeicherung</span>
           </h2>
           <p>
-            Um unbefugten Zugriff durch Dritte oder automatisierte Scraper auszuschließen:
+            Unsere Server stellen ausschließlich die Website und die für die lokale Verarbeitung benötigten Programmdateien bereit. Ein Upload-, Konvertierungs- oder Speicherdienst für Ihre Dateien wird nicht betrieben. Es existieren daher weder Upload-Verzeichnisse noch Download-Links zu Ihren Dokumenten auf unseren Systemen.
           </p>
-          <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600 mt-2">
-            <li>Dateinamen werden im Speicher durch zufallsgenerierte, nicht erratbare UUIDs ersetzt.</li>
-            <li>Das direkte Durchsuchen von Verzeichnissen (Directory Indexing) ist serverseitig strikt unterbunden.</li>
-            <li>Download-Links werden mit einem kryptografischen HMAC-SHA256-Token und einer festen Ablaufzeit ({privacyConfig.retentionMinutes} Min.) versehen. Manipulationen oder unautorisierte Abfragen werden abgewiesen.</li>
-          </ul>
         </section>
 
         {/* Section 6 */}

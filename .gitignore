@@ -51,3 +51,6 @@ next-env.d.ts
 *.dump
 *.log
 
+
+# in-browser wasm runtimes (copied from node_modules by scripts/copy-wasm-assets.mjs)
+/public/vendor/

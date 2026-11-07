@@ -35,10 +35,9 @@ export default function ImpressumPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Diensteanbieter</h2>
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-1">
-            <p className="font-bold text-slate-900">[Name des Diensteanbieters / Betreibergesellschaft]</p>
-            <p>[Rechtsform, z. B. Einzelunternehmen / GmbH / UG (haftungsbeschränkt)]</p>
-            <p>[Straße und Hausnummer]</p>
-            <p>[Postleitzahl und Ort, Deutschland / EU]</p>
+            <p className="font-bold text-slate-900">Bil Al</p>
+            <p>20095 Hamburg, Deutschland</p>
+            <p>E-Mail: info@datei-tools.de</p>
           </div>
         </section>
 
@@ -46,25 +45,15 @@ export default function ImpressumPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Vertretungsberechtigte Personen</h2>
           <p className="text-xs text-slate-600">
-            Vertreten durch: [Name der vertretungsberechtigten Person / Geschäftsführer]
+            Vertreten durch: Bil Al
           </p>
-        </section>
-
-        {/* Register & USt-ID */}
-        <section>
-          <h2 className="text-lg font-bold text-slate-900 mb-2">Registereintrag & Steuernummer</h2>
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 space-y-1">
-            <p>Registergericht: [Amtsgericht ..., falls eingetragen]</p>
-            <p>Registernummer: [HRB / HRA ..., falls eingetragen]</p>
-            <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: [DE ..., falls vorhanden]</p>
-          </div>
         </section>
 
         {/* Kontakt */}
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Kontakt</h2>
           <p className="text-xs text-slate-600">
-            E-Mail: <a href="mailto:support@datei-tools.de" className="text-sky-600 underline font-medium">support@datei-tools.de</a><br />
+            E-Mail: <a href="mailto:info@datei-tools.de" className="text-sky-600 underline font-medium">info@datei-tools.de</a><br />
             Support & Kontaktformular:{' '}
             <Link href="/de/kontakt" className="text-sky-600 underline font-medium">
               datei-tools.de/de/kontakt
@@ -76,9 +65,8 @@ export default function ImpressumPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
           <p className="text-xs text-slate-600">
-            [Name der verantwortlichen Person]<br />
-            [Straße und Hausnummer]<br />
-            [Postleitzahl und Ort]
+            Bil Al<br />
+            20095 Hamburg, Deutschland
           </p>
         </section>
 

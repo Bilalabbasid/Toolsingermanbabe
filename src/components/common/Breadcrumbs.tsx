@@ -9,19 +9,20 @@ export interface BreadcrumbItem {
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
+  className?: string;
 }
 
-export function Breadcrumbs({ items }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
   return (
-    <nav aria-label="Brotkrumennavigation" className="py-3 px-4 sm:px-0">
-      <ol className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+    <nav aria-label="Brotkrumennavigation" className={`py-3 ${className}`}>
+      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-ink-subtle">
         <li className="flex items-center">
           <Link
             href="/de"
-            className="flex items-center gap-1 hover:text-sky-700 transition-colors"
+            className="inline-flex items-center gap-1 rounded-md p-0.5 hover:text-sky-700 transition-colors"
             title="Startseite"
           >
-            <Home className="w-3.5 h-3.5" />
+            <Home className="w-3.5 h-3.5" aria-hidden="true" />
             <span className="sr-only">Startseite</span>
           </Link>
         </li>
@@ -29,17 +30,14 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
-            <li key={item.url} className="flex items-center gap-1.5">
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <li key={item.url} className="flex items-center gap-1.5 min-w-0">
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" aria-hidden="true" />
               {isLast ? (
-                <span className="font-semibold text-slate-800 truncate max-w-[200px] sm:max-w-xs" aria-current="page">
+                <span className="font-medium text-ink-muted truncate max-w-[220px] sm:max-w-sm" aria-current="page">
                   {item.name}
                 </span>
               ) : (
-                <Link
-                  href={item.url}
-                  className="hover:text-sky-700 transition-colors truncate max-w-[150px]"
-                >
+                <Link href={item.url} className="hover:text-sky-700 transition-colors truncate max-w-[180px]">
                   {item.name}
                 </Link>
               )}
