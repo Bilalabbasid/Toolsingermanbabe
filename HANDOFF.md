@@ -1,6 +1,6 @@
 # Datei Tools – Handoff (Stand 2026-11-08)
 
-Branch: `feat/browser-only-tools-seo` (pushed to `origin`). `main` is untouched.
+Branch: everything is merged and pushed to **`main`** (also kept on `feat/browser-only-tools-seo`). Repo: https://github.com/Bilalabbasid/Toolsingermanbabe
 Live domain: **https://datei-tools.de** (hard-coded in `src/lib/seo.ts`, `src/app/layout.tsx`, `src/config/env.config.ts`).
 Operator shown on legal pages: **Bil Al, 20095 Hamburg, Deutschland, info@datei-tools.de**.
 
@@ -63,11 +63,12 @@ npm run build        # next build --webpack
 npx next start -p 3200
 ```
 
-### Deploy
-1. Open the Vercel preview for branch `feat/browser-only-tools-seo` and click through: `/de`, `/de/pdf-komprimieren`, `/de/pdf-schuetzen`, `/de/word-in-pdf-umwandeln`, `/de/bild-zu-text`, `/de/video-in-mp4-umwandeln`, `/de/zip-entpacken`, `/de/impressum`, `/sitemap.xml`, `/robots.txt`.
-2. Check the FFmpeg asset `/vendor/ffmpeg/ffmpeg-core.wasm` (~31 MB) is served on the preview (Vercel static file limits). If it is rejected, load it from a pinned CDN (`@ffmpeg/core@0.12.10`) in `src/lib/client/media/ffmpegClient.ts` and add that origin to CSP `connect-src`/`script-src`.
-3. Merge to `main` → production. In Vercel set the domain `datei-tools.de` (+ `www` redirect). No env vars are required for the tools; `NEXT_PUBLIC_SITE_URL` is ignored (domain hard-coded).
-4. Google Search Console: verify `datei-tools.de`, submit `https://datei-tools.de/sitemap.xml`.
+### Deploy (main is pushed — Vercel builds production from it)
+1. Check the Vercel deployment of `main` succeeded (build command `npm run build` = `prisma generate && node scripts/copy-wasm-assets.mjs && next build --webpack`). If the build fails, read the Vercel build log first.
+2. Click through on the deployment: `/de`, `/de/pdf-komprimieren`, `/de/pdf-schuetzen`, `/de/word-in-pdf-umwandeln`, `/de/bild-zu-text`, `/de/video-in-mp4-umwandeln`, `/de/zip-entpacken`, `/de/impressum`, `/sitemap.xml`, `/robots.txt`.
+3. Check the FFmpeg asset `/vendor/ffmpeg/ffmpeg-core.wasm` (~31 MB) is served (Vercel static file limits). If it is missing/rejected, load it from a pinned CDN (`@ffmpeg/core@0.12.10`) in `src/lib/client/media/ffmpegClient.ts` and add that origin to CSP `connect-src`/`script-src` in `next.config.ts`. Same check for `/vendor/tesseract/*`, `/vendor/tessdata/*`, `/vendor/qpdf/qpdf.wasm`, `/vendor/7z/*`.
+4. In Vercel set the domain `datei-tools.de` (+ `www` → apex redirect). No env vars are required for the tools; `NEXT_PUBLIC_SITE_URL` is ignored (domain hard-coded). `DATABASE_URL`/Stripe only matter for the (disabled) accounts/billing pages.
+5. Google Search Console: verify `datei-tools.de`, submit `https://datei-tools.de/sitemap.xml`, request indexing for `/de` and the top tools.
 
 ### To finish the unfinished items
 - **Article clusters**: open each `articles-cluster-*.ts`, review every article for accuracy against the engine code, remove anything incomplete, then add `import { STUDY_CLUSTER_ARTICLES } from './blog/articles-cluster-study'` (and WEB) to `src/config/blog.config.ts` and spread into `BLOG_ARTICLES`. Then run `validateBlogInternalLinks()` (must return `valid: true`) and rebuild.
@@ -75,5 +76,69 @@ npx next start -p 3200
 - **Never** link to hidden slugs (see `CLIENT_UNSUPPORTED_SLUGS`).
 - **Adding a tool**: add it to the config, make sure its engine runs client-side, add the engine limit to `getClientFileLimitMB`, test in a real browser with the tab in front.
 
-### Hand-off prompt (paste into a new Claude Code session)
-> You are continuing work on the Next.js 16 project in this repo ("Datei Tools", https://datei-tools.de, German, all tools run 100 % in the browser). Read `HANDOFF.md` and `AGENTS.md` first. Work on branch `feat/browser-only-tools-seo`. Tasks, in order: (1) open an article containing a markdown table on a local build and confirm it renders as a table. (2) Review and, if accurate, merge `src/config/blog/articles-cluster-study.ts` and `articles-cluster-web.ts` into `BLOG_ARTICLES`; run `validateBlogInternalLinks()`. (3) Fix the engine UX issues listed in HANDOFF §2 (OCR savings bar, video 0 % progress, self-suggestion in DownloadBox). (4) Verify FAQ/HowTo JSON-LD matches visible content on article and tool pages. (5) Crawl all sitemap URLs on a local `next start` and fix titles > 60 chars, missing H1, broken internal links. (6) Ask the owner before deleting the unused server API routes. Run `npm run typecheck`, `npx vitest run`, `npm run build` before every commit; test changed tools in the built-in browser with real files; commit and push to the branch; don't merge to main without the owner's OK.
+### Hand-off prompt (paste this whole block into a new AI coding session)
+
+```text
+You are taking over "Datei Tools" (https://datei-tools.de), a German free file-conversion website.
+Repo: https://github.com/Bilalabbasid/Toolsingermanbabe — work on branch `main` (production deploys from it on Vercel).
+Owner: Bil Al, 20095 Hamburg, contact info@datei-tools.de. The site is ONLY browser-based conversion — no accounts needed,
+no "Über uns" page wanted, no server processing.
+
+READ FIRST: HANDOFF.md (this file) and AGENTS.md. This is Next.js 16 (App Router, React 19, Tailwind v4) — APIs differ from
+older Next versions; read node_modules/next/dist/docs/ before using Next APIs. Build/dev use webpack (`next build --webpack`,
+`npm run dev` = `next dev --webpack`); Turbopack is not supported for this project.
+
+ARCHITECTURE YOU MUST KEEP:
+- Every tool processes files 100 % in the visitor's browser. Never add server-side file processing or uploads.
+- Tool registry: src/config/tools.config.ts, utilities.config.ts, media_archive.config.ts; getActiveTools() filters hidden slugs
+  via CLIENT_UNSUPPORTED_SLUGS in src/config/deployment.config.ts (hidden: eps-in-svg-umwandeln, eps-in-pdf-umwandeln,
+  pdfa-umwandeln, pptx-in-ppt-umwandeln). Never link to hidden slugs.
+- Engines: src/components/engines/*; dispatcher src/components/tools/ToolDispatcher.tsx; client libraries src/lib/client/{pdf,image,design,docs,ocr,media,archive}/.
+- WebAssembly runtimes (qpdf, 7-Zip, FFmpeg, Tesseract + tessdata) are copied from node_modules to public/vendor/ by
+  scripts/copy-wasm-assets.mjs (postinstall + build). public/vendor/ is git-ignored. CSP in next.config.ts allows 'wasm-unsafe-eval', blob: workers/media.
+- pdf.js rendering for processing must use `intent: 'print'` (keeps working in background tabs).
+- Per-engine file limits displayed on tool pages: getClientFileLimitMB() in deployment.config.ts — keep in sync with engine checks.
+- Blog: src/config/blog/*.ts merged in src/config/blog.config.ts (BLOG_ARTICLES). Section text supports [Anker](tool:slug),
+  [Anker](blog:slug), [Anker](/de/...), **bold**, lists, markdown tables (rendered by src/components/blog/BlogRichText.tsx).
+  validateBlogInternalLinks() must return valid: true.
+- SEO: SITE_URL hard-coded https://datei-tools.de (src/lib/seo.ts); sitemap src/app/sitemap.ts; robots src/app/robots.ts;
+  JSON-LD in src/lib/json-ld.ts. Tool/article/category pages are statically generated (generateStaticParams, dynamicParams=false).
+
+CONTENT RULES (Google helpful-content + AI-search/GEO):
+- German, "Sie" form. Answer-first: each article's directAnswer = 2–3 standalone sentences answering the H1.
+- Question/task-shaped headings; only claim what the engine code really does (check src/components/engines + src/lib/client);
+  no invented statistics or laws; metaTitle <= 60 chars, metaDescription <= 160.
+- Honest dates: new article publishedAt = the real date; only bump updatedAt for substantial changes.
+- Structured data (FAQPage/HowTo) must match text visible on the page.
+
+TASKS, IN ORDER:
+1. Confirm the Vercel production deployment of main succeeded and that /vendor/ffmpeg/ffmpeg-core.wasm (~31 MB),
+   /vendor/tesseract/*, /vendor/tessdata/*, /vendor/qpdf/qpdf.wasm and /vendor/7z/* are served. If ffmpeg-core.wasm is
+   too large for Vercel, load @ffmpeg/core@0.12.10 from a pinned CDN in src/lib/client/media/ffmpegClient.ts and add the
+   origin to the CSP.
+2. Smoke-test in a real browser (tab in front) with real files: pdf-komprimieren, pdf-schuetzen, pdf-passwort-entfernen,
+   pdf-schwaerzen, pdf-unterschreiben, pdf-zusammenfuegen, word-in-pdf-umwandeln, pdf-in-word-umwandeln, excel-in-pdf-umwandeln,
+   heic-in-jpg-umwandeln, png-in-ico-umwandeln, bild-komprimieren, bild-zu-text, ocr-pdf, audio-konvertieren,
+   video-in-mp4-umwandeln, zip-entpacken, 7z-entpacken. Fix anything broken.
+3. Fix known engine UX issues: OCR success box shows a meaningless "100 % kleiner" savings bar (OcrEngine/DownloadBox);
+   video progress stays 0 % when the input has no duration — show elapsed time/indeterminate (MediaEngine, src/lib/client/media);
+   DownloadBox "Direkt weiterbearbeiten" can suggest the current tool — exclude it.
+4. Review src/config/blog/articles-cluster-study.ts and articles-cluster-web.ts for accuracy/completeness; if good, import and
+   spread them into BLOG_ARTICLES in src/config/blog.config.ts; run validateBlogInternalLinks().
+5. Optionally write the missing clusters (office/admin: Bewerbung, Belege digitalisieren, Ausweiskopie schwärzen, Rechnungen
+   archivieren; developer/data: JWT, SHA-256 prüfen, JSON→CSV, Regex) following the content rules.
+6. Finish the GEO pass on article bodies (src/config/blog/articles-*.ts) and tool-page copy (introDe/faqDe in the tool configs):
+   answer-first, remove fluff/unverifiable claims, keep slugs/dates.
+7. Crawl every sitemap URL on a local `npx next start -p 3200`: HTTP 200, exactly one H1, unique titles <= 60 chars with brand,
+   descriptions <= 160, canonical = https://datei-tools.de + path, no broken internal links, images with alt, valid JSON-LD. Fix issues.
+8. Add vitest tests for pure modules in src/lib/client/** (qpdfArgs, image/binary encoders, archive tar/safety, media args,
+   docs csv/xlsx converters) under test/client/.
+9. Spot-check facts flagged in articles: Windows 11 native 7z/RAR support; digital passport photo rule since 1 May 2025;
+   Excel "Daten > Aus PDF" availability; macOS Preview AVIF support.
+10. ASK THE OWNER before deleting the unused server routes (src/app/api/v1/jobs*, /convert, /pdf/security, src/server/**,
+    heavy native deps) and before replacing the local-file analytics (/api/v1/analytics/track) with Vercel Analytics.
+
+WORKFLOW: before every commit run `npm run typecheck`, `npx vitest run` (47+ tests pass), `npm run build`. Don't commit
+data/analytics/events_ledger.json changes or .claude/. Commit with clear messages and push to main only after the build passes.
+Report to the owner in short, plain English what changed and what is still open; update HANDOFF.md at the end.
+```
