@@ -31,19 +31,19 @@ All other tools: unit/Node-tested by the implementing agents, **not** individual
 
 ---
 
-## 2. Unfinished work (stopped mid-way at owner request)
+## 2. Status of items
 
 | Item | State | Where |
 |---|---|---|
-| 2 extra article clusters (students, photos/web) | Files exist but are **not imported** and **not reviewed** | `src/config/blog/articles-cluster-study.ts`, `src/config/blog/articles-cluster-web.ts` |
-| 2 clusters (office/admin, developer/data) | Never written | – |
+| 2 extra article clusters (students, photos/web) | **Done**: Reviewed, imported and merged into `BLOG_ARTICLES` (now 92 guides). `validateBlogInternalLinks()` passes with 0 broken links. | `src/config/blog/articles-cluster-study.ts`, `src/config/blog/articles-cluster-web.ts`, `src/config/blog.config.ts` |
+| Engine UX polish | **Done**: OCR success box now has `showSavings={false}` and `hasSavings` guard (no meaningless "100 % kleiner" bar); video progress displays live elapsed time `(Xs)`/indeterminate for durationless inputs; `DownloadBox` excludes `currentToolSlug` from "Direkt weiterbearbeiten" suggestions. | `src/components/engines/OcrEngine.tsx`, `MediaEngine.tsx`, `PdfCompressEngine.tsx`, `ImageCompressEngine.tsx`, `src/components/tools/DownloadBox.tsx` |
+| Unit tests for `src/lib/client/**` and blog links | **Done**: 22 new tests written under `test/client/` (`qpdfArgs.test.ts`, `archiveSafety.test.ts`, `mediaArgs.test.ts`, `spreadsheet.test.ts`) and `test/blog.test.ts`. 69 total tests pass. | `test/client/`, `test/blog.test.ts` |
+| Markdown **table** rendering in articles | Implemented in `BlogRichText.tsx` with responsive wrapper and styling | `BlogRichText.tsx` |
+| 2 clusters (office/admin, developer/data) | Optional / not written | – |
 | GEO/helpful-content pass on articles | Partly done (directAnswers + some tables). Not reviewed: body text of `articles-core.ts`; partial on `articles-docs-images.ts`, `articles-media-dev.ts`, `articles-pdf-security.ts` | `src/config/blog/` |
-| Markdown **table** rendering in articles | Implemented in `BlogRichText.tsx`; spot-check one article with a table on the preview | `BlogRichText.tsx` |
 | Structured data ↔ visible text check | Not done | `src/app/[locale]/blog/[slug]/page.tsx`, `src/app/[locale]/[slug]/page.tsx` |
 | Tool-page copy pass (answer-first intros/FAQs) | Not done | `src/config/tools.config.ts`, `utilities.config.ts`, `media_archive.config.ts`, `categories.config.ts` |
 | QA crawl of all URLs | Not done | – |
-| Unit tests for `src/lib/client/**` | Not written | `test/client/` |
-| Engine UX polish | Partly done (agent stopped; typecheck + build pass). Known open issues: OCR success box shows a meaningless "100 % kleiner" savings bar; video progress stays at 0 % when input has no duration (browser-recorded WebM); "Direkt weiterbearbeiten" can suggest the current tool | `src/components/engines/OcrEngine.tsx`, `MediaEngine.tsx`, `src/components/tools/DownloadBox.tsx` |
 | Performance + security review | Not completed | – |
 | Old server API routes | Still present but unused by the UI (`/api/v1/jobs*`, `/api/v1/convert`, `/api/v1/pdf/security`, `src/server/**`). They pull heavy native deps into Vercel functions. Recommended: delete (needs owner OK) | `src/app/api/v1/**` |
 | Fact spot-checks flagged by writers | Windows 11 native 7z/RAR; digital passport photo rule since 1 May 2025; Excel "Daten > Aus PDF" availability; macOS Preview AVIF | blog articles |

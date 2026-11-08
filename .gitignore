@@ -54,3 +54,7 @@ next-env.d.ts
 
 # in-browser wasm runtimes (copied from node_modules by scripts/copy-wasm-assets.mjs)
 /public/vendor/
+
+# tooling & local analytics
+.claude/
+/data/analytics/events_ledger.json

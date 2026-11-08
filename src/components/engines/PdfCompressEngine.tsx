@@ -300,6 +300,7 @@ export function PdfCompressEngine() {
           filename={outcome.fileName}
           originalSizeBytes={singleFile.size}
           resultSizeBytes={outcome.size}
+          currentToolSlug={TOOL_SLUG}
           onDownload={() => {
             downloadBlob(outcome.blob, outcome.fileName);
             trackEvent('download_completed', { toolSlug: TOOL_SLUG });

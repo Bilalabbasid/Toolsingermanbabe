@@ -6,6 +6,8 @@ import { PDF_SECURITY_ARTICLES } from './blog/articles-pdf-security';
 import { DOCS_IMAGES_ARTICLES } from './blog/articles-docs-images';
 import { MEDIA_DEV_ARTICLES } from './blog/articles-media-dev';
 import { GUIDES_2_ARTICLES } from './blog/articles-guides-2';
+import { STUDY_CLUSTER_ARTICLES } from './blog/articles-cluster-study';
+import { WEB_CLUSTER_ARTICLES } from './blog/articles-cluster-web';
 
 export type {
   BlogArticle,
@@ -28,6 +30,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   ...DOCS_IMAGES_ARTICLES,
   ...MEDIA_DEV_ARTICLES,
   ...GUIDES_2_ARTICLES,
+  ...STUDY_CLUSTER_ARTICLES,
+  ...WEB_CLUSTER_ARTICLES,
 ];
 
 const ARTICLE_INDEX = new Map(BLOG_ARTICLES.map((a) => [a.slug, a]));

@@ -16,6 +16,8 @@ interface DownloadBoxProps {
   onDownload: () => void;
   onReset: () => void;
   downloadLabel?: string;
+  showSavings?: boolean;
+  currentToolSlug?: string;
 }
 
 interface WorkflowSuggestion {
@@ -48,10 +50,37 @@ function getNextWorkflowSuggestions(filename: string): WorkflowSuggestion[] {
         hint: 'Dokument in bearbeitbares Word (DOCX) konvertieren',
         icon: 'file',
       },
+      {
+        name: 'PDF zusammenfügen',
+        slug: 'pdf-zusammenfuegen',
+        hint: 'Mehrere Dokumente zu einer Datei bündeln',
+        icon: 'file',
+      },
+      {
+        name: 'PDF-Seiten nummerieren',
+        slug: 'pdf-seiten-nummerieren',
+        hint: 'Seitenzahlen und Kopfzeilen ergänzen',
+        icon: 'pdf',
+      },
+      {
+        name: 'PDF in JPG umwandeln',
+        slug: 'pdf-in-jpg-umwandeln',
+        hint: 'Seiten als hochauflösende Bilder exportieren',
+        icon: 'image',
+      },
     ];
   }
 
-  if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.webp')) {
+  if (
+    lower.endsWith('.png') ||
+    lower.endsWith('.jpg') ||
+    lower.endsWith('.jpeg') ||
+    lower.endsWith('.webp') ||
+    lower.endsWith('.heic') ||
+    lower.endsWith('.bmp') ||
+    lower.endsWith('.tif') ||
+    lower.endsWith('.tiff')
+  ) {
     return [
       {
         name: 'Bild komprimieren',
@@ -70,6 +99,18 @@ function getNextWorkflowSuggestions(filename: string): WorkflowSuggestion[] {
         slug: 'jpg-in-pdf-umwandeln',
         hint: 'Bilder in ein druckfertiges PDF zusammenfassen',
         icon: 'pdf',
+      },
+      {
+        name: 'Metadaten entfernen',
+        slug: 'bild-metadaten-entfernen',
+        hint: 'EXIF- und Standortdaten zum Schutz der Privatsphäre löschen',
+        icon: 'shield',
+      },
+      {
+        name: 'Bildgröße ändern',
+        slug: 'bildgroesse-aendern',
+        hint: 'Pixelmaße für Web und Social Media anpassen',
+        icon: 'image',
       },
     ];
   }
@@ -93,6 +134,18 @@ function getNextWorkflowSuggestions(filename: string): WorkflowSuggestion[] {
       hint: 'Gescannte Seiten durchsuchbar machen',
       icon: 'file',
     },
+    {
+      name: 'Word in PDF umwandeln',
+      slug: 'word-in-pdf-umwandeln',
+      hint: 'DOCX ohne Office direkt in PDF umwandeln',
+      icon: 'file',
+    },
+    {
+      name: 'ZIP-Archiv entpacken',
+      slug: 'zip-entpacken',
+      hint: 'Dateien lokal im Browser extrahieren',
+      icon: 'file',
+    },
   ];
 }
 
@@ -103,6 +156,8 @@ export function DownloadBox({
   onDownload,
   onReset,
   downloadLabel = 'Datei herunterladen',
+  showSavings = true,
+  currentToolSlug,
 }: DownloadBoxProps) {
   // Small celebration – loaded lazily and skipped for users who prefer reduced motion.
   useEffect(() => {
@@ -128,15 +183,25 @@ export function DownloadBox({
     };
   }, []);
 
-  const hasSavings = Boolean(originalSizeBytes && resultSizeBytes && originalSizeBytes > resultSizeBytes);
-  const savingsPercent = hasSavings
-    ? Math.round(((originalSizeBytes! - resultSizeBytes!) / originalSizeBytes!) * 100)
-    : null;
-  const savingsBytes = hasSavings ? originalSizeBytes! - resultSizeBytes! : null;
+  const rawSavingsPercent =
+    originalSizeBytes && resultSizeBytes && originalSizeBytes > resultSizeBytes
+      ? Math.round(((originalSizeBytes - resultSizeBytes) / originalSizeBytes) * 100)
+      : null;
+  const hasSavings = Boolean(
+    showSavings !== false &&
+      rawSavingsPercent !== null &&
+      rawSavingsPercent > 0 &&
+      rawSavingsPercent < 100
+  );
+  const savingsPercent = hasSavings ? rawSavingsPercent : null;
+  const savingsBytes = hasSavings && originalSizeBytes && resultSizeBytes ? originalSizeBytes - resultSizeBytes : null;
 
   const nextTools = getNextWorkflowSuggestions(filename)
+    .filter((step) => !currentToolSlug || step.slug !== currentToolSlug)
     .map((step) => getToolBySlug(step.slug))
-    .filter((t): t is NonNullable<typeof t> => Boolean(t));
+    .filter((t): t is NonNullable<typeof t> => Boolean(t))
+    .filter((t) => !currentToolSlug || t.slug !== currentToolSlug)
+    .slice(0, 3);
 
   return (
     <>

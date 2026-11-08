@@ -282,6 +282,7 @@ export function ImageCompressEngine() {
         filename={outputFilename}
         originalSizeBytes={singleFile.size}
         resultSizeBytes={compressedBlob.size}
+        currentToolSlug="bild-komprimieren"
         onDownload={() => downloadBlob(compressedBlob, outputFilename)}
         onReset={handleResetSingle}
         downloadLabel="Komprimiertes Bild herunterladen"

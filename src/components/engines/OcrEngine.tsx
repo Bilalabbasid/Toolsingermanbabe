@@ -162,6 +162,8 @@ export function OcrEngine({ defaultOutputType = 'pdf', toolSlug = 'ocr-pdf' }: O
           resultSizeBytes={result.blob.size}
           onDownload={handleDownload}
           onReset={handleReset}
+          showSavings={false}
+          currentToolSlug={toolSlug}
           downloadLabel={
             outputType === 'pdf'
               ? 'Durchsuchbares PDF herunterladen'

@@ -111,6 +111,10 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
     setError(null);
     trackEvent('conversion_started', { toolId, size: file.size });
 
+    let conversionStartTime: number | null = null;
+    let timerId: ReturnType<typeof setInterval> | null = null;
+    let receivedPositiveProgress = false;
+
     try {
       const { convertMedia } = await import('@/lib/client/media/convert');
       const result = await convertMedia(
@@ -138,17 +142,39 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
               setProgress(undefined);
               setStatusText('Datei wird eingelesen …');
             } else if (stage === 'converting') {
-              setProgress(0);
-              setStatusText(audioOutput ? 'Audio wird lokal umgewandelt …' : 'Video wird lokal umgewandelt …');
+              conversionStartTime = Date.now();
+              setProgress(undefined);
+              setStatusText(
+                audioOutput ? 'Audio wird lokal umgewandelt …' : 'Video wird lokal umgewandelt …'
+              );
+              timerId = setInterval(() => {
+                if (conversionStartTime && !receivedPositiveProgress) {
+                  const elapsedSec = Math.floor((Date.now() - conversionStartTime) / 1000);
+                  setStatusText(
+                    `${audioOutput ? 'Audio' : 'Video'} wird lokal umgewandelt … (${elapsedSec}s)`
+                  );
+                }
+              }, 1000);
             } else if (stage === 'finalizing') {
+              if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+              }
               setProgress(100);
               setStatusText('Ergebnis wird vorbereitet …');
             }
           },
           onProgress: (fraction) => {
             const pct = Math.round(fraction * 100);
-            setProgress(pct);
-            setStatusText(`${audioOutput ? 'Audio' : 'Video'} wird lokal umgewandelt … ${pct} %`);
+            if (pct > 0) {
+              receivedPositiveProgress = true;
+              if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+              }
+              setProgress(pct);
+              setStatusText(`${audioOutput ? 'Audio' : 'Video'} wird lokal umgewandelt … ${pct} %`);
+            }
           },
         }
       );
@@ -170,6 +196,7 @@ export function MediaEngine({ toolId }: MediaEngineProps) {
         trackEvent('conversion_failed', { toolId });
       }
     } finally {
+      if (timerId) clearInterval(timerId);
       setIsProcessing(false);
     }
   };
